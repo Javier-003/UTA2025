@@ -1,0 +1,76 @@
+import Swal from 'sweetalert2'; 
+import { getUsuarios, createUsuario, updateUsuario, deleteUsuario } 
+from '../../../api/Nucleo/usuario.api.js';
+
+// Obtener todos los usuarios
+export const getUsuario = async (setUsuario) => {
+  try {
+    const data = await getUsuarios();
+    setUsuario(data);
+  } catch (error) {
+    console.error('Error al obtener los usuarios:', error);
+  }
+};
+
+// Crear un nuevo usuario
+export const addUsuario = async (id_persona, usuario, contrasena, estatus, setShowModal, getUsuarios) => {
+  try {
+    await createUsuario(id_persona, usuario, contrasena, estatus);
+    getUsuarios();
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: 'Usuario registrado correctamente',
+    });
+    setShowModal(false);
+  } catch (error) {
+    console.error('Error al agregar el usuario:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema registrando el usuario.',
+    });
+  }
+};
+
+// Actualizar un usuario existente
+export const updateUsuarioFunc = async (id_user, id_persona, usuario, contrasena, estatus, setShowEditModal, getUsuarios) => {
+  try {
+    await updateUsuario(id_user, id_persona, usuario, contrasena, estatus);
+    getUsuarios();
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: 'Usuario actualizado correctamente',
+    });
+    setShowEditModal(false);
+  } catch (error) {
+    console.error('Error al actualizar el usuario:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema actualizando el usuario.',
+    });
+  }
+};
+
+// Eliminar un usuario
+export const deleteUsuarioFunc = async (id_user, setShowDeleteModal, getUsuarios) => {
+  try {
+    await deleteUsuario(id_user);
+    getUsuarios();
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: 'Usuario eliminado correctamente',
+    });
+    setShowDeleteModal(false);
+  } catch (error) {
+    console.error('Error al eliminar el usuario:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema eliminando el usuario.',
+    });
+  }
+};
