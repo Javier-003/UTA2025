@@ -7,7 +7,7 @@ const router = Router();
 
 router.get("/", getPuestotodos);
 router.post("/create", createPuesto);
-router.put("/update/:id_puesto",updatePuesto);
-router.delete("/delete/:id_puesto",deletePuesto );
+router.put("/update/:idpPuesto",updatePuesto);
+router.delete("/delete/:idPuesto",deletePuesto );
 
 export default router;

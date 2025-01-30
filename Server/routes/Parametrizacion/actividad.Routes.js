@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { getActividadtodos, createActividad,updateActividad,deleteActividad} 
 from "../../controllers/Parametrizacion/actividad.Controller.js";
 

@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { createBitacora, getBitacoratodos } from "../../controllers/Nucleo/bitacora.Controller.js";
 
 const router = Router();
