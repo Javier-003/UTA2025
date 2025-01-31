@@ -45,7 +45,7 @@ import Kardex from './pages/Superadmin/Parametrizacion/Kardex';
 import Actividad from './pages/Superadmin/Parametrizacion/Actividad';
 import Tramite from './pages/Superadmin/Parametrizacion/Tramite';
 import TramiteProceso from './pages/Superadmin/Parametrizacion/TramitePrroceso';
-
+import OfertaAcademica from './pages/Superadmin/PlanificacionAcademica/OfertaAcademica'; // Importar el componente OfertaAcademica
 
 // -------------------------- PLANTILLA ALUMNO --------------------------------
 import Consultadekadex from './pages/Superadmin/plantillaAlumno/ConsultaKardex ';
@@ -93,6 +93,7 @@ function App() {
         <Route path="/MapaCurricular" element={<MapaCurricular />} />
         <Route path="/NivelEstudio" element={<NivelEstudio />} />
         <Route path="/Periodo" element={<Periodo />} />
+        <Route path="/OfertaAcademica" element={<OfertaAcademica />} /> {/* Usar el componente OfertaAcademica */}
         <Route path="/Departamento" element={<Departamento />} />
         <Route path="/Puesto" element={<Puesto />} />
         <Route path="/Edificio" element={<Edificio />} />
