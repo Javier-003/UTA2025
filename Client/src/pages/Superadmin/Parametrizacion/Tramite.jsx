@@ -6,9 +6,11 @@ from '../../../assets/js/Parametrizacion/tramite.js';
 import { TramiteModales } from './TramitesModales.jsx';
 
 function Tramite() {
-  const [nombre, setNombre] = useState("");
-  const [desde, setDesde] = useState('');
-  const [hasta, setHasta] = useState('');
+
+  const [nombre, setnombre] = useState("");
+  const [desde, setdesde] = useState('');
+  const [hasta, sethasta] = useState('');
+  
   const [tramiteList, setTramite] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -20,9 +22,9 @@ function Tramite() {
 
   const handleAdd = () => {
     addTramite(nombre, desde, hasta, setShowModal, () => getTramite(setTramite));
-    setNombre("");
-    setDesde("");
-    setHasta("");
+    setnombre("");
+    setdesde("");
+    sethasta("");
   };
 
   const handleUpdate = () => {
@@ -31,10 +33,6 @@ function Tramite() {
 
   const handleDelete = () => {
     deleteTramiteFunc(selectedTramite.idTramite, setShowDeleteModal, () => getTramite(setTramite));
-  };
-
-  const formatDate = (date) => {
-    return new Date(date).toISOString().split('T')[0];
   };
 
   const filteredData = tramiteList.filter(item =>
@@ -53,9 +51,9 @@ function Tramite() {
         <h5>LISTADO DE TRAMITES</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
-              setNombre("");
-              setDesde("");
-              setHasta("");
+              setnombre("");
+              setdesde("");
+              sethasta("");
               setSelectedTramite(null);
               setShowModal(true);
           }}>Registrar</button>
@@ -86,9 +84,9 @@ function Tramite() {
                         <button className="btn btn-warning" onClick={() => {
                             setShowEditModal(true); 
                             setSelectedTramite(tramite);
-                            setNombre(tramite.nombre);
-                            setDesde(formatDateString(tramite.desde));
-                            setHasta(formatDateString(tramite.hasta));
+                            setnombre(tramite.nombre);
+                            setdesde(formatDateString(tramite.desde));
+                            sethasta(formatDateString(tramite.hasta));
                         }}>Editar</button>
                       </td>
                       <td>
@@ -111,9 +109,9 @@ function Tramite() {
       </div>
 
       <TramiteModales
-        nombre={nombre} setNombre={setNombre}
-        desde={desde} setDesde={setDesde}
-        hasta={hasta} setHasta={setHasta}
+        nombre={nombre} setNombre={setnombre}
+        desde={desde} setDesde={setdesde}
+        hasta={hasta} setHasta={sethasta}
         
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}

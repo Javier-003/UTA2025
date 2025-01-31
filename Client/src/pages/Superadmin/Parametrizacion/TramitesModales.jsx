@@ -1,14 +1,16 @@
 /* eslint-disable react/prop-types */
 export const TramiteModales = ({
-    nombre, setNombre, 
-    desde, setDesde,
-    hasta, setHasta,
-    showModal, setShowModal, 
-    showEditModal, setShowEditModal, 
-    showDeleteModal, setShowDeleteModal, 
-    handleAdd, handleUpdate, handleDelete, 
-    selectedTramite
-  }) => {
+
+  nombre, setnombre, 
+  desde, setdesde,
+  hasta, sethasta,
+
+  showModal, setShowModal, 
+  showEditModal, setShowEditModal, 
+  showDeleteModal, setShowDeleteModal, 
+  handleAdd, handleUpdate, handleDelete, 
+  selectedTramite
+}) => {
     return (
       <>
         {/* Modal para registrar tramite */}
@@ -19,31 +21,31 @@ export const TramiteModales = ({
                 <h5 className="modal-title" id="modalLabel">Registrar Trámite</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => {
                   setShowModal(false);
-                  setNombre("");
-                  setDesde("");
-                  setHasta("");
+                  setnombre("");
+                  setdesde("");
+                  sethasta("");
                 }}></button>
               </div>
               <div className="modal-body">
                 <div className="input-group mb-3">
                   <span className="input-group-text">Nombre:</span>
-                  <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />                         
+                  <input type="text" className="form-control" value={nombre} onChange={(event) => setnombre(event.target.value)} />                         
                 </div>
                 <div className="input-group mb-3">
                   <span className="input-group-text">Desde:</span>
-                  <input type="date" className="form-control" value={desde} onChange={(event) => setDesde(event.target.value)} />                         
+                  <input type="date" className="form-control" value={desde} onChange={(event) => setdesde(event.target.value)} />                         
                 </div>
                 <div className="input-group mb-3">
                   <span className="input-group-text">Hasta:</span>
-                  <input type="date" className="form-control" value={hasta} onChange={(event) => setHasta(event.target.value)} />                         
+                  <input type="date" className="form-control" value={hasta} onChange={(event) => sethasta(event.target.value)} />                         
                 </div>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => {
                   setShowModal(false);
-                  setNombre("");
-                  setDesde("");
-                  setHasta("");
+                  setnombre("");
+                  setdesde("");
+                  sethasta("");
                 }}>Cerrar</button>
                 <button type="button" className="btn btn-primary" onClick={handleAdd}>Registrar</button>
               </div>
@@ -62,15 +64,15 @@ export const TramiteModales = ({
               <div className="modal-body">
                 <div className="input-group mb-3">
                   <span className="input-group-text">Nombre:</span>
-                  <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
+                  <input type="text" className="form-control" value={nombre} onChange={(event) => setnombre(event.target.value)} />
                 </div>        
                 <div className="input-group mb-3">
                   <span className="input-group-text">Desde:</span>
-                  <input type="date" className="form-control" value={desde} onChange={(event) => setDesde(event.target.value)} />
+                  <input type="date" className="form-control" value={desde} onChange={(event) => setdesde(event.target.value)} />
                 </div>             
                 <div className="input-group mb-3">
                   <span className="input-group-text">Hasta:</span>
-                  <input type="date" className="form-control" value={hasta} onChange={(event) => setHasta(event.target.value)} />
+                  <input type="date" className="form-control" value={hasta} onChange={(event) => sethasta(event.target.value)} />
                 </div>
               </div>
               <div className="modal-footer">
