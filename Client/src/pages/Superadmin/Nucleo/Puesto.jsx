@@ -80,7 +80,7 @@ function Puesto() {
                             setSelectedPuesto(puesto);
                             setidDepartamento(puesto.idEDepartamento);
                             setnombre(puesto.nombre);
-                            setNombreDepartamento(puesto.nombreDepartamento);
+                            setNombreDepartamento(puesto.nombre_departamento);
                           }} >Editar</button>
                       </td>
                       <td>

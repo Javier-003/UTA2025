@@ -33,7 +33,7 @@ export const PuestoModales = ({
                   <option value="">Selecciona un departamento</option>
                   {departamentoList.map((departamento) => (
                     <option key={departamento.idDDepartamento} value={departamento.idDepartamento}>
-                      {departamento.nombre}
+                      {departamento.nombreD}
                     </option>
                   ))}
                 </select>
