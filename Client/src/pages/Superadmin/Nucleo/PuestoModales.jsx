@@ -27,13 +27,13 @@ export const PuestoModales = ({
               <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
-              <div className="mb-3">
+            <div className="mb-3">
                 <label className="form-label">Departamento:</label>
                 <select className="form-select" value={idDepartamento} onChange={(event) => setidDepartamento(event.target.value)}>
                   <option value="">Selecciona un departamento</option>
                   {departamentoList.map((departamento) => (
-                    <option key={departamento.idDDepartamento} value={departamento.idDepartamento}>
-                      {departamento.nombreD}
+                    <option key={departamento.idDepartamento} value={departamento.idDepartamento}>
+                      {departamento.nombre}
                     </option>
                   ))}
                 </select>

@@ -9,7 +9,7 @@ function Puesto() {
   const [puestoList, setPuesto] = useState([]);
   const [idDepartamento, setidDepartamento] = useState("");
   const [nombre, setnombre] = useState("");
-  const [nombreDepartamento, setNombreDepartamento] = useState("");
+  const [nombreDepartamento, setnombreDepartamento] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -46,7 +46,7 @@ function Puesto() {
             onClick={() => {
               setidDepartamento("");
               setnombre("");
-              setNombreDepartamento("");
+              setnombreDepartamento("");
               setSelectedPuesto(null);
               setShowModal(true);
             }}>Registrar</button>
@@ -80,7 +80,7 @@ function Puesto() {
                             setSelectedPuesto(puesto);
                             setidDepartamento(puesto.idEDepartamento);
                             setnombre(puesto.nombre);
-                            setNombreDepartamento(puesto.nombre_departamento);
+                            setnombreDepartamento(puesto.nombreDepartamento);
                           }} >Editar</button>
                       </td>
                       <td>
@@ -106,7 +106,7 @@ function Puesto() {
       <PuestoModales
         idDepartamento={idDepartamento} setidDepartamento={setidDepartamento}
         nombre={nombre} setnombre={setnombre}
-        nombreDepartamento={nombreDepartamento} setNombreDepartamento={setNombreDepartamento} 
+        nombreDepartamento={nombreDepartamento} setnombreDepartamento={setnombreDepartamento} 
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal}
         setShowEditModal={setShowEditModal}

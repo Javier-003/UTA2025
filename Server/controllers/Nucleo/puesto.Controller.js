@@ -3,7 +3,7 @@ import { db } from "../../db/connection.js";
 export const getPuestotodos = async (req, res) => {
   try {
     const query = `
-      SELECT p.idPuesto, p.idDepartamento, p.nombre, d.nombre AS nombre_departamento
+      SELECT p.idPuesto, p.idDepartamento, p.nombre, d.nombre AS nombreDepartamento
       FROM puesto p
       JOIN departamento d ON p.idDepartamento = d.idDepartamento
     `;
