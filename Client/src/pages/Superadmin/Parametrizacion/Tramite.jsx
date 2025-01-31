@@ -1,10 +1,8 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { getTramite, addTramite, updateTramiteFunc, deleteTramiteFunc } 
 from '../../../assets/js/Parametrizacion/tramite.js';
-
 import { TramiteModales } from './TramitesModales.jsx';
 
 function Tramite() {
@@ -109,14 +107,12 @@ function Tramite() {
       </div>
 
       <TramiteModales
-        nombre={nombre} setNombre={setnombre}
-        desde={desde} setDesde={setdesde}
-        hasta={hasta} setHasta={sethasta}
-        
+        nombre={nombre} setnombre={setnombre}
+        desde={desde} setdesde={setdesde}
+        hasta={hasta} sethasta={sethasta}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-        
         handleAdd={handleAdd} 
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
