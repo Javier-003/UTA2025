@@ -6,14 +6,14 @@ from '../../../assets/js/Nucleo/persona.js';
 import { PersonaModales } from '../Nucleo/PersonaModales.jsx';
 
 function Persona() {
-  const [nombre, setNombre] = useState("");
-  const [apellidoPaterno, setApellidoPaterno] = useState("");
-  const [apellidoMaterno, setApellidoMaterno] = useState("");
-  const [genero, setGenero] = useState("");
-  const [direccion, setDireccion] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [curp, setCurp] = useState("");
-  const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [nombre, setnombre] = useState("");
+  const [paterno, setpaterno] = useState("");
+  const [materno, setmaterno] = useState("");
+  const [nacimiento, setnacimiento] = useState("");
+  const [curp, setcurp] = useState("");
+  const [genero, setgenero] = useState("");
+  const [direccion, setdireccion] = useState("");
+  const [telefono, settelefono] = useState("");
   const [personaList, setPersona] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -23,13 +23,13 @@ function Persona() {
   
   useEffect(() => { getPersona(setPersona); }, []);
   const handleAdd = () => {
-    addPersona(nombre, apellidoPaterno, apellidoMaterno, genero, direccion, telefono, curp, fechaNacimiento, setShowModal, () => getPersona(setPersona));
+    addPersona(nombre, paterno, materno, nacimiento,curp, genero, direccion, telefono, setShowModal, () => getPersona(setPersona));
   };
   const handleUpdate = () => {
-    updatePersonaFunc(selectedPersona.id_persona, nombre, apellidoPaterno, apellidoMaterno, genero, direccion, telefono, curp, fechaNacimiento, setShowEditModal, () => getPersona(setPersona));
+    updatePersonaFunc(selectedPersona.idPersona, nombre, paterno, materno,nacimiento,curp ,genero, direccion, telefono, setShowEditModal, () => getPersona(setPersona));
   };
   const handleDelete = () => {
-    deletePersonaFunc(selectedPersona.id_persona, setShowDeleteModal, () => getPersona(setPersona));
+    deletePersonaFunc(selectedPersona.idPersona, setShowDeleteModal, () => getPersona(setPersona));
   };
   const filteredData = personaList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
@@ -37,20 +37,21 @@ function Persona() {
   const formatDate = (date) => {
     return new Date(date).toISOString().split('T')[0];
   };
+
   return (
     <div className="container">
       <div className="">
         <h5>LISTADO DE PERSONAS</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
-            setNombre("");
-            setApellidoPaterno("");
-            setApellidoMaterno("");
-            setGenero("");
-            setDireccion("");
-            setTelefono("");
-            setCurp("");
-            setFechaNacimiento("");
+            setnombre("");
+            setpaterno("");
+            setmaterno("");
+            setgenero("");
+            setdireccion("");
+            settelefono("");
+            setcurp("");
+            setnacimiento("");
             setSelectedPersona(null);
             setShowModal(true);
           }}>Registrar</button>
@@ -62,11 +63,11 @@ function Persona() {
                 <tr>
                   <th>ID</th>
                   <th>NOMBRE DE LA PERSONA</th>
+                  <th>FECHA DE NACIMIENTO</th>
+                  <th>CURP</th>
                   <th>GENERO</th>
                   <th>DIRECCION</th>
                   <th>TELEFONO</th>
-                  <th>CURP</th>
-                  <th>FECHA DE NACIMIENTO</th>
                   <th>EDITAR</th>
                   <th>ELIMINAR</th>
                 </tr>
@@ -74,26 +75,26 @@ function Persona() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((persona) => (
-                    <tr key={persona.id_persona}>
-                      <td>{persona.id_persona}</td>
-                      <td>{`${persona.nombre} ${persona.apellido_paterno} ${persona.apellido_materno}`}</td>
+                    <tr key={persona.idPersona}>
+                      <td>{persona.idPersona}</td>
+                      <td>{`${persona.nombre} ${persona.paterno} ${persona.materno}`}</td>
+                      <td>{new Date(persona.nacimiento).toLocaleDateString()}</td>
+                      <td>{persona.curp}</td>
                       <td>{persona.genero}</td>
                       <td>{persona.direccion}</td>
                       <td>{persona.telefono}</td>
-                      <td>{persona.curp}</td>
-                      <td>{new Date(persona.fecha_nacimiento).toLocaleDateString()}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                           setShowEditModal(true);
                           setSelectedPersona(persona);
-                          setNombre(persona.nombre);
-                          setApellidoPaterno(persona.apellido_paterno);
-                          setApellidoMaterno(persona.apellido_materno);
-                          setGenero(persona.genero);
-                          setDireccion(persona.direccion);
-                          setTelefono(persona.telefono);
-                          setCurp(persona.curp);
-                          setFechaNacimiento(formatDate(persona.fecha_nacimiento));
+                          setnombre(persona.nombre);
+                          setpaterno(persona.paterno);
+                          setmaterno(persona.materno);
+                          setnacimiento(formatDate(persona.nacimiento));
+                          setcurp(persona.curp);
+                          setgenero(persona.genero);
+                          setdireccion(persona.direccion);
+                          settelefono(persona.telefono);
                         }}>Editar</button>
                       </td>
                       <td>
@@ -114,24 +115,25 @@ function Persona() {
           </div>
         </div>
       </div>
+
       <PersonaModales
-        nombre={nombre} setNombre={setNombre}
-        apellidoPaterno={apellidoPaterno} setApellidoPaterno={setApellidoPaterno}
-        apellidoMaterno={apellidoMaterno} setApellidoMaterno={setApellidoMaterno}
-        genero={genero} setGenero={setGenero}
-        direccion={direccion} setDireccion={setDireccion}
-        telefono={telefono} setTelefono={setTelefono}
-        curp={curp} setCurp={setCurp}
-        fechaNacimiento={fechaNacimiento} setFechaNacimiento={setFechaNacimiento}
+        nombre={nombre} setnombre={setnombre}
+        paterno={paterno} setpaterno={setpaterno} 
+        materno={materno} setmaterno={setmaterno}
+        nacimiento={nacimiento} setnacimiento={setnacimiento}
+        curp={curp} setcurp={setcurp}
+        genero={genero} setgenero={setgenero}
+        direccion={direccion} setdireccion={setdireccion}
+        telefono={telefono} settelefono={settelefono}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedPersona={selectedPersona}
-      />
+        selectedPersona={selectedPersona}/>
     </div>
   );
 }
+
 export default Persona;
