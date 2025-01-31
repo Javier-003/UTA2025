@@ -79,6 +79,7 @@ function OffcanvasNavbar() {
                 <Nav.Link as={Link} to="/NivelEstudio">Nivel de Estudio</Nav.Link>
                 <Nav.Link as={Link} to="/MapaCurricular">Mapa Curricular</Nav.Link>
                 <Nav.Link as={Link} to="/Periodo">Tramite de Apertura Periodo</Nav.Link>
+                <Nav.Link as={Link} to="/OfertaAcademica">Oferta Academica</Nav.Link>
               </Nav>
               <hr />
 
