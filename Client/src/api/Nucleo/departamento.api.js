@@ -19,7 +19,7 @@ export const getDepartamentos = async () => {
 export const createDepartamento = async (nombre, sigla) => {
   try {
     await axios.post(`${BASE_URL}/departamento/create`, 
-        { Nombre: nombre , Sigla: sigla  } );
+        { nombre: nombre , sigla: sigla  } );
   } catch (error) {
     console.error("Error al registrar la departamento:", error);
     throw new Error('Error al registrar la departamento');
@@ -30,7 +30,7 @@ export const createDepartamento = async (nombre, sigla) => {
 export const updateDepartamento = async (idDepartamento, nombre, sigla) => {
   try {
     await axios.put(`${BASE_URL}/departamento/update/${idDepartamento}`, 
-        { Nombre: nombre, Sigla: sigla}  );
+        { nombre: nombre, sigla: sigla}  );
   } catch (error) {
     console.error("Error al actualizar el departamento:", error);
     throw new Error('Error al actualizar el departamento');
