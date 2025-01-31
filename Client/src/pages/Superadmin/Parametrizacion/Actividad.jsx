@@ -1,17 +1,13 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { getActividad, addActividad, updateActividadFunc, deleteActividadFunc } 
 from '../../../assets/js/Parametrizacion/actividad.js';
 
 import { ActividadModales } from './ActividadModales.jsx';
 
 function Actividad() {
-
   const [nombre, setnombre] = useState("");
-  
   const [actividadList, setActividad] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -95,9 +91,7 @@ function Actividad() {
         handleAdd={handleAdd} 
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
-        selectedActividad={selectedActividad}
-        
-        />        
+        selectedActividad={selectedActividad}/>        
     </div>
   );
 }

@@ -9,8 +9,8 @@ function TramiteProceso() {
   const [tramiteprocesoList, setTramiteProceso] = useState([]);
   const [idTramite, setIdTramite] = useState("");
   const [idActividad, setIdActividad] = useState("");
-  const [objeto, setObjeto] = useState("");
-  const [orden, setOrden] = useState("");
+  const [objeto, setobjeto] = useState("");
+  const [orden, setorden] = useState("");
   const [NombreTramite, setNombreTramite] = useState("");
   const [NombreActividad, setNombreActividad] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -47,8 +47,8 @@ function TramiteProceso() {
             setNombreTramite(""); 
             setIdActividad("");
             setNombreActividad("");
-            setObjeto("");
-            setOrden("");
+            setobjeto("");
+            setorden("");
             setSelectedTramiteProceso(null);
             setShowModal(true);
           }}>Registrar</button>
@@ -86,8 +86,8 @@ function TramiteProceso() {
                           setNombreTramite(tramiteproceso.NombreTramite);
                           setIdActividad(tramiteproceso.idActividad);     
                           setNombreActividad(tramiteproceso.NombreActividad);
-                          setObjeto(tramiteproceso.objeto);
-                          setOrden(tramiteproceso.orden);
+                          setobjeto(tramiteproceso.objeto);
+                          setorden(tramiteproceso.orden);
                           setShowEditModal(true); 
                           setSelectedTramiteProceso(tramiteproceso);
                         }}>Editar</button>
@@ -110,10 +110,9 @@ function TramiteProceso() {
           </div>
         </div>
       </div>
-
       <TramiteProcesoModales
-        objeto={objeto} setObjeto={setObjeto}
-        orden={orden} setOrden={setOrden}
+        objeto={objeto} setobjeto={setobjeto}
+        orden={orden} setorden={setorden}
         idTramite={idTramite} setIdTramite={setIdTramite}
         idActividad={idActividad} setIdActividad={setIdActividad}
         NombreTramite={NombreTramite} setNombreTramite={setNombreTramite}
@@ -124,8 +123,7 @@ function TramiteProceso() {
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedTramiteProceso={selectedTramiteProceso}
-      />
+        selectedTramiteProceso={selectedTramiteProceso}/>
     </div>
   );
 }

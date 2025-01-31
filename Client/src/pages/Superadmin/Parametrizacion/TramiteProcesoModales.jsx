@@ -6,8 +6,8 @@ import { getActividades } from "../../../api/Parametrizacion/actividad.api.js";
 export const TramiteProcesoModales = ({
   idTramite,setIdTramite,
   idActividad,setIdActividad,
-  objeto,setObjeto,
-  orden,setOrden,
+  objeto,setobjeto,
+  orden,setorden,
   showModal,setShowModal,showEditModal,setShowEditModal,
   showDeleteModal,setShowDeleteModal,
   handleAdd,handleUpdate,
@@ -26,7 +26,7 @@ export const TramiteProcesoModales = ({
     <>
       {/* Modal para registrar trámite proceso */}
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">Registrar Trámite Proceso</h5>
@@ -57,11 +57,11 @@ export const TramiteProcesoModales = ({
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Objeto:</span>
-                <input type="text" className="form-control" value={objeto} onChange={(event) => setObjeto(event.target.value)} />
+                <input type="text" className="form-control" value={objeto} onChange={(event) => setobjeto(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Orden:</span>
-                <input type="number" className="form-control" value={orden} onChange={(event) => setOrden(event.target.value)} />
+                <input type="number" className="form-control" value={orden} onChange={(event) => setorden(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -74,14 +74,13 @@ export const TramiteProcesoModales = ({
 
       {/* Modal para editar trámite proceso */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="editModalLabel">Editar Trámite Proceso</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowEditModal(false)}></button>
             </div>
             <div className="modal-body">
-              
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre Tramite:</span>
                 <select className="form-select" value={idTramite} onChange={(event) => setIdTramite(event.target.value)}>
@@ -91,7 +90,6 @@ export const TramiteProcesoModales = ({
                   ))}
                 </select>
               </div>
-
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre Actividad:</span>
                 <select className="form-select" value={idActividad} onChange={(event) => setIdActividad(event.target.value)}>
@@ -101,14 +99,13 @@ export const TramiteProcesoModales = ({
                   ))}
                 </select>
               </div>
-
               <div className="input-group mb-3">
                 <span className="input-group-text">Objeto:</span>
-                <input type="text" className="form-control" value={objeto} onChange={(event) => setObjeto(event.target.value)} />
+                <input type="text" className="form-control" value={objeto} onChange={(event) => setobjeto(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Orden:</span>
-                <input type="number" className="form-control" value={orden} onChange={(event) => setOrden(event.target.value)} />
+                <input type="number" className="form-control" value={orden} onChange={(event) => setorden(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -121,7 +118,7 @@ export const TramiteProcesoModales = ({
 
       {/* Modal para eliminar trámite proceso */}
       <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog  modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="deleteModalLabel">Eliminar Trámite Proceso</h5>

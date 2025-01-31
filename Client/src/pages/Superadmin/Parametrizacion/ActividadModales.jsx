@@ -11,7 +11,7 @@ export const ActividadModales = ({
       <>
         {/* Modal para registrar actividad */}
         <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-right">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="modalLabel">Registrar Actividad</h5>
@@ -21,11 +21,8 @@ export const ActividadModales = ({
                 <div className="input-group">
                   <span className="input-group-text">Nombre de Actividad:</span>
                   <input
-                    type="text"
-                    className="form-control"
-                    value={nombre}
-                    onChange={(event) => setnombre(event.target.value)}
-                  />
+                    type="text" className="form-control" value={nombre}
+                    onChange={(event) => setnombre(event.target.value)}/>
                 </div>
               </div>
               <div className="modal-footer">
@@ -38,7 +35,7 @@ export const ActividadModales = ({
   
         {/* Modal para editar actividad */}
         <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-right">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="editModalLabel">Editar Actividad</h5>
@@ -48,11 +45,8 @@ export const ActividadModales = ({
                 <div className="input-group">
                   <span className="input-group-text">Nombre de Actividad:</span>
                   <input
-                    type="text"
-                    className="form-control"
-                    value={nombre}
-                    onChange={(event) => setnombre(event.target.value)}
-                  />
+                    type="text" className="form-control"
+                    value={nombre} onChange={(event) => setnombre(event.target.value)}/>
                 </div>
               </div>
               <div className="modal-footer">
@@ -65,7 +59,7 @@ export const ActividadModales = ({
   
         {/* Modal para eliminar actividad */}
         <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-right">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="deleteModalLabel">Eliminar Actividad</h5>

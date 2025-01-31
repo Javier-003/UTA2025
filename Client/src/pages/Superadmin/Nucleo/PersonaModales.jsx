@@ -8,7 +8,6 @@ export const PersonaModales = ({
   genero, setgenero, 
   direccion, setdireccion, 
   telefono, settelefono,
-
   showModal, setShowModal, 
   showEditModal, setShowEditModal,
   showDeleteModal, setShowDeleteModal,
@@ -39,7 +38,6 @@ export const PersonaModales = ({
                 <span className="input-group-text">Apellido Materno:</span>
                 <input type="text" className="form-control" value={materno} onChange={(e) => setmaterno(e.target.value)} />
               </div>
-              
               <div className="input-group mb-3">
                 <span className="input-group-text">Género:</span>
                 <select className="form-select" value={genero} onChange={(e) => setgenero(e.target.value)} >
@@ -48,7 +46,6 @@ export const PersonaModales = ({
                   <option value="F">Femenino</option>
                 </select>
               </div>
-
               <div className="input-group mb-3">
                 <span className="input-group-text">Dirección:</span>
                 <input type="text"className="form-control"value={direccion} onChange={(e) => setdireccion(e.target.value)}/>
@@ -130,8 +127,6 @@ export const PersonaModales = ({
 
         {/* Modal para eliminar persona */}
         <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-
-        
         <div className="modal-dialog modal-dialog-right">
             <div className="modal-content">
               <div className="modal-header">

@@ -1,21 +1,20 @@
 /* eslint-disable react/prop-types */
 export const TramiteModales = ({
-
   nombre, setnombre, 
   desde, setdesde,
   hasta, sethasta,
-
   showModal, setShowModal, 
   showEditModal, setShowEditModal, 
   showDeleteModal, setShowDeleteModal, 
   handleAdd, handleUpdate, handleDelete, 
   selectedTramite
 }) => {
+
     return (
       <>
         {/* Modal para registrar tramite */}
         <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-right">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="modalLabel">Registrar Trámite</h5>
@@ -49,7 +48,7 @@ export const TramiteModales = ({
   
         {/* Modal para editar tramite */}
         <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-right">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="editModalLabel">Editar Trámite</h5>
@@ -79,7 +78,7 @@ export const TramiteModales = ({
   
         {/* Modal para eliminar tramite */}
         <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-right">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="deleteModalLabel">Eliminar Trámite</h5>
