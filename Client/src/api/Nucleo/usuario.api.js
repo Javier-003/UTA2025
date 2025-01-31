@@ -15,10 +15,10 @@ export const getUsuarios = async () => {
 };
 
 // Crear un nuevo usuario
-export const createUsuario = async (id_persona, usuario, contrasena, estatus) => {
+export const createUsuario = async (idPersona, usuario, contrasena, estatus) => {
   try {
     const response = await axios.post(`${BASE_URL}/usuario/create`, {
-      id_persona, usuario, contrasena, estatus
+      idPersona, usuario, contrasena, estatus
     });
     // Usar los valores devueltos en la respuesta para mostrar un mensaje informativo
     console.log("Usuario creado:", response.data);
@@ -29,10 +29,10 @@ export const createUsuario = async (id_persona, usuario, contrasena, estatus) =>
 };
 
 // Actualizar un usuario existente
-export const updateUsuario = async (id_user, id_persona, usuario, contrasena, estatus) => {
+export const updateUsuario = async (idUsuario, idPersona, usuario, contrasena, estatus) => {
   try {
-    const response = await axios.put(`${BASE_URL}/usuario/update/${id_user}`, {
-      id_persona, usuario, contrasena, estatus
+    const response = await axios.put(`${BASE_URL}/usuario/update/${idUsuario}`, {
+      idPersona, usuario, contrasena, estatus
     });
     // Usar los valores devueltos en la respuesta para mostrar un mensaje informativo
     console.log("Usuario actualizado:", response.data);
@@ -43,9 +43,9 @@ export const updateUsuario = async (id_user, id_persona, usuario, contrasena, es
 };
 
 // Eliminar un usuario
-export const deleteUsuario = async (id_user) => {
+export const deleteUsuario = async (idUsuario) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/usuario/delete/${id_user}`);
+    const response = await axios.delete(`${BASE_URL}/usuario/delete/${idUsuario}`);
     // Usar los valores devueltos en la respuesta para mostrar un mensaje informativo
     console.log("Usuario eliminado:", response.data);
   } catch (error) {

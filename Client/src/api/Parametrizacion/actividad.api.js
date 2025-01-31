@@ -26,9 +26,9 @@ export const createActividad = async (nombre) => {
 };
 
 // Actualizar una actividad existente
-export const updateActividad = async (idActividad, nombre) => {
+export const updateActividad = async (IdActividad, nombre) => {
   try {
-    await axios.put(`${BASE_URL}/actividad/update/${idActividad}`, { nombre: nombre });
+    await axios.put(`${BASE_URL}/actividad/update/${IdActividad}`, { nombre: nombre });
   } catch (error) {
     console.error("Error al actualizar la actividad:", error);
     throw new Error('Error al actualizar la actividad');
@@ -36,9 +36,9 @@ export const updateActividad = async (idActividad, nombre) => {
 };
 
 // Eliminar una actividad
-export const deleteActividad = async (idActividad) => {
+export const deleteActividad = async (IdActividad) => {
   try {
-    await axios.delete(`${BASE_URL}/actividad/delete/${idActividad}`);
+    await axios.delete(`${BASE_URL}/actividad/delete/${IdActividad}`);
   } catch (error) {
     console.error("Error al eliminar la actividad:", error);
     throw new Error('Error al eliminar la actividad');

@@ -14,23 +14,23 @@ export const getAlumnos = async () => {
   }
 };
 
-// Crear una nuevo alumno
-export const createAlumno = async (email,promedio,cuatrimestre,fecha_registro,nss) => {
+// Crear un nuevo alumno
+export const createAlumno = async (email, nss, fecha) => {
   try {
     await axios.post(`${BASE_URL}/alumno/create`, {
-      email,promedio,cuatrimestre,fecha_registro,nss
+      email, nss, fecha
     });
   } catch (error) {
-    console.error("Error al registrar la alumno:", error);
-    throw new Error('Error al registrar la alumno');
+    console.error("Error al registrar el alumno:", error);
+    throw new Error('Error al registrar el alumno');
   }
 };
 
-// Actualizar una alumno existente
-export const updateAlumno = async (id_alumno, email,promedio,cuatrimestre,fecha_registro,nss) => {
+// Actualizar un alumno existente
+export const updateAlumno = async (idAlumno, email, nss, fecha) => {
   try {
-    await axios.put(`${BASE_URL}/alumno/update/${id_alumno}`, {
-      email,promedio,cuatrimestre,fecha_registro,nss
+    await axios.put(`${BASE_URL}/alumno/update/${idAlumno}`, {
+      email, nss, fecha
     });
   } catch (error) {
     console.error("Error al actualizar el alumno:", error);
@@ -38,14 +38,12 @@ export const updateAlumno = async (id_alumno, email,promedio,cuatrimestre,fecha_
   }
 };
 
-
 // Eliminar un alumno
-export const deleteAlumno = async (id_alumno) => {
-    try {
-      await axios.delete(`${BASE_URL}/alumno/delete/${id_alumno}`);
-    } catch (error) {
-      console.error("Error al eliminar el alumno:", error);
-      throw new Error('Error al eliminar el alumno');
-    }
+export const deleteAlumno = async (idAlumno) => {
+  try {
+    await axios.delete(`${BASE_URL}/alumno/delete/${idAlumno}`);
+  } catch (error) {
+    console.error("Error al eliminar el alumno:", error);
+    throw new Error('Error al eliminar el alumno');
+  }
 };
-  

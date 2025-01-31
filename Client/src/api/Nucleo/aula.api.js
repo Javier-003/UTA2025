@@ -15,33 +15,33 @@ export const getAulas = async () => {
 };
 
 // Crear una nueva aula
-export const createAula = async (IdEdificio, AulaTipo, Nombre, SIGLA) => {
+export const createAula = async (idEdificio, tipo, nombre, sigla) => {
   try {
     await axios.post(`${BASE_URL}/aula/create`, {
-      IdEdificio,AulaTipo,Nombre,SIGLA
+      idEdificio, tipo, nombre, sigla
     });
   } catch (error) {
-    console.error("Error al registrar la aula:", error);
-    throw new Error('Error al registrar la aula');
+    console.error("Error al registrar el aula:", error);
+    throw new Error('Error al registrar el aula');
   }
 };
 
 // Actualizar una aula existente
-export const updateAula = async (IdAula, IdEdificio, AulaTipo, Nombre, SIGLA) => {
+export const updateAula = async (idAula, idEdificio, tipo, nombre, sigla) => {
   try {
-    await axios.put(`${BASE_URL}/aula/update/${IdAula}`, {
-      IdEdificio,AulaTipo,Nombre,SIGLA
+    await axios.put(`${BASE_URL}/aula/update/${idAula}`, {
+      idEdificio, tipo, nombre, sigla
     });
   } catch (error) {
-    console.error("Error al actualizar la aula:", error);
-    throw new Error('Error al actualizar la aula');
+    console.error("Error al actualizar el aula:", error);
+    throw new Error('Error al actualizar el aula');
   }
 };
 
 // Eliminar una aula
-export const deleteAula = async (IdAula) => {
+export const deleteAula = async (idAula) => {
   try {
-    await axios.delete(`${BASE_URL}/aula/delete/${IdAula}`);
+    await axios.delete(`${BASE_URL}/aula/delete/${idAula}`);
   } catch (error) {
     console.error("Error al eliminar el aula:", error);
     throw new Error('Error al eliminar el aula');

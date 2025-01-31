@@ -27,9 +27,9 @@ export const createDepartamento = async (nombre, sigla) => {
 };
 
 // Actualizar una departamento existente
-export const updateDepartamento = async (id_departamento, nombre, sigla) => {
+export const updateDepartamento = async (idDepartamento, nombre, sigla) => {
   try {
-    await axios.put(`${BASE_URL}/departamento/update/${id_departamento}`, 
+    await axios.put(`${BASE_URL}/departamento/update/${idDepartamento}`, 
         { Nombre: nombre, Sigla: sigla}  );
   } catch (error) {
     console.error("Error al actualizar el departamento:", error);
@@ -38,9 +38,9 @@ export const updateDepartamento = async (id_departamento, nombre, sigla) => {
 };
 
 // Eliminar una departamento
-export const deleteDepartamento = async (id_departamento) => {
+export const deleteDepartamento = async (idDepartamento) => {
   try {
-    await axios.delete(`${BASE_URL}/departamento/delete/${id_departamento}`);
+    await axios.delete(`${BASE_URL}/departamento/delete/${idDepartamento}`);
   } catch (error) {
     console.error("Error al eliminar el departamento:", error);
     throw new Error('Error al eliminar el departamento');

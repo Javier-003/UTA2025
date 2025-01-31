@@ -26,9 +26,9 @@ export const createEdificio = async (Nombre, Sigla) => {
 };
 
 // Actualizar una edificio existente
-export const updateEdificio = async (id_edificio, Nombre, Sigla) => {
+export const updateEdificio = async (idEdificio, Nombre, Sigla) => {
   try {
-    await axios.put(`${BASE_URL}/edificio/update/${id_edificio}`, { Nombre: Nombre, Sigla: Sigla}  );
+    await axios.put(`${BASE_URL}/edificio/update/${idEdificio}`, { Nombre: Nombre, Sigla: Sigla}  );
   } catch (error) {
     console.error("Error al actualizar el edificio:", error);
     throw new Error('Error al actualizar el edificio');
@@ -36,9 +36,9 @@ export const updateEdificio = async (id_edificio, Nombre, Sigla) => {
 };
 
 // Eliminar una edificio
-export const deleteEdificio = async (id_edificio) => {
+export const deleteEdificio = async (idEdificio) => {
   try {
-    await axios.delete(`${BASE_URL}/edificio/delete/${id_edificio}`);
+    await axios.delete(`${BASE_URL}/edificio/delete/${idEdificio}`);
   } catch (error) {
     console.error("Error al eliminar el edificio:", error);
     throw new Error('Error al eliminar el edificio');

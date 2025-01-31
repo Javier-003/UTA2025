@@ -26,9 +26,9 @@ export const createTramite = async (nombre, desde, hasta) => {
 };
 
 // Actualizar un tramite existente
-export const updateTramite = async (idTramite, nombre, desde, hasta) => {
+export const updateTramite = async (IdTramite, nombre, desde, hasta) => {
   try {
-    await axios.put(`${BASE_URL}/tramite/update/${idTramite}`, { nombre, desde, hasta });
+    await axios.put(`${BASE_URL}/tramite/update/${IdTramite}`, { nombre, desde, hasta });
   } catch (error) {
     console.error("Error al actualizar el tramite:", error);
     throw new Error('Error al actualizar el tramite');
@@ -36,9 +36,9 @@ export const updateTramite = async (idTramite, nombre, desde, hasta) => {
 };
 
 // Eliminar un tramite
-export const deleteTramite = async (idTramite) => {
+export const deleteTramite = async (IdTramite) => {
   try {
-    await axios.delete(`${BASE_URL}/tramite/delete/${idTramite}`);
+    await axios.delete(`${BASE_URL}/tramite/delete/${IdTramite}`);
   } catch (error) {
     console.error("Error al eliminar el tramite:", error);
     throw new Error('Error al eliminar el tramite');
