@@ -81,11 +81,11 @@ function Aula() {
                         <button className="btn btn-warning" onClick={() => {
                           setShowEditModal(true); 
                           setSelectedAula(aula);
-                          settipo(aula.AulaTipo);
-                          setnombre(aula.Nombre);
-                          setsigla(aula.sigla);
                           setidEdificio(aula.IdEdificio);
                           setNombreEdificio(aula.NombreEdificio);
+                          settipo(aula.tipo);
+                          setnombre(aula.nombre);
+                          setsigla(aula.sigla);
                         }}>Editar</button>
                       </td>
                       <td>
@@ -107,11 +107,11 @@ function Aula() {
         </div>
       </div>
       <AulaModales
-        tipo={tipo} settipo={settipo}
-        nombre={nombre} setnombre={setnombre}
-        sigla={sigla} setSIGLA={setsigla}
         idEdificio={idEdificio} setidEdificio={setidEdificio}
         NombreEdificio={NombreEdificio} setNombreEdificio={setNombreEdificio}
+        tipo={tipo} settipo={settipo}
+        nombre={nombre} setnombre={setnombre}
+        sigla={sigla} setsigla={setsigla}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}

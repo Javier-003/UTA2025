@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { getEdificios } from "../../../api/Nucleo/edificio.api.js";
 
 export const AulaModales = ({
+  idEdificio, setidEdificio,
   tipo, settipo,
   nombre, setnombre, 
   sigla, setsigla,
-  idEdificio, setidEdificio,
   showModal, setShowModal, 
   showEditModal, setShowEditModal, 
   showDeleteModal, setShowDeleteModal, 
