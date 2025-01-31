@@ -30,7 +30,7 @@ function Edificio() {
   };
 
   const filteredData = edificioList.filter(item =>
-    item.Nombre.toLowerCase().includes(searchText.toLowerCase())
+    item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return(
