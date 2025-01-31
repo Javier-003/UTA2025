@@ -32,9 +32,9 @@ export const addNivelEstudio = async (nombre, descripcion, sigla, setShowModal, 
   }
 };
 
-export const updateNivelEstudioFunc = async (id_nivel_estudio, nombre, descripcion, sigla, setShowEditModal, getnivelestudio) => {
+export const updateNivelEstudioFunc = async (idnivelEstudio, nombre, descripcion, sigla, setShowEditModal, getnivelestudio) => {
   try {
-    await updateNivelEstudio(id_nivel_estudio, nombre, descripcion, sigla);
+    await updateNivelEstudio(idnivelEstudio, nombre, descripcion, sigla);
     getnivelestudio();
     Swal.fire({
       icon: 'success',
@@ -52,9 +52,9 @@ export const updateNivelEstudioFunc = async (id_nivel_estudio, nombre, descripci
   }
 };
 
-export const deleteNivelEstudioFunc = async (id_nivel_estudio, setShowDeleteModal, getnivelestudio) => {
+export const deleteNivelEstudioFunc = async (idnivelEstudio, setShowDeleteModal, getnivelestudio) => {
   try {
-    await deleteNivelEstudio(id_nivel_estudio);
+    await deleteNivelEstudio(idnivelEstudio);
     getnivelestudio();
     Swal.fire({
       icon: 'success',

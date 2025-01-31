@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/",getnivelestudiotodos);
 router.post("/create", createNivelEstudio);
-router.put("/update/:id_nivel_estudio",updateNivelEstudio );
-router.delete("/delete/:id_nivel_estudio",deleteNivelEstudio );
+router.put("/update/:idnivelEstudio",updateNivelEstudio );
+router.delete("/delete/:idnivelEstudio",deleteNivelEstudio );
 
 export default router;

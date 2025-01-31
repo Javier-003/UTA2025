@@ -26,9 +26,9 @@ export const createNivelEstudio = async (nombre, descripcion, sigla) => {
 };
 
 // Actualizar un nivelestudio existente
-export const updateNivelEstudio = async (id_nivel_estudio, nombre, descripcion, sigla) => {
+export const updateNivelEstudio = async (idnivelEstudio, nombre, descripcion, sigla) => {
   try {
-    await axios.put(`${BASE_URL}/nivelestudio/update/${id_nivel_estudio}`, { nombre, descripcion, sigla });
+    await axios.put(`${BASE_URL}/nivelestudio/update/${idnivelEstudio}`, { nombre, descripcion, sigla });
   } catch (error) {
     console.error("Error al actualizar el nivel de estudio:", error);
     throw new Error('Error al actualizar el nivel de estudio');
@@ -36,9 +36,9 @@ export const updateNivelEstudio = async (id_nivel_estudio, nombre, descripcion, 
 };
 
 // Eliminar un nivel estudio
-export const deleteNivelEstudio = async (id_nivel_estudio) => {
-  try {
-    await axios.delete(`${BASE_URL}/nivelestudio/delete/${id_nivel_estudio}`);
+export const deleteNivelEstudio = async (idnivelEstudio) => {
+  try { 
+    await axios.delete(`${BASE_URL}/nivelestudio/delete/${idnivelEstudio}`);
   } catch (error) {
     console.error("Error al eliminar el nivel estudio:", error);
     throw new Error('Error al eliminar el nivel estudio');
