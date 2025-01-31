@@ -7,8 +7,8 @@ import { PuestoModales } from '../Nucleo/PuestoModales.jsx';
 
 function Puesto() {
   const [puestoList, setPuesto] = useState([]);
-  const [idDepartamento, setIdDepartamento] = useState("");
-  const [nombre, setNombre] = useState("");
+  const [idDepartamento, setidDepartamento] = useState("");
+  const [nombre, setnombre] = useState("");
   const [nombreDepartamento, setNombreDepartamento] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -29,11 +29,11 @@ function Puesto() {
   };
 
   const handleUpdate = () => {
-    updatePuestoFunc( selectedPuesto.id_puesto,idDepartamento,nombre, setShowEditModal,() => getPuesto(setPuesto));
+    updatePuestoFunc( selectedPuesto.idPuesto,idDepartamento,nombre, setShowEditModal,() => getPuesto(setPuesto));
   };
 
   const handleDelete = () => {
-    deletePuestoFunc(selectedPuesto.id_puesto,setShowDeleteModal,() => getPuesto(setPuesto));
+    deletePuestoFunc(selectedPuesto.idPuesto,setShowDeleteModal,() => getPuesto(setPuesto));
   };
 
   return (
@@ -44,20 +44,15 @@ function Puesto() {
           <button
             className="btn btn-success"
             onClick={() => {
-              setIdDepartamento("");
-              setNombre("");
+              setidDepartamento("");
+              setnombre("");
               setNombreDepartamento("");
               setSelectedPuesto(null);
               setShowModal(true);
-            }}
-          >Registrar</button>
+            }}>Registrar</button>
           <div className="mt-4">
-            <input
-              type="text"
-              className="form-control mb-1"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Buscar Nombre"/>
+            <input type="text" className="form-control mb-1" value={searchText} 
+              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Nombre"/>
             <table className="table table-bordered">
               <thead>
                 <tr>
@@ -72,22 +67,21 @@ function Puesto() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((puesto) => (
-                    <tr key={puesto.id_puesto}>
-                      <td>{puesto.id_puesto}</td>
-                      <td>{puesto.id_departamento}</td>
+                    <tr key={puesto.idPuesto}>
+                      <td>{puesto.idPuesto}</td>
+                      <td>{puesto.idDepartamento}</td>
                       <td>{puesto.nombre}</td>
-                      <td>{puesto.nombre_departamento}</td>
+                      <td>{puesto.nombreDepartamento}</td>
                       <td>
                         <button
                           className="btn btn-warning"
                           onClick={() => {
                             setShowEditModal(true);
                             setSelectedPuesto(puesto);
-                            setIdDepartamento(puesto.id_departamento);
-                            setNombre(puesto.nombre);
-                            setNombreDepartamento(puesto.nombre_departamento);
-                          }}
-                        >Editar</button>
+                            setidDepartamento(puesto.idEDepartamento);
+                            setnombre(puesto.nombre);
+                            setNombreDepartamento(puesto.nombreDepartamento);
+                          }} >Editar</button>
                       </td>
                       <td>
                         <button
@@ -95,8 +89,7 @@ function Puesto() {
                           onClick={() => {
                             setShowDeleteModal(true);
                             setSelectedPuesto(puesto);
-                          }}
-                        >Eliminar</button>
+                          }} >Eliminar</button>
                       </td>
                     </tr>
                   ))
@@ -110,16 +103,11 @@ function Puesto() {
           </div>
         </div>
       </div>
-
       <PuestoModales
-        idDepartamento={idDepartamento}
-        setIdDepartamento={setIdDepartamento}
-        nombre={nombre}
-        setNombre={setNombre} 
-        nombreDepartamento={nombreDepartamento} 
-        setNombreDepartamento={setNombreDepartamento} 
-        showModal={showModal}
-        setShowModal={setShowModal}
+        idDepartamento={idDepartamento} setidDepartamento={setidDepartamento}
+        nombre={nombre} setnombre={setnombre}
+        nombreDepartamento={nombreDepartamento} setNombreDepartamento={setNombreDepartamento} 
+        showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal}
         setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal}
@@ -127,8 +115,7 @@ function Puesto() {
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedPuesto={selectedPuesto}
-      />
+        selectedPuesto={selectedPuesto}/>
     </div>
   );
 }

@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { getDepartamentos } from "../../../api/Nucleo/departamento.api.js";
 
 export const PuestoModales = ({
-  nombre, setNombre,  
-  idDepartamento, setIdDepartamento,
+  nombre, setnombre,  
+  idDepartamento, setidDepartamento,
   showModal, setShowModal,
   showEditModal, setShowEditModal,
   showDeleteModal, setShowDeleteModal,
@@ -20,7 +20,7 @@ export const PuestoModales = ({
     <>
       {/* Modal para agregar puesto */}
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Agregar Puesto</h5>
@@ -29,10 +29,10 @@ export const PuestoModales = ({
             <div className="modal-body">
               <div className="mb-3">
                 <label className="form-label">Departamento:</label>
-                <select className="form-select" value={idDepartamento} onChange={(event) => setIdDepartamento(event.target.value)}>
+                <select className="form-select" value={idDepartamento} onChange={(event) => setidDepartamento(event.target.value)}>
                   <option value="">Selecciona un departamento</option>
                   {departamentoList.map((departamento) => (
-                    <option key={departamento.id_departamento} value={departamento.id_departamento}>
+                    <option key={departamento.idDDepartamento} value={departamento.idDepartamento}>
                       {departamento.nombre}
                     </option>
                   ))}
@@ -40,7 +40,7 @@ export const PuestoModales = ({
               </div>
               <div className="mb-3">
                 <label className="form-label">Nombre del Puesto:</label>
-                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
+                <input type="text" className="form-control" value={nombre} onChange={(event) => setnombre(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -53,7 +53,7 @@ export const PuestoModales = ({
 
       {/* Modal para editar puesto */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Editar Puesto</h5>
@@ -62,10 +62,10 @@ export const PuestoModales = ({
             <div className="modal-body">
               <div className="mb-3">
                 <label className="form-label">Departamento:</label>
-                <select className="form-select" value={idDepartamento} onChange={(event) => setIdDepartamento(event.target.value)}>
+                <select className="form-select" value={idDepartamento} onChange={(event) => setidDepartamento(event.target.value)}>
                   <option value="">Selecciona un departamento</option>
                   {departamentoList.map((departamento) => (
-                    <option key={departamento.id_departamento} value={departamento.id_departamento}>
+                    <option key={departamento.idDepartamento} value={departamento.idDepartamento}>
                       {departamento.nombre}
                     </option>
                   ))}
@@ -73,7 +73,7 @@ export const PuestoModales = ({
               </div>
               <div className="mb-3">
                 <label className="form-label">Nombre del Puesto:</label>
-                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
+                <input type="text" className="form-control" value={nombre} onChange={(event) => setnombre(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -86,7 +86,7 @@ export const PuestoModales = ({
 
       {/* Modal para eliminar puesto */}
       <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Eliminar Puesto</h5>
