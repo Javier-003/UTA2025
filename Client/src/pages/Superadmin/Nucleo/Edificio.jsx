@@ -61,7 +61,7 @@ function Edificio() {
                 {filteredData.length > 0 ? (
                   filteredData.map((edificio) => (
                     <tr key={edificio.idEdificio}>
-                      <td>{edificio.idedificio}</td>
+                      <td>{edificio.idEdificio}</td>
                       <td>{edificio.nombre}</td>
                       <td>{edificio.sigla}</td>
                       <td>

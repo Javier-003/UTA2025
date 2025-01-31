@@ -23,10 +23,10 @@ function Departamento() {
     addDepartamento(nombre, sigla, setShowModal, () => getDepartamento(setDepartamento));
   };
   const handleUpdate = () => {
-    updateDepartamentoFunc(selectedDepartamento.id_departamento, nombre, sigla, setShowEditModal, () => getDepartamento(setDepartamento));
+    updateDepartamentoFunc(selectedDepartamento.idDepartamento, nombre, sigla, setShowEditModal, () => getDepartamento(setDepartamento));
   };
   const handleDelete = () => {
-    deleteDepartamentoFunc(selectedDepartamento.id_departamento, setShowDeleteModal, () => getDepartamento(setDepartamento));
+    deleteDepartamentoFunc(selectedDepartamento.idDepartamento, setShowDeleteModal, () => getDepartamento(setDepartamento));
   };
 
   const filteredData = departamentoList.filter(item =>
@@ -60,8 +60,8 @@ function Departamento() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((departamento) => (
-                    <tr key={departamento.id_departamento}>
-                      <td>{departamento.id_departamento}</td>
+                    <tr key={departamento.idDepartamento}>
+                      <td>{departamento.idDepartamento}</td>
                       <td>{departamento.nombre}</td>
                       <td>{departamento.sigla}</td>
                       <td>
