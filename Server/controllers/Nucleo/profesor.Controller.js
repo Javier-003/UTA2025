@@ -7,14 +7,14 @@ export const getProfesortodos = async (req, res) => {
       SELECT 
         p.*, 
         persona.nombre, 
-        persona.apellido_paterno, 
-        persona.apellido_materno,
-        d.Nombre AS NombreDepartamento, 
-        pu.Nombre AS NombrePuesto
+        persona.paterno, 
+        persona.materno,
+        d.nombre AS NombreDepartamento, 
+        pu.nombre AS NombrePuesto
       FROM profesor p
-      JOIN departamento d ON p.id_departamento = d.id_departamento
-      JOIN puesto pu ON p.id_puesto = pu.id_puesto
-      JOIN persona ON p.id_profesor = persona.id_persona
+      JOIN departamento d ON p.idDepartamento = d.idDepartamento
+      JOIN puesto pu ON p.idPuesto = pu.idPuesto
+      JOIN persona ON p.idProfesor = persona.idPersona
     `;
     const [rows] = await db.query(query);
     if (rows.length > 0) {
@@ -27,26 +27,24 @@ export const getProfesortodos = async (req, res) => {
   }
 };
 
-  
-// Crear un Profesor
 export const createProfesor = async (req, res) => {
   try {
-    const { id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc } = req.body;
-    if (!id_departamento || !id_puesto || !clave || !perfil || !email || !no_cedula || !programa_academicos || !nss || !rfc) {
-      return res.status(400).json({ message: "Todos los campos son requeridos: id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc" });
+    const { idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc } = req.body;
+    if (!idDepartamento || !idPuesto || !clave || !perfil || !email || !noCedula || !programaAcademicos || !nss || !rfc) {
+      return res.status(400).json({ message: "Todos los campos son requeridos: idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc" });
     }
     const [exists] = await db.query("SELECT 1 FROM profesor WHERE email = ?", [email]);
     if (exists.length) {
       return res.status(400).json({ message: "El email del profesor ya existe" });
     }
     const [result] = await db.query(
-      "INSERT INTO profesor (id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc]
+      "INSERT INTO profesor (idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc]
     );
     res.status(201).json({
       message: `'${email}' creado`,
-      id_profesor: result.insertId,
-      id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc
+      idProfesor: result.insertId,
+      idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
     });
   } catch (error) {
     console.error("Error al crear profesor:", error);
@@ -54,42 +52,40 @@ export const createProfesor = async (req, res) => {
   }
 };
 
-// Actualizar un Profesor
 export const updateProfesor = async (req, res) => {
   try {
-    const { id_profesor } = req.params;
-    const { id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc } = req.body;
-    const [exists] = await db.query("SELECT 1 FROM profesor WHERE id_profesor = ?", [id_profesor]);
+    const { idProfesor } = req.params;
+    const { idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc } = req.body;
+    const [exists] = await db.query("SELECT 1 FROM profesor WHERE idProfesor = ?", [idProfesor]);
     if (!exists.length) {
       return res.status(404).json({ message: "El Profesor no existe" });
     }
     const [result] = await db.query(
-      "UPDATE profesor SET id_departamento = ?, id_puesto = ?, clave = ?, perfil = ?, email = ?, no_cedula = ?, programa_academicos = ?, nss = ?, rfc = ? WHERE id_profesor = ?",
-      [id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc, id_profesor]
+      "UPDATE profesor SET idDepartamento = ?, idPuesto = ?, clave = ?, perfil = ?, email = ?, noCedula = ?, programaAcademicos = ?, nss = ?, rfc = ? WHERE idProfesor = ?",
+      [idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, idProfesor]
     );
     if (result.affectedRows === 0) {
       return res.status(400).json({ message: "No se pudo actualizar el profesor" });
     }
     res.status(200).json({
       message: `'${email}' actualizado correctamente`,
-      id_profesor, id_departamento, id_puesto, clave, perfil, email, no_cedula, programa_academicos, nss, rfc
+      idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
     });
   } catch (error) {
-    res.status(500).json({ message: "Algo salió mal", error });
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
 
-// Eliminar un Profesor
 export const deleteProfesor = async (req, res) => {
   try {
-    const { id_profesor } = req.params;
-    const [profesor] = await db.query("SELECT clave FROM profesor WHERE id_profesor = ?", [id_profesor]);
+    const { idProfesor } = req.params;
+    const [profesor] = await db.query("SELECT clave FROM profesor WHERE idProfesor = ?", [idProfesor]);
     if (!profesor.length) return res.status(404).json({ message: "Profesor no encontrado" });
-    const [rows] = await db.query("DELETE FROM profesor WHERE id_profesor = ?", [id_profesor]);
+    const [rows] = await db.query("DELETE FROM profesor WHERE idProfesor = ?", [idProfesor]);
     rows.affectedRows
       ? res.status(200).json({ message: `'${profesor[0].clave}' eliminado correctamente` })
       : res.status(404).json({ message: "Profesor no encontrado" });
   } catch (error) {
-    res.status(500).json({ message: "Algo salió mal" });
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
