@@ -12,9 +12,9 @@ export const getEdificio = async (setEdificio) => {
   }
 };
 
-export const addEdificio = async (Nombre, Sigla,setShowModal, getEdificio) => {
+export const addEdificio = async (nombre,sigla,setShowModal, getEdificio) => {
   try {
-    await createEdificio(Nombre , Sigla);
+    await createEdificio(nombre , sigla);
     getEdificio();
     Swal.fire({
       icon: 'success',
@@ -32,9 +32,9 @@ export const addEdificio = async (Nombre, Sigla,setShowModal, getEdificio) => {
   }
 };
 
-export const updateEdificioFunc = async (id_edificio, Nombre,Sigla, setShowEditModal, getEdificio) => {
+export const updateEdificioFunc = async (idEdificio, nombre,sigla, setShowEditModal, getEdificio) => {
   try {
-    await updateEdificio(id_edificio, Nombre, Sigla);
+    await updateEdificio(idEdificio, nombre, sigla);
     getEdificio();
     Swal.fire({
       icon: 'success',
@@ -52,9 +52,9 @@ export const updateEdificioFunc = async (id_edificio, Nombre,Sigla, setShowEditM
   }
 };
 
-export const deleteEdificioFunc = async (id_edificio, setShowDeleteModal, getEdificio) => {
+export const deleteEdificioFunc = async (idEdificio, setShowDeleteModal, getEdificio) => {
   try {
-    await deleteEdificio(id_edificio);
+    await deleteEdificio(idEdificio);
     getEdificio();
     Swal.fire({
       icon: 'success',

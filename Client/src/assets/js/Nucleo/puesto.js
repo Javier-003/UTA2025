@@ -10,9 +10,9 @@ export const getPuesto = async (setPuesto) => {
   }
 };
 
-export const addPuesto = async (id_departamento, nombre, setShowModal, getPuesto) => {
+export const addPuesto = async (idDepartamento, nombre, setShowModal, getPuesto) => {
   try {
-    await createPuesto(id_departamento, nombre);
+    await createPuesto(idDepartamento, nombre);
     getPuesto();
     Swal.fire({
       icon: 'success',
@@ -30,9 +30,9 @@ export const addPuesto = async (id_departamento, nombre, setShowModal, getPuesto
   }
 };
 
-export const updatePuestoFunc = async (id_puesto, id_departamento, nombre, setShowEditModal, getPuesto) => {
+export const updatePuestoFunc = async (idPuesto, idDepartamento, nombre, setShowEditModal, getPuesto) => {
   try {
-    await updatePuesto(id_puesto, id_departamento, nombre);
+    await updatePuesto(idPuesto, idDepartamento, nombre);
     getPuesto();
     Swal.fire({
       icon: 'success',
@@ -50,9 +50,9 @@ export const updatePuestoFunc = async (id_puesto, id_departamento, nombre, setSh
   }
 };
 
-export const deletePuestoFunc = async (id_puesto, setShowDeleteModal, getPuesto) => {
+export const deletePuestoFunc = async (idPuesto, setShowDeleteModal, getPuesto) => {
   try {
-    await deletePuesto(id_puesto);
+    await deletePuesto(idPuesto);
     getPuesto();
     Swal.fire({
       icon: 'success',

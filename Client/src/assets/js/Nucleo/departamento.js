@@ -32,9 +32,9 @@ export const addDepartamento = async (nombre, sigla,setShowModal, getDepartament
   }
 };
 
-export const updateDepartamentoFunc = async (id_departamento, nombre,sigla, setShowEditModal, getDepartamento) => {
+export const updateDepartamentoFunc = async (idDepartamento, nombre,sigla, setShowEditModal, getDepartamento) => {
   try {
-    await updateDepartamento(id_departamento, nombre, sigla);
+    await updateDepartamento(idDepartamento, nombre, sigla);
     getDepartamento();
     Swal.fire({
       icon: 'success',
@@ -52,9 +52,9 @@ export const updateDepartamentoFunc = async (id_departamento, nombre,sigla, setS
   }
 };
 
-export const deleteDepartamentoFunc = async (id_departamento, setShowDeleteModal, getDepartamento) => {
+export const deleteDepartamentoFunc = async (idDepartamento, setShowDeleteModal, getDepartamento) => {
   try {
-    await deleteDepartamento(id_departamento);
+    await deleteDepartamento(idDepartamento);
     getDepartamento();
     Swal.fire({
       icon: 'success',

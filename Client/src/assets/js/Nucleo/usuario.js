@@ -13,10 +13,10 @@ export const getUsuario = async (setUsuario) => {
 };
 
 // Crear un nuevo usuario
-export const addUsuario = async (id_persona, usuario, contrasena, estatus, setShowModal, getUsuarios) => {
+export const addUsuario = async (idPersona, usuario, contrasena, estatus, setShowModal, getUsuario) => {
   try {
-    await createUsuario(id_persona, usuario, contrasena, estatus);
-    getUsuarios();
+    await createUsuario(idPersona, usuario, contrasena, estatus);
+    getUsuario();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
@@ -34,10 +34,10 @@ export const addUsuario = async (id_persona, usuario, contrasena, estatus, setSh
 };
 
 // Actualizar un usuario existente
-export const updateUsuarioFunc = async (id_user, id_persona, usuario, contrasena, estatus, setShowEditModal, getUsuarios) => {
+export const updateUsuarioFunc = async (idUsuario, idPersona, usuario, contrasena, estatus, setShowEditModal, getUsuario) => {
   try {
-    await updateUsuario(id_user, id_persona, usuario, contrasena, estatus);
-    getUsuarios();
+    await updateUsuario(idUsuario, idPersona, usuario, contrasena, estatus);
+    getUsuario();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
@@ -55,10 +55,10 @@ export const updateUsuarioFunc = async (id_user, id_persona, usuario, contrasena
 };
 
 // Eliminar un usuario
-export const deleteUsuarioFunc = async (id_user, setShowDeleteModal, getUsuarios) => {
+export const deleteUsuarioFunc = async (idUsuario, setShowDeleteModal, getUsuario) => {
   try {
-    await deleteUsuario(id_user);
-    getUsuarios();
+    await deleteUsuario(idUsuario);
+    getUsuario();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',

@@ -12,9 +12,9 @@ export const getAula = async (setAula) => {
   }
 };
 
-export const addAula = async (IdEdificio, AulaTipo, Nombre, SIGLA, setShowModal, getAula) => {
+export const addAula = async (idEdificio, tipo, nombre, sigla, setShowModal, getAula) => {
   try {
-    await createAula(IdEdificio, AulaTipo, Nombre, SIGLA);
+    await createAula(idEdificio, tipo, nombre, sigla);
     getAula();
     Swal.fire({
       icon: 'success',
@@ -32,9 +32,9 @@ export const addAula = async (IdEdificio, AulaTipo, Nombre, SIGLA, setShowModal,
   }
 };
 
-export const updateAulaFunc = async (IdAula, NombreEdificio, AulaTipo, Nombre, SIGLA, setShowEditModal, getAula) => {
+export const updateAulaFunc = async (idAula, idEdificio, tipo, nombre, sigla, setShowEditModal, getAula) => {
   try {
-    await updateAula(IdAula, NombreEdificio, AulaTipo, Nombre, SIGLA);
+    await updateAula(idAula, idEdificio, tipo, nombre, sigla);
     getAula();
     Swal.fire({
       icon: 'success',
@@ -52,9 +52,9 @@ export const updateAulaFunc = async (IdAula, NombreEdificio, AulaTipo, Nombre, S
   }
 };
 
-export const deleteAulaFunc = async (IdAula, setShowDeleteModal, getAula) => {
+export const deleteAulaFunc = async (idAula, setShowDeleteModal, getAula) => {
   try {
-    await deleteAula(IdAula);
+    await deleteAula(idAula);
     getAula();
     Swal.fire({
       icon: 'success',
