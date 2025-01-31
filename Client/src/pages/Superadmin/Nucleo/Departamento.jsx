@@ -6,8 +6,8 @@ from '../../../assets/js/Nucleo/departamento.js';
 import { DepartamentoModales } from '../Nucleo/DepartamentoModales.jsx';
 
 function Departamento() {
-  const [nombre, setNombre] = useState("");
-  const [sigla, setSigla] = useState('');
+  const [nombre, setnombre] = useState("");
+  const [sigla, setsigla] = useState('');
   const [departamentoList, setDepartamento] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -21,14 +21,12 @@ function Departamento() {
 
   const handleAdd = () => {
     addDepartamento(nombre, sigla, setShowModal, () => getDepartamento(setDepartamento));
-    setNombre(""); // Limpiar el campo de nombre
-    setSigla(""); // Limpiar el campo de sigla
   };
   const handleUpdate = () => {
-    updateDepartamentoFunc(selectedDepartamento.id_departamento, nombre, sigla, setShowEditModal, () => getDepartamento(setDepartamento));
+    updateDepartamentoFunc(selectedDepartamento.idDepartamento, nombre, sigla, setShowEditModal, () => getDepartamento(setDepartamento));
   };
   const handleDelete = () => {
-    deleteDepartamentoFunc(selectedDepartamento.id_departamento, setShowDeleteModal, () => getDepartamento(setDepartamento));
+    deleteDepartamentoFunc(selectedDepartamento.idDepartamento, setShowDeleteModal, () => getDepartamento(setDepartamento));
   };
 
   const filteredData = departamentoList.filter(item =>
@@ -41,19 +39,14 @@ function Departamento() {
         <h5>LISTADO DE DEPARTAMENTOS</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
-              setNombre("");
-              setSigla("");
+              setnombre("");
+              setsigla("");
               setSelectedDepartamento(null);
               setShowModal(true);
           }}>Registrar</button>        
           <div className="mt-4">
-            <input 
-              type="text" 
-              className="form-control mb-1" 
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)} 
-              placeholder="Buscar Departamento" 
-            />
+            <input type="text" className="form-control mb-1"  value={searchText}
+              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Departamento" />
             <table className="table table-bordered">
               <thead>
                 <tr>
@@ -67,16 +60,16 @@ function Departamento() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((departamento) => (
-                    <tr key={departamento.id_departamento}>
-                      <td>{departamento.id_departamento}</td>
+                    <tr key={departamento.idDepartamento}>
+                      <td>{departamento.idDepartamento}</td>
                       <td>{departamento.nombre}</td>
                       <td>{departamento.sigla}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                             setShowEditModal(true); 
                             setSelectedDepartamento(departamento);
-                            setNombre(departamento.nombre);
-                            setSigla(departamento.sigla);
+                            setnombre(departamento.nombre);
+                            setsigla(departamento.sigla);
                           }}>Editar</button>
                       </td>
                       <td>
@@ -97,22 +90,18 @@ function Departamento() {
           </div>
         </div>
       </div>
+
       <DepartamentoModales
-        nombre={nombre} 
-        setNombre={setNombre}
-        sigla={sigla} 
-        setSigla={setSigla}
-        showModal={showModal} 
-        setShowModal={setShowModal}
-        showEditModal={showEditModal} 
-        setShowEditModal={setShowEditModal}
-        showDeleteModal={showDeleteModal} 
-        setShowDeleteModal={setShowDeleteModal}
+        nombre={nombre}  setnombre={setnombre}
+        sigla={sigla}  setsigla={setsigla}
+        showModal={showModal}  setShowModal={setShowModal}
+        showEditModal={showEditModal}  setShowEditModal={setShowEditModal}
+        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedDepartamento={selectedDepartamento}
-      />
+        selectedDepartamento={selectedDepartamento}/>
+
     </div>
   );
 }

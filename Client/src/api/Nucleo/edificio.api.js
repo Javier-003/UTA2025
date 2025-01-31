@@ -16,9 +16,9 @@ export const getEdificios = async () => {
 
 
 // Crear una nuevo edificio
-export const createEdificio = async (Nombre, Sigla) => {
+export const createEdificio = async (nombre, sigla) => {
   try {
-    await axios.post(`${BASE_URL}/edificio/create`, { Nombre: Nombre , Sigla: Sigla  } );
+    await axios.post(`${BASE_URL}/edificio/create`, { nombre: nombre , sigla: sigla  } );
   } catch (error) {
     console.error("Error al registrar la edificio:", error);
     throw new Error('Error al registrar la edificio');
@@ -26,9 +26,9 @@ export const createEdificio = async (Nombre, Sigla) => {
 };
 
 // Actualizar una edificio existente
-export const updateEdificio = async (idEdificio, Nombre, Sigla) => {
+export const updateEdificio = async (idEdificio, nombre, sigla) => {
   try {
-    await axios.put(`${BASE_URL}/edificio/update/${idEdificio}`, { Nombre: Nombre, Sigla: Sigla}  );
+    await axios.put(`${BASE_URL}/edificio/update/${idEdificio}`, { nombre: nombre, sigla: sigla}  );
   } catch (error) {
     console.error("Error al actualizar el edificio:", error);
     throw new Error('Error al actualizar el edificio');

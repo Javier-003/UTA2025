@@ -6,8 +6,8 @@ from '../../../assets/js/Nucleo/edificio.js';
 import { EdificioModales } from '../Nucleo/EdificioModales.jsx';
 
 function Edificio() {
-  const [Nombre, setNombre] = useState("");
-  const [Sigla, setSigla] = useState('');
+  const [nombre, setnombre] = useState("");
+  const [sigla, setsigla] = useState('');
   const [edificioList, setEdificio] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -18,13 +18,11 @@ function Edificio() {
   useEffect(() => { getEdificio(setEdificio); }, []);
 
   const handleAdd = () => {
-    addEdificio(Nombre, Sigla, setShowModal, () => getEdificio(setEdificio));
-    setNombre("");
-    setSigla("");
+    addEdificio(nombre, sigla, setShowModal, () => getEdificio(setEdificio));
   };
 
   const handleUpdate = () => {
-    updateEdificioFunc(selectedEdificio.id_edificio, Nombre, Sigla, setShowEditModal, () => getEdificio(setEdificio));
+    updateEdificioFunc(selectedEdificio.idEdificio, nombre, sigla, setShowEditModal, () => getEdificio(setEdificio));
   };
 
   const handleDelete = () => {
@@ -32,7 +30,7 @@ function Edificio() {
   };
 
   const filteredData = edificioList.filter(item =>
-    item.Nombre.toLowerCase().includes(searchText.toLowerCase())
+    item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return(
@@ -41,12 +39,11 @@ function Edificio() {
         <h5>LISTADO DE EDIFICIOS</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
-              setNombre("");
-              setSigla("");
+              setnombre("");
+              setsigla("");
               setSelectedEdificio(null);
               setShowModal(true);
           }}>Registrar</button>
-            
           <div className="mt-4">
             <input type="text" className="form-control mb-1" value={searchText}
               onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Edificio"/>
@@ -63,16 +60,16 @@ function Edificio() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((edificio) => (
-                    <tr key={edificio.id_edificio}>
-                      <td>{edificio.id_edificio}</td>
-                      <td>{edificio.Nombre}</td>
-                      <td>{edificio.Sigla}</td>
+                    <tr key={edificio.idEdificio}>
+                      <td>{edificio.idEdificio}</td>
+                      <td>{edificio.nombre}</td>
+                      <td>{edificio.sigla}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                             setShowEditModal(true); 
                             setSelectedEdificio(edificio);
-                            setNombre(edificio.Nombre);
-                            setSigla(edificio.Sigla);
+                            setnombre(edificio.nombre);
+                            setsigla(edificio.sigla);
                         }}>Editar</button>
                       </td>
                       <td>
@@ -95,18 +92,16 @@ function Edificio() {
       </div>
 
       <EdificioModales
-        Nombre={Nombre} setNombre={setNombre}
-        Sigla={Sigla} setSigla={setSigla}
-        
+        nombre={nombre} setnombre={setnombre}
+        sigla={sigla} setsigla={setsigla}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-        
         handleAdd={handleAdd} 
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
-        
         selectedEdificio={selectedEdificio}/>
+
     </div>
   );
 }

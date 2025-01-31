@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 export const DepartamentoModales = ({
-  nombre, setNombre,
-  sigla, setSigla,
+  nombre, setnombre,
+  sigla, setsigla,
   showModal, setShowModal,
   showEditModal, setShowEditModal,
   showDeleteModal, setShowDeleteModal,
@@ -12,7 +12,7 @@ export const DepartamentoModales = ({
     <>
       {/* Modal para registrar departamento */}
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">Registrar Departamento</h5>
@@ -21,11 +21,11 @@ export const DepartamentoModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre de Departamento:</span>
-                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
+                <input type="text" className="form-control" value={nombre} onChange={(event) => setnombre(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Sigla del Departamento:</span>
-                <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+                <input type="text" className="form-control" value={sigla} onChange={(event) => setsigla(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -38,7 +38,7 @@ export const DepartamentoModales = ({
 
       {/* Modal para editar departamento */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="editModalLabel">Editar Departamento</h5>
@@ -47,11 +47,11 @@ export const DepartamentoModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre de Departamento:</span>
-                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
+                <input type="text" className="form-control" value={nombre} onChange={(event) => setnombre(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Sigla del Departamento:</span>
-                <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+                <input type="text" className="form-control" value={sigla} onChange={(event) => setsigla(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -64,7 +64,7 @@ export const DepartamentoModales = ({
 
       {/* Modal para eliminar departamento */}
       <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="deleteModalLabel">Eliminar Departamento</h5>
