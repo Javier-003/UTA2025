@@ -1,8 +1,10 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { getTramite, addTramite, updateTramiteFunc, deleteTramiteFunc } 
 from '../../../assets/js/Parametrizacion/tramite.js';
+
 import { TramiteModales } from './TramitesModales.jsx';
 
 function Tramite() {
@@ -39,12 +41,10 @@ function Tramite() {
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const formatDateString = (dateString) => {
-    if (dateString) {
-      return dateString.split('T')[0];
-    }
-    return dateString;
+  const formatDate = (date) => {
+    return new Date(date).toISOString().split('T')[0];
   };
+
   return(
     <div className="container">
       <div className="">
@@ -78,15 +78,15 @@ function Tramite() {
                     <tr key={tramite.idTramite}>
                       <td>{tramite.idTramite}</td>
                       <td>{tramite.nombre}</td>
-                      <td>{formatDateString(tramite.desde)}</td>
-                      <td>{formatDateString(tramite.hasta)}</td>
+                      <td>{new Date(tramite.desde).toLocaleDateString()}</td>
+                      <td>{new Date(tramite.hasta).toLocaleDateString()}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                             setShowEditModal(true); 
                             setSelectedTramite(tramite);
-                            setnombre(tramite.nombre);
-                            setdesde(formatDateString(tramite.desde));
-                            sethasta(formatDateString(tramite.hasta));
+                            setnombre(tramite.nombre);    
+                            setdesde(formatDate(tramite.desde));
+                            sethasta(formatDate(tramite.hasta));                        
                         }}>Editar</button>
                       </td>
                       <td>
