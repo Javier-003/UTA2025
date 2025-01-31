@@ -1,12 +1,17 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { getActividad, addActividad, updateActividadFunc, deleteActividadFunc } 
 from '../../../assets/js/Parametrizacion/actividad.js';
+
 import { ActividadModales } from './ActividadModales.jsx';
 
 function Actividad() {
-  const [nombre, setNombre] = useState("");
+
+  const [nombre, setnombre] = useState("");
+  
   const [actividadList, setActividad] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -36,7 +41,7 @@ function Actividad() {
         <h5>LISTADO DE ACTIVIDADES</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
-            setNombre("");
+            setnombre("");
             setSelectedActividad(null);
             setShowModal(true);
             }}>Registrar</button>
@@ -62,7 +67,7 @@ function Actividad() {
                         <button className="btn btn-warning"  onClick={() => {
                             setShowEditModal(true); 
                             setSelectedActividad(actividad); 
-                            setNombre(actividad.nombre);
+                            setnombre(actividad.nombre);
                           }}>Editar</button>
                       </td>
                       <td>
@@ -81,15 +86,18 @@ function Actividad() {
           </div>
         </div>
       </div>
+
       <ActividadModales
-        Nombre={nombre} setNombre={setNombre}
+        nombre={nombre} setnombre={setnombre}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal}setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal}setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd} 
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
-        selectedActividad={selectedActividad}/>        
+        selectedActividad={selectedActividad}
+        
+        />        
     </div>
   );
 }

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 export const ActividadModales = ({
-    nombre, setNombre, 
+    nombre, setnombre, 
     showModal,setShowModal, 
     showEditModal,setShowEditModal, 
     showDeleteModal,setShowDeleteModal, 
@@ -24,7 +24,7 @@ export const ActividadModales = ({
                     type="text"
                     className="form-control"
                     value={nombre}
-                    onChange={(event) => setNombre(event.target.value)}
+                    onChange={(event) => setnombre(event.target.value)}
                   />
                 </div>
               </div>
@@ -51,7 +51,7 @@ export const ActividadModales = ({
                     type="text"
                     className="form-control"
                     value={nombre}
-                    onChange={(event) => setNombre(event.target.value)}
+                    onChange={(event) => setnombre(event.target.value)}
                   />
                 </div>
               </div>
