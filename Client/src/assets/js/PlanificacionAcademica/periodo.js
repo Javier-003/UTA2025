@@ -16,10 +16,11 @@ export const getPeriodo = async (setPeriodo) => {
     });
   }
 };
-
-export const addPeriodo = async (periodo, fecha_inicio, fecha_fin, estado,fecha_registro, setShowModal, getPeriodo) => {
+ 
+export const addPeriodo = async (periodo, fechaInicio, fechaFin, estado,fechaRegistro, setShowModal, getPeriodo) => {
+  
   try {
-    await createPeriodo(periodo, fecha_inicio, fecha_fin, estado, fecha_registro);
+    await createPeriodo(periodo, fechaInicio, fechaFin, estado, fechaRegistro);
     getPeriodo();
     Swal.fire({
       icon: 'success',
@@ -37,9 +38,9 @@ export const addPeriodo = async (periodo, fecha_inicio, fecha_fin, estado,fecha_
   }
 };
 
-export const updatePeriodoFunc = async (id_periodo, periodo, fecha_inicio, fecha_fin, estado, setShowEditModal, getPeriodo) => {
+export const updatePeriodoFunc = async (idPeriodo, periodo, fechaInicio, fechaFin, estado, setShowEditModal, getPeriodo) => {
   try {
-    await updatePeriodo(id_periodo, periodo, fecha_inicio, fecha_fin, estado);
+    await updatePeriodo(idPeriodo, periodo, fechaInicio, fechaFin, estado);
     getPeriodo();
     Swal.fire({
       icon: 'success',
@@ -57,9 +58,9 @@ export const updatePeriodoFunc = async (id_periodo, periodo, fecha_inicio, fecha
   }
 };
 
-export const deletePeriodoFunc = async (id_periodo, setShowDeleteModal, getPeriodo) => {
+export const deletePeriodoFunc = async (idPeriodo, setShowDeleteModal, getPeriodo) => {
   try {
-    await deletePeriodo(id_periodo);
+    await deletePeriodo(idPeriodo);
     getPeriodo();
     Swal.fire({
       icon: 'success',
