@@ -7,20 +7,20 @@ import { ProfesorModales } from '../Nucleo/ProfesorModales.jsx';
 
 function Profesor() {
   const [profesorList, setProfesor] = useState([]);
-  const [idDepartamento, setIdDepartamento] = useState("");
-  const [idPuesto, setIdPuesto] = useState("");
-  const [nombre, setNombre] = useState(""); 
-  const [apellidoPaterno, setApellidoPaterno] = useState(""); 
-  const [apellidoMaterno, setApellidoMaterno] = useState("");
-  const [clave, setClave] = useState("");
-  const [perfil, setPerfil] = useState("");
-  const [email, setEmail] = useState("");
-  const [noCedula, setNoCedula] = useState("");
-  const [programaAcademicos, setProgramaAcademicos] = useState("");
-  const [nss, setNss] = useState("");
-  const [rfc, setRfc] = useState("");
-  const [nombreDepartamento, setNombreDepartamento] = useState("");
-  const [nombrePuesto, setNombrePuesto] = useState("");
+  const [idDepartamento, setidDepartamento] = useState("");
+  const [idPuesto, setidPuesto] = useState("");
+  const [nombreDepartamento, setnombreDepartamento] = useState("");
+  const [nombrePuesto, setnombrePuesto] = useState("");
+  const [nombre, setnombre] = useState(""); 
+  const [paterno, setpaterno] = useState(""); 
+  const [materno, setmaterno] = useState("");
+  const [clave, setclave] = useState("");
+  const [perfil, setperfil] = useState("");
+  const [email, setemail] = useState("");
+  const [noCedula, setnoCedula] = useState("");
+  const [programaAcademicos, setprogramaAcademicos] = useState("");
+  const [nss, setnss] = useState("");
+  const [rfc, setrfc] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -38,11 +38,11 @@ function Profesor() {
   };
 
   const handleUpdate = () => {
-    updateProfesorFunc(selectedProfesor.id_profesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, setShowEditModal, () => getProfesor(setProfesor));
+    updateProfesorFunc(selectedProfesor.idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, setShowEditModal, () => getProfesor(setProfesor));
   };
 
   const handleDelete = () => {
-    deleteProfesorFunc(selectedProfesor.id_profesor, setShowDeleteModal, () => getProfesor(setProfesor));
+    deleteProfesorFunc(selectedProfesor.idProfesor, setShowDeleteModal, () => getProfesor(setProfesor));
   };
 
   return (
@@ -51,24 +51,23 @@ function Profesor() {
         <h5>LISTADO DE PROFESORES</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
-            setIdDepartamento("");
-            setIdPuesto("");
-            setNombre(""); 
-            setApellidoPaterno(""); 
-            setApellidoMaterno("");
-            setClave("");
-            setPerfil("");
-            setEmail("");
-            setNoCedula("");
-            setProgramaAcademicos("");
-            setNss("");
-            setRfc("");
-            setNombreDepartamento("");
-            setNombrePuesto("");
+            setidDepartamento("");
+            setidPuesto("");
+            setnombre(""); 
+            setpaterno(""); 
+            setmaterno("");
+            setclave("");
+            setperfil("");
+            setemail("");
+            setnoCedula("");
+            setprogramaAcademicos("");
+            setnss("");
+            setrfc("");
+            setnombreDepartamento("");
+            setnombrePuesto("");
             setSelectedProfesor(null);
             setShowModal(true);
           }}>Registrar</button>
-
           <div className="mt-4">
             <input type="text" className="form-control mb-4" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por email" />
             <table className="table table-bordered">
@@ -94,36 +93,36 @@ function Profesor() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((profesor) => (
-                    <tr key={profesor.id_profesor}>
-                      <td>{profesor.id_profesor}</td>
-                      <td >{profesor.id_departamento}</td>
-                      <td>{profesor.id_puesto}</td>
-                      <td>{`${profesor.nombre} ${profesor.apellido_paterno} ${profesor.apellido_materno}`}</td>
-                      <td>{profesor.NombreDepartamento}</td>
-                      <td>{profesor.NombrePuesto}</td>
+                    <tr key={profesor.idProfesor}>
+                      <td>{profesor.idProfesor}</td>
+                      <td >{profesor.idDepartamento}</td>
+                      <td>{profesor.idPuesto}</td>
+                      <td>{`${profesor.nombre} ${profesor.paterno} ${profesor.materno}`}</td>
+                      <td>{profesor.nombreDepartamento}</td>
+                      <td>{profesor.nombrePuesto}</td>
                       <td>{profesor.clave}</td>
                       <td>{profesor.perfil}</td>
                       <td>{profesor.email}</td>
-                      <td>{profesor.no_cedula}</td>
-                      <td>{profesor.programa_academicos}</td>
+                      <td>{profesor.noCedula}</td>
+                      <td>{profesor.programaAcademicos}</td>
                       <td>{profesor.nss}</td>
                       <td>{profesor.rfc}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
-                          setIdDepartamento(profesor.id_departamento);
-                          setIdPuesto(profesor.id_puesto);
-                          setNombre(profesor.nombre);
-                          setApellidoPaterno(profesor.apellido_paterno);
-                          setApellidoMaterno(profesor.apellido_materno);
-                          setClave(profesor.clave);
-                          setPerfil(profesor.perfil);
-                          setEmail(profesor.email);
-                          setNoCedula(profesor.no_cedula);
-                          setProgramaAcademicos(profesor.programa_academicos);
-                          setNss(profesor.nss);
-                          setRfc(profesor.rfc);
-                          setNombreDepartamento(profesor.NombreDepartamento);
-                          setNombrePuesto(profesor.NombrePuesto);
+                          setidDepartamento(profesor.idDepartamento);
+                          setidPuesto(profesor.idPuesto);
+                          setnombre(profesor.nombre);
+                          setpaterno(profesor.paterno);
+                          setmaterno(profesor.materno);
+                          setclave(profesor.clave);
+                          setperfil(profesor.perfil);
+                          setemail(profesor.email);
+                          setnoCedula(profesor.noCedula);
+                          setprogramaAcademicos(profesor.programaAcademicos);
+                          setnss(profesor.nss);
+                          setrfc(profesor.rfc);
+                          setnombreDepartamento(profesor.nombreDepartamento);
+                          setnombrePuesto(profesor.nombrePuesto);
                           setShowEditModal(true);
                           setSelectedProfesor(profesor);
                         }}>Editar</button>
@@ -146,33 +145,27 @@ function Profesor() {
           </div>
         </div>
       </div>
-
       <ProfesorModales
-        
-        idDepartamento={idDepartamento} setIdDepartamento={setIdDepartamento}
-        idPuesto={idPuesto} setIdPuesto={setIdPuesto}
-        nombre={nombre} setNombre={setNombre}
-        apellidoPaterno={apellidoPaterno} setApellidoPaterno={setApellidoPaterno}
-        apellidoMaterno={apellidoMaterno} setApellidoMaterno={setApellidoMaterno}
-        clave={clave} setClave={setClave}
-        perfil={perfil} setPerfil={setPerfil}
-        email={email} setEmail={setEmail}
-        noCedula={noCedula} setNoCedula={setNoCedula}
-        programaAcademicos={programaAcademicos} setProgramaAcademicos={setProgramaAcademicos}
-        nss={nss} setNss={setNss}
-        
-        rfc={rfc} setRfc={setRfc}
-        nombreDepartamento={nombreDepartamento} setNombreDepartamento={setNombreDepartamento}
-        nombrePuesto={nombrePuesto} setNombrePuesto={setNombrePuesto}
-        
+        idDepartamento={idDepartamento} setIdDepartamento={setidDepartamento}
+        idPuesto={idPuesto} setIdPuesto={setidPuesto}
+        nombreDepartamento={nombreDepartamento} setnombreDepartamento={setnombreDepartamento}
+        nombrePuesto={nombrePuesto} setnombrePuesto={setnombrePuesto}
+        nombre={nombre} setnombre={setnombre}
+        paterno={paterno} setpaterno={setpaterno}
+        materno={materno} setmaterno={setmaterno}
+        clave={clave} setclave={setclave}
+        perfil={perfil} setperfil={setperfil}
+        email={email} setemail={setemail}
+        noCedula={noCedula} setnoCedula={setnoCedula}
+        programaAcademicos={programaAcademicos} setprogramaAcademicos={setprogramaAcademicos}
+        nss={nss} setnss={setnss}
+        rfc={rfc} setrfc={setrfc}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-        
         handleAdd={handleAdd}
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
-        
         selectedProfesor={selectedProfesor}/>
     </div>
   );

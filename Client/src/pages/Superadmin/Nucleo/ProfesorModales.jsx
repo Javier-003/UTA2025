@@ -5,22 +5,26 @@ import { getDepartamentos } from "../../../api/Nucleo/departamento.api.js";
 import { getPersonas } from "../../../api/Nucleo/persona.api.js";
 
 export const ProfesorModales = ({
-  idDepartamento, setIdDepartamento,
-  idPuesto, setIdPuesto,
-  id_persona, setIdPersona,  // Añadir funciones de estado para id_persona
-  clave, setClave, perfil, setPerfil, email, setEmail, noCedula, setNoCedula,
-  programaAcademicos, setProgramaAcademicos,
-  nss, setNss,
-  rfc, setRfc,
+  idDepartamento, setidDepartamento,
+  idPuesto, setidPuesto,
+  idPersona, setidPersona,
+  clave, setclave, 
+  perfil, setperfil, 
+  email, setemail, 
+  noCedula, setnoCedula,
+  programaAcademicos, setprogramaAcademicos,
+  nss, setnss,
+  rfc, setrfc,
   showModal, setShowModal, 
   showEditModal, setShowEditModal, 
   showDeleteModal, setShowDeleteModal, 
   handleAdd, handleUpdate, handleDelete,
   selectedProfesor
 }) => {
+
   const [puestoList, setPuestoList] = useState([]);
   const [departamentoList, setDepartamentoList] = useState([]);
-  const [personaList, setPersonaList] = useState([]);  // Añadir estado para personaList
+  const [personaList, setPersonaList] = useState([]); 
   
   useEffect(() => {
     getPuestos().then(data => setPuestoList(data)).catch(error => console.error("Error al obtener los puestos:", error));
@@ -41,66 +45,62 @@ export const ProfesorModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Persona:</span>
-                <select className="form-select" value={id_persona} onChange={(event) => setIdPersona(event.target.value)}>
+                <select className="form-select" value={idPersona} onChange={(event) => setidPersona(event.target.value)}>
                   <option value="">Selecciona una persona</option>
                   {personaList.map((persona) => (
-                    <option key={persona.id_persona} value={persona.id_persona}>
-                      {`${persona.nombre} ${persona.apellido_paterno} ${persona.apellido_materno} - ${persona.curp}`}
+                    <option key={persona.idPersona} value={persona.idPersona}>
+                      {`${persona.nombre} ${persona.paterno} ${persona.materno}`}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Departamento:</span>
-                <select className="form-select" value={idDepartamento} onChange={(event) => setIdDepartamento(event.target.value)}>
+                <select className="form-select" value={idDepartamento} onChange={(event) => setidDepartamento(event.target.value)}>
                   <option value="">Selecciona un departamento</option>
                   {departamentoList.map((departamento) => (
-                    <option key={departamento.id_departamento} value={departamento.id_departamento}>{departamento.nombre}</option>
+                    <option key={departamento.idDepartamento} value={departamento.idDepartamento}>{departamento.nombre}</option>
                   ))}
                 </select>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Puesto:</span>
-                <select className="form-select" value={idPuesto} onChange={(event) => setIdPuesto(event.target.value)}>
+                <select className="form-select" value={idPuesto} onChange={(event) => setidPuesto(event.target.value)}>
                   <option value="">Selecciona un puesto</option>
                   {puestoList.map((puesto) => (
-                    <option key={puesto.id_puesto} value={puesto.id_puesto}>{puesto.nombre}</option>
+                    <option key={puesto.idPuesto} value={puesto.idPuesto}>{puesto.nombre}</option>
                   ))}
                 </select>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Clave:</span>
-                <input type="text" className="form-control" value={clave} onChange={(event) => setClave(event.target.value)} />
+                <input type="text" className="form-control" value={clave} onChange={(event) => setclave(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Perfil:</span>
-                <input type="text" className="form-control" value={perfil} onChange={(event) => setPerfil(event.target.value)} />
+                <input type="text" className="form-control" value={perfil} onChange={(event) => setperfil(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Email:</span>
-                <input type="email" className="form-control" value={email} onChange={(event) => setEmail(event.target.value)} />
+                <input type="email" className="form-control" value={email} onChange={(event) => setemail(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">No. Cédula:</span>
-                <input type="text" className="form-control" value={noCedula} onChange={(event) => setNoCedula(event.target.value)} />
+                <input type="text" className="form-control" value={noCedula} onChange={(event) => setnoCedula(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Programa Académico:</span>
-                <select className="form-select" value={programaAcademicos} onChange={(event) => setProgramaAcademicos(event.target.value)}>
-                  <option value="">Selecciona un programa</option>
-                  <option value="TICS">TICS</option>
-                  <option value="Gastronomía">Gastronomía</option>
-                  <option value="Mantenimiento Industrial">Mantenimiento Industrial</option>
-                  <option value="Mercadotecnia">Mercadotecnia</option>
-                </select>
+                <textarea className="form-control" value={programaAcademicos} onChange={(event) => setprogramaAcademicos(event.target.value)} 
+                    placeholder="Escribe tu comentario aquí">
+                </textarea>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">NSS:</span>
-                <input type="text" className="form-control" value={nss} onChange={(event) => setNss(event.target.value)} />
+                <input type="text" className="form-control" value={nss} onChange={(event) => setnss(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">RFC:</span>
-                <input type="text" className="form-control" value={rfc} onChange={(event) => setRfc(event.target.value)} />
+                <input type="text" className="form-control" value={rfc} onChange={(event) => setrfc(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -122,93 +122,90 @@ export const ProfesorModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Persona:</span>
-                <select className="form-select" value={id_persona} onChange={(event) => setIdPersona(event.target.value)}>
+                <select className="form-select" value={idPersona} onChange={(event) => setidPersona(event.target.value)}>
                   <option value="">Selecciona una persona</option>
                   {personaList.map((persona) => (
-                    <option key={persona.id_persona} value={persona.id_persona}>
-                      {`${persona.nombre} ${persona.apellido_paterno} ${persona.apellido_materno} - ${persona.curp}`}
+                    <option key={persona.idPersona} value={persona.idPersona}>
+                      {`${persona.nombre} ${persona.paterno} ${persona.materno}`}
                     </option>
                   ))}
                 </select>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Departamento:</span>
-                <select className="form-select" value={idDepartamento} onChange={(event) => setIdDepartamento(event.target.value)}>
+                <select className="form-select" value={idDepartamento} onChange={(event) => setidDepartamento(event.target.value)}>
                   <option value="">Selecciona un departamento</option>
                   {departamentoList.map((departamento) => (
-                    <option key={departamento.id_departamento} value={departamento.id_departamento}>{departamento.nombre}</option>
+                    <option key={departamento.idDepartamento} value={departamento.idDepartamento}>{departamento.nombre}</option>
                   ))}
                 </select>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Puesto:</span>
-                <select className="form-select" value={idPuesto} onChange={(event) => setIdPuesto(event.target.value)}>
+                <select className="form-select" value={idPuesto} onChange={(event) => setidPuesto(event.target.value)}>
                   <option value="">Selecciona un puesto</option>
                   {puestoList.map((puesto) => (
-                    <option key={puesto.id_puesto} value={puesto.id_puesto}>{puesto.nombre}</option>
+                    <option key={puesto.idPuesto} value={puesto.idPuesto}>{puesto.nombre}</option>
                   ))}
                 </select>
               </div>
-        <div className="input-group mb-3">
-          <span className="input-group-text">Clave:</span>
-          <input type="text" className="form-control" value={clave} onChange={(event) => setClave(event.target.value)} />
-        </div>
-        <div className="input-group mb-3">
-          <span className="input-group-text">Perfil:</span>
-          <input type="text" className="form-control" value={perfil} onChange={(event) => setPerfil(event.target.value)} />
-        </div>
-        <div className="input-group mb-3">
-          <span className="input-group-text">Email:</span>
-          <input type="email" className="form-control" value={email} onChange={(event) => setEmail(event.target.value)} />
-        </div>
-        <div className="input-group mb-3">
-          <span className="input-group-text">No. Cédula:</span>
-          <input type="text" className="form-control" value={noCedula} onChange={(event) => setNoCedula(event.target.value)} />
-        </div>
-        <div className="input-group mb-3">
-          <span className="input-group-text">Programa Académico:</span>
-          <select className="form-select" value={programaAcademicos} onChange={(event) => setProgramaAcademicos(event.target.value)}>
-            <option value="">Selecciona un programa</option>
-            <option value="TICS">TICS</option>
-            <option value="Gastronomía">Gastronomía</option>
-            <option value="Mantenimiento Industrial">Mantenimiento Industrial</option>
-            <option value="Mercadotecnia">Mercadotecnia</option>
-          </select>
-        </div>
-        <div className="input-group mb-3">
-          <span className="input-group-text">NSS:</span>
-          <input type="text" className="form-control" value={nss} onChange={(event) => setNss(event.target.value)} />
-        </div>
-        <div className="input-group mb-3">
-          <span className="input-group-text">RFC:</span>
-          <input type="text" className="form-control" value={rfc} onChange={(event) => setRfc(event.target.value)} />
+              <div className="input-group mb-3">
+                <span className="input-group-text">Clave:</span>
+                <input type="text" className="form-control" value={clave} onChange={(event) => setclave(event.target.value)} />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">Perfil:</span>
+                <input type="text" className="form-control" value={perfil} onChange={(event) => setperfil(event.target.value)} />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">Email:</span>
+                <input type="email" className="form-control" value={email} onChange={(event) => setemail(event.target.value)} />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">No. Cédula:</span>
+                <input type="text" className="form-control" value={noCedula} onChange={(event) => setnoCedula(event.target.value)} />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">Programa Académico:</span>
+                <textarea className="form-control" value={programaAcademicos} onChange={(event) => setprogramaAcademicos(event.target.value)} 
+                    placeholder="Escribe tu comentario aquí">
+                </textarea>
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">NSS:</span>
+                <input type="text" className="form-control" value={nss} onChange={(event) => setnss(event.target.value)} />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">RFC:</span>
+                <input type="text" className="form-control" value={rfc} onChange={(event) => setrfc(event.target.value)} />
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cerrar</button>
+              <button type="button" className="btn btn-primary" onClick={handleUpdate}>Guardar cambios</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cerrar</button>
-        <button type="button" className="btn btn-primary" onClick={handleUpdate}>Guardar cambios</button>
+      
+      <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="deleteModalLabel">Eliminar Profesor</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModal(false)}></button>
+            </div>
+            <div className="modal-body">
+              <p>¿Estás seguro de que deseas eliminar al profesor <strong>{selectedProfesor?.email}</strong>?</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>
+              <button type="button" className="btn btn-danger" onClick={handleDelete}>Eliminar</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div className="modal-dialog">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h5 className="modal-title" id="deleteModalLabel">Eliminar Profesor</h5>
-        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModal(false)}></button>
-      </div>
-      <div className="modal-body">
-        <p>¿Estás seguro de que deseas eliminar al profesor <strong>{selectedProfesor?.email}</strong>?</p>
-      </div>
-      <div className="modal-footer">
-        <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>
-        <button type="button" className="btn btn-danger" onClick={handleDelete}>Eliminar</button>
-      </div>
-    </div>
-  </div>
-</div>
-     </>
+    </>
   );
 };
