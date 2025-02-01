@@ -7,7 +7,7 @@ const router = Router();
 
 router.get("/",getAdministrativotodos );
 router.post("/create", createAdministrativo);
-router.put("/update/:idAadministrativo", updateAdministrativo);
-router.delete("/delete/:idAadministrativo", deleteAdministrativo);
+router.put("/update/:idAdministrativo", updateAdministrativo);
+router.delete("/delete/:idAdministrativo", deleteAdministrativo);
 
 export default router;

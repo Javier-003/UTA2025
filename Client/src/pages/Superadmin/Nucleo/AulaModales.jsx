@@ -35,16 +35,16 @@ export const AulaModales = ({
                 <select className="form-select" value={idEdificio} onChange={(event) => setidEdificio(event.target.value)}>
                   <option value="">Selecciona un edificio</option>
                   {edificioList.map((edificio) => (
-                    <option key={edificio.idEdificio} value={edificio.idEdificio}>{edificio.nombre}</option>
+                    <option key={edificio.idEdificio} value={edificio.idEdificio}>{edificio.noombr}</option>
                   ))}
                 </select>
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text">Aula Tipo:</span>
+                <span className="input-group-text">Tipo:</span>
                 <input type="text" className="form-control" value={tipo} onChange={(event) => settipo(event.target.value)} />
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text">Nombre de Actividad:</span>
+                <span className="input-group-text">Nombre:</span>
                 <input type="text" className="form-control" value={nombre} onChange={(event) => setnombre(event.target.value)} />
               </div>
               <div className="input-group mb-3">
@@ -79,7 +79,7 @@ export const AulaModales = ({
                 </select>
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text">Aula Tipo:</span>
+                <span className="input-group-text">Tipo:</span>
                 <input type="text" className="form-control" value={tipo} onChange={(event) => settipo(event.target.value)} />
               </div>
               <div className="input-group mb-3">
@@ -108,7 +108,7 @@ export const AulaModales = ({
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModal(false)}></button>
             </div>
             <div className="modal-body">
-              <p>¿Estás seguro de que deseas eliminar el aula: <strong>{selectedAula?.Nombre}</strong>?</p>
+              <p>¿Estás seguro de que deseas eliminar el aula: <strong>{selectedAula?.nombre}</strong>?</p>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>

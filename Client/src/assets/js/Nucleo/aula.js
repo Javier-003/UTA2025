@@ -59,7 +59,7 @@ export const deleteAulaFunc = async (idAula, setShowDeleteModal, getAula) => {
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Aula eliminada correctamente',
+      text: 'Aula eliminado correctamente',
     });
     setShowDeleteModal(false);
   } catch (error) {

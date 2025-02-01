@@ -1,5 +1,7 @@
 import Swal from 'sweetalert2';
-import { createAdministrativo, deleteAdministrativo, getAdministrativos, updateAdministrativo } from '../../../api/Nucleo/administrativo.api.js';
+
+import { createAdministrativo, deleteAdministrativo, getAdministrativos, updateAdministrativo } 
+from '../../../api/Nucleo/administrativo.api.js';
 
 export const getAdministrativo = async (setAdministrativo) => {
   try {
@@ -10,9 +12,9 @@ export const getAdministrativo = async (setAdministrativo) => {
   }
 };
 
-export const addAdministrativo = async (idDepartamento, idPuesto, clave, horario, nss, rfc, setShowModal, getAdministrativo) => {
+export const addAdministrativo = async (idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc, setShowModal, getAdministrativo) => {
   try {
-    await createAdministrativo(idDepartamento, idPuesto, clave, horario, nss, rfc);
+    await createAdministrativo(idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc);
     getAdministrativo();
     Swal.fire({
       icon: 'success',
@@ -30,9 +32,9 @@ export const addAdministrativo = async (idDepartamento, idPuesto, clave, horario
   }
 };
 
-export const updateAdministrativoFunc = async (idAdministrativo, idDepartamento, idPuesto, clave, horario, nss, rfc, setShowEditModal, getAdministrativo) => {
+export const updateAdministrativoFunc = async (idAdministrativo, idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc, setShowEditModal, getAdministrativo) => {
   try {
-    await updateAdministrativo(idAdministrativo, idDepartamento, idPuesto, clave, horario, nss, rfc);
+    await updateAdministrativo(idAdministrativo, idPersona,idDepartamento, idPuesto, clave, horario, nss, rfc);
     getAdministrativo();
     Swal.fire({
       icon: 'success',

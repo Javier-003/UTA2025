@@ -12,9 +12,9 @@ export const getAlumno = async (setAlumno) => {
   }
 };
 
-export const addAlumno = async (email, nss, fecha, setShowModal, getAlumno) => {
+export const addAlumno = async (idPersona, email, nss, fecha, setShowModal, getAlumno) => {
   try {
-    await createAlumno(email, nss, fecha);
+    await createAlumno(idPersona, email, nss, fecha);
     getAlumno();
     Swal.fire({
       icon: 'success',
@@ -32,9 +32,9 @@ export const addAlumno = async (email, nss, fecha, setShowModal, getAlumno) => {
   }
 };
 
-export const updateAlumnoFunc = async (id_alumno, email, nss, fecha, setShowEditModal, getAlumno) => {
+export const updateAlumnoFunc = async (idPersona, idAlumno, email, nss, fecha, setShowEditModal, getAlumno) => {
   try {
-    await updateAlumno(id_alumno, email, nss, fecha);
+    await updateAlumno(idPersona, idAlumno, email, nss, fecha);
     getAlumno();
     Swal.fire({
       icon: 'success',
@@ -52,9 +52,9 @@ export const updateAlumnoFunc = async (id_alumno, email, nss, fecha, setShowEdit
   }
 };
 
-export const deleteAlumnoFunc = async (id_alumno, setShowDeleteModal, getAlumno) => {
+export const deleteAlumnoFunc = async (idAlumno, setShowDeleteModal, getAlumno) => {
   try {
-    await deleteAlumno(id_alumno);
+    await deleteAlumno(idAlumno);
     getAlumno();
     Swal.fire({
       icon: 'success',

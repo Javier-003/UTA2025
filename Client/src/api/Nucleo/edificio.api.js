@@ -35,6 +35,7 @@ export const updateEdificio = async (idEdificio, nombre, sigla) => {
   }
 };
 
+
 // Eliminar una edificio
 export const deleteEdificio = async (idEdificio) => {
   try {
@@ -44,3 +45,4 @@ export const deleteEdificio = async (idEdificio) => {
     throw new Error('Error al eliminar el edificio');
   }
 };
+

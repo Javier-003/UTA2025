@@ -7,7 +7,7 @@ const router = Router();
 
 router.get("/",getAulatodos);
 router.post("/create", createAula);
-router.put("/update/:IdAula", updateAula);
-router.delete("/delete/:IdAula",deleteAula );
+router.put("/update/:idAula", updateAula);
+router.delete("/delete/:idAula",deleteAula );
 
 export default router;

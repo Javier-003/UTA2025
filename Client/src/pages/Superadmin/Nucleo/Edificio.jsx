@@ -1,7 +1,7 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getEdificio, addEdificio, updateEdificioFunc, deleteEdificioFunc } 
+import { getEdificio, addEdificio, updateEdificioFunc, deleteEdifcioFunc } 
 from '../../../assets/js/Nucleo/edificio.js';
 import { EdificioModales } from '../Nucleo/EdificioModales.jsx';
 
@@ -26,7 +26,7 @@ function Edificio() {
   };
 
   const handleDelete = () => {
-    deleteEdificioFunc(selectedEdificio.id_edificio, setShowDeleteModal, () => getEdificio(setEdificio));
+    deleteEdifcioFunc(selectedEdificio.idEdificio, setShowDeleteModal, () => getEdificio(setEdificio));
   };
 
   const filteredData = edificioList.filter(item =>

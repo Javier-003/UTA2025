@@ -7,10 +7,10 @@ export const getAdministrativotodos = async (req, res) => {
       SELECT 
         a.*, 
         p.nombre, 
-        p.apellido, 
-        p.apellido,
-        d.Nombre AS NombreDepartamento, 
-        pu.Nombre AS NombrePuesto
+        p.paterno, 
+        p.materno,
+        d.nombre AS nombreDepartamento, 
+        pu.nombre AS nombrePuesto
       FROM administrativo a
       JOIN departamento d ON a.idDepartamento = d.idDepartamento
       JOIN puesto pu ON a.idPuesto = pu.idPuesto
@@ -59,12 +59,10 @@ export const updateAdministrativo = async (req, res) => {
   try {
     const { idAdministrativo } = req.params;
     const { idDepartamento, idPuesto, clave, horario, nss, rfc } = req.body;
-    // Verificar si el administrativo existe
     const [exists] = await db.query("SELECT 1 FROM administrativo WHERE idAdministrativo = ?", [idAdministrativo]);
     if (!exists.length) {
       return res.status(404).json({ message: "El administrativo no existe" });
     }
-    // Realizar la actualización del administrativo
     const [result] = await db.query(
       "UPDATE administrativo SET idDepartamento = ?, idPuesto = ?, clave = ?, horario = ?, nss = ?, rfc = ? WHERE idAdministrativo = ?",
       [idDepartamento, idPuesto, clave, horario, nss, rfc, idAdministrativo]
@@ -74,7 +72,7 @@ export const updateAdministrativo = async (req, res) => {
     }
     res.status(200).json({
       message: `'${rfc}' actualizado correctamente`,
-      id_administrativo, id_departamento, id_puesto, clave, horario, nss, rfc
+      idAdministrativo, idDepartamento, idPuesto, clave, horario, nss, rfc
     });
   } catch (error) {
     console.error("Error al actualizar administrativo:", error);
@@ -89,11 +87,13 @@ export const deleteAdministrativo = async (req, res) => {
     const [administrativo] = await db.query("SELECT clave FROM administrativo WHERE idAdministrativo = ?", [idAdministrativo]);
     if (!administrativo.length) return res.status(404).json({ message: "Administrativo no encontrado" });
     const [rows] = await db.query("DELETE FROM administrativo WHERE idAdministrativo = ?", [idAdministrativo]);
-    rows.affectedRows
-      ? res.status(200).json({ message: `'${administrativo[0].clave}' eliminado correctamente` })
-      : res.status(404).json({ message: "Administrativo no encontrado" });
+    if (rows.affectedRows) {
+      return res.status(200).json({ message: `Administrativo '${administrativo[0].clave}' eliminado correctamente` });
+    } else {
+      return res.status(404).json({ message: "No se pudo eliminar el administrativo, no se encontraron registros afectados" });
+    }
   } catch (error) {
     console.error("Error al eliminar administrativo:", error);
-    res.status(500).json({ message: "Algo salió mal", error: error.message });
+    return res.status(500).json({ message: "Error al eliminar el administrativo", error: error.message });
   }
 };

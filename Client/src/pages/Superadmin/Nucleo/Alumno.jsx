@@ -6,29 +6,28 @@ from '../../../assets/js/Nucleo/alumno.js';
 import { AlumnoModales } from '../Nucleo/AlumnoModales.jsx';
 
 function Alumno() {
-  const [email, setEmail] = useState("");
-  const [promedio, setPromedio] = useState("");
-  const [cuatrimestre, setCuatrimestre] = useState("");
-  const [fecha_registro, setFechaRegistro] = useState("");
-  const [nss, setNss] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [apellidoPaterno, setApellidoPaterno] = useState("");
-  const [apellidoMaterno, setApellidoMaterno] = useState("");
+  const [nombre, setnombre] = useState("");
+  const [paterno, setpaterno] = useState("");
+  const [materno, setmaterno] = useState("");
+  const [email, setemail] = useState("");
+  const [fecha, setfecha] = useState("");
+  const [nss, setnss] = useState("");
   const [alumnoList, setAlumno] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedAlumno, setSelectedAlumno] = useState(null);
   const [searchText, setSearchText] = useState("");
+
   useEffect(() => { getAlumno(setAlumno); }, []);
   const handleAdd = () => {
-    addAlumno(email, promedio, cuatrimestre, fecha_registro, nss, setShowModal, () => getAlumno(setAlumno));
+    addAlumno(email, fecha, nss, setShowModal, () => getAlumno(setAlumno));
   };
   const handleUpdate = () => {
-    updateAlumnoFunc(selectedAlumno.id_alumno, email, promedio, cuatrimestre, fecha_registro, nss, setShowEditModal, () => getAlumno(setAlumno));
+    updateAlumnoFunc(selectedAlumno.idAlumno, email, fecha, nss, setShowEditModal, () => getAlumno(setAlumno));
   };
   const handleDelete = () => {
-    deleteAlumnoFunc(selectedAlumno.id_alumno, setShowDeleteModal, () => getAlumno(setAlumno));
+    deleteAlumnoFunc(selectedAlumno.idAlumno, setShowDeleteModal, () => getAlumno(setAlumno));
   };
   const filteredData = alumnoList.filter(item =>
     item.email.toLowerCase().includes(searchText.toLowerCase())
@@ -43,34 +42,25 @@ function Alumno() {
         <h5>LISTADO DE ALUMNOS</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
-            setEmail("");
-            setPromedio("");
-            setCuatrimestre("");
-            setFechaRegistro("");
-            setNss("");
-            setNombre("");
-            setApellidoPaterno("");
-            setApellidoMaterno("");
+            setnombre("");
+            setpaterno("");
+            setmaterno("");
+            setemail("");
+            setfecha("");
+            setnss("");
             setSelectedAlumno(null);
             setShowModal(true);
           }}>Registrar</button>
           <div className="mt-4">
-            <input 
-              type="text" 
-              className="form-control mb-1" 
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)} 
-              placeholder="Buscar por email" 
-            />
+            <input  type="text" className="form-control mb-1" value={searchText}
+               onChange={(e) => setSearchText(e.target.value)}  placeholder="Buscar por email" />
             <table className="table table-bordered">
               <thead>
                 <tr>
                   <th>Id A</th>
                   <th>NOMBRE DEL ALUMNO</th>
                   <th>EMAIL</th>
-                  <th>PROMEDIO</th>
-                  <th>CUATRIMESTRE</th>
-                  <th>FECHA REGISTRO</th>
+                  <th>FECHA</th>
                   <th>NSS</th>
                   <th>Editar</th>
                   <th>Eliminar</th>
@@ -79,27 +69,22 @@ function Alumno() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((alumno) => (
-                    <tr key={alumno.id_alumno}>
-                      <td>{alumno.id_alumno}</td>
-                      <td>{`${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno}`}</td>
+                    <tr key={alumno.idAlumno}>
+                      <td>{alumno.idAlumno}</td>
+                      <td>{`${alumno.nombre} ${alumno.paterno} ${alumno.materno}`}</td>
                       <td>{alumno.email}</td>
-                      <td>{alumno.promedio}</td>
-                      <td>{alumno.cuatrimestre}</td>
-                      <td>{new Date(alumno.fecha_registro).toLocaleDateString()}</td>
+                      <td>{new Date(alumno.fecha).toLocaleDateString()}</td>
                       <td>{alumno.nss}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                           setShowEditModal(true);
                           setSelectedAlumno(alumno);
-                          setEmail(alumno.email);
-                          setPromedio(alumno.promedio);
-                          setCuatrimestre(alumno.cuatrimestre);
-                          
-                          setFechaRegistro(formatDate(alumno.fecha_registro));
-                          setNss(alumno.nss);
-                          setNombre(alumno.nombre);
-                          setApellidoPaterno(alumno.apellido_paterno);
-                          setApellidoMaterno(alumno.apellido_materno);
+                          setemail(alumno.email);
+                          setfecha(formatDate(alumno.fecha));
+                          setnss(alumno.nss);
+                          setnombre(alumno.nombre);
+                          setpaterno(alumno.paterno);
+                          setmaterno(alumno.materno);
                         }}>Editar</button>
                       </td>
                       <td>
@@ -121,23 +106,21 @@ function Alumno() {
         </div>
       </div>
       <AlumnoModales
-        email={email} setEmail={setEmail}
-        promedio={promedio} setPromedio={setPromedio}
-        cuatrimestre={cuatrimestre} setCuatrimestre={setCuatrimestre}
-        fecha_registro={fecha_registro} setFechaRegistro={setFechaRegistro}
-        nss={nss} setNss={setNss}
-        nombre={nombre} setNombre={setNombre}
-        apellidoPaterno={apellidoPaterno} setApellidoPaterno={setApellidoPaterno}
-        apellidoMaterno={apellidoMaterno} setApellidoMaterno={setApellidoMaterno}
+        email={email} setemail={setemail}
+        fecha ={fecha} setfecha={setfecha}
+        nss={nss} setnss={setnss}
+        nombre={nombre} setnombre={setnombre}
+        paterno={paterno} setpaterno={setpaterno}
+        materno={materno} setmaterno={setmaterno}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedAlumno={selectedAlumno}
-      />
+        selectedAlumno={selectedAlumno}/>
     </div>
   );
 }
+
 export default Alumno;

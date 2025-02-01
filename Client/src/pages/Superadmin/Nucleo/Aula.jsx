@@ -11,7 +11,7 @@ function Aula() {
   const [nombre, setnombre] = useState("");
   const [sigla, setsigla] = useState("");
   const [idEdificio, setidEdificio] = useState("");
-  const [NombreEdificio, setNombreEdificio] = useState("");
+  const [nombreEdificio, setnombreEdificio] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -46,7 +46,7 @@ function Aula() {
             setnombre(""); 
             setsigla(""); 
             setidEdificio(""); 
-            setNombreEdificio("");  
+            setnombreEdificio("");  
             setSelectedAula(null);
             setShowModal(true);
           }}>Registrar</button>
@@ -73,7 +73,7 @@ function Aula() {
                     <tr key={aula.idAula}>
                       <td>{aula.idAula}</td>
                       <td>{aula.idEdificio}</td>
-                      <td>{aula.NombreEdificio}</td>
+                      <td>{aula.nombreEdificio}</td>
                       <td>{aula.tipo}</td>
                       <td>{aula.nombre}</td>
                       <td>{aula.sigla}</td>
@@ -82,7 +82,7 @@ function Aula() {
                           setShowEditModal(true); 
                           setSelectedAula(aula);
                           setidEdificio(aula.IdEdificio);
-                          setNombreEdificio(aula.NombreEdificio);
+                          setnombreEdificio(aula.nmbreEdificio);
                           settipo(aula.tipo);
                           setnombre(aula.nombre);
                           setsigla(aula.sigla);
@@ -108,7 +108,7 @@ function Aula() {
       </div>
       <AulaModales
         idEdificio={idEdificio} setidEdificio={setidEdificio}
-        NombreEdificio={NombreEdificio} setNombreEdificio={setNombreEdificio}
+        nombreEdificio={nombreEdificio} setnombreEdificio={setnombreEdificio}
         tipo={tipo} settipo={settipo}
         nombre={nombre} setnombre={setnombre}
         sigla={sigla} setsigla={setsigla}

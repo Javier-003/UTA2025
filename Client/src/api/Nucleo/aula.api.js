@@ -38,12 +38,13 @@ export const updateAula = async (idAula, idEdificio, tipo, nombre, sigla) => {
   }
 };
 
-// Eliminar una aula
+
+// Eliminar un aula
 export const deleteAula = async (idAula) => {
   try {
     await axios.delete(`${BASE_URL}/aula/delete/${idAula}`);
   } catch (error) {
-    console.error("Error al eliminar el aula:", error);
-    throw new Error('Error al eliminar el aula');
+    console.error("Error al eliminar el puesto:", error);
+    throw new Error('Error al eliminar el puesto');
   }
 };

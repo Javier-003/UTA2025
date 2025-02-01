@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2'; 
-import { getPuestos, createPuesto, updatePuesto, deletePuesto } from '../../../api/Nucleo/puesto.api.js'; 
+import { getPuestos, createPuesto, updatePuesto, deletePuesto } 
+from '../../../api/Nucleo/puesto.api.js'; 
 
 export const getPuesto = async (setPuesto) => {
   try {

@@ -51,8 +51,7 @@ export const updateEdificioFunc = async (idEdificio, nombre,sigla, setShowEditMo
     });
   }
 };
-
-export const deleteEdificioFunc = async (idEdificio, setShowDeleteModal, getEdificio) => {
+export const deleteEdifcioFunc = async (idEdificio, setShowDeleteModal, getEdificio) => {
   try {
     await deleteEdificio(idEdificio);
     getEdificio();
