@@ -8,9 +8,9 @@ import { PeriodoModales } from './PeriodoModales.jsx';
 function Periodo() {
   const [periodoList, setPeriodo] = useState([]);
   const [periodo, setPeriodoName] = useState("");
-  const [fecha_inicio, setFechaInicio] = useState("");
-  const [fecha_fin, setFechaFin] = useState("");
-  const [fecha_registro, setFechaRegistro] = useState("");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+  const [fechaRegistro, setFechaRegistro] = useState("");
   const [estado, setEstado] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -25,15 +25,15 @@ function Periodo() {
   );
 
   const handleAdd = () => {
-    addPeriodo(periodo, fecha_inicio, fecha_fin, estado,fecha_registro ,setShowModal, () => getPeriodo(setPeriodo));
+    addPeriodo(periodo, fechaFin, fechaFin, estado,fechaRegistro ,setShowModal, () => getPeriodo(setPeriodo));
   };
 
   const handleUpdate = () => {
-    updatePeriodoFunc(selectedPeriodo.id_periodo, periodo, fecha_inicio, fecha_fin, estado, setShowEditModal, () => getPeriodo(setPeriodo));
+    updatePeriodoFunc(selectedPeriodo.idPeriodo, periodo, fechaFin, fechaFin, estado, setShowEditModal, () => getPeriodo(setPeriodo));
   };
 
   const handleDelete = () => {
-    deletePeriodoFunc(selectedPeriodo.id_periodo, setShowDeleteModal, () => getPeriodo(setPeriodo));
+    deletePeriodoFunc(selectedPeriodo.idPeriodo, setShowDeleteModal, () => getPeriodo(setPeriodo));
   };
   // Function to remove "T06:00:00.000Z" from dates
   const formatDateString = (dateString) => {
@@ -83,20 +83,20 @@ const formatDateStringHora = (isoDateString) => {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((periodo) => (
-                    <tr key={periodo.id_periodo}>
-                      <td>{periodo.id_periodo}</td>
+                    <tr key={periodo.idPeriodo}>
+                      <td>{periodo.idPeriodo}</td>
                       <td>{periodo.periodo}</td>
-                      <td>{formatDateString(periodo.fecha_inicio)}</td>
-                      <td>{formatDateString(periodo.fecha_fin)}</td>
-                      <td>{formatDateStringHora(periodo.fecha_registro)}</td>
+                      <td>{formatDateString(periodo.fechaFin)}</td>
+                      <td>{formatDateString(periodo.fechaFin)}</td>
+                      <td>{formatDateStringHora(periodo.fechaRegistro)}</td>
                       <td>{periodo.estado}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                           setShowEditModal(true);
                           setSelectedPeriodo(periodo);
                           setPeriodoName(periodo.periodo);
-                          setFechaInicio(formatDateString(periodo.fecha_inicio));
-                          setFechaFin(formatDateString(periodo.fecha_fin));
+                          setFechaInicio(formatDateString(periodo.fechaFin));
+                          setFechaFin(formatDateString(periodo.fechaFin));
                           setEstado(periodo.estado);
                         }}>Editar</button>
                       </td>
@@ -118,9 +118,9 @@ const formatDateStringHora = (isoDateString) => {
       </div>
       <PeriodoModales
         periodo={periodo} setPeriodoName={setPeriodoName}
-        fecha_inicio={fecha_inicio} setFechaInicio={setFechaInicio}
-        fecha_fin={fecha_fin} setFechaFin={setFechaFin}
-        fecha_registro={fetch} setFechaRegistro={setFechaRegistro}
+        fechaInicio={fechaInicio} setFechaInicio={setFechaInicio}
+        fechaFin={fechaFin} setFechaFin={setFechaFin}
+        fechaRegistro={fetch} setFechaRegistro={setFechaRegistro}
         estado={estado} setEstado={setEstado}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
@@ -135,3 +135,4 @@ const formatDateStringHora = (isoDateString) => {
 }
 
 export default Periodo;
+ 

@@ -15,9 +15,10 @@ export const getPeriodos = async () => {
 };
 
 // Crear un nuevo periodo
-export const createPeriodo = async (periodo, fecha_inicio, fecha_fin, estado, fecha_registro) => {
+export const createPeriodo = async (periodo, fechaInicio, fechaFin, estado, fechaRegistro) => {
+  console.log("llegando a api", { periodo, fechaInicio, fechaFin, estado, fechaRegistro });
   try {
-    await axios.post(`${BASE_URL}/periodo/create`, { periodo, fecha_inicio, fecha_fin, estado, fecha_registro });
+    await axios.post(`${BASE_URL}/periodo/create`, { periodo, fechaInicio, fechaFin, estado, fechaRegistro });
   } catch (error) {
     console.error("Error al registrar el periodo:", error.response?.data || error.message);
     throw new Error('Error al registrar el periodo');
@@ -25,9 +26,9 @@ export const createPeriodo = async (periodo, fecha_inicio, fecha_fin, estado, fe
 };
 
 // Actualizar un periodo existente
-export const updatePeriodo = async (id_periodo, periodo, fecha_inicio, fecha_fin, estado) => {
+export const updatePeriodo = async (idPeriodo, periodo, fechaInicio, fechaFin, estado) => {
   try {
-    await axios.put(`${BASE_URL}/periodo/update/${id_periodo}`, { periodo, fecha_inicio, fecha_fin, estado });
+    await axios.put(`${BASE_URL}/periodo/update/${idPeriodo}`, { periodo, fechaInicio, fechaFin, estado });
   } catch (error) {
     console.error("Error al actualizar el periodo:", error.response?.data || error.message);
     throw new Error('Error al actualizar el periodo');
@@ -35,9 +36,9 @@ export const updatePeriodo = async (id_periodo, periodo, fecha_inicio, fecha_fin
 };
 
 // Eliminar un periodo
-export const deletePeriodo = async (id_periodo) => {
+export const deletePeriodo = async (idPeriodo) => {
   try {
-    await axios.delete(`${BASE_URL}/periodo/delete/${id_periodo}`);
+    await axios.delete(`${BASE_URL}/periodo/delete/${idPeriodo}`);
   } catch (error) {
     console.error("Error al eliminar el periodo:", error.response?.data || error.message);
     throw new Error('Error al eliminar el periodo');
