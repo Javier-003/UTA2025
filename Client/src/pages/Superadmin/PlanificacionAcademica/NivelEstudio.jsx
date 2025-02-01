@@ -23,11 +23,11 @@ function NivelEstudio() {
   };
 
   const handleUpdate = () => {
-    updateNivelEstudioFunc(selectedNivelEstudio.id_nivel_estudio, nombre, descripcion, sigla, setShowEditModal, () => getnivelestudio(setNivelEstudio));
+    updateNivelEstudioFunc(selectedNivelEstudio.idnivelEstudio, nombre, descripcion, sigla, setShowEditModal, () => getnivelestudio(setNivelEstudio));
   };
 
   const handleDelete = () => {
-    deleteNivelEstudioFunc(selectedNivelEstudio.id_nivel_estudio, setShowDeleteModal, () => getnivelestudio(setNivelEstudio));
+    deleteNivelEstudioFunc(selectedNivelEstudio.idnivelEstudio, setShowDeleteModal, () => getnivelestudio(setNivelEstudio));
   };
 
   const filteredData = nivelEstudioList.filter(item =>
@@ -65,8 +65,8 @@ function NivelEstudio() {
               <tbody>
                 {filteredData.length > 0 ? (
                   filteredData.map((nivelEstudio) => (
-                    <tr key={nivelEstudio.id_nivel_estudio}>
-                      <td>{nivelEstudio.id_nivel_estudio}</td>
+                    <tr key={nivelEstudio.idnivelEstudio}>
+                      <td>{nivelEstudio.idnivelEstudio}</td>
                       <td>{nivelEstudio.nombre}</td>
                       <td>{nivelEstudio.descripcion}</td>
                       <td>{nivelEstudio.sigla}</td>

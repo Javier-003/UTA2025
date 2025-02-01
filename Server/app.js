@@ -34,6 +34,7 @@ import horario from "./routes/PlanificacionAcademica/horario.Routes.js";
 import programaacademicoRoutes from "./routes/PlanificacionAcademica/programaacademico.Routes.js";
 import mapacurricularRoutes from "./routes/PlanificacionAcademica/mapacurricular.Routes.js";
 import periodoRoutes from "./routes/PlanificacionAcademica/periodo.Routes.js";
+import ofertaacademicaRoutes from "./routes/PlanificacionAcademica/ofertaacademica.Routes.js"; // Importar las rutas de Oferta Academica
 
 
 // -------------------------- PARAMETRIZACIÓN --------------------------------
@@ -78,6 +79,7 @@ app.use("/programaacademico",programaacademicoRoutes);
 app.use("/mapacurricular",mapacurricularRoutes);
 app.use("/nivelestudio", nivelestudioRoutes);
 app.use("/periodo", periodoRoutes);
+app.use("/ofertaacademica", ofertaacademicaRoutes); // Usar las rutas de Oferta Academica
 //Area
 app.use("/aula", aulaRoutes);
 app.use("/edificio",edificioRoutes);
