@@ -30,7 +30,7 @@ export const createAlumno = async (idPersona, email, nss, fecha) => {
 export const updateAlumno = async (idAlumno,idPersona, email, nss, fecha) => {
   try {
     await axios.put(`${BASE_URL}/alumno/update/${idAlumno}`, {
-      idPersona,email, nss, fecha
+      idPersona, email, nss, fecha
     });
   } catch (error) {
     console.error("Error al actualizar el alumno:", error);

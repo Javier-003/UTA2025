@@ -15,7 +15,7 @@ export const AlumnoModales = ({
 }) => {
 
   const [personaList, setPersonaList] = useState([]); 
-
+  
   useEffect(() => {
     getPersonas().then((data) => setPersonaList(data)).catch((error) => console.error("Error al obtener las personas:", error));
   }, []);
@@ -44,7 +44,7 @@ export const AlumnoModales = ({
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Email:</span>
-                <input type="email"  className="form-control" value={email}
+                <input type="email" className="form-control" value={email}
                   onChange={(event) => setemail(event.target.value)}/>
               </div>
               <div className="input-group mb-3">
@@ -54,8 +54,8 @@ export const AlumnoModales = ({
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">NSS:</span>
-                <input type="text" className="form-control" value={nss} 
-                   onChange={(event) => setnss(event.target.value)}/>
+                <input type="text" className="form-control" value={nss}
+                  onChange={(event) => setnss(event.target.value)}/>
               </div>
             </div>
             <div className="modal-footer">
@@ -88,18 +88,18 @@ export const AlumnoModales = ({
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Email:</span>
-                <input type="email"  className="form-control" value={email}
-                  onChange={(event) => setemail(event.target.value)}/>
+                <input type="email" className="form-control" value={email}
+                  onChange={(event) => setemail(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Fecha de Registro:</span>
-                <input  type="date"  className="form-control"  value={fecha}
+                <input type="date"className="form-control" value={fecha}
                   onChange={(event) => setfecha(event.target.value)}/>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">NSS:</span>
                 <input type="text" className="form-control" value={nss}
-                  onChange={(event) => setnss(event.target.value)} />
+                  onChange={(event) => setnss(event.target.value)}/>
               </div>
             </div>
             <div className="modal-footer">

@@ -14,7 +14,7 @@ export const getAlumno = async (setAlumno) => {
 
 export const addAlumno = async (idPersona, email, nss, fecha, setShowModal, getAlumno) => {
   try {
-    await createAlumno(idPersona, email, nss, fecha);
+    await createAlumno(idPersona,email, nss, fecha);
     getAlumno();
     Swal.fire({
       icon: 'success',
@@ -32,9 +32,9 @@ export const addAlumno = async (idPersona, email, nss, fecha, setShowModal, getA
   }
 };
 
-export const updateAlumnoFunc = async (idPersona, idAlumno, email, nss, fecha, setShowEditModal, getAlumno) => {
+export const updateAlumnoFunc = async (idAlumno,idPersona, email, nss, fecha, setShowEditModal, getAlumno) => {
   try {
-    await updateAlumno(idPersona, idAlumno, email, nss, fecha);
+    await updateAlumno(idAlumno,idPersona, email, nss, fecha);
     getAlumno();
     Swal.fire({
       icon: 'success',

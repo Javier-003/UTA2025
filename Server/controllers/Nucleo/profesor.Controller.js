@@ -9,8 +9,8 @@ export const getProfesortodos = async (req, res) => {
         persona.nombre, 
         persona.paterno, 
         persona.materno,
-        d.nombre AS NombreDepartamento, 
-        pu.nombre AS NombrePuesto
+        d.nombre AS nombreDepartamento, 
+        pu.nombre AS nombrePuesto
       FROM profesor p
       JOIN departamento d ON p.idDepartamento = d.idDepartamento
       JOIN puesto pu ON p.idPuesto = pu.idPuesto
