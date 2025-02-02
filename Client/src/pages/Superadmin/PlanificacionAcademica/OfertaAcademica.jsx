@@ -74,6 +74,7 @@ function OfertaAcademica() {
                 <table className="table table-bordered">
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Nombre</th>
                             <th>Descripcion</th>
                             <th>Sigla</th>
@@ -82,10 +83,11 @@ function OfertaAcademica() {
                             <th>Editar</th>
                             <th>Eliminar</th>
                         </tr>
-                    </thead>
+                    </thead> 
                     <tbody>
                         {filteredData.map((ofertaAcademica) => (
                             <tr key={ofertaAcademica.idOfertaAcademica}>
+                                <td>{ofertaAcademica.idOfertaAcademica}</td>
                                 <td>{ofertaAcademica.nombre}</td>
                                 <td>{ofertaAcademica.descripcion}</td>
                                 <td>{ofertaAcademica.sigla}</td>
