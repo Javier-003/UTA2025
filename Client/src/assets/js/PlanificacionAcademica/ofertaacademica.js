@@ -57,21 +57,22 @@ export const updateOfertaAcademicaFunc = async (idOfertaAcademica, nombre, descr
     }
     };
 
-export const deleteOfertaAcademicaFunc = async (idOfertaAcademica, getOfertaAcademica) => {
-    try {
-        await deleteOfertaAcademica(idOfertaAcademica);
-        getOfertaAcademica();
-        Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'Oferta academica eliminada correctamente',
-        });
-    } catch (error) {
-        console.error('Error al eliminar la oferta academica:', error);
-        Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un problema eliminando la oferta academica.',
-        });
-    }
-    }
+    export const deleteOfertaAcademicaFunc = async (idOfertaAcademica, getOfertaAcademica, setShowDeleteModal) => {
+        try {
+            await deleteOfertaAcademica(idOfertaAcademica);
+            getOfertaAcademica();
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: 'Oferta academica eliminada correctamente',
+            });
+            setShowDeleteModal(false); // Cierra el modal de eliminación
+        } catch (error) {
+            console.error('Error al eliminar la oferta academica:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema eliminando la oferta academica.',
+            });
+        }
+    };
