@@ -4,7 +4,7 @@ import { db } from "../../db/connection.js";
 export const getPeriodotodos = async (req, res) => {
   try {
     const query = `
-      SELECT p.idPeriodo, p.periodo, p.fechaInicio, p.fechaFin, p.estado, p.fechaRegistro, p.idUsuario 
+      SELECT p.idPeriodo, p.periodo, p.fechaInicio, p.fechaFin, p.estado, p.fechaRegistro
       FROM periodo p 
       ORDER BY p.idPeriodo;
     `;
