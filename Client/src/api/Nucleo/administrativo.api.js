@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// URL base de la API
 const BASE_URL = "http://localhost:3000";
 
 // Obtener todos los administrativos

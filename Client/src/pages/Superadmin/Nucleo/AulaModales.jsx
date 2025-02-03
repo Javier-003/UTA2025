@@ -30,12 +30,12 @@ export const AulaModales = ({
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
-              <div className="input-group mb-3">
+            <div className="input-group mb-3">
                 <span className="input-group-text">Edificio:</span>
                 <select className="form-select" value={idEdificio} onChange={(event) => setidEdificio(event.target.value)}>
                   <option value="">Selecciona un edificio</option>
                   {edificioList.map((edificio) => (
-                    <option key={edificio.idEdificio} value={edificio.idEdificio}>{edificio.noombr}</option>
+                    <option key={edificio.idEdificio} value={edificio.idEdificio}>{edificio.nombre}</option>
                   ))}
                 </select>
               </div>
