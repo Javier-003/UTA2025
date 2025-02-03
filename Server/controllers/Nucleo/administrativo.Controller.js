@@ -3,9 +3,9 @@ import { db } from "../../db/connection.js";
 // Obtener todos los Administrativos con datos de la tabla persona
 export const getAdministrativotodos = async (req, res) => {
   try {
-    const query = `
-      SELECT 
+    const query = `SELECT 
         a.*, 
+        p.idPersona,
         p.nombre, 
         p.paterno, 
         p.materno,
@@ -31,22 +31,22 @@ export const getAdministrativotodos = async (req, res) => {
 // Crear un Administrativo
 export const createAdministrativo = async (req, res) => {
   try {
-    const { idDepartamento, idPuesto, clave, horario, nss, rfc } = req.body;
-    if (!idDepartamento || !idPuesto || !clave || !horario || !nss || !rfc) {
-      return res.status(400).json({ message: "Todos los campos son requeridos: idDepartamento, idPuesto, clave, horario, nss, rfc" });
+    const {idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc } = req.body;
+    if(!idPersona || !idDepartamento || !idPuesto || !clave || !horario || !nss || !rfc) {
+      return res.status(400).json({ message: "Todos los campos son requeridos: idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc" });
     }
     const [exists] = await db.query("SELECT 1 FROM administrativo WHERE rfc = ?", [rfc]);
     if (exists.length) {
       return res.status(400).json({ message: "El RFC del administrativo ya existe" });
     }
     const [result] = await db.query(
-      "INSERT INTO administrativo (idDepartamento, idPuesto, clave, horario, nss, rfc) VALUES (?, ?, ?, ?, ?, ?)",
-      [idDepartamento, idPuesto, clave, horario, nss, rfc]
+      "INSERT INTO administrativo (idAdministrativo, idDepartamento, idPuesto, clave, horario, nss, rfc) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc]
     );
     res.status(201).json({
       message: `'${rfc}' creado`,
       idAdministrativo: result.insertId,
-      idDepartamento, idPuesto, clave, horario, nss, rfc
+      idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc
     });
   } catch (error) {
     console.error("Error al crear administrativo:", error);
@@ -86,7 +86,7 @@ export const deleteAdministrativo = async (req, res) => {
     const { idAdministrativo } = req.params;
     const [administrativo] = await db.query("SELECT clave FROM administrativo WHERE idAdministrativo = ?", [idAdministrativo]);
     if (!administrativo.length) return res.status(404).json({ message: "Administrativo no encontrado" });
-    const [rows] = await db.query("DELETE FROM administrativo WHERE idAdministrativo = ?", [idAdministrativo]);
+    const [rows] = await db.query("DELETE FROM Administrativo WHERE idAdministrativo = ? = ?", [idAdministrativo]);
     if (rows.affectedRows) {
       return res.status(200).json({ message: `Administrativo '${administrativo[0].clave}' eliminado correctamente` });
     } else {
