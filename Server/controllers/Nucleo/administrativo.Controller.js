@@ -84,13 +84,13 @@ export const updateAdministrativo = async (req, res) => {
 export const deleteAdministrativo = async (req, res) => {
   try {
     const { idAdministrativo } = req.params;
-    const [administrativo] = await db.query("SELECT clave FROM administrativo WHERE idAdministrativo = ?", [idAdministrativo]);
-    if (!administrativo.length) return res.status(404).json({ message: "Administrativo no encontrado" });
-    const [rows] = await db.query("DELETE FROM Administrativo WHERE idAdministrativo = ? = ?", [idAdministrativo]);
+    const [rows] = await db.query(
+      "DELETE FROM administrativo WHERE idAdministrativo = ?",[idAdministrativo]
+    );
     if (rows.affectedRows) {
-      return res.status(200).json({ message: `Administrativo '${administrativo[0].clave}' eliminado correctamente` });
+      return res.status(200).json({ message: `Administrativo eliminado correctamente` });
     } else {
-      return res.status(404).json({ message: "No se pudo eliminar el administrativo, no se encontraron registros afectados" });
+      return res.status(404).json({ message: "Administrativo no encontrado" });
     }
   } catch (error) {
     console.error("Error al eliminar administrativo:", error);
