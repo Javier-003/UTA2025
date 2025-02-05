@@ -15,10 +15,10 @@ export const getProfesores = async () => {
 };
 
 // Crear un nuevo profesor
-export const createProfesor = async (idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) => {
+export const createProfesor = async (idPersona,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) => {
   try {
     await axios.post(`${BASE_URL}/profesor/create`, {
-      idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
+      idPersona,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
     });
   } catch (error) {
     console.error("Error al registrar el profesor:", error);
@@ -27,10 +27,10 @@ export const createProfesor = async (idDepartamento, idPuesto, clave, perfil, em
 };
 
 // Actualizar un profesor existente
-export const updateProfesor = async (idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) => {
+export const updateProfesor = async (idProfesor,idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) => {
   try {
     await axios.put(`${BASE_URL}/profesor/update/${idProfesor}`, {
-      idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
+      idPersona,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
     });
   } catch (error) {
     console.error("Error al actualizar el profesor:", error);

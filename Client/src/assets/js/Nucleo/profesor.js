@@ -12,9 +12,9 @@ export const getProfesor = async (setProfesor) => {
   }
 };
 
-export const addProfesor = async (idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowModal, getProfesor) => {
+export const addProfesor = async (idPersona,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowModal, getProfesor) => {
   try {
-    await createProfesor(idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc);
+    await createProfesor(idPersona,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc);
     getProfesor();
     Swal.fire({
       icon: 'success',
@@ -32,9 +32,9 @@ export const addProfesor = async (idDepartamento, idPuesto, clave, perfil, email
   }
 };
 
-export const updateProfesorFunc = async (idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowEditModal, getProfesor) => {
+export const updateProfesorFunc = async (idProfesor, idPersona,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowEditModal, getProfesor) => {
   try {
-    await updateProfesor(idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc);
+    await updateProfesor(idProfesor, idPersona,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc);
     getProfesor();
     Swal.fire({
       icon: 'success',
