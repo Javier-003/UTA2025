@@ -3,16 +3,19 @@ import { db } from "../../db/connection.js";
 // Obtener todos los Profesores con datos de la tabla persona
 export const getProfesortodos = async (req, res) => {
   try {
-    const query = `SELECT p.*, 
-        persona.nombre, 
-        persona.paterno, 
-        persona.materno,
+    const query = `
+      SELECT 
+        p.*, 
+        persona.idPersona,
+        persona.nombre,
+        persona.paterno,
+        persona.materno, 
         d.nombre AS nombreDepartamento, 
         pu.nombre AS nombrePuesto
-      FROM profesor p
-      JOIN departamento d ON p.idDepartamento = d.idDepartamento
-      JOIN puesto pu ON p.idPuesto = pu.idPuesto
-      JOIN persona ON p.idProfesor = persona.idPersona`;
+        FROM profesor p
+        JOIN departamento d ON p.idDepartamento = d.idDepartamento
+        JOIN puesto pu ON p.idPuesto = pu.idPuesto
+        JOIN persona ON p.idProfesor = persona.idPersona`;
     const [rows] = await db.query(query);
     if (rows.length > 0) {
       res.json({ message: "Profesores obtenidos correctamente", data: rows });
