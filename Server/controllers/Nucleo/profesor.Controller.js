@@ -3,9 +3,7 @@ import { db } from "../../db/connection.js";
 // Obtener todos los Profesores con datos de la tabla persona
 export const getProfesortodos = async (req, res) => {
   try {
-    const query = `
-      SELECT 
-        p.*, 
+    const query = `SELECT p.*, 
         persona.nombre, 
         persona.paterno, 
         persona.materno,
@@ -14,8 +12,7 @@ export const getProfesortodos = async (req, res) => {
       FROM profesor p
       JOIN departamento d ON p.idDepartamento = d.idDepartamento
       JOIN puesto pu ON p.idPuesto = pu.idPuesto
-      JOIN persona ON p.idProfesor = persona.idPersona
-    `;
+      JOIN persona ON p.idProfesor = persona.idPersona`;
     const [rows] = await db.query(query);
     if (rows.length > 0) {
       res.json({ message: "Profesores obtenidos correctamente", data: rows });
@@ -27,24 +24,25 @@ export const getProfesortodos = async (req, res) => {
   }
 };
 
+//Crear un Profesor
 export const createProfesor = async (req, res) => {
   try {
-    const { idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc } = req.body;
-    if (!idDepartamento || !idPuesto || !clave || !perfil || !email || !noCedula || !programaAcademicos || !nss || !rfc) {
-      return res.status(400).json({ message: "Todos los campos son requeridos: idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc" });
+    const { idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc } = req.body;
+    if (!idPersona || !idDepartamento || !idPuesto || !clave || !perfil || !email || !noCedula || !programaAcademicos || !nss || !rfc) {
+      return res.status(400).json({ message: "Todos los campos son requeridos: idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc" });
     }
     const [exists] = await db.query("SELECT 1 FROM profesor WHERE email = ?", [email]);
     if (exists.length) {
       return res.status(400).json({ message: "El email del profesor ya existe" });
     }
     const [result] = await db.query(
-      "INSERT INTO profesor (idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc]
-    );
+      "INSERT INTO profesor (idProfesor,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc]
+    );    
     res.status(201).json({
       message: `'${email}' creado`,
       idProfesor: result.insertId,
-      idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
+      idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
     });
   } catch (error) {
     console.error("Error al crear profesor:", error);
@@ -52,6 +50,7 @@ export const createProfesor = async (req, res) => {
   }
 };
 
+//Actualizar un profesor 
 export const updateProfesor = async (req, res) => {
   try {
     const { idProfesor } = req.params;
@@ -68,8 +67,7 @@ export const updateProfesor = async (req, res) => {
       return res.status(400).json({ message: "No se pudo actualizar el profesor" });
     }
     res.status(200).json({
-      message: `'${email}' actualizado correctamente`,
-      idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
+      message: `'${email}' actualizado correctamente`,idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
     });
   } catch (error) {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
