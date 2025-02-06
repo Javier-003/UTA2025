@@ -15,15 +15,15 @@ export const getBloquees = async () => {
 };
 
 // Crear un nuevo bloque
-export const createBloque = async (Nombre, Duracion, HoraInicio, HoraFin) => {
+export const createBloque = async (nombre, duracion, horaInicio, horaFin) => {
     try {
         await axios.post(`${BASE_URL}/bloque/create`, {
-            Nombre,
-            Duracion,
-            HoraInicio,
-            HoraFin,
-            Desde: null, // Valor por defecto para Desde
-            Hasta: null  // Valor por defecto para Hasta
+            nombre,
+            duracion, 
+            horaInicio, 
+            horaFin,
+            desde: null, // Valor por defecto para Desde
+            hasta: null  // Valor por defecto para Hasta
         });
     } catch (error) {
         console.error("Error al registrar el bloque:", error);
@@ -32,15 +32,15 @@ export const createBloque = async (Nombre, Duracion, HoraInicio, HoraFin) => {
 };
 
 // Actualizar un bloque existente
-export const updateBloque = async (idBloque, Nombre, Duracion, HoraInicio, HoraFin) => {
+export const updateBloque = async (idBloque, nombre, duracion, horaInicio, horaFin) => {
     try {
         await axios.put(`${BASE_URL}/bloque/update/${idBloque}`, {
-            Nombre,
-            Duracion,
-            HoraInicio,
-            HoraFin,
-            Desde: null, // Valor por defecto para Desde
-            Hasta: null  // Valor por defecto para Hasta
+            nombre,
+            duracion, 
+            horaInicio, 
+            horaFin,
+            desde: null, // Valor por defecto para Desde
+            hasta: null  // Valor por defecto para Hasta
         });
     } catch (error) {
         console.error("Error al actualizar el bloque:", error);

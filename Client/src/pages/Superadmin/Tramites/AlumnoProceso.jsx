@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getAlumnoProceso, addAlumnoProceso, updateAlumnoProcesoFunc, deleteAlumnoProcesoFunc } 
 from '../../../assets/js/Tramites/alumnoproceso.js';
+import {AlumnoProcesoModales} from './AlumnoProcesoModales.jsx'
+
 
 function AlumnoProceso() {
   const [alumnoprocesoList, setAlumnoProceso] = useState([]);
@@ -129,6 +131,20 @@ function AlumnoProceso() {
           </div>
         </div>
       </div>
+      <AlumnoProcesoModales
+      
+      idAlumnoTramite={idAlumnoTramite} setIdAlumnoTramite={setIdAlumnoTramite}  
+idTramiteProceso={idTramiteProceso} setIdTramiteProceso={setIdTramiteProceso}  
+idActividad={idActividad} setIdActividad={setIdActividad}  
+orden={orden} setOrden={setOrden}  
+estatus={estatus} setEstatus={setEstatus}  
+observacion={observacion} setObservacion={setObservacion}  
+showModal={showModal} setShowModal={setShowModal}  
+showEditModal={showEditModal} setShowEditModal={setShowEditModal}  
+showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}  
+handleAdd={handleAdd} handleUpdate={handleUpdate}  
+handleDelete={handleDelete} setSelectedAlumnoProceso={setSelectedAlumnoProceso}  
+   />
 
 
     </div>

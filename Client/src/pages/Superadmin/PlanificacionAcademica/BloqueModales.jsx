@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 export const BloqueModales = ({
-  Nombre, setNombre,
-  Duracion, setDuracion,
-  HoraInicio, setHoraInicio,
-  HoraFin, setHoraFin,
+  nombre, setNombre,
+  duracion, setDuracion,
+  horaInicio, setHoraInicio,
+  horaFin, setHoraFin,
   showModal, setShowModal,
   showEditModal, setShowEditModal,
   showDeleteModal, setShowDeleteModal,
@@ -23,19 +23,19 @@ export const BloqueModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre:</span>
-                <input type="text" className="form-control" value={Nombre} onChange={(event) => setNombre(event.target.value)} />
+                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Duracion:</span>
-                <input type="number" className="form-control" value={Duracion} onChange={(event) => setDuracion(event.target.value)} />
+                <input type="number" className="form-control" value={duracion} onChange={(event) => setDuracion(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Hora Inicio:</span>
-                <input type="time" className="form-control" value={HoraInicio} onChange={(event) => setHoraInicio(event.target.value)} />
+                <input type="time" className="form-control" value={horaInicio} onChange={(event) => setHoraInicio(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Hora Fin:</span>
-                <input type="time" className="form-control" value={HoraFin} onChange={(event) => setHoraFin(event.target.value)} />
+                <input type="time" className="form-control" value={horaFin} onChange={(event) => setHoraFin(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -57,19 +57,19 @@ export const BloqueModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre:</span>
-                <input type="text" className="form-control" value={Nombre} onChange={(event) => setNombre(event.target.value)} />
+                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Duracion:</span>
-                <input type="number" className="form-control" value={Duracion} onChange={(event) => setDuracion(event.target.value)} />
+                <input type="number" className="form-control" value={duracion} onChange={(event) => setDuracion(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Hora Inicio:</span>
-                <input type="time" className="form-control" value={HoraInicio} onChange={(event) => setHoraInicio(event.target.value)} />
+                <input type="time" className="form-control" value={horaInicio} onChange={(event) => setHoraInicio(event.target.value)} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Hora Fin:</span>
-                <input type="time" className="form-control" value={HoraFin} onChange={(event) => setHoraFin(event.target.value)} />
+                <input type="time" className="form-control" value={horaFin} onChange={(event) => setHoraFin(event.target.value)} />
               </div>
             </div>
             <div className="modal-footer">
@@ -89,7 +89,7 @@ export const BloqueModales = ({
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModal(false)}></button>
             </div>
             <div className="modal-body">
-              <p>¿Estás seguro de que deseas eliminar el bloque: <strong>{selectedBloque?.Nombre}</strong>?</p>
+              <p>¿Estás seguro de que deseas eliminar el bloque: <strong>{selectedBloque?.nombre}</strong>?</p>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>

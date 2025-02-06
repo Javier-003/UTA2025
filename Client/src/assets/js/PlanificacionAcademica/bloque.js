@@ -12,9 +12,11 @@ export const getBloque = async (setBloque) => {
   }
 };
 
-export const addBloque = async (Nombre, Duracion, HoraInicio, HoraFin, setShowModal, getBloque) => {
+export const addBloque = async (nombre, duracion, horaInicio, horaFin, setShowModal, getBloque) => {
+  console.log("llegando a api", {nombre, duracion, horaInicio, horaFin})
     try {
-      await createBloque(Nombre, Duracion, HoraInicio, HoraFin);
+      console.log("llegando a api 2", {nombre, duracion, horaInicio, horaFin})
+      await createBloque(nombre, duracion, horaInicio, horaFin);
       getBloque();
       Swal.fire({
         icon: 'success',
@@ -32,9 +34,9 @@ export const addBloque = async (Nombre, Duracion, HoraInicio, HoraFin, setShowMo
     }
 };
 
-export const updateBloqueFunc = async (idBloque, Nombre, Duracion, HoraInicio, HoraFin, setShowEditModal, getBloque) => {
+export const updateBloqueFunc = async (idBloque, nombre, duracion, horaInicio, horaFin, setShowEditModal, getBloque) => {
     try {
-        await updateBloque(idBloque, Nombre, Duracion, HoraInicio, HoraFin);
+        await updateBloque(idBloque, nombre, duracion, horaInicio, horaFin);
         getBloque();
         Swal.fire({
             icon: 'success',

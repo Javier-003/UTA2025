@@ -6,10 +6,10 @@ from '../../../assets/js/PlanificacionAcademica/bloque.js';
 import { BloqueModales } from '../PlanificacionAcademica/BloqueModales.jsx';
 
 function Bloque() {
-  const [Nombre, setNombre] = useState("");
-  const [Duracion, setDuracion] = useState("");
-  const [HoraInicio, setHoraInicio] = useState("");
-  const [HoraFin, setHoraFin] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [duracion, setDuracion] = useState("");
+  const [horaInicio, setHoraInicio] = useState("");
+  const [horaFin, setHoraFin] = useState("");
   const [bloqueList, setBloque] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
@@ -23,11 +23,11 @@ function Bloque() {
   useEffect(() => { getBloque(setBloque); }, []);
 
   const handleAdd = () => {
-    addBloque(Nombre, Duracion, HoraInicio, HoraFin, setShowModal, () => getBloque(setBloque));
+    addBloque(nombre, duracion, horaInicio, horaFin, setShowModal, () => getBloque(setBloque));
   };
 
   const handleUpdate = () => {
-    updateBloqueFunc(selectedBloque.idBloque, Nombre, Duracion, HoraInicio, HoraFin, setShowEditModal, () => getBloque(setBloque));
+    updateBloqueFunc(selectedBloque.idBloque, nombre, duracion, horaInicio, horaFin, setShowEditModal, () => getBloque(setBloque));
   };
 
   const handleDelete = () => {
@@ -35,7 +35,7 @@ function Bloque() {
   };
 
   const filteredData = bloqueList.filter(item =>
-    item.Nombre.toLowerCase().includes(searchText.toLowerCase())
+    item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (
@@ -77,18 +77,18 @@ function Bloque() {
                   filteredData.map((bloque) => (
                     <tr key={bloque.idBloque}>
                       <td>{bloque.idBloque}</td>
-                      <td>{bloque.Nombre}</td>
-                      <td>{bloque.Duracion}</td>
-                      <td>{bloque.HoraInicio}</td>
-                      <td>{bloque.HoraFin}</td>
+                      <td>{bloque.nombre}</td>
+                      <td>{bloque.duracion}</td>
+                      <td>{bloque.horaInicio}</td>
+                      <td>{bloque.horaFin}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                           setShowEditModal(true);
                           setSelectedBloque(bloque);
-                          setNombre(bloque.Nombre);
-                          setDuracion(bloque.Duracion);
-                          setHoraInicio(bloque.HoraInicio);
-                          setHoraFin(bloque.HoraFin);
+                          setNombre(bloque.nombre);
+                          setDuracion(bloque.duracion);
+                          setHoraInicio(bloque.horaInicio);
+                          setHoraFin(bloque.horaFin);
                         }}>Editar</button>
                       </td>
                       <td>
@@ -111,13 +111,13 @@ function Bloque() {
       </div>
 
       <BloqueModales
-        Nombre={Nombre}
+        nombre={nombre}
         setNombre={setNombre}
-        Duracion={Duracion}
+        duracion={duracion}
         setDuracion={setDuracion}
-        HoraInicio={HoraInicio}
+        horaInicio={horaInicio}
         setHoraInicio={setHoraInicio}
-        HoraFin={HoraFin}
+        horaFin={horaFin}
         setHoraFin={setHoraFin}
         showModal={showModal}
         setShowModal={setShowModal}
