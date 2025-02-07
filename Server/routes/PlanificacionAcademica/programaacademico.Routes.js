@@ -1,13 +1,13 @@
 import { Router } from "express";
 
-import { createPrograma_Academico, deletePrograma_Academico, getPrograma_Academicotodos, updatePrograma_Academico }
+import { createProgramaAcademico, deleteProgramaAcademico, getProgramaAcademico, updateProgramaAcademico }
 from "../../controllers/PlanificacionAcademica/programa_academico.Controller.js";
 
 const router = Router();
 
-router.get("/", getPrograma_Academicotodos);
-router.post("/create",createPrograma_Academico);
-router.put("/update/:id_programa_academico", updatePrograma_Academico);
-router.delete("/delete/:id_programa_academico",deletePrograma_Academico );
+router.get("/", getProgramaAcademico);
+router.post("/create",createProgramaAcademico);
+router.put("/update/:idProgramaAcademico", updateProgramaAcademico);
+router.delete("/delete/:idProgramaAcademico",deleteProgramaAcademico );
 
 export default router;
