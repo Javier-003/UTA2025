@@ -75,7 +75,7 @@ export const AlumnoModales = ({
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowEditModal(false)}></button>
             </div>
             <div className="modal-body">
-              <div className="input-group mb-3">
+            <div className="input-group mb-3">
                 <span className="input-group-text">Persona:</span>
                 <select className="form-select" value={idPersona} onChange={(event) => setidPersona(event.target.value)} disabled>
                   <option value="">Selecciona una persona</option>
