@@ -1,180 +1,144 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getMapaCurricular, addMapaCurricular, updateMapaCurricularFunc, deleteMapaCurricularFunc } 
+import { getMapaCurricular, addMapaCurricular, editMapaCurricular, removeMapaCurricular } 
 from '../../../assets/js/PlanificacionAcademica/mapacurricular.js';
 import { MapaCurricularModales } from './MapacurricularModales.jsx';
 
-function MapaCurricular() {
-  const [mapaList, setMapa] = useState([]);
-  const [id_programa_academico, setIdProgramaAcademico] = useState("");
-  const [ciclo, setCiclo] = useState("");
-  const [cuatrimestre, setCuatrimestre] = useState("");
-  const [materia, setMateria] = useState("");
-  const [clave, setClave] = useState("");
-  const [h_semana, setHSemana] = useState("");
-  const [h_teoricas, setHTeoricas] = useState("");
-  const [h_practicas, setHPracticas] = useState("");
-  const [h_total, setHTotal] = useState("");
-  const [creditos, setCreditos] = useState("");
-  const [modalidad, setModalidad] = useState("");
-  const [espacio, setEspacio] = useState("");
-  const [Titulo, setTitulo] = useState("");
+const MapaCurricular = () => {
+  const [mapaCurricular, setMapaCurricular] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [searchText, setSearchText] = useState("");
   const [selectedMapa, setSelectedMapa] = useState(null);
+  const [idProgramaAcademico, setIdProgramaAcademico] = useState('');
+  const [ciclo, setCiclo] = useState('');
+  const [cuatrimestre, setCuatrimestre] = useState('');
+  const [materia, setMateria] = useState('');
+  const [clave, setClave] = useState('');
+  const [horasSemana, setHorasSemana] = useState('');
+  const [horasTeoricas, setHorasTeoricas] = useState('');
+  const [horasPracticas, setHorasPracticas] = useState('');
+  const [horasTotal, setHorasTotal] = useState('');
+  const [creditos, setCreditos] = useState('');
+  const [modalidad, setModalidad] = useState('');
+  const [espacio, setEspacio] = useState('');
+  const [noUnidad, setNoUnidad] = useState('');
 
-  useEffect(() => {
-    getMapaCurricular(setMapa);
+  const fetchMapaCurricular = useCallback(async () => {
+    await getMapaCurricular(setMapaCurricular);
   }, []);
 
-  const filteredData = mapaList.filter(item => item.materia.toLowerCase().includes(searchText.toLowerCase()));
+  useEffect(() => {
+    fetchMapaCurricular();
+  }, [fetchMapaCurricular]);
 
-  // Handle add action
-  const handleAdd = useCallback(() => {
-    addMapaCurricular(
-        id_programa_academico, ciclo, cuatrimestre, materia, clave, h_semana, h_teoricas, h_practicas, 
-        h_total, creditos, modalidad, espacio,  Titulo, 
-      setShowModal, () => getMapaCurricular(setMapa)
-    );
-  }, [id_programa_academico, ciclo, cuatrimestre, materia, clave, h_semana, h_teoricas, h_practicas, 
-    h_total, creditos, modalidad, espacio, Titulo]);
+  const handleAdd = async () => {
+    await addMapaCurricular(idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowModal, fetchMapaCurricular);
+  };
 
-  // Handle update action
-  const handleUpdate = useCallback(() => {
-    updateMapaCurricularFunc(
-      selectedMapa.id_mapa_curricular, id_programa_academico, ciclo, cuatrimestre, materia, clave, 
-      h_semana, h_teoricas, h_practicas, h_total, creditos, modalidad, espacio, 
-      Titulo, setShowEditModal, () => getMapaCurricular(setMapa)
-    );
-  }, [selectedMapa, id_programa_academico, ciclo, cuatrimestre, materia, clave, h_semana, 
-    h_teoricas, h_practicas, h_total, creditos, modalidad, espacio, Titulo]);
+  const handleUpdate = async () => {
+    await editMapaCurricular(selectedMapa.idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowEditModal, fetchMapaCurricular);
+  };
 
-  // Handle delete action
-  const handleDelete = useCallback(() => {
-    deleteMapaCurricularFunc(selectedMapa.id_mapa_curricular, setShowDeleteModal, () => getMapaCurricular(setMapa));
-}, [selectedMapa]);
+  const handleDelete = async () => {
+    await removeMapaCurricular(selectedMapa.idMapaCurricular, fetchMapaCurricular);
+    setShowDeleteModal(false);
+  };
 
-  // Reset state and show modal for adding new entry
-  const resetFormAndShowModal = () => {
-    setIdProgramaAcademico(""); setCiclo(""); setCuatrimestre(""); setMateria("");
-    setClave(""); setHSemana(""); setHTeoricas(""); setHPracticas(""); setHTotal("");
-    setCreditos(""); setModalidad(""); setEspacio("");  setTitulo("");
-    setSelectedMapa(null);setShowModal(true);
+  const handleEditClick = (mapa) => {
+    setSelectedMapa(mapa);
+    setIdProgramaAcademico(mapa.idProgramaAcademico);
+    setCiclo(mapa.ciclo);
+    setCuatrimestre(mapa.cuatrimestre);
+    setMateria(mapa.materia);
+    setClave(mapa.clave);
+    setHorasSemana(mapa.horasSemana);
+    setHorasTeoricas(mapa.horasTeoricas);
+    setHorasPracticas(mapa.horasPracticas);
+    setHorasTotal(mapa.horasTotal);
+    setCreditos(mapa.creditos);
+    setModalidad(mapa.modalidad);
+    setEspacio(mapa.espacio);
+    setNoUnidad(mapa.noUnidad);
+    setShowEditModal(true);
+  };
+
+  const handleDeleteClick = (mapa) => {
+    setSelectedMapa(mapa);
+    setShowDeleteModal(true);
   };
 
   return (
     <div className="container">
-      <div className="">
-        <h5>LISTADOS DE MAPA CURRICULAR</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={resetFormAndShowModal}>Registrar</button>
-          <div className="mt-4">
-            <input type="text" className="form-control mb-1" value={searchText} onChange={(e) => setSearchText(e.target.value)}placeholder="Buscar Materia" />
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Id MC</th>
-                  <th>Id PA</th>
-                  <th>CICLO</th>
-                  <th>CUATRIMESTRE</th>
-                  <th>MATERIA</th>
-                  <th>CLAVE</th>
-                  <th>HORAS SEMANAS</th>
-                  <th>HORAS TEORICAS</th>
-                  <th>HORAS PRACTICAS</th>
-                  <th>HORAS TOTAL</th>
-                  <th>CREDITOS</th>
-                  <th>MODALIDAD</th>
-                  <th>ESPACIO</th>
-                  <th>TITULO</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((mapa) => (
-                    <tr key={mapa.id_mapa_curricular}>
-                      <td>{mapa.id_mapa_curricular}</td>
-                      <td>{mapa.id_programa_academico}</td>
-                      <td>{mapa.ciclo}</td>
-                      <td>{mapa.cuatrimestre}</td>
-                      <td>{mapa.materia}</td>
-                      <td>{mapa.clave}</td>
-                      <td>{mapa.h_semana}</td>
-                      <td>{mapa.h_teoricas}</td>
-                      <td>{mapa.h_practicas}</td>
-                      <td>{mapa.h_total}</td>
-                      <td>{mapa.creditos}</td>
-                      <td>{mapa.modalidad}</td>
-                      <td>{mapa.espacio}</td>
-                      <td>{mapa.Titulo}</td>
-                      <td>
-                        <button className="btn btn-warning"
-                          onClick={() => {
-                            setShowEditModal(true);
-                            setSelectedMapa(mapa);
-                            setIdProgramaAcademico(mapa.id_programa_academico);
-                            setCiclo(mapa.ciclo);
-                            setCuatrimestre(mapa.cuatrimestre);
-                            setMateria(mapa.materia);
-                            setClave(mapa.clave);
-                            setHSemana(mapa.h_semana);
-                            setHTeoricas(mapa.h_teoricas);
-                            setHPracticas(mapa.h_practicas);
-                            setHTotal(mapa.h_total);
-                            setCreditos(mapa.creditos);
-                            setModalidad(mapa.modalidad);
-                            setEspacio(mapa.espacio);
-                            setTitulo(mapa.Titulo);
-                          }}
-                        >Editar</button>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => {
-                            setShowDeleteModal(true);
-                            setSelectedMapa(mapa);
-                          }}
-                        >Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr><td colSpan="16">No hay registros para mostrar</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <h1>Mapa Curricular</h1>
+      <button className="btn btn-primary" onClick={() => setShowModal(true)}>Agregar Mapa Curricular</button>
+      <table className="table table-striped mt-3">
+        <thead>
+          <tr>
+            <th>Programa Académico</th>
+            <th>Ciclo</th>
+            <th>Cuatrimestre</th>
+            <th>Materia</th>
+            <th>Clave</th>
+            <th>Horas Semana</th>
+            <th>Horas Teóricas</th>
+            <th>Horas Prácticas</th>
+            <th>Horas Totales</th>
+            <th>Créditos</th>
+            <th>Modalidad</th>
+            <th>Espacio</th>
+            <th>Número de Unidad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mapaCurricular.map((mapa) => (
+            <tr key={mapa.idMapaCurricular}>
+              <td>{mapa.NombreProgramaAcademico}</td>
+              <td>{mapa.ciclo}</td>
+              <td>{mapa.cuatrimestre}</td>
+              <td>{mapa.materia}</td>
+              <td>{mapa.clave}</td>
+              <td>{mapa.horasSemana}</td>
+              <td>{mapa.horasTeoricas}</td>
+              <td>{mapa.horasPracticas}</td>
+              <td>{mapa.horasTotal}</td>
+              <td>{mapa.creditos}</td>
+              <td>{mapa.modalidad}</td>
+              <td>{mapa.espacio}</td>
+              <td>{mapa.noUnidad}</td>
+              <td>
+                <button className="btn btn-warning me-2" onClick={() => handleEditClick(mapa)}>Editar</button>
+                <button className="btn btn-danger" onClick={() => handleDeleteClick(mapa)}>Eliminar</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
       <MapaCurricularModales
-        id_programa_academico={id_programa_academico}
-        setIdProgramaAcademico={setIdProgramaAcademico}
-        ciclo={ciclo}  setCiclo={setCiclo}
+        ciclo={ciclo} setCiclo={setCiclo}
         cuatrimestre={cuatrimestre} setCuatrimestre={setCuatrimestre}
         materia={materia} setMateria={setMateria}
         clave={clave} setClave={setClave}
-        h_semana={h_semana} setHSemana={setHSemana}
-        h_teoricas={h_teoricas}setHTeoricas={setHTeoricas}
-        h_practicas={h_practicas}setHPracticas={setHPracticas}
-        h_total={h_total}setHTotal={setHTotal}
-        creditos={creditos}setCreditos={setCreditos}
-        modalidad={modalidad}setModalidad={setModalidad}
-        espacio={espacio}setEspacio={setEspacio}
-        Titulo={Titulo}setTitulo={setTitulo}
-        showModal={showModal}setShowModal={setShowModal}
-        showEditModal={showEditModal}setShowEditModal={setShowEditModal}
-        showDeleteModal={showDeleteModal}setShowDeleteModal={setShowDeleteModal}
-        handleAdd={handleAdd} handleUpdate={handleUpdate}handleDelete={handleDelete}
+        horasSemana={horasSemana} setHorasSemana={setHorasSemana}
+        horasTeoricas={horasTeoricas} setHorasTeoricas={setHorasTeoricas}
+        horasPracticas={horasPracticas} setHorasPracticas={setHorasPracticas}
+        horasTotal={horasTotal} setHorasTotal={setHorasTotal}
+        creditos={creditos} setCreditos={setCreditos}
+        modalidad={modalidad} setModalidad={setModalidad}
+        espacio={espacio} setEspacio={setEspacio}
+        noUnidad={noUnidad} setNoUnidad={setNoUnidad}
+        idProgramaAcademico={idProgramaAcademico} setIdProgramaAcademico={setIdProgramaAcademico}
+        showModal={showModal} setShowModal={setShowModal}
+        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
+        handleAdd={handleAdd} handleUpdate={handleUpdate} handleDelete={handleDelete}
         selectedMapa={selectedMapa}
       />
     </div>
   );
-}
+};
 
 export default MapaCurricular;

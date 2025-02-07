@@ -3,25 +3,23 @@ import Swal from 'sweetalert2';
 import { createMapaCurricular, deleteMapaCurricular, getMapaCurriculares, updateMapaCurricular } 
 from '../../../api/PlanificacionAcademica/mapacurricular.api.js';
 
-export const getMapaCurricular = async (setMapaCurriccular) => {
+export const getMapaCurricular = async (setMapaCurricular) => {
   try {
     const data = await getMapaCurriculares();
-    setMapaCurriccular(data);
+    setMapaCurricular(data);
   } catch (error) {
     console.error('Error al obtener mapas curriculares:', error);
   }
 };
 
-export const addMapaCurricular = async (id_programa_academico,ciclo,cuatrimestre,materia, clave,
-    h_semana,h_teoricas,h_practicas,h_total,creditos,modalidad,espacio, setShowModal, getMapaCurricular) => {
+export const addMapaCurricular = async (idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowModal, getMapaCurricular) => {
   try {
-    await createMapaCurricular(id_programa_academico,ciclo,cuatrimestre,materia, clave,
-        h_semana,h_teoricas,h_practicas,h_total,creditos,modalidad,espacio);
+    await createMapaCurricular(idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad);
     getMapaCurricular();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Mapa Curricular registrada correctamente',
+      text: 'Mapa Curricular registrado correctamente',
     });
     setShowModal(false);
   } catch (error) {
@@ -34,19 +32,14 @@ export const addMapaCurricular = async (id_programa_academico,ciclo,cuatrimestre
   }
 };
 
-export const updateMapaCurricularFunc = async (
-    id_mapa_curricular,id_programa_academico,ciclo,cuatrimestre,
-    materia, clave,h_semana,h_teoricas,h_practicas,h_total,creditos,
-    modalidad,espacio, setShowEditModal, getMapaCurricular) => {
+export const editMapaCurricular = async (idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowEditModal, getMapaCurricular) => {
   try {
-    await updateMapaCurricular(id_mapa_curricular, 
-        id_programa_academico,ciclo,cuatrimestre,materia, clave,h_semana,
-        h_teoricas,h_practicas,h_total,creditos,modalidad,espacio);
+    await updateMapaCurricular(idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad);
     getMapaCurricular();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Mapa Curricular actualizada correctamente',
+      text: 'Mapa Curricular actualizado correctamente',
     });
     setShowEditModal(false);
   } catch (error) {
@@ -59,16 +52,15 @@ export const updateMapaCurricularFunc = async (
   }
 };
 
-export const deleteMapaCurricularFunc = async (id_mapa_curricular, setShowDeleteModal, getMapaCurricular) => {
+export const removeMapaCurricular = async (idMapaCurricular, getMapaCurricular) => {
   try {
-    await deleteMapaCurricular(id_mapa_curricular);
+    await deleteMapaCurricular(idMapaCurricular);
     getMapaCurricular();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Mapa Curricular eliminada correctamente',
+      text: 'Mapa Curricular eliminado correctamente',
     });
-    setShowDeleteModal(false);
   } catch (error) {
     console.error('Error al eliminar el Mapa Curricular:', error);
     Swal.fire({
