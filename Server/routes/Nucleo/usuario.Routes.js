@@ -1,5 +1,4 @@
 import { Router } from "express"
-
 import { createUsuario, deleteUsuario, getUsuarioTodos, updateUsuario }
 from "../../controllers/Nucleo/usuario.Controller.js";
 
