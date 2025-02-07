@@ -3,22 +3,22 @@ import axios from 'axios';
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
 
-// Crear un rol
-export const createRol = async (nombre) => {
+// Agregar un rol a un usuario
+export const agregarRolUsuario = async (idUsuario, idRol) => {
   try {
-    await axios.post(`${BASE_URL}/rol/create`, { nombre });
+    await axios.post(`${BASE_URL}/rolUsuario/agregar`, { idUsuario, idRol });
   } catch (error) {
-    console.error("Error al registrar el rol:", error);
-    throw new Error('Error al registrar el rol');
+    console.error("Error al agregar el rol al usuario:", error);
+    throw new Error('Error al agregar el rol al usuario');
   }
 };
 
-// Eliminar un rol
-export const deleteRol = async (idRol) => {
+// Eliminar un rol de un usuario
+export const eliminarRolUsuario = async (idUsuario, idRol) => {
   try {
-    await axios.delete(`${BASE_URL}/rol/delete/${idRol}`);
+    await axios.post(`${BASE_URL}/rolUsuario/eliminar`, { idUsuario, idRol });
   } catch (error) {
-    console.error("Error al eliminar el rol:", error);
-    throw new Error('Error al eliminar el rol');
+    console.error("Error al eliminar el rol del usuario:", error);
+    throw new Error('Error al eliminar el rol del usuario');
   }
 };

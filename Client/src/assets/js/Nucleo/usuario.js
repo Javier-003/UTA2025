@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2'; 
+
 import { getUsuarios, createUsuario, updateUsuario, deleteUsuario } 
 from '../../../api/Nucleo/usuario.api.js';
 
@@ -13,9 +14,9 @@ export const getUsuario = async (setUsuario) => {
 };
 
 // Crear un nuevo usuario
-export const addUsuario = async (idPersona, usuario, contrasena, estatus, setShowModal, getUsuario) => {
+export const addUsuario = async (idPersona, usuario, contrasena, estatus, idRol, setShowModal, getUsuario) => {
   try {
-    await createUsuario(idPersona, usuario, contrasena, estatus);
+    await createUsuario(idPersona, usuario, contrasena, estatus, idRol);
     getUsuario();
     Swal.fire({
       icon: 'success',

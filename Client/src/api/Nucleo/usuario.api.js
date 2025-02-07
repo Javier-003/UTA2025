@@ -15,10 +15,10 @@ export const getUsuarios = async () => {
 };
 
 // Crear un nuevo usuario
-export const createUsuario = async (idPersona, usuario, contrasena, estatus) => {
+export const createUsuario = async (idPersona, usuario, contrasena, estatus, idRol) => {
   try {
     const response = await axios.post(`${BASE_URL}/usuario/create`, {
-      idPersona, usuario, contrasena, estatus
+      idPersona, usuario, contrasena, estatus, idRol
     });
     // Usar los valores devueltos en la respuesta para mostrar un mensaje informativo
     console.log("Usuario creado:", response.data);
