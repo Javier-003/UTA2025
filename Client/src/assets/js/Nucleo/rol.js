@@ -1,44 +1,44 @@
-import Swal from 'sweetalert2'; 
-import { createRol, deleteRol } from '../../../api/Nucleo/rol.api.js'; 
+import Swal from 'sweetalert2';
+import { agregarRolUsuario, eliminarRolUsuario } from '../../../api/Nucleo/rol.api.js';
 
-// Función para agregar un nuevo rol
-export const addRolFunc = async (nombre, setShowModal, getRoles) => {
+// Función para agregar un nuevo rol a un usuario
+export const addRolUsuarioFunc = async (idUsuario, idRol, setShowModal, getRoles) => {
   try {
-    await createRol(nombre); // Llamada a la API para crear el rol
+    await agregarRolUsuario(idUsuario, idRol); // Llamada a la API para agregar el rol al usuario
     getRoles(); // Actualiza la lista de roles
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Rol registrado correctamente',
+      text: 'Rol agregado al usuario correctamente',
     });
     setShowModal(false); // Cierra el modal
   } catch (error) {
-    console.error('Error al agregar el rol:', error);
+    console.error('Error al agregar el rol al usuario:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema registrando el rol.',
+      text: 'Hubo un problema agregando el rol al usuario.',
     });
   }
 };
 
-// Función para eliminar un rol
-export const deleteRolFunc = async (idRol, setShowDeleteModal, getRoles) => {
+// Función para eliminar un rol de un usuario
+export const deleteRolUsuarioFunc = async (idUsuario, idRol, setShowDeleteModal, getRoles) => {
   try {
-    await deleteRol(idRol); // Llamada a la API para eliminar el rol
+    await eliminarRolUsuario(idUsuario, idRol); // Llamada a la API para eliminar el rol del usuario
     getRoles(); // Actualiza la lista de roles
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Rol eliminado correctamente',
+      text: 'Rol eliminado del usuario correctamente',
     });
     setShowDeleteModal(false); // Cierra el modal
   } catch (error) {
-    console.error('Error al eliminar el rol:', error);
+    console.error('Error al eliminar el rol del usuario:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema eliminando el rol.',
+      text: 'Hubo un problema eliminando el rol del usuario.',
     });
   }
 };
