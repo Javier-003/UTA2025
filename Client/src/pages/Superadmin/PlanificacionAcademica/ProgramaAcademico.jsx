@@ -24,6 +24,7 @@ const ProgramaAcademico = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedProgramaAcademico, setSelectedProgramaAcademico] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
 
   const fetchProgramasAcademicos = () => {
     getProgramaAcademico((data) => {
@@ -55,6 +56,15 @@ const ProgramaAcademico = () => {
     return dateString;
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredProgramaAcademicoList = programaAcademicoList.filter(programaAcademico => 
+    programaAcademico.nivelEstudio.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    programaAcademico.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="container">
       <h5>LISTADO DE PROGRAMA ACADÉMICO</h5>
@@ -76,6 +86,13 @@ const ProgramaAcademico = () => {
       }}>Agregar Programa Académico</button>
 
       <div className='mt-4'>
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Buscar por nivel de estudio o nombre"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
         <table className="table">
           <thead>
             <tr>
@@ -91,12 +108,13 @@ const ProgramaAcademico = () => {
               <th>Desde</th>
               <th>Hasta</th>
               <th>Estatus</th>
-              <th>Acciones</th>
+              <th>Editar</th>
+              <th>Eliminar</th>
             </tr>
           </thead>
           <tbody>
-            {programaAcademicoList.length > 0 ? (
-              programaAcademicoList.map((programaAcademico) => (
+            {filteredProgramaAcademicoList.length > 0 ? (
+              filteredProgramaAcademicoList.map((programaAcademico) => (
                 <tr key={programaAcademico.idProgramaAcademico}>
                   <td>{programaAcademico.nivelEstudio}</td>
                   <td>{programaAcademico.ofertaAcademica}</td>
@@ -128,6 +146,8 @@ const ProgramaAcademico = () => {
                       setHasta(formatDateString(programaAcademico.hasta));
                       setEstatus(programaAcademico.estatus);
                     }}>Editar</button>
+                  </td>
+                  <td>
                     <button className="btn btn-danger" onClick={() => {
                       setShowDeleteModal(true);
                       setSelectedProgramaAcademico(programaAcademico);
