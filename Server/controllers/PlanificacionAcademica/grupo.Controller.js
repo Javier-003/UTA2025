@@ -1,95 +1,62 @@
 import { db } from "../../db/connection.js";
 
-// Obtener todos los grupos incluyendo periodo, programa académico, y el nombre completo del tutor
+// Obtener todos los grupos
 export const getGruposTodos = async (req, res) => {
-  const { idPeriodo, idPrograma } = req.query; // Suponiendo que los IDs se pasan como parámetros de consulta
   try {
-    let query = `SELECT g.*, p.periodo, 
-    CONCAT(COALESCE(pa.Titulo_Tsu, ''), ' ', COALESCE(pa.Titulo_Ing, '')) AS programa_academico,
-    CONCAT(tutor.nombre, ' ', tutor.apellido_paterno, ' ', tutor.apellido_materno) AS tutor
+    const query = `SELECT g.*, p.periodo, 
+    CONCAT(COALESCE(pa.nombre, ''), ' ', COALESCE(pa.nombreOficial, '')) AS programa_academico,
+    CONCAT(tutor.nombre, ' ', tutor.paterno, ' ', tutor.materno) AS tutor
     FROM grupo g
-    JOIN periodo p ON g.idPeriodo = p.id_periodo
-    JOIN programaacademico pa ON g.idProgramaAcademico = pa.id_programa_academico
-    JOIN persona tutor ON g.idTutor = tutor.id_persona`;
-    const conditions = [];
-    const params = [];
-    // Agregar condiciones si idPeriodo y idPrograma están presentes
-    if (idPeriodo) {
-      conditions.push("g.idPeriodo = ?");
-      params.push(idPeriodo);
-    }
-    if (idPrograma) {
-      conditions.push("g.idProgramaAcademico = ?");
-      params.push(idPrograma);
-    }
-    if (conditions.length) {
-      query += ` WHERE ${conditions.join(" AND ")}`;
-    }
-    const [rows] = await db.query(query, params);
-    // Manejo del estatus
-    rows.forEach(element => {
-      element['estatus'] = element['estatus'] === 1 ? 'Autorizado' : 'Planeado';
-    });
-    if (rows.length > 0) {
-      res.status(200).json({ message: "Grupos obtenidos correctamente", data: rows });
-    } else {
-      res.status(404).json({ message: "No se encontraron los grupos" });
-    }
+    JOIN periodo p ON g.idPeriodo = p.idPeriodo
+    JOIN programaacademico pa ON g.idProgramaAcademico = pa.idProgramaAcademico
+    JOIN profesor ON g.idTutor = profesor.idProfesor
+    JOIN persona tutor ON profesor.idProfesor = tutor.idPersona`;
+    const [rows] = await db.query(query);
+    res.json(rows);
   } catch (error) {
-    res.status(500).json({ message: "Algo salió mal", error: error.message });
+    console.error("Error al obtener los grupos:", error);
+    res.status(500).json({ error: "Error al obtener los grupos" });
   }
 };
 
-// Crear un nuevo grupo
+// crear un grupo
 export const createGrupo = async (req, res) => {
-  const { idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus } = req.body;
-  if (!idPeriodo || !idProgramaAcademico || !idTutor || !nombre || !cuatrimestre || !estatus) {
-    return res.status(400).json({ message: "Todos los campos son obligatorios" });
-  }
+  const { idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha } = req.body;
   try {
-    const query = `
-      INSERT INTO grupo (idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha)
-      VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
-    `;
-    await db.query(query, [idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus]);
-    res.status(201).json({ message: "Grupo creado correctamente" });
+    const query = `INSERT INTO grupo (idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const [result] = await db.query(query, [idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha]);
+    res.json({ id: result.insertId, message: "Grupo registrado correctamente" });
   } catch (error) {
-    res.status(500).json({ message: "Error al crear el grupo", error: error.message });
+    console.error("Error al registrar el grupo:", error);
+    res.status(500).json({ error: "Error al registrar el grupo" });
   }
 };
 
-// Actualizar un grupo existente
+// Actualizar un grupo
 export const updateGrupo = async (req, res) => {
   const { idGrupo } = req.params;
-  const { idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus } = req.body;
-  if (!idGrupo) {
-    return res.status(400).json({ message: "El ID del grupo es obligatorio" });
-  }
+  const { idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha } = req.body;
   try {
-    const query = `UPDATE grupo SET idPeriodo = ?, idProgramaAcademico = ?, idTutor = ?, nombre = ?, cuatrimestre = ?, observacion = ?, estatus = ?
-      WHERE idGrupo = ?`;
-    const [result] = await db.query(query, [idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, idGrupo]);
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Grupo no encontrado" });
-    }
-    res.status(200).json({ message: "Grupo actualizado correctamente" });
+    const query = `UPDATE grupo SET idPeriodo = ?, idProgramaAcademico = ?, idTutor = ?, nombre = ?, cuatrimestre = ?, observacion = ?, estatus = ?, fecha = ?
+    WHERE idGrupo = ?`;
+    await db.query(query, [idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha, idGrupo]);
+    res.json({ message: "Grupo actualizado correctamente" });
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar el grupo", error: error.message });
+    console.error("Error al actualizar el grupo:", error);
+    res.status(500).json({ error: "Error al actualizar el grupo" });
   }
 };
 
-// Eliminar un grupo
+// eliminar un grupo
 export const deleteGrupo = async (req, res) => {
-    try {
-      const { idGrupo } = req.params;
-      const [grupo] = await db.query("SELECT nombre FROM grupo WHERE idGrupo = ?", [idGrupo]);
-      if (!grupo.length) return res.status(404).json({ message: "Grupo no encontrado" });
-      const [result] = await db.query("DELETE FROM grupo WHERE idGrupo = ?", [idGrupo]);
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "Grupo no encontrado" });
-      }
-      res.status(200).json({ message: `'${grupo[0].nombre}' eliminado correctamente` });
-    } catch (error) {
-      res.status(500).json({ message: "Error al eliminar el grupo", error: error.message });
-    }
+  const { idGrupo } = req.params;
+  try {
+    const query = `DELETE FROM grupo WHERE idGrupo = ?`;
+    await db.query(query, [idGrupo]);
+    res.json({ message: "Grupo eliminado correctamente" });
+  } catch (error) {
+    console.error("Error al eliminar el grupo:", error);
+    res.status(500).json({ error: "Error al eliminar el grupo" });
+  }
 };

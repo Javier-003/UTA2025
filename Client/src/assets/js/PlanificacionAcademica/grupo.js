@@ -10,8 +10,8 @@ export const getGrupo = async (setGrupo) => {
   }
 };
 
-export const addGrupo = async (idPeriodo, idProgramaAcademico, idTutor, nombre, 
-    cuatrimestre, observacion, estatus, fecha, setShowModal, getGrupo) => {
+export const addGrupo = async (idPeriodo, idProgramaAcademico, idTutor, 
+    nombre, cuatrimestre, observacion, estatus, fecha, setShowModal, getGrupo) => {
   try {
     await createGrupo(idPeriodo, idProgramaAcademico, idTutor, nombre, 
         cuatrimestre, observacion, estatus, fecha);

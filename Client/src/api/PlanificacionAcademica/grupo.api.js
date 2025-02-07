@@ -7,12 +7,21 @@ const BASE_URL = "http://localhost:3000";
 export const getGrupos = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/grupo`);
-    return response.data.data; // Retorna los datos de los grupos
+    console.log("🔍 Respuesta completa de la API:", response);
+
+    // Verifica qué datos estás recibiendo antes de retornarlos
+    if (!response.data || typeof response.data !== "object") {
+      console.error("⚠️ La API no devolvió datos válidos:", response.data);
+      return [];
+    }
+
+    return response.data;
   } catch (error) {
-    console.error("Error al obtener los grupos:", error);
-    throw new Error('Error al obtener los grupos');
+    console.error("❌ Error al obtener los grupos:", error);
+    return [];
   }
 };
+
 
 // Crear un nuevo grupo
 export const createGrupo = async (idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha) => {
@@ -47,3 +56,7 @@ export const deleteGrupo = async (idGrupo) => {
     throw new Error('Error al eliminar el grupo');
   }
 };
+
+
+
+
