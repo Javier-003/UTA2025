@@ -17,14 +17,22 @@ function TramiteProceso() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [selectedTramite, setSelectedTramite] = useState('');
   const [selectedTramiteProceso, setSelectedTramiteProceso] = useState(null);
 
   useEffect(() => { getTramitesProceso(setTramiteProceso); }, []);
   
-  const filteredData = tramiteprocesoList.filter(item =>
+ /*  const filteredData = tramiteprocesoList.filter(item =>
     item.objeto.toLowerCase().includes(searchText.toLowerCase())
+  ); */
+
+  const filteredData = tramiteprocesoList.filter(
+    (item) =>
+      (!selectedTramite || item.NombreTramite === selectedTramite) &&
+      item.NombreActividad.toLowerCase().includes(searchText.toLowerCase())
   );
-  
+
+
   const handleAdd = () => {
     addTramiteProceso(idTramite, idActividad, objeto, orden, setShowModal, () => getTramitesProceso(setTramiteProceso));
   };
@@ -42,6 +50,25 @@ function TramiteProceso() {
       <div className="">
         <h5>LISTADO DE TRAMITE PROCESO</h5>
         <div className="card-body">
+
+    {/* Filtros */}
+    <div className="d-flex mb-3">
+          <select
+            className="form-select me-2"
+            value={selectedTramite}
+            onChange={(e) => setSelectedTramite(e.target.value)}
+          >
+            <option value="">Mostrar todos los trámites</option>
+            {Array.from(new Set(tramiteprocesoList.map((item) => item.NombreTramite))).map((NombreTramite) => (
+              <option key={NombreTramite} value={NombreTramite}>
+                {NombreTramite}
+              </option>
+            ))}
+          </select>
+        </div>
+
+
+
           <button className='btn btn-success' onClick={() => {
             setIdTramite("");    
             setNombreTramite(""); 
@@ -54,7 +81,7 @@ function TramiteProceso() {
           }}>Registrar</button>
           <div className="mt-4">
             <input type="text" className="form-control mb-1" value={searchText}
-            onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Objeto" />
+            onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Actividad" />
             <table className="table table-bordered">
               <thead>
                 <tr>
