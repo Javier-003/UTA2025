@@ -13,12 +13,11 @@ export const getUsuarios = async () => {
     throw new Error('Error al obtener los usuarios');
   }
 };
-
 // Crear un nuevo usuario
-export const createUsuario = async (idPersona, usuario, contrasena, estatus, idRol) => {
+export const createUsuario = async ( idPersona, usuario, contrasena, estatus) => {
   try {
     const response = await axios.post(`${BASE_URL}/usuario/create`, {
-      idPersona, usuario, contrasena, estatus, idRol
+      idPersona, usuario, contrasena, estatus
     });
     // Usar los valores devueltos en la respuesta para mostrar un mensaje informativo
     console.log("Usuario creado:", response.data);

@@ -7,7 +7,7 @@ export const getUsuarioTodos = async (req, res) => {
     u.idUsuario, u.usuario, u.contrasena, u.estatus,
     p.idPersona, p.nombre, p.paterno, p.materno,
     GROUP_CONCAT(r.idRol SEPARATOR ', ') AS rolId,
-    GROUP_CONCAT(r.nombre SEPARATOR ', ') AS roles
+    GROUP_CONCAT(r.nombre SEPARATOR ', ') AS rol
     FROM 
     usuario u
     LEFT JOIN 
@@ -29,43 +29,48 @@ export const getUsuarioTodos = async (req, res) => {
   }
 };
 
-export const createUsuario = async (req, res) => {
-  try {
-    const { idPersona, usuario, contrasena, estatus, idRol } = req.body;
-    if (!idPersona || !usuario || !contrasena || estatus === undefined || !idRol) {
-      return res.status(400).json({ message: "Todos los campos son requeridos: idPersona, usuario, contrasena, estatus, idRol" });
-    }
-    // Encriptar la contraseña
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(contrasena, salt);
-    // Consulta SQL para verificar si el usuario ya existe
-    const checkUserQuery = `SELECT COUNT(*) AS count FROM Usuario WHERE usuario = ?`;
-    // Consulta SQL para insertar un nuevo usuario
-    const insertUserQuery = `INSERT INTO Usuario (idPersona, usuario, contrasena, estatus) VALUES (?, ?, ?, ?)`;
-    // Consulta SQL para insertar la relación en la tabla RolUsuario
-    const insertRolUsuarioQuery = `INSERT INTO RolUsuario (idUsuario, idRol) VALUES (?, ?)`;   
-    try {
-      // Verificar si el usuario ya existe
-      const [checkResult] = await db.query(checkUserQuery, [usuario]);
-      if (checkResult[0].count > 0) {
-        return res.status(400).json({ message: "El nombre del usuario ya existe" });
+export const createUsuario = async (req, res) => { 
+  try { 
+      const { idPersona, usuario, contrasena, estatus, idRol } = req.body; 
+      if (!idPersona || !usuario || !contrasena || estatus === undefined || !idRol) { 
+          return res.status(400).json({ 
+              message: "Todos los campos son requeridos: idPersona, usuario, contrasena, estatus, idRol" 
+          }); 
       }
-      // Ejecutar la consulta para insertar el nuevo usuario
-      const [userResult] = await db.query(insertUserQuery, [idPersona, usuario, hashedPassword, estatus]);
-      // Obtener el ID del nuevo usuario insertado
-      const newUserId = userResult.insertId;
-      // Ejecutar la consulta para insertar la relación en la tabla RolUsuario
-      await db.query(insertRolUsuarioQuery, [newUserId, idRol]);
-      res.status(201).json({message: `'${usuario}' creado con rol`,
-        idUsuario: newUserId,idPersona: idPersona,usuario,estatus,idRol});
-    } catch (error) {
-      console.error("Error al crear usuario:", error);
-      res.status(500).json({ message: "Algo salió mal", error: error.message });
-    }
-  } catch (error) {
-    console.error("Error al crear usuario:", error);
-    res.status(500).json({ message: "Algo salió mal", error: error.message });
-  }
+      if (![0, 1].includes(estatus)) {
+          return res.status(400).json({ message: "El campo 'estatus' debe ser 0 o 1" });
+      }
+      // Encriptar la contraseña 
+      const salt = await bcrypt.genSalt(10); 
+      const hashedPassword = await bcrypt.hash(contrasena, salt); 
+      // Consulta SQL para verificar si el usuario ya existe 
+      const checkUserQuery = `SELECT COUNT(*) AS count FROM Usuario WHERE usuario = ?`; 
+      const insertUserQuery = `INSERT INTO Usuario (idPersona, usuario, contrasena, estatus) VALUES (?, ?, ?, ?)`; 
+      const insertRolUsuarioQuery = `INSERT INTO RolUsuario (idUsuario, idRol) VALUES (?, ?)`; 
+      // Verificar si el usuario ya existe 
+      const [checkResult] = await db.query(checkUserQuery, [usuario]); 
+      if (checkResult[0].count > 0) { 
+          return res.status(400).json({ message: "El nombre del usuario ya existe" }); 
+      } 
+      // Insertar el nuevo usuario 
+      const [userResult] = await db.query(insertUserQuery, [idPersona, usuario, hashedPassword, estatus]); 
+      // Obtener el ID del nuevo usuario insertado 
+      const newUserId = userResult.insertId; 
+      // Insertar la relación en la tabla RolUsuario 
+      await db.query(insertRolUsuarioQuery, [newUserId, idRol]); 
+      res.status(201).json({ 
+          message: `'${usuario}' creado con rol`, 
+          idUsuario: newUserId, 
+          idPersona, 
+          usuario, 
+          contrasena,
+          estatus,
+          idRol
+      }); 
+  } catch (error) { 
+      console.error("Error al crear usuario:", error); 
+      res.status(500).json({ message: "Algo salió mal", error: error.message }); 
+  } 
 };
 
 export const updateUsuario = async (req, res) => {

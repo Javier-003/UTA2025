@@ -42,8 +42,8 @@ export const PersonaModales = ({
                 <span className="input-group-text">Género:</span>
                 <select className="form-select" value={genero} onChange={(e) => setgenero(e.target.value)} >
                   <option value="">Selecciona</option>
-                  <option value="M">Masculino</option>
-                  <option value="F">Femenino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
                 </select>
               </div>
               <div className="input-group mb-3">
@@ -96,8 +96,8 @@ export const PersonaModales = ({
                 <span className="input-group-text">Género:</span>
                 <select className="form-select" value={genero} onChange={(e) => setgenero(e.target.value)} >
                   <option value="">Selecciona</option>
-                  <option value="M">Masculino</option>
-                  <option value="F">Femenino</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
                 </select>
               </div>
               <div className="input-group mb-3">

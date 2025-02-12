@@ -14,9 +14,9 @@ export const getUsuario = async (setUsuario) => {
 };
 
 // Crear un nuevo usuario
-export const addUsuario = async (idPersona, usuario, contrasena, estatus, idRol, setShowModal, getUsuario) => {
+export const addUsuario = async (idPersona, usuario, contrasena, estatus,  setShowModal, getUsuario) => {
   try {
-    await createUsuario(idPersona, usuario, contrasena, estatus, idRol);
+    await createUsuario(idPersona, usuario, contrasena, estatus);
     getUsuario();
     Swal.fire({
       icon: 'success',
