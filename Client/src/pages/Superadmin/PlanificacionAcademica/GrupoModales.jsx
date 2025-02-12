@@ -45,7 +45,7 @@ const GrupoModales = ({
   return (
     <>
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">Registrar grupo</h5>
@@ -118,7 +118,7 @@ const GrupoModales = ({
         </div>
       </div>
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">Editar grupo</h5>
@@ -191,7 +191,7 @@ const GrupoModales = ({
         </div>
       </div>
       <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">Eliminar grupo</h5>

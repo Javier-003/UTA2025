@@ -13,7 +13,7 @@ export const NivelEstudioModales = ({
     <>
       {/* Modal para registrar nivel de estudio */}
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">Registrar Nivel de Estudio</h5>
@@ -43,7 +43,7 @@ export const NivelEstudioModales = ({
 
       {/* Modal para editar nivel de estudio */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="editModalLabel">Editar Nivel de Estudio</h5>
@@ -73,7 +73,7 @@ export const NivelEstudioModales = ({
 
       {/* Modal para eliminar nivel de estudio */}
       <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="deleteModalLabel">Eliminar Nivel de Estudio</h5>

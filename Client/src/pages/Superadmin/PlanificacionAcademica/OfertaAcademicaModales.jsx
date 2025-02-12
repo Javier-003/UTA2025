@@ -25,7 +25,7 @@ export const OfertaAcademicaModales = ({
         <>
             {/* Modal para registrar oferta academica */}
             <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-dialog-right">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="modalLabel">Registrar Oferta Academica</h5>
@@ -63,7 +63,7 @@ export const OfertaAcademicaModales = ({
             
             {/* Modal para editar oferta academica */}
             <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-dialog-right">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="editModalLabel">Editar Oferta Academica</h5>
@@ -101,7 +101,7 @@ export const OfertaAcademicaModales = ({
 
             {/* Modal para eliminar oferta academica */}
             <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-dialog-right">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="modalDeleteLabel">Eliminar Oferta Academica</h5>
