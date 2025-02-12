@@ -10,11 +10,13 @@ export const PeriodoModales = ({
   handleAdd, handleUpdate, handleDelete,
   selectedPeriodo
 }) => {
+  const isEditable = estado === "Planeado";
+
   return (
     <>
       {/* Modal para registrar periodo */}
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right"> {/*Se cambia la posición del modal > modal-dialog-right*/}
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="modalLabel">Registrar Periodo</h5>
@@ -33,12 +35,11 @@ export const PeriodoModales = ({
                 <span className="input-group-text">Fecha Fin:</span>
                 <input type="date" className="form-control" value={fechaFin} onChange={(event) => setFechaFin(event.target.value)} />
               </div>
-            
               <div className="input-group mb-3">
                 <span className="input-group-text">Estado:</span>
                 <select className="form-select" value={estado} onChange={(event) => setEstado(event.target.value)}>
                   <option value="">Selecciona un estado</option>
-                  <option value="Pendiente">Pendiente</option>
+                  <option value="Planeado">Planeado</option>
                   <option value="Iniciado">Iniciado</option>
                   <option value="Finalizado">Finalizado</option>
                 </select>
@@ -54,7 +55,7 @@ export const PeriodoModales = ({
       
       {/* Modal para editar periodo */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right"> {/*Se cambia la posición del modal > modal-dialog-right*/}
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="editModalLabel">Editar Periodo</h5>
@@ -63,21 +64,21 @@ export const PeriodoModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Periodo:</span>
-                <input type="text" className="form-control" value={periodo} onChange={(event) => setPeriodoName(event.target.value)} />
+                <input type="text" className="form-control" value={periodo} onChange={(event) => setPeriodoName(event.target.value)} disabled={!isEditable} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Fecha Inicio:</span>
-                <input type="date" className="form-control" value={fechaInicio} onChange={(event) => setFechaInicio(event.target.value)} />
+                <input type="date" className="form-control" value={fechaInicio} onChange={(event) => setFechaInicio(event.target.value)} disabled={!isEditable} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Fecha Fin:</span>
-                <input type="date" className="form-control" value={fechaFin} onChange={(event) => setFechaFin(event.target.value)} />
+                <input type="date" className="form-control" value={fechaFin} onChange={(event) => setFechaFin(event.target.value)} disabled={!isEditable} />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Estado:</span>
-                <select className="form-select" value={estado} onChange={(event) => setEstado(event.target.value)}>
+                <select className="form-select" value={estado} onChange={(event) => setEstado(event.target.value)} disabled={!isEditable}>
                   <option value="">Selecciona un estado</option>
-                  <option value="Pendiente">Pendiente</option>
+                  <option value="Planeado">Planeado</option>
                   <option value="Iniciado">Iniciado</option>
                   <option value="Finalizado">Finalizado</option>
                 </select>
@@ -85,7 +86,7 @@ export const PeriodoModales = ({
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cerrar</button>
-              <button type="button" className="btn btn-primary" onClick={handleUpdate}>Actualizar</button>
+              <button type="button" className="btn btn-primary" onClick={handleUpdate} disabled={!isEditable}>Actualizar</button>
             </div>
           </div>
         </div>
@@ -93,7 +94,7 @@ export const PeriodoModales = ({
 
       {/* Modal para eliminar periodo */}
       <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right"> {/*Se cambia la posición del modal > modal-dialog-right*/}
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="deleteModalLabel">Eliminar Periodo</h5>

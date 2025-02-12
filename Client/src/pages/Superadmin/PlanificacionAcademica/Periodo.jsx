@@ -54,7 +54,7 @@ const formatDateStringHora = (isoDateString) => {
   return (
     <div className="container">
       <div className="">
-        <h5>LISTADO DE TRAMITE APERTURA DE PERIODO</h5>
+        <h5>TRAMITE APERTURA DE PERIODO</h5>
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
             setPeriodoName("");
@@ -77,7 +77,6 @@ const formatDateStringHora = (isoDateString) => {
                   <th>FECHA REGISTRO</th>
                   <th>ESTADO</th>
                   <th>Editar</th>
-                  <th>Eliminar</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,12 +98,6 @@ const formatDateStringHora = (isoDateString) => {
                           setFechaFin(formatDateString(periodo.fechaFin));
                           setEstado(periodo.estado);
                         }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {
-                          setShowDeleteModal(true);
-                          setSelectedPeriodo(periodo);
-                        }}>Eliminar</button>
                       </td>
                     </tr>
                   ))
