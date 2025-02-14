@@ -1,5 +1,4 @@
 import { Router } from "express";
-
 import { getHorario, createHorario, updateHorario, deleteHorario } 
 from "../../controllers/PlanificacionAcademica/horario.Controller.js";
 
