@@ -61,10 +61,12 @@ function OffcanvasNavbar() {
               { to: "/Departamento", text: "Departamento", icon: <FaBriefcase /> },
               { to: "/MapaCurricular", text: "Mapa Curricular", icon: <FaMapSigns /> },
               { to: "/NivelEstudio", text: "Nivel de Estudio", icon: <FaUniversity /> },
+              
               {},
               { to: "/Puesto", text: "Puesto", icon: <FaBriefcase /> },
               { to: "/MateriaUnidad", text: "Materia Unidad", icon: <FaClipboard />},
-              { to: "/AsignarPA", text: "Asignar Programa Académico", icon: <FaTasks /> }, 
+              { to: "/AsignarPA", text: "Asignar Programa Académico", icon: <FaTasks /> },
+              { to: "/AdicionProfesor", text: "Adición Profesor", icon: <FaUserPlus /> }, 
               {},
               { to: "/Edificio", text: "Edificio", icon: <FaRegBuilding /> },
               { to: "/Bloque", text: "Bloque", icon: <FaLayerGroup /> },

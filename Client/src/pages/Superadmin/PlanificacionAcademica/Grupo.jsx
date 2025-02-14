@@ -153,7 +153,7 @@ function Grupo() {
                   <td>{grupo.estatus}</td>
                   <td>{formatDateString(grupo.fecha)}</td>
                   <td>
-                    <button className="btn btn-primary" onClick={() => {
+                    <button className="btn btn-warning" onClick={() => {
                       setSelectedGrupo(grupo);
                       setIdPeriodo(grupo.idPeriodo);
                       setIdProgramaAcademico(grupo.idProgramaAcademico);

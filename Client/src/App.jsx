@@ -35,6 +35,7 @@ import Materias from './pages/Superadmin/PlanificacionAcademica/Cargadematerias'
 import ProgramaAcademico from './pages/Superadmin/PlanificacionAcademica/ProgramaAcademico';
 import MapaCurricular from './pages/Superadmin/PlanificacionAcademica/MapaCurricular';
 import Periodo from "./pages/Superadmin/PlanificacionAcademica/Periodo";
+import AdicionProfesor from "./pages/Superadmin/PlanificacionAcademica/AdicionProfesor";
 
 
 // -------------------------- PARAMETRIZACIÓN --------------------------------
@@ -94,6 +95,7 @@ function App() {
         <Route path="/NivelEstudio" element={<NivelEstudio />} />
         <Route path="/Periodo" element={<Periodo />} />
         <Route path="/OfertaAcademica" element={<OfertaAcademica />} /> {/* Usar el componente OfertaAcademica */}
+        <Route path="/AdicionProfesor" element={<AdicionProfesor />} />
         <Route path="/Departamento" element={<Departamento />} />
         <Route path="/Puesto" element={<Puesto />} />
         <Route path="/Edificio" element={<Edificio />} />
