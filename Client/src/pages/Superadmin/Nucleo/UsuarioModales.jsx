@@ -1,11 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, Fragment } from 'react';
 import { getPersonas } from "../../../api/Nucleo/persona.api.js";
+import { getRol } from "../../../api/Nucleo/rol.api.js";
 
 export const UsuarioModales = ({
   idPersona, setidPersona,
   usuario, setUsuario,
   estatus, setEstatus,
+  idRol,setIdRol,
   contrasena, setcontrasena,
   rol, setrol,
   showModal, setShowModal,
@@ -20,8 +22,12 @@ export const UsuarioModales = ({
   const [showPassword, setShowPassword] = useState(false);
   const [personaList, setPersonaList] = useState([]);
   
+  const [rolList, setRolList] = useState([]);
+  
   useEffect(() => {
     getPersonas().then(data => setPersonaList(data)).catch(error => console.error("Error al obtener las personas:", error));
+    
+    getRol().then(data => setRolList(data)).catch(error => console.error("Error al obtener los Roles:", error));
   }, []);
   
   return (
@@ -152,14 +158,14 @@ export const UsuarioModales = ({
               <button type="button" className="btn-close" onClick={() => setShowAddRoleModal(false)}></button>
             </div>
             <div className="modal-body">
-              <select className="form-select" value={selectedRole} onChange={(event) => setSelectedRole(event.target.value)}>
-                <option value="">Seleccionar Rol</option>
-                <option value="Admin">Admin</option>
-                <option value="Profesor">Profesor</option>
-                <option value="Alumno">Alumno</option>
-                <option value="DGA">DGA</option>
-                <option value="SE">SE</option>
-              </select>
+              <select className="form-select" value={idRol} onChange={(event) => setIdRol(event.target.value)}>
+                  <option value="">Seleccionar Rol</option>
+                  {rolList.map((rol) => (
+                    <option key={rol.idRol} value={rol.idRol}>
+                      {rol.nombre}
+                    </option>
+                  ))}
+                </select>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowAddRoleModal(false)}>Cerrar</button>
@@ -180,12 +186,14 @@ export const UsuarioModales = ({
             <div className="modal-body">
               <p>¿Estás seguro de eliminar un rol de <strong>{selectedUsuario?.usuario}</strong>?</p>
               <select className="form-select" value={selectedRole} onChange={(event) => setSelectedRole(event.target.value)}>
-                <option value="">Seleccionar Rol a Eliminar</option>
-                <option value="Admin">Admin</option>
-                <option value="Profesor">Profesor</option>
-                <option value="Alumno">Alumno</option>
-                <option value="DGA">DGA</option>
-                <option value="SE">SE</option>
+              <select className="form-select" value={idRol} onChange={(event) => setIdRol(event.target.value)}>
+                  <option value="">Seleccionar Rol</option>
+                  {rolList.map((rol) => (
+                    <option key={rol.idRol} value={rol.idRol}>
+                      {rol.nombre}
+                    </option>
+                  ))}
+                </select>
               </select>
             </div>
             <div className="modal-footer">

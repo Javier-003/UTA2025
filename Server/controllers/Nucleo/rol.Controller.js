@@ -1,5 +1,18 @@
 import { db } from "../../db/connection.js";
 
+export const getRolestodos = async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM rol");
+    if (rows.length > 0) {    
+      res.json({ message: "Roles obtenidas correctamente", data: rows });
+    } else {
+      res.status(404).json({ message: "No se encontraron rol" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Algo salió mal", error: error.message });
+  }
+};
+
 export const createRol = async (req, res) => {
   try {
     const { idUsuario, idRol } = req.body;

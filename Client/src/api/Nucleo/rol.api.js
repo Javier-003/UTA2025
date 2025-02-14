@@ -3,6 +3,17 @@ import axios from 'axios';
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
 
+// Obtener todos los roles
+export const getRol = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/rol`);
+    return response.data.data; // Retorna los datos de los roles
+  } catch (error) {
+    console.error("Error al obtener los roles:", error);
+    throw new Error('Error al obtener los roles');
+  }
+};
+
 // Agregar un rol a un usuario
 export const agregarRolUsuario = async (idUsuario, idRol) => {
   try {
