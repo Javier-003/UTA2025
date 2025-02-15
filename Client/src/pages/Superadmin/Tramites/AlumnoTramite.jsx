@@ -7,11 +7,18 @@ import { AlumnoTramiteModales } from '../Tramites/AlumnoTramiteModales.jsx';
 
 function AlumnoTramite() {
   const [alumnotramiteList, setAlumnoTramite] = useState([]);
+
   const [idTramite, setIdTramite] = useState("");
-  const [idAlumnoPA, setIdAlumno] = useState("");
+  const [idAlumnoPA, setIdAlumnoPA] = useState("");
   const [idPeriodo, setIdPeriodo] = useState("");
   const [fecha, setFecha] = useState("");
   const [estatus, setEstatus] = useState("");
+
+  //FK
+  const [tramite, setTramite] = useState("");
+  const [alumno, setAlumno] = useState("");
+  const [periodo, setPeriodo] = useState("");
+
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -23,9 +30,9 @@ function AlumnoTramite() {
   }, []);
 
   const filteredData = alumnotramiteList.filter(item => {
-    const estatus = item.Estatus || "";
+    const alumno = item.alumno || "";
     return (
-      estatus.toLowerCase().includes(searchText.toLowerCase()) 
+      alumno.toLowerCase().includes(searchText.toLowerCase()) 
     );
   });
 
@@ -41,6 +48,14 @@ function AlumnoTramite() {
     deleteAlumnoTramiteFunc(selectedAlumnoTramite.idAlumnoTramite, setShowDeleteModal, () => getAlumnoTramite(setAlumnoTramite));
   };
 
+  // Function to remove "T06:00:00.000Z" from dates
+  const formatDateString = (dateString) => {
+    if (dateString) {
+      return dateString.split('T')[0];
+    }
+    return dateString;
+  };
+
   return (
     <div className="container">
       <div className="">
@@ -48,24 +63,35 @@ function AlumnoTramite() {
         <div className="card-body">
           <button className='btn btn-success' onClick={() => {
             setIdTramite("");
-            setIdAlumno("");
+            setIdAlumnoPA("");
             setIdPeriodo("");
             setFecha("");
             setEstatus("");
+
+            //FK
+            setAlumno("");
+            setTramite("");
+            setPeriodo("");
+
             setSelectedAlumnoTramite(null);
             setShowModal(true);
           }}>Registrar</button>
 
           <div className="mt-4">
             <input type="text" className="form-control mb-1" value={searchText}
-            onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Estatus, IdTramite o IdAlumno" />
+            onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Alumno" />
             <table className="table table-bordered">
               <thead> 
                 <tr>
-                  <th>ID</th>
-                  <th>ID TRÁMITE</th>
-                  <th>ID ALUMNO</th>
-                  <th>ID PERIODO</th>
+                  {/* <th>ID</th> */}
+                  {/* <th>ID TRÁMITE</th> */}
+                  <th>TRÁMITE</th>
+                  {/* <th>ID ALUMNO</th> */}
+                  <th>MATRÍCULA</th>
+                  <th>ALUMNO</th>
+                  <th>PROGRAMA ACADÉMICO</th>
+                  {/* <th>ID PERIODO</th> */}
+                  <th>PERIODO</th>
                   <th>FECHA</th>
                   <th>ESTATUS</th>
                   <th>Editar</th>
@@ -76,18 +102,25 @@ function AlumnoTramite() {
                 {filteredData.length > 0 ? (
                   filteredData.map((alumnotramite) => (
                     <tr key={alumnotramite.idAlumnoTramite}>
-                      <td>{alumnotramite.idAlumnoTramite}</td>
-                      <td>{alumnotramite.idTramite}</td>
-                      <td>{alumnotramite.idAlumnoPA}</td>
-                      <td>{alumnotramite.idPeriodo}</td>
-                      <td>{alumnotramite.fecha}</td>
+                      {/* <td>{alumnotramite.idAlumnoTramite}</td> */}
+                      {/* <td>{alumnotramite.idTramite}</td> */}
+                      {/*  <td>{alumnotramite.tramite}</td>*/}
+                      <td><strong>{alumnotramite.tramite}</strong></td>
+                      {/* <td>{alumnotramite.idAlumnoPA}</td> */}
+                      <td>{alumnotramite.matricula}</td>
+                      <td>{alumnotramite.alumno}</td>
+                      <td>{alumnotramite.programa}</td>
+                      {/* <td>{alumnotramite.idPeriodo}</td> */}
+                      <td>{alumnotramite.periodo}</td>
+                      <td>{formatDateString(alumnotramite.fecha)}</td>
                       <td>{alumnotramite.estatus}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                           setIdTramite(alumnotramite.idTramite);
-                          setIdAlumno(alumnotramite.idAlumnoPA);
+                          setIdAlumnoPA(alumnotramite.idAlumnoPA);
                           setIdPeriodo(alumnotramite.idPeriodo);
                           setFecha(alumnotramite.fecha);
+                          setFecha(formatDateString(alumnotramite.fecha))
                           setEstatus(alumnotramite.estatus);
                           setShowEditModal(true);
                           setSelectedAlumnoTramite(alumnotramite);
@@ -112,11 +145,17 @@ function AlumnoTramite() {
         </div>
       </div>
       <AlumnoTramiteModales
-        IdTramite={idTramite} setIdTramite={setIdTramite}
-        IdAlumno={idAlumnoPA} setIdAlumno={setIdAlumno}
-        IdPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
-        Fecha={fecha} setFecha={setFecha}
-        Estatus={estatus} setEstatus={setEstatus}
+        idTramite={idTramite} setIdTramite={setIdTramite}
+        idAlumnoPA={idAlumnoPA} setIdAlumnoPA={setIdAlumnoPA}
+        idPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
+        fecha={fecha} setFecha={setFecha}
+        estatus={estatus} setEstatus={setEstatus}
+
+        tramite={tramite} setTramite={setTramite}
+        alumno={alumno} setAlumno={setAlumno}
+        periodo={periodo} setPeriodo={setPeriodo}
+
+
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}

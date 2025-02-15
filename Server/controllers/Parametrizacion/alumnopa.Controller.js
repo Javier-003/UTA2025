@@ -4,14 +4,13 @@ export const getAlumnopatodos = async (req, res) => {
   try {
     const query = `
       SELECT alp.*, 
-             CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre, 
-             pe.periodo, 
-             CONCAT(pa.Titulo_tsu, ' ', pa.Titulo_Ing) AS programa 
-      FROM integradora_se.alumno_programa AS alp
-      INNER JOIN alumno AS al ON al.id_alumno = alp.idAlumno
-      INNER JOIN persona AS p ON p.id_persona = al.id_alumno
-      INNER JOIN periodo AS pe ON pe.id_periodo = alp.idPeriodo
-      INNER JOIN programaacademico AS pa ON pa.id_programa_academico = alp.idProgramaAcademico
+      pe.periodo,  
+      CONCAT(p.nombre, ' ', p.paterno, ' ', p.materno) AS nombre
+      FROM alumnopa AS alp
+      INNER JOIN alumno AS al ON al.idAlumno = alp.idAlumno
+      INNER JOIN persona AS p ON p.idPersona = al.idAlumno
+      INNER JOIN periodo AS pe ON pe.idPeriodo = alp.idPeriodo
+      INNER JOIN programaacademico AS pa ON pa.idProgramaAcademico = alp.idProgramaAcademico
     `;
     const [rows] = await db.query(query);
     if (rows.length > 0) {

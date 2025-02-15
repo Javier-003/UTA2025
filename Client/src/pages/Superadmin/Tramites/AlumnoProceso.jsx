@@ -14,8 +14,11 @@ function AlumnoProceso() {
   const [orden, setOrden] = useState("");
   const [estatus, setEstatus] = useState("");
   const [observacion, setObservacion] = useState("");
+  
   const [NombreAlumno, setNombreAlumno] = useState(""); 
   const [NombreActividad, setNombreActividad] = useState(""); 
+  const [tramite, setTramite] = useState(""); 
+
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -63,6 +66,7 @@ function AlumnoProceso() {
             setObservacion("");
             setNombreAlumno(""); // Añadido Nombre Alumno
             setNombreActividad(""); // Añadido NombreActividad
+            setTramite("");
             setSelectedAlumnoProceso(null);
             setShowModal(true);
           }}>Registrar</button>
@@ -77,6 +81,7 @@ function AlumnoProceso() {
                   <th>ID AT</th>
                   <th>NOMBRE ALUMNO</th> 
                   <th>ID TP</th>
+                  <th>TRÁMITE</th>
                   <th>ID A</th>
                   <th>NOMBRE ACTIVIDAD</th>
                   <th>ORDEN</th>
@@ -94,6 +99,7 @@ function AlumnoProceso() {
                       <td>{alumnoproceso.idAlumnoTramite}</td>
                       <td>{alumnoproceso.NombreAlumno}</td> 
                       <td>{alumnoproceso.idTramiteProceso}</td>
+                      <td>{alumnoproceso.tramite}</td>
                       <td>{alumnoproceso.idActividad}</td>
                       <td>{alumnoproceso.NombreActividad}</td>
                       <td>{alumnoproceso.orden}</td>
@@ -109,6 +115,7 @@ function AlumnoProceso() {
                           setObservacion(alumnoproceso.observacion);
                           setNombreAlumno(alumnoproceso.NombreAlumno); // Añadido Nombre Alumno
                           setNombreActividad(alumnoproceso.NombreActividad); // Añadido NombreActividad
+                          setTramite(alumnoproceso.tramite);
                           setShowEditModal(true); 
                           setSelectedAlumnoProceso(alumnoproceso);
                         }}>Editar</button>
@@ -134,16 +141,16 @@ function AlumnoProceso() {
       <AlumnoProcesoModales
       
       idAlumnoTramite={idAlumnoTramite} setIdAlumnoTramite={setIdAlumnoTramite}  
-idTramiteProceso={idTramiteProceso} setIdTramiteProceso={setIdTramiteProceso}  
-idActividad={idActividad} setIdActividad={setIdActividad}  
-orden={orden} setOrden={setOrden}  
-estatus={estatus} setEstatus={setEstatus}  
-observacion={observacion} setObservacion={setObservacion}  
-showModal={showModal} setShowModal={setShowModal}  
-showEditModal={showEditModal} setShowEditModal={setShowEditModal}  
-showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}  
-handleAdd={handleAdd} handleUpdate={handleUpdate}  
-handleDelete={handleDelete} setSelectedAlumnoProceso={setSelectedAlumnoProceso}  
+      idTramiteProceso={idTramiteProceso} setIdTramiteProceso={setIdTramiteProceso}  
+      idActividad={idActividad} setIdActividad={setIdActividad}  
+      orden={orden} setOrden={setOrden}  
+      estatus={estatus} setEstatus={setEstatus}  
+      observacion={observacion} setObservacion={setObservacion}  
+      showModal={showModal} setShowModal={setShowModal}  
+      showEditModal={showEditModal} setShowEditModal={setShowEditModal}  
+      showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}  
+      handleAdd={handleAdd} handleUpdate={handleUpdate}  
+      handleDelete={handleDelete} setSelectedAlumnoProceso={setSelectedAlumnoProceso}  
    />
 
 

@@ -16,6 +16,7 @@ export const getAlumnoTramites = async () => {
 
 // Crear un nuevo trámite de alumno
 export const createAlumnoTramite = async (idTramite, idAlumnoPA, idPeriodo, fecha, estatus) => {
+  console.log("llegando a api", { idTramite, idAlumnoPA, idPeriodo, fecha, estatus });
   try {
     await axios.post(`${BASE_URL}/alumnotramite/create`, { idTramite, idAlumnoPA, idPeriodo, fecha, estatus });
   } catch (error) {
@@ -37,6 +38,7 @@ export const updateAlumnoTramite = async (idAlumnoTramite, idTramite, idAlumnoPA
 // Eliminar un trámite de alumno
 export const deleteAlumnoTramite = async (idAlumnoTramite) => {
   try {
+    console.log("Intentando eliminar trámite con ID:", idAlumnoTramite);
     await axios.delete(`${BASE_URL}/alumnotramite/delete/${idAlumnoTramite}`);
   } catch (error) {
     console.error("Error al eliminar el trámite de alumno:", error);

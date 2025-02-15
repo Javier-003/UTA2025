@@ -9,22 +9,18 @@ export const getAlumnoTramitetodos = async(req, res) => {
         Alt.idPeriodo,
         Alt.fecha,  
         Alt.estatus,
-        apa.matricula,
+        apa.matricula AS matricula,
+        prog.nombreOficial AS programa, 
         alumno.idAlumno,
-        p.nombre AS NombreAlumno,
-        p.paterno AS apellidoPaterno,
-        p.materno AS apellidoMaterno,
-        tramite.nombre AS NombreTramite,
-        CONCAT(prog.nombre, ' ', prog.sigla) AS Programa_Academico,
-        tramite.idTramite
+        tramite.nombre AS tramite, 
+        periodo.periodo AS periodo, 
+        CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS alumno
       FROM
-        AlumnoTramite Alt
+        alumnotramite Alt
       JOIN 
         periodo ON Alt.idPeriodo = periodo.idPeriodo
       JOIN
-        tramite on Alt.idTramite = tramite.idTramite
-      JOIN
-        tramite on Alt.idTramite = tramite.idTramite
+        tramite ON Alt.idTramite = tramite.idTramite
       JOIN
         alumnopa apa ON Alt.idAlumnoPA = apa.idAlumnoPA
       JOIN
@@ -93,13 +89,13 @@ export const deleteAlumnoTramite = async (req, res) => {
     const { idAlumnoTramite } = req.params;
     // Verificar si el trámite del alumno existe
     const [alumnotramite] = await db.query("SELECT idAlumnoTramite FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
-    if (!alumnoTramite.length) 
+    if (!alumnotramite.length) 
       return res.status(404).json({ message: "Alumno Tramite no encontrado" });
     // Eliminar el trámite del alumno
     const [rows] = await db.query("DELETE FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
     // Verificar si la eliminación se realizó correctamente
     rows.affectedRows
-      ? res.status(200).json({ message: `Trámite de '${alumnoTramite[0].NombreAlumno}' eliminado correctamente` })
+      ? res.status(200).json({ message: `Trámite eliminado correctamente` })
       : res.status(404).json({ message: "Alumno Tramite no encontrado" });
   } catch (error) {
     res.status(500).json({ message: "Algo salió mal", error: error.message });

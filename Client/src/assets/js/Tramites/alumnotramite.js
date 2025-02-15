@@ -12,6 +12,7 @@ export const getAlumnoTramite = async (setAlumnoTramite) => {
 };
 
 export const addAlumnoTramite = async (idTramite, idAlumnoPA, idPeriodo, fecha, estatus, setShowModal, getAlumnoTramite) => {
+  console.log("saliendo", { idTramite, idAlumnoPA, idPeriodo, fecha, estatus });
   try {
     await createAlumnoTramite(idTramite, idAlumnoPA, idPeriodo, fecha, estatus);
     getAlumnoTramite();
@@ -53,6 +54,7 @@ export const updateAlumnoTramiteFunc = async (idAlumnoTramite, idTramite, idAlum
 
 export const deleteAlumnoTramiteFunc = async (idAlumnoTramite, setShowDeleteModal, getAlumnoTramite) => {
   try {
+    console.log("Intentando eliminar trámite con ID:", idAlumnoTramite);
     await deleteAlumnoTramite(idAlumnoTramite);
     getAlumnoTramite();
     Swal.fire({

@@ -57,18 +57,18 @@ function TramiteProceso() {
         {/* Filtros */}
         <div className="d-flex mb-3">
         <select
-  className="form-select me-2"
-  value={selectedTramite}
-  onChange={(e) => {
-    const selectedId = e.target.value;
-    setSelectedTramite(selectedId);
+        className="form-select me-2"
+        value={selectedTramite}
+        onChange={(e) => {
+          const selectedId = e.target.value;
+          setSelectedTramite(selectedId);
 
-    // Buscar el trámite correcto, asegurando que comparamos correctamente tipos de datos
-    const tramite = tramiteList.find((t) => t.idTramite == selectedId); // Usamos == para evitar problemas de tipo
-    setNombreTramite(tramite ? tramite.nombre : "Registrar");
-    setIdTramite(selectedId);
-  }}
->
+          // Buscar el trámite correcto, asegurando que comparamos correctamente tipos de datos
+          const tramite = tramiteList.find((t) => t.idTramite == selectedId); // Usamos == para evitar problemas de tipo
+          setNombreTramite(tramite ? tramite.nombre : "Registrar");
+          setIdTramite(selectedId);
+        }}
+      >
 
             <option value="">Mostrar todos los trámites</option>
             {tramiteList.map((tramite) => (
