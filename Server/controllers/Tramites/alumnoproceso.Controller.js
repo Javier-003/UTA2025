@@ -11,6 +11,7 @@ export const getAlumnoProcesotodos = async(req, res) => {
         ap.orden,
         ap.estatus,
         ap.observacion,
+        apa.matricula AS matricula,
         act.nombre AS NombreActividad,
         t.nombre AS tramite, 
         CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno

@@ -5,6 +5,8 @@ import { getAlumnoTramite, addAlumnoTramite, updateAlumnoTramiteFunc, deleteAlum
 from '../../../assets/js/Tramites/alumnotramite.js';
 import { AlumnoTramiteModales } from '../Tramites/AlumnoTramiteModales.jsx';
 
+import { getTramites } from '../../../api/Parametrizacion/tramite.api.js';
+
 function AlumnoTramite() {
   const [alumnotramiteList, setAlumnoTramite] = useState([]);
 
@@ -19,22 +21,29 @@ function AlumnoTramite() {
   const [alumno, setAlumno] = useState("");
   const [periodo, setPeriodo] = useState("");
 
+  //Para filtro de trámite
+  const [tramiteList, setTramiteList] = useState([]); // Nueva lista de trámites
+  const [selectedTramite, setSelectedTramite] = useState('');//New
+
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedAlumnoTramite, setSelectedAlumnoTramite] = useState(null);
 
+
   useEffect(() => { 
     getAlumnoTramite(setAlumnoTramite); 
+    getTramites().then(setTramiteList); // Obtiene todos los trámites para el filtro
   }, []);
 
-  const filteredData = alumnotramiteList.filter(item => {
-    const alumno = item.alumno || "";
-    return (
-      alumno.toLowerCase().includes(searchText.toLowerCase()) 
-    );
-  });
+  
+  const filteredData = alumnotramiteList.filter(
+    (item) =>
+      (!selectedTramite || item.idTramite == selectedTramite) && // Usar == para comparar string con número
+      item.alumno.toLowerCase().includes(searchText.toLowerCase())
+  );
+
 
   const handleAdd = () => {
     addAlumnoTramite(idTramite, idAlumnoPA, idPeriodo, fecha, estatus, setShowModal, () => getAlumnoTramite(setAlumnoTramite));
@@ -61,6 +70,32 @@ function AlumnoTramite() {
       <div className="">
         <h5>LISTADO DE ALUMNOS EN TRÁMITES</h5>
         <div className="card-body">
+
+    {/* ------------------- Filtros -------------------------------*/}
+    <div className="d-flex mb-3">
+        <select
+        className="form-select me-2"
+        value={selectedTramite}
+        onChange={(e) => {
+          const selectedId = e.target.value;
+          setSelectedTramite(selectedId);
+
+          // Buscar el trámite correcto, asegurando que comparamos correctamente tipos de datos
+          const tramite = tramiteList.find((t) => t.idTramite == selectedId); // Usamos == para evitar problemas de tipo
+          setTramite(tramite ? tramite.nombre : "Registrar");
+          setIdTramite(selectedId);
+        }}
+      >
+            <option value="">Mostrar todos los trámites</option>
+            {tramiteList.map((tramite) => (
+              <option key={tramite.idTramite} value={tramite.idTramite}>
+                {tramite.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+ {/* ------------------- FIN Filtros -------------------------------*/}
+ 
           <button className='btn btn-success' onClick={() => {
             setIdTramite("");
             setIdAlumnoPA("");

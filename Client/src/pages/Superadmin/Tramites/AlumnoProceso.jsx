@@ -79,6 +79,7 @@ function AlumnoProceso() {
                 <tr>
                   <th>ID</th>
                   <th>ID AT</th>
+                  <th>MATRÍCULA</th> 
                   <th>NOMBRE ALUMNO</th> 
                   <th>ID TP</th>
                   <th>TRÁMITE</th>
@@ -97,6 +98,7 @@ function AlumnoProceso() {
                     <tr key={alumnoproceso.idAlumnoProceso}>
                       <td>{alumnoproceso.idAlumnoProceso}</td>
                       <td>{alumnoproceso.idAlumnoTramite}</td>
+                      <td>{alumnoproceso.matricula}</td> 
                       <td>{alumnoproceso.NombreAlumno}</td> 
                       <td>{alumnoproceso.idTramiteProceso}</td>
                       <td>{alumnoproceso.tramite}</td>
