@@ -26,7 +26,8 @@ import Historial from './pages/Superadmin/Nucleo/Historial';
 import AlumnoTramite from './pages/Superadmin/Tramites/AlumnoTramite';
 import AlumnoProceso from './pages/Superadmin/Tramites/AlumnoProceso';
 
-
+import RegistrarST from './pages/Superadmin/Tramites/registrarST'
+import Seguimientodetramite from './pages/Superadmin/Tramites/seguimientoTramite';
 // -------------------------- PLANIFICACIÓN ACADEMICA -------------------------
 import NivelEstudio from "./pages/Superadmin/PlanificacionAcademica/NivelEstudio";
 import Grupo from './pages/Superadmin/PlanificacionAcademica/Grupo';
@@ -107,8 +108,9 @@ function App() {
         <Route path="/Bloque" element={<Bloque />} />
         <Route path="/Grupo" element={<Grupo />} />
         <Route path="/Materias" element={<Materias />} />
-        <Route path="/SeguimientoTramite" element={<SeguimientoTramite />} />
+        <Route path="/SeguimientoTramite" element={<Seguimientodetramite />} />
         <Route path="/Consultadekadex" element={<Consultadekadex />} />
+        <Route path="/nuevoTramiteAlumno" element={<RegistrarST/>} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

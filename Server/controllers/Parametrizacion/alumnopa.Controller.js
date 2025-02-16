@@ -5,6 +5,7 @@ export const getAlumnopatodos = async (req, res) => {
     const query = `
       SELECT alp.*, 
       pe.periodo,  
+      pa.nombreOficial AS programa, 
       CONCAT(p.nombre, ' ', p.paterno, ' ', p.materno) AS nombre
       FROM alumnopa AS alp
       INNER JOIN alumno AS al ON al.idAlumno = alp.idAlumno
