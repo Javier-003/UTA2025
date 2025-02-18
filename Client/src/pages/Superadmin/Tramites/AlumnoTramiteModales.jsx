@@ -55,7 +55,7 @@ export const AlumnoTramiteModales = ({
               </div>
 
               <div className="input-group mb-3">
-              <span className="input-group-text">Mapa Curricular:</span>
+              <span className="input-group-text">Trámite:</span>
               <select className="form-select" value={idTramite} onChange={(event) => setIdTramite(event.target.value)}>
                 <option value="">Selecciona un Tramite</option>
                 {tramiteList.map((tramiteList) => (

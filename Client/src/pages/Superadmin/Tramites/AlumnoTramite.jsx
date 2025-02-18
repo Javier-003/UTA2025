@@ -1,7 +1,7 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getAlumnoTramite, addAlumnoTramite, updateAlumnoTramiteFunc, deleteAlumnoTramiteFunc } 
+import {getAlumnoTramite, addAlumnoTramite, updateAlumnoTramiteFunc, deleteAlumnoTramiteFunc } 
 from '../../../assets/js/Tramites/alumnotramite.js';
 import { AlumnoTramiteModales } from '../Tramites/AlumnoTramiteModales.jsx';
 
@@ -95,7 +95,7 @@ function AlumnoTramite() {
           </select>
         </div>
  {/* ------------------- FIN Filtros -------------------------------*/}
- 
+
           <button className='btn btn-success' onClick={() => {
             setIdTramite("");
             setIdAlumnoPA("");

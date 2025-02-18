@@ -55,7 +55,7 @@ import Consultadekadex from './pages/Superadmin/plantillaAlumno/ConsultaKardex '
 
 
 
-import SeguimientoTramite from './pages/Superadmin/Seguimientodetramite';
+
 
 
 //import horario from './pages/Superadmin/cargamaterias.horario';

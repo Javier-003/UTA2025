@@ -74,12 +74,15 @@ function Seguimientodetramite() {
         <h5>SEGUIMIENTO DE TRÁMITES</h5>
         <div className="card-body">
 
-        <button 
-        className="btn btn-primary mb-3"
-        onClick={() => navigate('/nuevoTramiteAlumno')} 
-        >Ir a Nuevo Trámite
-      </button>
 
+
+    {/* Botón mejorado */}
+        <button 
+          className="btn btn-success mb-3"
+          onClick={() => navigate('/nuevoTramiteAlumno')}
+        >
+          <i className="bi bi-plus-circle me-2"></i> Ir a Nuevo Trámite
+        </button>
     {/* ------------------- Filtros -------------------------------*/}
     <div className="d-flex mb-3">
         <select
@@ -89,10 +92,7 @@ function Seguimientodetramite() {
           const selectedId = e.target.value;
           setSelectedTramite(selectedId);
 
-          // Buscar el trámite correcto, asegurando que comparamos correctamente tipos de datos
-          const tramite = tramiteList.find((t) => t.idTramite == selectedId); // Usamos == para evitar problemas de tipo
-          setTramite(tramite ? tramite.nombre : "Registrar");
-          setIdTramite(selectedId);
+      
         }}
       >
             <option value="">Mostrar todos los trámites</option>
@@ -104,23 +104,6 @@ function Seguimientodetramite() {
           </select>
         </div>
  {/* ------------------- FIN Filtros -------------------------------*/}
- 
-          <button className='btn btn-success' onClick={() => {
-            setIdTramite("");
-            setIdAlumnoPA("");
-            setIdPeriodo("");
-            setFecha("");
-            setEstatus("");
-
-            //FK
-            setAlumno("");
-            setTramite("");
-            setPeriodo("");
-
-            setSelectedAlumnoTramite(null);
-            setShowModal(true);
-          }}>Registrar</button>
-
           <div className="mt-4">
             <input type="text" className="form-control mb-1" value={searchText}
             onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Alumno" />
@@ -138,6 +121,7 @@ function Seguimientodetramite() {
                   <th>PERIODO</th>
                   <th>FECHA</th>
                   <th>ESTATUS</th>
+                  <th>PROCESO</th>
                   <th>Editar</th>
                   <th>Eliminar</th>
                 </tr>
@@ -158,6 +142,12 @@ function Seguimientodetramite() {
                       <td>{alumnotramite.periodo}</td>
                       <td>{formatDateString(alumnotramite.fecha)}</td>
                       <td>{alumnotramite.estatus}</td>
+
+                        {/* Nueva columna de proceso con icono */}
+                      <td className="text-center">
+                        <i className="bi bi-hourglass-split text-primary fs-5"></i>
+                      </td>
+
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                           setIdTramite(alumnotramite.idTramite);
