@@ -30,7 +30,7 @@ export const accessLogin = async (req,res) => {
           const token = jwt.sign({Username}, "Stack", {expiresIn: '24h'});
           return res.status(200).send({
             message: `Autenticación exitosa`,
-            Username: foundUser.usuario,
+            Username: Username,
             Token: token
           });
         }

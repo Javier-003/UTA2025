@@ -18,65 +18,74 @@ export const getUsuarioTodos = async (req, res) => {
     rol r ON ru.idRol = r.idRol
     GROUP BY 
     u.idUsuario, p.idPersona;`;
+    
     const [rows] = await db.query(query);
-    if (rows.length > 0) {
-      res.json({ message: "Usuarios obtenidos correctamente", data: rows });
-    } else {
-      res.status(404).json({ message: "No se encontraron usuarios" });
-    }
+    
+    res.status(200).json({
+      message: rows.length > 0 ? "Usuarios obtenidos correctamente" : "No se encontraron usuarios",
+      data: rows
+    });
   } catch (error) {
     return res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
 
-export const createUsuario = async (req, res) => { 
-  try { 
-      const { idPersona, usuario, contrasena, estatus, idRol } = req.body; 
-      if (!idPersona || !usuario || !contrasena || estatus === undefined || !idRol) { 
-          return res.status(400).json({ 
-              message: "Todos los campos son requeridos: idPersona, usuario, contrasena, estatus, idRol" 
-          }); 
-      }
-      if (![0, 1].includes(estatus)) {
-          return res.status(400).json({ message: "El campo 'estatus' debe ser 0 o 1" });
-      }
-      // Encriptar la contraseña 
-      const salt = await bcrypt.genSalt(10); 
-      const hashedPassword = await bcrypt.hash(contrasena, salt); 
-      // Consulta SQL para verificar si el usuario ya existe 
-      const checkUserQuery = `SELECT COUNT(*) AS count FROM Usuario WHERE usuario = ?`; 
-      const insertUserQuery = `INSERT INTO Usuario (idPersona, usuario, contrasena, estatus) VALUES (?, ?, ?, ?)`; 
-      const insertRolUsuarioQuery = `INSERT INTO RolUsuario (idUsuario, idRol) VALUES (?, ?)`; 
-      // Verificar si el usuario ya existe 
-      const [checkResult] = await db.query(checkUserQuery, [usuario]); 
-      if (checkResult[0].count > 0) { 
-          return res.status(400).json({ message: "El nombre del usuario ya existe" }); 
-      } 
-      // Insertar el nuevo usuario 
-      const [userResult] = await db.query(insertUserQuery, [idPersona, usuario, hashedPassword, estatus]); 
-      // Obtener el ID del nuevo usuario insertado 
-      const newUserId = userResult.insertId; 
-      // Insertar la relación en la tabla RolUsuario 
-      await db.query(insertRolUsuarioQuery, [newUserId, idRol]); 
-      res.status(201).json({ 
-          message: `'${usuario}' creado con rol`, 
-          idUsuario: newUserId, 
-          idPersona, 
-          usuario, 
-          contrasena,
-          estatus,
-          idRol
-      }); 
-  } catch (error) { 
-      console.error("Error al crear usuario:", error); 
-      res.status(500).json({ message: "Algo salió mal", error: error.message }); 
-  } 
+export const createUsuario = async (req, res) => {
+  try {
+    const { idPersona, usuario, contrasena, estatus, idRol, userSession } = req.body;
+
+    // Validación de parámetros requeridos
+    if (!idPersona || !usuario || !contrasena || !['0', '1'].includes(estatus) || !idRol) {
+      return res.status(400).json({ message: "Todos los campos son requeridos: idPersona, usuario, contrasena, estatus, idRol" }); 
+    }
+
+    // Encriptación de la contraseña
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(contrasena, salt);
+
+    // Consulta para verificar si el usuario ya existe
+    const checkUserQuery = `SELECT COUNT(*) AS count FROM Usuario WHERE usuario = ?`;
+
+    // Consulta de inserción de usuario
+    const insertUserQuery = `INSERT INTO Usuario (idPersona, usuario, contrasena, estatus) VALUES (?, ?, ?, ?)`;
+
+    // Consulta para insertar en RolUsuario
+    const insertRolUsuarioQuery = `INSERT INTO RolUsuario (idUsuario, idRol) VALUES (?, ?)`;
+
+    // Verificar si el nombre de usuario ya existe
+    const [checkResult] = await db.query(checkUserQuery, [usuario]); 
+    if (checkResult[0].count > 0) {
+      return res.status(400).json({ message: "El nombre del usuario ya existe" }); 
+    }
+
+    // Insertar el nuevo usuario
+    const [userResult] = await db.query(insertUserQuery, [idPersona, usuario, hashedPassword, estatus]); 
+    const newUserId = userResult.insertId;
+
+    // Insertar la relación del rol
+    await db.query(insertRolUsuarioQuery, [newUserId, idRol]);
+
+    // Responder al cliente con éxito
+    res.status(200).json({
+      message: `'${usuario}' creado con rol`,
+      idUsuario: newUserId,
+      idPersona,
+      usuario,
+      estatus,
+      idRol,
+      userSession: userSession
+    });
+  } catch (error) {
+    console.error("Error al crear usuario:", error);
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
+  }
 };
+
 
 export const updateUsuario = async (req, res) => {
   try {
     const { idUsuario } = req.params;
-    const { idPersona, usuario, contrasena, estatus } = req.body;
+    const { idPersona, usuario, contrasena, estatus, userSession } = req.body;
     // Verificar si el nombre de usuario ya existe en otro usuario
     const checkQuery = `SELECT COUNT(*) as count FROM Usuario WHERE usuario = ? AND idUsuario != ?`;
     // Consulta SQL para actualizar los datos del usuario
@@ -107,7 +116,7 @@ export const updateUsuario = async (req, res) => {
         return res.status(400).json({ message: "No se pudo actualizar el usuario" });
       }
       res.status(200).json({message: `'${usuario}' actualizado correctamente`,
-        idUsuario: idUsuario,idPersona: idPersona,usuario,estatus,});
+        idUsuario: idUsuario,idPersona: idPersona,usuario,estatus,userSession: userSession});
     } catch (error) {
       console.error("Error al actualizar usuario:", error);
       res.status(500).json({ message: "Algo salió mal", error: error.message });
@@ -120,7 +129,8 @@ export const updateUsuario = async (req, res) => {
 
 export const deleteUsuario = async (req, res) => {
   try {
-    const { idUsuario } = req.params;
+    const { idUsuario} = req.params;
+    const { userSession } = req.body
     // Verificar si el usuario existe
     const [usuario] = await db.query("SELECT usuario FROM Usuario WHERE idUsuario = ?", [idUsuario]);
     if (!usuario.length) {
@@ -133,7 +143,7 @@ export const deleteUsuario = async (req, res) => {
     const deleteUserQuery = `DELETE FROM Usuario WHERE idUsuario = ?`;
     const [rows] = await db.query(deleteUserQuery, [idUsuario]);
     if (rows.affectedRows) {
-      res.status(200).json({ message: `'${usuario[0].usuario}' eliminado correctamente` });
+      res.status(200).json({ message: `'${usuario[0].usuario}' eliminado correctamente`, userSession: userSession });
     } else {
       res.status(404).json({ message: "Usuario no encontrado" });
     }

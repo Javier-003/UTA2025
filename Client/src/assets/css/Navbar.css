@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: #18408a;
-  padding: 15px 40px;
+  padding: 10px 20px;
   position: fixed;
   width: 100%;
   top: 0;
@@ -12,7 +12,7 @@
 }
 
 .navbar-brand {
-  color: rgb(255, 255, 255);
+  color: #fff;
   font-size: 1.5rem;
   font-weight: bold;
 }
@@ -24,7 +24,7 @@
 
 .menu-item {
   position: relative;
-  color: rgb(255, 255, 255);
+  color: #fff;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -34,23 +34,20 @@
 .menu-item:hover {
   color: #ffffff;
 }
-
 .submenu {
   display: none;
   position: absolute;
   top: 100%;
-  left: 0%;
-  transform: translateX(-50%);
-  width: 1550px; /* Ajusta según necesidad */
+  width: 500px;
+  max-width: 600px;
   background-color: white;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-  padding: 20px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+  padding: 30px;
   border-radius: 8px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
+  grid-template-columns: repeat(2, 1fr);
   text-align: left;
 }
-
 
 .menu-item:hover .submenu {
   display: grid;
@@ -64,7 +61,6 @@
 }
 
 .submenu a {
-  left: 20%;
   color: black;
   font-size: 0.9rem;
   font-weight: bold;
@@ -75,4 +71,49 @@
 
 .submenu a:hover {
   color: #18408a;
+}
+
+/* Estilos para hacerlo responsivo */
+@media (max-width: 768px) {
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #18408a;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .menu-item {
+    padding: 15px;
+    display: block;
+  }
+
+  .menu.show {
+    display: flex;
+  }
+
+  .submenu {
+    position: relative;
+    width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none;
+  }
 }

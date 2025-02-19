@@ -26,12 +26,12 @@ function Alumno() {
   
   useEffect(() => {
     if (selectedAlumno) {
-      setidPersona(selectedAlumno.idPersona);
-      setnombre(selectedAlumno.nombre);
-      setpaterno(selectedAlumno.paterno);
-      setmaterno(selectedAlumno.materno);
-      setemail(selectedAlumno.email);
-      setnss(selectedAlumno.nss);
+      setidPersona(selectedAlumno.idPersona || "");
+      setnombre(selectedAlumno.nombre || "");
+      setpaterno(selectedAlumno.paterno || "");
+      setmaterno(selectedAlumno.materno || "");
+      setemail(selectedAlumno.email || "");
+      setnss(selectedAlumno.nss || "");
       setfecha(formatDate(selectedAlumno.fecha));
     }
   }, [selectedAlumno]);
@@ -45,7 +45,7 @@ function Alumno() {
   };
   
   const handleUpdate = () => {
-    updateAlumnoFunc(selectedAlumno.idAlumno, idPersona, email, nss,fecha,  setShowEditModal, () => getAlumno(setAlumno));
+    updateAlumnoFunc(selectedAlumno.idAlumno, email, nss, fecha,  setShowEditModal, () => getAlumno(setAlumno));
   };
   
   const handleDelete = () => {
@@ -53,7 +53,7 @@ function Alumno() {
   };
 
   const formatDate = (date) => {
-    return new Date(date).toISOString().split('T')[0];
+    return date ? new Date(date).toISOString().split('T')[0] : "";
   };
 
   return (

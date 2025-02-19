@@ -16,56 +16,55 @@ export const PersonaModales = ({
 }) => {
   return (
     <>
-    
       {/* Modal para registrar persona */}
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="modalLabel">Registrar Persona</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
+            <div className="modal-header d-flex align-items-center justify-content-center position-relative">
+                <h5 className="modal-title" id="modalLabel">Registrar Persona</h5>
+                <button type="button" className="btn-close position-absolute" style={{ top: '50%', transform: 'translateY(-50%)', right: '1rem' }} data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
               <div className="input-group mb-3">
-                <span className="input-group-text">Nombre:</span>
-                <input type="text"className="form-control"value={nombre} onChange={(e) => setnombre(e.target.value)}/>
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Apellido Paterno:</span>
-                <input type="text"className="form-control" value={paterno} onChange={(e) => setpaterno(e.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Apellido Materno:</span>
-                <input type="text" className="form-control" value={materno} onChange={(e) => setmaterno(e.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Género:</span>
-                <select className="form-select" value={genero} onChange={(e) => setgenero(e.target.value)} >
-                  <option value="">Selecciona</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
-                </select>
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Dirección:</span>
-                <input type="text"className="form-control"value={direccion} onChange={(e) => setdireccion(e.target.value)}/>
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Teléfono:</span>
-                <input type="text"  className="form-control" value={telefono} onChange={(e) => settelefono(e.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">CURP:</span>
-                <input type="text"className="form-control" value={curp} onChange={(e) => setcurp(e.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Fecha de Nacimiento:</span>
-                <input type="date"className="form-control" value={nacimiento} onChange={(e) => setnacimiento(e.target.value)} />
-              </div>
+                    <span className="input-group-text">Nombre:</span>
+                    <input type="text" className="form-control" value={nombre} onChange={(e) => setnombre(e.target.value)} />
+                </div>
+                <div className="input-group mb-3">
+                    <span className="input-group-text">Paterno:</span>
+                    <input type="text" className="form-control" value={paterno} onChange={(e) => setpaterno(e.target.value)} />
+                </div>
+                <div className="input-group mb-3">
+                    <span className="input-group-text">Materno:</span>
+                    <input type="text" className="form-control" value={materno} onChange={(e) => setmaterno(e.target.value)} />
+                </div>
+                <div className="input-group mb-3">
+                    <span className="input-group-text">Género:</span>
+                    <select className="form-select" value={genero} onChange={(e) => setgenero(e.target.value)} >
+                        <option value="">Selecciona</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </div>
+                <div className="input-group mb-3">
+                    <span className="input-group-text">Dirección:</span>
+                    <input type="text" className="form-control" value={direccion} onChange={(e) => setdireccion(e.target.value)} />
+                </div>
+                <div className="input-group mb-3">
+                    <span className="input-group-text">Teléfono:</span>
+                    <input type="text" className="form-control" value={telefono} onChange={(e) => settelefono(e.target.value)} />
+                </div>
+                <div className="input-group mb-3">
+                    <span className="input-group-text">CURP:</span>
+                    <input type="text" className="form-control" value={curp} onChange={(e) => setcurp(e.target.value)} />
+                </div>
+                <div className="input-group mb-3">
+                    <span className="input-group-text">Fecha de Nacimiento:</span>
+                    <input type="date" className="form-control" value={nacimiento} onChange={(e) => setnacimiento(e.target.value)} />
+                </div>
             </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cerrar</button>
-              <button type="button" className="btn btn-primary" onClick={handleAdd}>Registrar</button>
+            <div className="modal-footer d-flex justify-content-center">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cerrar</button>
+                <button type="button" className="btn btn-primary" onClick={handleAdd}>Registrar</button>
             </div>
           </div>
         </div>
