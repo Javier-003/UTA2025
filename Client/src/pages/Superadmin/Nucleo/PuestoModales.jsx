@@ -12,9 +12,16 @@ export const PuestoModales = ({
   selectedPuesto
 }) => {
   const [departamentoList, setDepartamentoList] = useState([]);
+
   useEffect(() => {
-    getDepartamentos().then(data => setDepartamentoList(data)).catch(error => console.error("Error al obtener los edificios:", error));
+    getDepartamentos().then(data => setDepartamentoList(data)).catch(error => console.error("Error al obtener los departamentos:", error));
   }, []);
+
+  useEffect(() => {
+    if (selectedPuesto) {
+      setidDepartamento(selectedPuesto.idDepartamento);
+    }
+  }, [selectedPuesto]);
 
   return (
     <>
@@ -27,7 +34,7 @@ export const PuestoModales = ({
               <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
-            <div className="mb-3">
+              <div className="mb-3">
                 <label className="form-label">Departamento:</label>
                 <select className="form-select" value={idDepartamento} onChange={(event) => setidDepartamento(event.target.value)}>
                   <option value="">Selecciona un departamento</option>
