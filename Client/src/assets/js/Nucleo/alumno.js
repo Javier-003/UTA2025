@@ -1,7 +1,5 @@
-import Swal from 'sweetalert2'; 
-
-import { createAlumno, getAlumnos, updateAlumno, deleteAlumno } 
-from '../../../api/Nucleo/alumno.api.js'; 
+import Swal from 'sweetalert2';
+import { createAlumno, getAlumnos, updateAlumno, deleteAlumno } from '../../../api/Nucleo/alumno.api.js'; 
 
 export const getAlumno = async (setAlumno) => {
   try {
@@ -9,12 +7,17 @@ export const getAlumno = async (setAlumno) => {
     setAlumno(data);
   } catch (error) {
     console.error('Error al obtener los alumnos:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error.response?.data?.message || 'Hubo un problema obteniendo los alumnos.',
+    });
   }
 };
 
-export const addAlumno = async (idPersona, email, nss, fecha, setShowModal, getAlumno) => {
+export const addAlumno = async (idPersona, email, fecha, nss, setShowModal, getAlumno) => {
   try {
-    await createAlumno(idPersona,email, nss, fecha);
+    await createAlumno(idPersona, email, nss, fecha);
     getAlumno();
     Swal.fire({
       icon: 'success',
@@ -27,14 +30,14 @@ export const addAlumno = async (idPersona, email, nss, fecha, setShowModal, getA
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema registrando el alumno.',
+      text: error.response?.data?.message || 'Hubo un problema registrando el alumno.',
     });
   }
 };
 
-export const updateAlumnoFunc = async (idAlumno,idPersona, email, nss, fecha, setShowEditModal, getAlumno) => {
+export const updateAlumnoFunc = async (idAlumno, email, fecha, nss, setShowEditModal, getAlumno) => {
   try {
-    await updateAlumno(idAlumno,idPersona, email, nss, fecha);
+    await updateAlumno(idAlumno, email, nss, fecha);
     getAlumno();
     Swal.fire({
       icon: 'success',
@@ -47,7 +50,7 @@ export const updateAlumnoFunc = async (idAlumno,idPersona, email, nss, fecha, se
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema actualizando el alumno.',
+      text: error.response?.data?.message || 'Hubo un problema actualizando el alumno.',
     });
   }
 };
@@ -67,7 +70,7 @@ export const deleteAlumnoFunc = async (idAlumno, setShowDeleteModal, getAlumno) 
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema eliminando el alumno.',
+      text: error.response?.data?.message || 'Hubo un problema eliminando el alumno.',
     });
   }
 };

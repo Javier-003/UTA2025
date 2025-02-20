@@ -27,15 +27,14 @@ function TramiteProceso() {
     getTramites().then(setTramiteList); // Obtiene todos los trámites para el filtro
   }, []);
 
-  // Filtrar datos según el trámite seleccionado y el texto de búsqueda
-  const filteredData = tramiteprocesoList.filter(
-    (item) =>
-      (!selectedTramite || item.idTramite == selectedTramite) && // Usar == para comparar string con número
-      item.NombreActividad.toLowerCase().includes(searchText.toLowerCase())
-  );
-  
-
-  
+  // Filtrar y ordenar datos según el trámite seleccionado y el texto de búsqueda
+  const filteredData = tramiteprocesoList
+    .filter(
+      (item) =>
+        (!selectedTramite || item.idTramite == selectedTramite) && // Usar == para comparar string con número
+        item.NombreActividad.toLowerCase().includes(searchText.toLowerCase())
+    )
+    .sort((a, b) => a.orden - b.orden); // Ordenar por el campo "orden" de manera ascendente
 
   const handleAdd = () => {
     addTramiteProceso(idTramite, idActividad, objeto, orden, setShowModal, () => getTramitesProceso(setTramiteProceso));
@@ -56,20 +55,19 @@ function TramiteProceso() {
 
         {/* Filtros */}
         <div className="d-flex mb-3">
-        <select
-  className="form-select me-2"
-  value={selectedTramite}
-  onChange={(e) => {
-    const selectedId = e.target.value;
-    setSelectedTramite(selectedId);
+          <select
+            className="form-select me-2"
+            value={selectedTramite}
+            onChange={(e) => {
+              const selectedId = e.target.value;
+              setSelectedTramite(selectedId);
 
-    // Buscar el trámite correcto, asegurando que comparamos correctamente tipos de datos
-    const tramite = tramiteList.find((t) => t.idTramite == selectedId); // Usamos == para evitar problemas de tipo
-    setNombreTramite(tramite ? tramite.nombre : "Registrar");
-    setIdTramite(selectedId);
-  }}
->
-
+              // Buscar el trámite correcto, asegurando que comparamos correctamente tipos de datos
+              const tramite = tramiteList.find((t) => t.idTramite == selectedId); // Usamos == para evitar problemas de tipo
+              setNombreTramite(tramite ? tramite.nombre : "Registrar");
+              setIdTramite(selectedId);
+            }}
+          >
             <option value="">Mostrar todos los trámites</option>
             {tramiteList.map((tramite) => (
               <option key={tramite.idTramite} value={tramite.idTramite}>
@@ -90,7 +88,6 @@ function TramiteProceso() {
         }}>
           {selectedTramite ? `Registrar ${NombreTramite}` : "Registrar"}
         </button>
-
 
         {/* Tabla de trámites proceso */}
         <div className="mt-4">

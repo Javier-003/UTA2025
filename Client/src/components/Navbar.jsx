@@ -34,49 +34,57 @@ function OffcanvasNavbar() {
         <div className="menu">
           {[
             { label: "Ajustes", key: "gestionUsuarios", icon: <FaUser />, links: [
-              { text: "Núcleo", isTitle: true }, // Título de sección
-              { text: "Parametrización", isTitle: true }, // Título de sección
-              { text: "Planificación Academica", isTitle: true }, // Título de sección
-              { text: "Tramites", isTitle: true }, // Título de sección
+              { text: "Núcleo", isTitle: true },
+
+              { text: "Parametrización", isTitle: true }, 
+
               { to: "/Usuario", text: "Usuario", icon: <FaUserPlus /> },
-              { to: "/Tramite", text: "Trámite", icon: <FaFileAlt /> }, 
-              { to: "/Periodo", text: "Apertura Periodo", icon: <FaRegBuilding /> },
-              { to: "/SeguimientoTramite", text: "Seguimiento Trámite", icon: <FaClipboardCheck /> },
+              { to: "/Tramite", text: "Trámite", icon: <FaFileAlt /> },
               { to: "/Persona", text: "Persona", icon: <FaAddressCard /> },
-              { to: "/Actividad", text: "Actividad", icon: <FaTasks /> },               
-              { to: "/Grupo", text: "Grupo", icon: <FaLayerGroup /> },
-              { to: "/Consultadekadex", text: "Consulta de Kardex", icon: <FaClipboardList /> },
+              
+              { to: "/Actividad", text: "Actividad", icon: <FaTasks /> },   
               { to: "/Alumno", text: "Alumno", icon: <FaGraduationCap /> },  
+              
               { to: "/TramiteProceso", text: "Trámite Proceso", icon: <FaEdit /> },  
-              { to: "/Materias", text: "Carga de Materias", icon: <FaClipboardList /> },
-              { to: "/AlumnoTramite", text: "Alumno Tramite", icon: <FaClipboardList /> },   
+
               { to: "/Profesor", text: "Profesor", icon: <FaChalkboardTeacher /> },
+              
               { to: "/OfertaAcademica", text: "Oferta Académica", icon: <FaUniversity /> } ,
-              { to: "/Evaluacion", text: "Evaluación", icon: <FaClipboardCheck /> },
-              { to: "/AlumnoProceso", text: "Alumno Proceso", icon: <FaLayerGroup /> }, 
               { to: "/Administrativo", text: "Administrativo", icon: <FaUserTie /> },
               { to: "/ProgramaAcademico", text: "Programa Académico", icon: <FaBook /> },
-              { to: "/Kardex", text: "Kardex", icon: <FaClipboardList /> },
-              {},
-              { to: "/Departamento", text: "Departamento", icon: <FaBriefcase /> },
-              { to: "/MapaCurricular", text: "Mapa Curricular", icon: <FaMapSigns /> },
-              { to: "/NivelEstudio", text: "Nivel de Estudio", icon: <FaUniversity /> },
               
-              {},
+              { to: "/Departamento", text: "Departamento", icon: <FaBriefcase /> },
+
+              { to: "/MapaCurricular", text: "Mapa Curricular", icon: <FaMapSigns /> },
               { to: "/Puesto", text: "Puesto", icon: <FaBriefcase /> },
+              
               { to: "/MateriaUnidad", text: "Materia Unidad", icon: <FaClipboard />},
-              { to: "/AsignarPA", text: "Asignar Programa Académico", icon: <FaTasks /> },
-              { to: "/AdicionProfesor", text: "Adición Profesor", icon: <FaUserPlus /> }, 
-              {},
               { to: "/Edificio", text: "Edificio", icon: <FaRegBuilding /> },
               { to: "/Bloque", text: "Bloque", icon: <FaLayerGroup /> },
-              {},
-              {},
               { to: "/Aula", text: "Aula", icon: <FaDoorOpen /> },
-              {},
-              {},
               { to: "/Historial", text: "Historial", icon: <FaHistory /> } ,
-          ]} ,
+               
+
+          ]},
+
+          { label: "Planificación Academica", key: "Planificación Academica", icon: <FaUser />, links: [
+            { to: "/Periodo", text: "Apertura Periodo", icon: <FaRegBuilding /> },        
+            { to: "/Grupo", text: "Grupo", icon: <FaLayerGroup /> },
+            { to: "/Materias", text: "Carga de Materias", icon: <FaClipboardList /> },
+            { to: "/AdicionProfesor", text: "Adición Profesor", icon: <FaUserPlus /> },
+            { to: "/Evaluacion", text: "Evaluación", icon: <FaClipboardCheck /> },
+            { to: "/NivelEstudio", text: "Nivel de Estudio", icon: <FaUniversity /> },
+            { to: "/AsignarPA", text: "Asignar Programa Académico", icon: <FaTasks /> },
+          ]}, 
+
+          { label: "Tramites", key: "Tramites", icon: <FaUser />, links: [
+            { to: "/AlumnoProceso", text: "Alumno Proceso", icon: <FaLayerGroup /> }, 
+            { to: "/AlumnoTramite", text: "Alumno Tramite", icon: <FaClipboardList /> },  
+            { to: "/SeguimientoTramite", text: "Seguimiento Trámite", icon: <FaClipboardCheck /> },
+            { to: "/Consultadekadex", text: "Consulta de Kardex", icon: <FaClipboardList /> }, 
+            { to: "/Kardex", text: "Kardex", icon: <FaClipboardList /> },
+          ]}
+
           ].map(({ label, key, icon, links }) => (
             <div key={key}  className={`menu-item ${activeMenu === key ? 'open' : ''}`}
               onMouseEnter={() => handleMouseEnter(key)} onMouseLeave={handleMouseLeave}>

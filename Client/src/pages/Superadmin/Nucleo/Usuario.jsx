@@ -6,17 +6,18 @@ import { addRolUsuarioFunc, deleteRolUsuarioFunc } from '../../../assets/js/Nucl
 import { UsuarioModales } from '../Nucleo/UsuarioModales.jsx';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+
 function Usuario() {
   const [usuarioList, setUsuarios] = useState([]);
   const [idPersona, setidPersona] = useState("");
-  const [nombre, setnombre] = useState(""); 
-  const [paterno, setpaterno] = useState(""); 
+  const [nombre, setnombre] = useState("");
+  const [paterno, setpaterno] = useState("");
   const [materno, setmaterno] = useState("");
   const [usuario, setusuario] = useState("");
   const [estatus, setEstatus] = useState("");
   const [contrasena, setcontrasena] = useState("");
-  const [rol, setrol] = useState("");
-  const [idRol, setIdRol] = useState(""); // Nuevo estado para rol
+  const [rol, setRol] = useState("");
+  const [rolId, setRolId] = useState(""); // Nuevo estado para rol
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -25,9 +26,11 @@ function Usuario() {
   const [searchText, setSearchText] = useState("");
   const [selectedUsuario, setSelectedUsuario] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
-  useEffect(() => { 
-    getUsuario(setUsuarios); 
+
+  useEffect(() => {
+    getUsuario(setUsuarios);
   }, []);
+
   useEffect(() => {
     if (selectedUsuario) {
       setidPersona(selectedUsuario.idPersona);
@@ -36,28 +39,35 @@ function Usuario() {
       setmaterno(selectedUsuario.materno);
       setusuario(selectedUsuario.usuario);
       setEstatus(selectedUsuario.estatus);
-      setrol(selectedUsuario.roles);
-      setIdRol(selectedUsuario.idRol);
+      setRolId(selectedUsuario.idRol);
+      setRol(selectedUsuario.rol);
     }
   }, [selectedUsuario]);
+
   const filteredData = usuarioList.filter(item =>
     item.usuario.toLowerCase().includes(searchText.toLowerCase())
   );
+
   const handleAdd = () => {
-    addUsuario(idPersona, usuario, contrasena, estatus, idRol, setShowModal, () => getUsuario(setUsuarios));
+    addUsuario(idPersona, usuario, contrasena, estatus, rolId, setShowModal, () => getUsuario(setUsuarios));
   };
+
   const handleUpdate = () => {
     updateUsuarioFunc(selectedUsuario.idUsuario, idPersona, usuario, contrasena, estatus, setShowEditModal, () => getUsuario(setUsuarios));
   };
+
   const handleDelete = () => {
     deleteUsuarioFunc(selectedUsuario.idUsuario, setShowDeleteModal, () => getUsuario(setUsuarios));
   };
-  const handleAddRol = () => {
+
+  const handleAddRole = () => {
     addRolUsuarioFunc(selectedUsuario.idUsuario, selectedRole, setShowAddRoleModal, () => getUsuario(setUsuarios));
   };
-  const handleDeleteRol = () => {
+
+  const handleDeleteRole = () => {
     deleteRolUsuarioFunc(selectedUsuario.idUsuario, selectedRole, setShowDeleteRoleModal, () => getUsuario(setUsuarios));
   };
+
   return (
     <div className="container">
       <div className="">
@@ -70,9 +80,9 @@ function Usuario() {
             setmaterno("");
             setcontrasena("");
             setusuario("");
-            setEstatus("");
-            setrol("");
-            setIdRol("");
+            setEstatus("1");
+            setRol("");
+            setRolId("");
             setSelectedUsuario(null);
             setShowModal(true);
           }}>Registrar</button>
@@ -98,7 +108,7 @@ function Usuario() {
                       <td>{usuario.idUsuario}</td>
                       <td>{usuario.usuario}</td>
                       <td>{usuario.idPersona}</td>
-                      <td>{`${usuario.nombre} ${usuario.paterno} ${usuario.materno}`}</td>              
+                      <td>{`${usuario.nombre} ${usuario.paterno} ${usuario.materno}`}</td>
                       <td>{usuario.rolId}</td>
                       <td>{usuario.rol}</td>
                       <td>{usuario.estatus ? 'Activo' : 'Inactivo' }</td>
@@ -134,6 +144,7 @@ function Usuario() {
           </div>
         </div>
       </div>
+
       <UsuarioModales
         idPersona={idPersona} setidPersona={setidPersona}
         nombre={nombre} setnombre={setnombre}
@@ -142,21 +153,23 @@ function Usuario() {
         usuario={usuario} setUsuario={setusuario}
         contrasena={contrasena} setcontrasena={setcontrasena}
         estatus={estatus} setEstatus={setEstatus}
-        rol={rol} setrol={setrol}
-        idRol={idRol} setIdRol={setIdRol}
+        rol={rol} setRol={setRol}
+        rolId={rolId} setRolId={setRolId}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         showAddRoleModal={showAddRoleModal} setShowAddRoleModal={setShowAddRoleModal}
         showDeleteRoleModal={showDeleteRoleModal} setShowDeleteRoleModal={setShowDeleteRoleModal}
         handleAdd={handleAdd}
-        handleUpdate={handleUpdate} 
+        handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        handleAddRol={handleAddRol}
-  handleDeleteRol={handleDeleteRol} 
+        handleAddRole={handleAddRole}
+        handleDeleteRole={handleDeleteRole}
         selectedUsuario={selectedUsuario}
-        selectedRole={selectedRole} setSelectedRole={setSelectedRole}/>
+        selectedRole={selectedRole} setSelectedRole={setSelectedRole}
+      />
     </div>
   );
 }
+
 export default Usuario;

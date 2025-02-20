@@ -48,7 +48,7 @@ export const AlumnoProcesoModales = ({
                     <option value="">Selecciona un alumno</option>
                     {alumnotramiteList.map((alumno_tramite) => (
                       <option key={alumno_tramite.idAlumnoTramite} value={alumno_tramite.idAlumnoTramite}>
-                         {alumno_tramite.idAlumnoTramite}  
+                         {alumno_tramite.idAlumnoTramite} {alumno_tramite.alumno}  
                       </option>
                     ))}
                   </select>
@@ -59,13 +59,14 @@ export const AlumnoProcesoModales = ({
                 <select className="form-select" value={idTramiteProceso} onChange={(event) => setIdTramiteProceso(event.target.value)}>
                   <option value="">Selecciona un Tramite</option>
                   {tramiteprocesoList.map((tramiteproceso) => (
-                    <option key={tramiteproceso.idTramiteProceso} value={tramiteproceso.idTramiteProceso}>{tramiteproceso.objeto}</option>
+                    <option key={tramiteproceso.idTramiteProceso} value={tramiteproceso.idTramiteProceso}>
+                    {tramiteproceso.NombreTramite} - {tramiteproceso.NombreActividad} </option>
                   ))}
                 </select>
               </div>
   
               <div className="input-group mb-3">
-                  <span className="input-group-text">Periodo:</span>
+                  <span className="input-group-text">Actividad:</span>
                   <select className="form-select" value={idActividad} onChange={(event) => setIdActividad(event.target.value)}>
                     <option value="">Selecciona una actividad</option>
                     {actividadList.map((actividad) => (
@@ -76,12 +77,12 @@ export const AlumnoProcesoModales = ({
   
                 <div className="input-group mb-3">
                     <span className="input-group-text">Orden:</span>
-                    <input type="date" className="form-control" placeholder="Orden en número" value={orden} onChange={(event) => setOrden(event.target.value)} />                         
+                    <input type="number" className="form-control" placeholder="Orden en número" value={orden} onChange={(event) => setOrden(event.target.value)} />                         
                 </div>
 
                 <div className="input-group mb-3">
                     <span className="input-group-text">Observacion:</span>
-                    <input type="date" className="form-control" value={observacion} onChange={(event) => setObservacion(event.target.value)} />                         
+                    <input type="text" className="form-control" value={observacion} onChange={(event) => setObservacion(event.target.value)} />                         
                 </div>
   
                 <div className="input-group mb-3">
@@ -114,13 +115,14 @@ export const AlumnoProcesoModales = ({
               </div>
               <div className="modal-body">
                  {/* Campos del formulario */}
-                 <div className="input-group mb-3">
+                                     {/* Campos del formulario */}
+                                     <div className="input-group mb-3">
                   <span className="input-group-text">Alumno:</span>
                   <select className="form-select" value={idAlumnoTramite} onChange={(event) => setIdAlumnoTramite(event.target.value)}>
                     <option value="">Selecciona un alumno</option>
                     {alumnotramiteList.map((alumno_tramite) => (
                       <option key={alumno_tramite.idAlumnoTramite} value={alumno_tramite.idAlumnoTramite}>
-                         {alumno_tramite.idAlumnoTramite}  
+                         {alumno_tramite.idAlumnoTramite}  {alumno_tramite.alumno}  
                       </option>
                     ))}
                   </select>
@@ -131,13 +133,14 @@ export const AlumnoProcesoModales = ({
                 <select className="form-select" value={idTramiteProceso} onChange={(event) => setIdTramiteProceso(event.target.value)}>
                   <option value="">Selecciona un Tramite</option>
                   {tramiteprocesoList.map((tramiteproceso) => (
-                    <option key={tramiteproceso.idTramiteProceso} value={tramiteproceso.idTramiteProceso}>{tramiteproceso.objeto}</option>
+                    <option key={tramiteproceso.idTramiteProceso} value={tramiteproceso.idTramiteProceso}>
+                       {tramiteproceso.NombreTramite} - {tramiteproceso.NombreActividad}</option>
                   ))}
                 </select>
               </div>
   
               <div className="input-group mb-3">
-                  <span className="input-group-text">Periodo:</span>
+                  <span className="input-group-text">Actividad:</span>
                   <select className="form-select" value={idActividad} onChange={(event) => setIdActividad(event.target.value)}>
                     <option value="">Selecciona una actividad</option>
                     {actividadList.map((actividad) => (
@@ -148,12 +151,12 @@ export const AlumnoProcesoModales = ({
   
                 <div className="input-group mb-3">
                     <span className="input-group-text">Orden:</span>
-                    <input type="date" className="form-control" placeholder="Orden en número" value={orden} onChange={(event) => setOrden(event.target.value)} />                         
+                    <input type="number" className="form-control" placeholder="Orden en número" value={orden} onChange={(event) => setOrden(event.target.value)} />                         
                 </div>
 
                 <div className="input-group mb-3">
                     <span className="input-group-text">Observacion:</span>
-                    <input type="date" className="form-control" value={observacion} onChange={(event) => setObservacion(event.target.value)} />                         
+                    <input type="text" className="form-control" value={observacion} onChange={(event) => setObservacion(event.target.value)} />                         
                 </div>
   
                 <div className="input-group mb-3">
@@ -164,6 +167,7 @@ export const AlumnoProcesoModales = ({
                     <option value="Concluido">Concluido</option>
                   </select>
                 </div>
+
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cerrar</button>
@@ -182,7 +186,7 @@ export const AlumnoProcesoModales = ({
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModal(false)}></button>
               </div>
               <div className="modal-body">
-                <p>¿Estás seguro de que deseas eliminar el trámite proceso: <strong>{setSelectedAlumnoProceso?.estatus}</strong>?</p>
+                <p>¿Estás seguro de que deseas eliminar el trámite proceso: <strong>{setSelectedAlumnoProceso?.actividad}</strong>?</p>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>

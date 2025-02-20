@@ -3,23 +3,26 @@ import axios from 'axios';
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
 
-// Obtener todos los roles
-export const getRol = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/rol`);
-    return response.data.data; // Retorna los datos de los roles
-  } catch (error) {
-    console.error("Error al obtener los roles:", error);
-    throw new Error('Error al obtener los roles');
-  }
-};
+const userSession = localStorage.getItem('Username')
 
 // Agregar un rol a un usuario
 export const agregarRolUsuario = async (idUsuario, idRol) => {
   try {
-    await axios.post(`${BASE_URL}/rol/create`, { idUsuario, idRol });
+    const response = await axios.post(`${BASE_URL}/rol/create`, { idUsuario, idRol, userSession });
+
+    // Validar la respuesta
+    if (response.status === 200) {
+      console.log("Rol agregado correctamente:", response.data);
+      return response.data; // Retornar los datos de la respuesta si es necesario
+    } else {
+      throw new Error('No se pudo agregar el rol al usuario');
+    }
   } catch (error) {
     console.error("Error al agregar el rol al usuario:", error);
+    if (error.response) {
+      // Si la respuesta del servidor existe, se obtiene el mensaje de error
+      throw new Error(error.response.data.message || 'Error desconocido');
+    }
     throw new Error('Error al agregar el rol al usuario');
   }
 };
@@ -27,9 +30,20 @@ export const agregarRolUsuario = async (idUsuario, idRol) => {
 // Eliminar un rol de un usuario
 export const eliminarRolUsuario = async (idUsuario, idRol) => {
   try {
-    await axios.post(`${BASE_URL}/rol/delete`, { idUsuario, idRol });
+    const response = await axios.post(`${BASE_URL}/rol/delete`, { idUsuario, idRol, userSession });
+    // Validar la respuesta
+    if (response.status === 200) {
+      console.log("Rol eliminado correctamente:", response.data);
+      return response.data; // Retornar los datos de la respuesta si es necesario
+    } else {
+      throw new Error('No se pudo eliminar el rol del usuario');
+    }
   } catch (error) {
     console.error("Error al eliminar el rol del usuario:", error);
+    if (error.response) {
+      // Si la respuesta del servidor existe, se obtiene el mensaje de error
+      throw new Error(error.response.data.message || 'Error desconocido');
+    }
     throw new Error('Error al eliminar el rol del usuario');
   }
 };

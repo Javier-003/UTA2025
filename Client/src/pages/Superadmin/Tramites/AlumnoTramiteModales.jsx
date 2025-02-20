@@ -7,10 +7,11 @@ import { getAlumnosPrograma } from "../../../api/Parametrizacion/alumnopa.api.js
 
 export const AlumnoTramiteModales = ({
   idTramite, setIdTramite, 
-  idAlumnoPA, setIdAlumno, 
+  idAlumnoPA, setIdAlumnoPA, 
   idPeriodo, setIdPeriodo, 
   fecha, setFecha, 
   estatus, setEstatus, 
+
   showModal,setShowModal,showEditModal,setShowEditModal,
   showDeleteModal,setShowDeleteModal,
   handleAdd,handleUpdate,
@@ -43,18 +44,18 @@ export const AlumnoTramiteModales = ({
                   {/* Campos del formulario */}
                   <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
-                <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumno(event.target.value)}>
+                <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
                   <option value="">Selecciona un alumno</option>
-                  {alumnopaList.map((alumno_programa) => (
-                    <option key={alumno_programa.idAlumnoPrograma} value={alumno_programa.idAlumnoPrograma}>
-                        {alumno_programa.nombre} {alumno_programa.apellido_paterno} {alumno_programa.apellido_materno}  
-                    </option>
+                  {alumnopaList.map((alumnopa) => (
+                    <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
+                     {alumnopa.matricula} {alumnopa.nombre}
+                    </option> 
                   ))}
                 </select>
               </div>
 
               <div className="input-group mb-3">
-              <span className="input-group-text">Mapa Curricular:</span>
+              <span className="input-group-text">Trámite:</span>
               <select className="form-select" value={idTramite} onChange={(event) => setIdTramite(event.target.value)}>
                 <option value="">Selecciona un Tramite</option>
                 {tramiteList.map((tramiteList) => (
@@ -111,12 +112,12 @@ export const AlumnoTramiteModales = ({
                 {/* Campos del formulario */}
                 <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
-                <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumno(event.target.value)}>
+                <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
                   <option value="">Selecciona un alumno</option>
-                  {alumnopaList.map((alumno_programa) => (
-                    <option key={alumno_programa.idAlumnoPrograma} value={alumno_programa.idAlumnoPrograma}>
-                        {alumno_programa.nombre} {alumno_programa.apellido_paterno} {alumno_programa.apellido_materno}  
-                    </option>
+                  {alumnopaList.map((alumnopa) => (
+                    <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
+                     {alumnopa.matricula} {alumnopa.nombre}
+                    </option> 
                   ))}
                 </select>
               </div>
@@ -173,7 +174,7 @@ export const AlumnoTramiteModales = ({
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModal(false)}></button>
             </div>
             <div className="modal-body">
-              <p>¿Estás seguro de que deseas eliminar el trámite proceso: <strong>{selectedAlumnoTramite?.fecha}</strong>?</p>
+              <p>¿Estás seguro de que deseas eliminar el trámite proceso: <strong>{selectedAlumnoTramite?.matricula}</strong>?</p>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>

@@ -16,12 +16,13 @@ export const getProfesortodos = async (req, res) => {
         JOIN departamento d ON p.idDepartamento = d.idDepartamento
         JOIN puesto pu ON p.idPuesto = pu.idPuesto
         JOIN persona ON p.idProfesor = persona.idPersona`;
+    
     const [rows] = await db.query(query);
-    if (rows.length > 0) {
-      res.json({ message: "Profesores obtenidos correctamente", data: rows });
-    } else {
-      res.status(404).json({ message: "No se encontraron profesores" });
-    }
+
+    res.status(200).json({
+      message: rows.length > 0 ? "Profesores obtenidos correctamente" : "No se encontraron profesores",
+      data: rows
+    });
   } catch (error) {
     return res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
@@ -30,7 +31,7 @@ export const getProfesortodos = async (req, res) => {
 //Crear un Profesor
 export const createProfesor = async (req, res) => {
   try {
-    const { idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc } = req.body;
+    const { idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, userSession } = req.body;
     if (!idPersona || !idDepartamento || !idPuesto || !clave || !perfil || !email || !noCedula || !programaAcademicos || !nss || !rfc) {
       return res.status(400).json({ message: "Todos los campos son requeridos: idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc" });
     }
@@ -42,10 +43,10 @@ export const createProfesor = async (req, res) => {
       "INSERT INTO profesor (idProfesor,idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc]
     );    
-    res.status(201).json({
+    res.status(200).json({
       message: `'${email}' creado`,
       idProfesor: result.insertId,
-      idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
+      idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, userSession: userSession
     });
   } catch (error) {
     console.error("Error al crear profesor:", error);
@@ -57,7 +58,7 @@ export const createProfesor = async (req, res) => {
 export const updateProfesor = async (req, res) => {
   try {
     const { idProfesor } = req.params;
-    const { idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc } = req.body;
+    const { idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, userSession } = req.body;
     const [exists] = await db.query("SELECT 1 FROM profesor WHERE idProfesor = ?", [idProfesor]);
     if (!exists.length) {
       return res.status(404).json({ message: "El Profesor no existe" });
@@ -70,7 +71,7 @@ export const updateProfesor = async (req, res) => {
       return res.status(400).json({ message: "No se pudo actualizar el profesor" });
     }
     res.status(200).json({
-      message: `'${email}' actualizado correctamente`,idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc
+      message: `'${email}' actualizado correctamente`,idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, userSession: userSession
     });
   } catch (error) {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
@@ -80,11 +81,12 @@ export const updateProfesor = async (req, res) => {
 export const deleteProfesor = async (req, res) => {
   try {
     const { idProfesor } = req.params;
+    const { userSession } = req.body
     const [profesor] = await db.query("SELECT clave FROM profesor WHERE idProfesor = ?", [idProfesor]);
     if (!profesor.length) return res.status(404).json({ message: "Profesor no encontrado" });
     const [rows] = await db.query("DELETE FROM profesor WHERE idProfesor = ?", [idProfesor]);
     rows.affectedRows
-      ? res.status(200).json({ message: `'${profesor[0].clave}' eliminado correctamente` })
+      ? res.status(200).json({ message: `'${profesor[0].clave}' eliminado correctamente`, userSession: userSession })
       : res.status(404).json({ message: "Profesor no encontrado" });
   } catch (error) {
     res.status(500).json({ message: "Algo salió mal", error: error.message });

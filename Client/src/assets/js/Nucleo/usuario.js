@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2';
 
 import { getUsuarios, createUsuario, updateUsuario, deleteUsuario } 
 from '../../../api/Nucleo/usuario.api.js';
@@ -14,22 +14,42 @@ export const getUsuario = async (setUsuario) => {
 };
 
 // Crear un nuevo usuario
-export const addUsuario = async (idPersona, usuario, contrasena, estatus,  setShowModal, getUsuario) => {
+export const addUsuario = async (idPersona, usuario, contrasena, estatus, idRol, setShowModal, getUsuario) => {
   try {
-    await createUsuario(idPersona, usuario, contrasena, estatus);
+
+    // Validar que los campos necesarios estén completos
+    if (!idPersona || !usuario || !contrasena || !['0', '1'].includes(String(estatus)) || !idRol) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Faltan datos',
+        text: 'Por favor, asegúrate de que todos los campos estén completos.',
+      });
+      return;
+    }
+
+    // Llamar a la API para crear el usuario
+    await createUsuario(idPersona, usuario, contrasena, estatus, idRol);
+
+    // Actualizar la lista de usuarios
     getUsuario();
+
+    // Mostrar mensaje de éxito
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
       text: 'Usuario registrado correctamente',
     });
+
+    // Cerrar el modal
     setShowModal(false);
   } catch (error) {
     console.error('Error al agregar el usuario:', error);
+
+    // Mostrar mensaje de error detallado
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema registrando el usuario.',
+      text: error.message || 'Hubo un problema registrando el usuario.',
     });
   }
 };

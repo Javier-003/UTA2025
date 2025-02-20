@@ -1,6 +1,45 @@
 .modal-dialog-right {
-    position: fixed;
-    right: 0;
-    margin: 0;
-  }
-  
+  position: fixed;
+  right: 0;
+  margin: 0;
+}
+
+
+.table-container {
+  padding: 0 150px; /* Ajusta el espacio a 20px */
+}
+
+.custom-table {
+  margin: 0 auto; /* Centrar la tabla */
+  border: 1px solid #080808;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+h5.mx-auto {
+  margin: 0 auto;
+}
+
+.data-table-wrapper .pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.data-table-wrapper .pagination p {
+  margin: 0;
+}
+
+.data-table-wrapper .pagination ul {
+  margin: 0;
+}
+
+.custom-header {
+  background-color: #000000;
+}

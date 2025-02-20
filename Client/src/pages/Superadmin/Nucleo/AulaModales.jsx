@@ -19,6 +19,15 @@ export const AulaModales = ({
     getEdificios().then(data => setEdificioList(data)).catch(error => console.error("Error al obtener los edificios:", error));
   }, []);
 
+  useEffect(() => {
+    if (selectedAula) {
+      setidEdificio(selectedAula.idEdificio);
+      settipo(selectedAula.tipo);
+      setnombre(selectedAula.nombre);
+      setsigla(selectedAula.sigla);
+    }
+  }, [selectedAula]);
+
   return (
     <>
       {/* Modal para registrar aula */}
@@ -30,7 +39,7 @@ export const AulaModales = ({
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
             </div>
             <div className="modal-body">
-            <div className="input-group mb-3">
+              <div className="input-group mb-3">
                 <span className="input-group-text">Edificio:</span>
                 <select className="form-select" value={idEdificio} onChange={(event) => setidEdificio(event.target.value)}>
                   <option value="">Selecciona un edificio</option>
@@ -59,7 +68,7 @@ export const AulaModales = ({
           </div>
         </div>
       </div>
-      
+
       {/* Modal para editar aula */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-right">
