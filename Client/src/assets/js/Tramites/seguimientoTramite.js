@@ -11,10 +11,10 @@ export const getAlumnoTramite = async (setAlumnoTramite) => {
   }
 };
 
-export const addAlumnoTramite = async (idTramite, idAlumnoPA, idPeriodo, fecha, estatus, getAlumnoTramite) => {
-  console.log("saliendo", { idTramite, idAlumnoPA, idPeriodo, fecha, estatus });
+export const addAlumnoTramite = async (idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, getAlumnoTramite) => {
+  console.log("saliendo", { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus });
   try {
-    await createAlumnoTramite(idTramite, idAlumnoPA, idPeriodo, fecha, estatus);
+    await createAlumnoTramite(idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus);
     getAlumnoTramite();
     Swal.fire({
       icon: 'success',
@@ -31,9 +31,10 @@ export const addAlumnoTramite = async (idTramite, idAlumnoPA, idPeriodo, fecha, 
   }
 };
 
-export const updateAlumnoTramiteFunc = async (idAlumnoTramite, idTramite, idAlumnoPA, idPeriodo, fecha, estatus, setShowEditModal, getAlumnoTramite) => {
+export const updateAlumnoTramiteFunc = async (idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, setShowEditModal, getAlumnoTramite) => {
+  console.log("saliendo", { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus });
   try {
-    await updateAlumnoTramite(idAlumnoTramite, idTramite, idAlumnoPA, idPeriodo, fecha, estatus);
+    await updateAlumnoTramite(idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus);
     getAlumnoTramite();
     Swal.fire({
       icon: 'success',

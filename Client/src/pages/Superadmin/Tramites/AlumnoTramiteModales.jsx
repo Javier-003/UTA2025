@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react'
 import { getTramites } from "../../../api/Parametrizacion/tramite.api.js";
 import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js";
 import { getAlumnosPrograma } from "../../../api/Parametrizacion/alumnopa.api.js";
+import { getPersonas } from "../../../api/Nucleo/persona.api.js";
 
 export const AlumnoTramiteModales = ({
   idTramite, setIdTramite, 
   idAlumnoPA, setIdAlumnoPA, 
+  idPersona, setIdPersona, 
   idPeriodo, setIdPeriodo, 
   fecha, setFecha, 
   estatus, setEstatus, 
@@ -21,11 +23,13 @@ export const AlumnoTramiteModales = ({
     const [tramiteList, setTramiteList] = useState([]);
     const [periodoList, setPeriodoList] = useState([]);
     const [alumnopaList, setAlumnopaList] = useState([]);
+    const [personaList, setPersonaList] = useState([]);
 
     useEffect(() => {
       getTramites().then((data) => setTramiteList(data)).catch((error) => console.error("Error al obtener los trámites:", error));
       getPeriodos().then((data) => setPeriodoList(data)).catch((error) => console.error("Error al obtener los periodos:", error));
       getAlumnosPrograma().then((data) => setAlumnopaList(data)).catch((error) => console.error("Error al obtener los alumnos con programa:", error));
+      getPersonas().then((data) => setPersonaList(data)).catch((error) => console.error("Error al obtener las personas:", error));
     }, []);
     
   return (
@@ -42,6 +46,19 @@ export const AlumnoTramiteModales = ({
             <div className="modal-body">
 
                   {/* Campos del formulario */}
+
+                  <div className="input-group mb-3">
+                <span className="input-group-text">Alumno:</span>
+                <select className="form-select" value={idPersona} onChange={(event) => setIdPersona(event.target.value)}>
+                  <option value="">Selecciona una persona</option>
+                  {personaList.map((persona) => (
+                    <option key={persona.idPersona} value={persona.idPersona}>
+                     {persona.nombre} {persona.paterno} {persona.materno}
+                    </option> 
+                  ))}
+                </select>
+              </div>
+
                   <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
                 <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
@@ -110,6 +127,19 @@ export const AlumnoTramiteModales = ({
             </div>
             <div className="modal-body">
                 {/* Campos del formulario */}
+
+                <div className="input-group mb-3">
+                <span className="input-group-text">Alumno:</span>
+                <select className="form-select" value={idPersona} onChange={(event) => setIdPersona(event.target.value)}>
+                  <option value="">Selecciona una persona</option>
+                  {personaList.map((persona) => (
+                    <option key={persona.idPersona} value={persona.idPersona}>
+                     {persona.nombre} {persona.paterno} {persona.materno}
+                    </option> 
+                  ))}
+                </select>
+              </div>
+
                 <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
                 <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>

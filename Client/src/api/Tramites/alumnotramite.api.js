@@ -15,10 +15,10 @@ export const getAlumnoTramites = async () => {
 };
 
 // Crear un nuevo trámite de alumno
-export const createAlumnoTramite = async (idTramite, idAlumnoPA, idPeriodo, fecha, estatus) => {
-  console.log("llegando a api", { idTramite, idAlumnoPA, idPeriodo, fecha, estatus });
+export const createAlumnoTramite = async (idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus) => {
+  console.log("llegando a api", { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus });
   try {
-    await axios.post(`${BASE_URL}/alumnotramite/create`, { idTramite, idAlumnoPA, idPeriodo, fecha, estatus });
+    await axios.post(`${BASE_URL}/alumnotramite/create`, { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus });
   } catch (error) {
     console.error("Error al registrar el trámite de alumno:", error);
     throw new Error('Error al registrar el trámite de alumno');
@@ -26,9 +26,9 @@ export const createAlumnoTramite = async (idTramite, idAlumnoPA, idPeriodo, fech
 };
 
 // Actualizar un trámite de alumno existente
-export const updateAlumnoTramite = async (idAlumnoTramite, idTramite, idAlumnoPA, idPeriodo, fecha, estatus) => {
+export const updateAlumnoTramite = async (idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus) => {
   try {
-    await axios.put(`${BASE_URL}/alumnotramite/update/${idAlumnoTramite}`, { idTramite, idAlumnoPA, idPeriodo, fecha, estatus });
+    await axios.put(`${BASE_URL}/alumnotramite/update/${idAlumnoTramite}`, { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus });
   } catch (error) {
     console.error("Error al actualizar el trámite de alumno:", error);
     throw new Error('Error al actualizar el trámite de alumno');
