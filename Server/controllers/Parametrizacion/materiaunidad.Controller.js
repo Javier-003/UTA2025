@@ -22,7 +22,7 @@ export const getMateriaUnidadtodos = async (req, res) => {
     return res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
-
+ 
 export const createMateriaUnidad = async (req, res) => {
   try {
     const { idMapaCurricular, unidad, nombre } = req.body;
