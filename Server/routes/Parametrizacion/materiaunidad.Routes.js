@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/", getMateriaUnidadtodos);
 router.post("/create", createMateriaUnidad);
-router.put("/update/:IdMateriaUnidad",updateMateriaUnidad );
-router.delete("/delete/:IdMateriaUnidad", deleteMateriaUnidad);
+router.put("/update/:idMateriaUnidad",updateMateriaUnidad );
+router.delete("/delete/:idMateriaUnidad", deleteMateriaUnidad);
 
 export default router;

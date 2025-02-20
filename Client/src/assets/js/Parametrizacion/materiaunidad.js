@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'; 
 
-import {getMateriaU, createMateriaU, updateMateriaU, deleteMateriaU } 
+import { getMateriaU, createMateriaU, updateMateriaU, deleteMateriaU } 
 from '../../../api/Parametrizacion/materiaunidad.api.js'; 
 
 export const getMateriajs = async (setMateriajs) => {
@@ -12,9 +12,9 @@ export const getMateriajs = async (setMateriajs) => {
   }
 };
 
-export const addMateriajs = async (id_mapa_curricular, Unidad, Nombre, setShowModal) => {
+export const addMateriajs = async (idMapaCurricular, unidad, nombre, setShowModal) => {
   try {
-    await createMateriaU(id_mapa_curricular, Unidad, Nombre);
+    await createMateriaU(idMapaCurricular, unidad, nombre);
     getMateriajs();
     Swal.fire({
       icon: 'success',
@@ -32,9 +32,9 @@ export const addMateriajs = async (id_mapa_curricular, Unidad, Nombre, setShowMo
   }
 };
 
-export const updateMateriajs = async (IdMateriaUnidad, id_mapa_curricular, Unidad, Nombre, setShowEditModal, getMateriajs) => {
+export const updateMateriajs = async (idMateriaUnidad, idMapaCurricular, unidad, nombre, setShowEditModal, getMateriajs) => {
   try {
-    await updateMateriaU(IdMateriaUnidad, id_mapa_curricular, Unidad, Nombre);
+    await updateMateriaU(idMateriaUnidad, idMapaCurricular, unidad, nombre);
     getMateriajs();
     Swal.fire({
       icon: 'success',
@@ -43,7 +43,7 @@ export const updateMateriajs = async (IdMateriaUnidad, id_mapa_curricular, Unida
     });
     setShowEditModal(false);
   } catch (error) {
-    console.error('Error al actualizar la Materia Unidad.:', error);
+    console.error('Error al actualizar la Materia Unidad:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
@@ -52,9 +52,9 @@ export const updateMateriajs = async (IdMateriaUnidad, id_mapa_curricular, Unida
   }
 };
 
-export const deleteMateriajs = async (IdMateriaUnidad, setShowDeleteModal, getMateriajs) => {
+export const deleteMateriajs = async (idMateriaUnidad, setShowDeleteModal, getMateriajs) => {
   try {
-    await deleteMateriaU(IdMateriaUnidad);
+    await deleteMateriaU(idMateriaUnidad);
     getMateriajs();
     Swal.fire({
       icon: 'success',

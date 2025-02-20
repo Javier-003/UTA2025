@@ -1,9 +1,12 @@
-import'../../../assets/css/App.css';
+import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTable from 'react-data-table-component';
 import { getAlumno, addAlumno, updateAlumnoFunc, deleteAlumnoFunc } 
 from '../../../assets/js/Nucleo/alumno.js';
 import { AlumnoModales } from '../Nucleo/AlumnoModales.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Alumno() {
   const [alumnoList, setAlumno] = useState([]);
@@ -24,105 +27,100 @@ function Alumno() {
     getAlumno(setAlumno);
   }, []);
   
-  useEffect(() => {
-    if (selectedAlumno) {
-      setidPersona(selectedAlumno.idPersona || "");
-      setnombre(selectedAlumno.nombre || "");
-      setpaterno(selectedAlumno.paterno || "");
-      setmaterno(selectedAlumno.materno || "");
-      setemail(selectedAlumno.email || "");
-      setnss(selectedAlumno.nss || "");
-      setfecha(formatDate(selectedAlumno.fecha));
-    }
-  }, [selectedAlumno]);
-  
-  const filteredData = alumnoList.filter(item =>
-    item.email.toLowerCase().includes(searchText.toLowerCase())
-  );
-  
   const handleAdd = () => {
-    addAlumno(idPersona, email, nss,fecha, setShowModal, () => getAlumno(setAlumno));
+    addAlumno(idPersona, email, nss, fecha, setShowModal, () => getAlumno(setAlumno));
   };
   
   const handleUpdate = () => {
-    updateAlumnoFunc(selectedAlumno.idAlumno, email, nss, fecha,  setShowEditModal, () => getAlumno(setAlumno));
+    updateAlumnoFunc(selectedAlumno.idAlumno, email, nss, fecha, setShowEditModal, () => getAlumno(setAlumno));
   };
   
   const handleDelete = () => {
     deleteAlumnoFunc(selectedAlumno.idAlumno, setShowDeleteModal, () => getAlumno(setAlumno));
   };
 
-  const formatDate = (date) => {
-    return date ? new Date(date).toISOString().split('T')[0] : "";
-  };
+  const columns = [
+    { name: 'Id A', selector: row => row.idAlumno, sortable: true },
+    { name: 'Id P', selector: row => row.idPersona, sortable: true },
+    { name: 'Nombre del Alumno', selector: row => `${row.nombre} ${row.paterno} ${row.materno}`, sortable: true },
+    { name: 'Email', selector: row => row.email, sortable: true },
+    { name: 'NSS', selector: row => row.nss, sortable: true },
+    { name: 'Fecha', selector: row => new Date(row.fecha).toLocaleDateString(), sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedAlumno(row);
+            setidPersona(row.idPersona);
+            setnombre(row.nombre);
+            setpaterno(row.paterno);
+            setmaterno(row.materno);
+            setemail(row.email);
+            setnss(row.nss);
+            setfecha(row.fecha);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger" onClick={() => {
+            setSelectedAlumno(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      )
+    }
+  ];
+
+  const filteredData = alumnoList.filter(item =>
+    item.email.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
-    <div className="container">
-      <div className="">
-        <h5>LISTADO DE ALUMNOS</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={() => {
-            setidPersona("");
-            setnombre("");
-            setpaterno("");
-            setmaterno("");
-            setemail("");
-            setnss("");
-            setfecha("");
-            setSelectedAlumno(null);
-            setShowModal(true);
-          }}>Registrar</button>
-          <div className="mt-4">
-            <input type="text" className="form-control mb-1" value={searchText}
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
+              setidPersona("");
+              setnombre("");
+              setpaterno("");
+              setmaterno("");
+              setemail("");
+              setnss("");
+              setfecha("");
+              setSelectedAlumno(null);
+              setShowModal(true);
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO DE ALUMNOS</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText}
               onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por email"/>
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Id A</th>
-                  <th>Id P</th>
-                  <th>NOMBRE DEL ALUMNO</th>
-                  <th>EMAIL</th>
-                  <th>NSS</th>
-                  <th>FECHA</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((alumno) => (
-                    <tr key={alumno.idAlumno}>
-                      <td>{alumno.idAlumno}</td>
-                      <td>{alumno.idPersona}</td>
-                      <td>{`${alumno.nombre} ${alumno.paterno} ${alumno.materno}`}</td>
-                      <td>{alumno.email}</td>   
-                      <td>{alumno.nss}</td>
-                      <td>{new Date(alumno.fecha).toLocaleDateString()}</td>
-                      <td>
-                        <button className="btn btn-warning" onClick={() => {
-                          setSelectedAlumno(alumno);
-                          setShowEditModal(true);
-                        }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {
-                          setSelectedAlumno(alumno);
-                          setShowDeleteModal(true);
-                        }}>Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="11">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
           </div>
-        </div>
-      </div>
-      
+        }
+        columns={columns}
+        data={filteredData}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <AlumnoModales
       idPersona={idPersona} setidPersona={setidPersona}
       nombre={nombre} setnombre={setnombre}

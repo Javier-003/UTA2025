@@ -1,9 +1,12 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTable from 'react-data-table-component';
 import { getProfesor, addProfesor, updateProfesorFunc, deleteProfesorFunc } 
 from '../../../assets/js/Nucleo/profesor.js';
 import { ProfesorModales } from '../Nucleo/ProfesorModales.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Profesor() {
   const [profesorList, setProfesor] = useState([]);
@@ -28,136 +31,127 @@ function Profesor() {
   const [searchText, setSearchText] = useState("");
   const [selectedProfesor, setSelectedProfesor] = useState(null);
 
-useEffect(() => { 
-  getProfesor(setProfesor); 
-}, []);
+  useEffect(() => { 
+    getProfesor(setProfesor); 
+  }, []);
 
-useEffect(() => {
-  if (selectedProfesor) {
-    setidPersona(selectedProfesor.idPersona);
-    setnombre(selectedProfesor.nombre);
-    setpaterno(selectedProfesor.paterno);
-    setmaterno(selectedProfesor.materno);
-    setidDepartamento(selectedProfesor.idDepartamento);
-    setnombreDepartamento(selectedProfesor.nombreDepartamento);
-    setidPuesto(selectedProfesor.idPuesto);
-    setnombrePuesto(selectedProfesor.nombrePuesto);
-    setclave(selectedProfesor.clave);
-    setperfil(selectedProfesor.perfil);
-    setemail(selectedProfesor.email);
-    setnoCedula(selectedProfesor.noCedula);
-    setprogramaAcademicos(selectedProfesor.programaAcademicos);
-    setnss(selectedProfesor.nss);
-    setrfc(selectedProfesor.rfc);
-  }
-}, [selectedProfesor]);
+  const handleAdd = () => {
+    addProfesor(idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowModal, () => getProfesor(setProfesor));
+  };
 
-const filteredData = profesorList.filter(item =>
-  item.clave.toLowerCase().includes(searchText.toLowerCase())
-);
+  const handleUpdate = () => {
+    updateProfesorFunc(selectedProfesor.idProfesor, idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowEditModal, () => getProfesor(setProfesor));
+  };
 
-const handleAdd = () => {
-  addProfesor(idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowModal, () => getProfesor(setProfesor));
-};
+  const handleDelete = () => {
+    deleteProfesorFunc(selectedProfesor.idProfesor, setShowDeleteModal, () => getProfesor(setProfesor));
+  };
 
-const handleUpdate = () => {
-  updateProfesorFunc(selectedProfesor.idProfesor, idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc, setShowEditModal, () => getProfesor(setProfesor));
-};
+  const columns = [
+    { name: 'Id', selector: row => row.idProfesor, sortable: true },
+    { name: 'Id P', selector: row => row.idPersona, sortable: true },
+    { name: 'Persona', selector: row => `${row.nombre} ${row.paterno} ${row.materno}`, sortable: true },
+    { name: 'Id D', selector: row => row.idDepartamento, sortable: true },
+    { name: 'Departamento', selector: row => row.nombreDepartamento, sortable: true },
+    { name: 'Id P', selector: row => row.idPuesto, sortable: true },
+    { name: 'Puesto', selector: row => row.nombrePuesto, sortable: true },
+    { name: 'Clave', selector: row => row.clave, sortable: true },
+    { name: 'Perfil', selector: row => row.perfil, sortable: true },
+    { name: 'Email', selector: row => row.email, sortable: true },
+    { name: 'No Cédula', selector: row => row.noCedula, sortable: true },
+    { name: 'PA', selector: row => row.programaAcademicos, sortable: true },
+    { name: 'NSS', selector: row => row.nss, sortable: true },
+    { name: 'RFC', selector: row => row.rfc, sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedProfesor(row);
+            setidPersona(row.idPersona);
+            setnombre(row.nombre);
+            setpaterno(row.paterno);
+            setmaterno(row.materno);
+            setidDepartamento(row.idDepartamento);
+            setnombreDepartamento(row.nombreDepartamento);
+            setidPuesto(row.idPuesto);
+            setnombrePuesto(row.nombrePuesto);
+            setclave(row.clave);
+            setperfil(row.perfil);
+            setemail(row.email);
+            setnoCedula(row.noCedula);
+            setprogramaAcademicos(row.programaAcademicos);
+            setnss(row.nss);
+            setrfc(row.rfc);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger" onClick={() => {
+            setSelectedProfesor(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      )
+    }
+  ];
 
-const handleDelete = () => {
-  deleteProfesorFunc(selectedProfesor.idProfesor, setShowDeleteModal, () => getProfesor(setProfesor));
-};
+  const filteredData = profesorList.filter(item =>
+    item.clave.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
-    <div className="container">
-      <div className="">
-        <h5>LISTADO DE PROFESORES</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={() => {
-            setidPersona("");
-            setidDepartamento("");
-            setidPuesto("");
-            setnombre(""); 
-            setpaterno(""); 
-            setmaterno("");
-            setclave("");
-            setperfil("");
-            setemail("");
-            setnoCedula("");
-            setprogramaAcademicos("");
-            setnss("");
-            setrfc("");
-            setnombreDepartamento("");
-            setnombrePuesto("");
-            setSelectedProfesor(null);
-            setShowModal(true);
-          }}>Registrar</button>
-          <div className="mt-4">
-            <input type="text" className="form-control mb-4" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por email" />
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Id</th>
-                  <th>Id P</th>
-                  <th>PERSONA</th>
-                  <th>Id D</th>
-                  <th>DEPARTAMENTO</th>
-                  <th>Id P</th>
-                  <th>PUESTO</th>
-                  <th>CLAVE</th>
-                  <th>PERFIL</th>
-                  <th>EMAIL</th>
-                  <th>NO CEDULA</th>
-                  <th>PA</th>
-                  <th>NSS</th>
-                  <th>RFC</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((profesor) => (
-                    <tr key={profesor.idProfesor}>
-                      <td>{profesor.idProfesor}</td>
-                      <td>{profesor.idPersona}</td>
-                      <td>{`${profesor.nombre} ${profesor.paterno} ${profesor.materno}`}</td>
-                      <td >{profesor.idDepartamento}</td>
-                      <td>{profesor.nombreDepartamento}</td>
-                      <td>{profesor.idPuesto}</td>
-                      <td>{profesor.nombrePuesto}</td>
-                      <td>{profesor.clave}</td>
-                      <td>{profesor.perfil}</td>
-                      <td>{profesor.email}</td>
-                      <td>{profesor.noCedula}</td>
-                      <td>{profesor.programaAcademicos}</td>
-                      <td>{profesor.nss}</td>
-                      <td>{profesor.rfc}</td>
-                      <td>
-                        <button className="btn btn-warning" onClick={() => {
-                          setSelectedProfesor(profesor);
-                          setShowEditModal(true);
-                        }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {
-                          setSelectedProfesor(profesor);
-                          setShowDeleteModal(true);
-                        }}>Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="14">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
+              setidPersona("");
+              setidDepartamento("");
+              setidPuesto("");
+              setnombre(""); 
+              setpaterno(""); 
+              setmaterno("");
+              setclave("");
+              setperfil("");
+              setemail("");
+              setnoCedula("");
+              setprogramaAcademicos("");
+              setnss("");
+              setrfc("");
+              setnombreDepartamento("");
+              setnombrePuesto("");
+              setSelectedProfesor(null);
+              setShowModal(true);
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO DE PROFESORES</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por clave" />
           </div>
-        </div>
-      </div>
-
+        }
+        columns={columns}
+        data={filteredData}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <ProfesorModales
       idPersona={idPersona} setidPersona={setidPersona}
       nombre={nombre} setnombre={setnombre}

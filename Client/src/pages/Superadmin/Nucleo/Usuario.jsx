@@ -1,11 +1,12 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTable from 'react-data-table-component';
 import { getUsuario, addUsuario, updateUsuarioFunc, deleteUsuarioFunc } from '../../../assets/js/Nucleo/usuario.js';
 import { addRolUsuarioFunc, deleteRolUsuarioFunc } from '../../../assets/js/Nucleo/rol.js';
 import { UsuarioModales } from '../Nucleo/UsuarioModales.jsx';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash, faUserPlus, faUserMinus } from '@fortawesome/free-solid-svg-icons';
 
 function Usuario() {
   const [usuarioList, setUsuarios] = useState([]);
@@ -17,7 +18,7 @@ function Usuario() {
   const [estatus, setEstatus] = useState("");
   const [contrasena, setcontrasena] = useState("");
   const [rol, setRol] = useState("");
-  const [rolId, setRolId] = useState(""); // Nuevo estado para rol
+  const [rolId, setRolId] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -30,23 +31,6 @@ function Usuario() {
   useEffect(() => {
     getUsuario(setUsuarios);
   }, []);
-
-  useEffect(() => {
-    if (selectedUsuario) {
-      setidPersona(selectedUsuario.idPersona);
-      setnombre(selectedUsuario.nombre);
-      setpaterno(selectedUsuario.paterno);
-      setmaterno(selectedUsuario.materno);
-      setusuario(selectedUsuario.usuario);
-      setEstatus(selectedUsuario.estatus);
-      setRolId(selectedUsuario.idRol);
-      setRol(selectedUsuario.rol);
-    }
-  }, [selectedUsuario]);
-
-  const filteredData = usuarioList.filter(item =>
-    item.usuario.toLowerCase().includes(searchText.toLowerCase())
-  );
 
   const handleAdd = () => {
     addUsuario(idPersona, usuario, contrasena, estatus, rolId, setShowModal, () => getUsuario(setUsuarios));
@@ -68,83 +52,100 @@ function Usuario() {
     deleteRolUsuarioFunc(selectedUsuario.idUsuario, selectedRole, setShowDeleteRoleModal, () => getUsuario(setUsuarios));
   };
 
-  return (
-    <div className="container">
-      <div className="">
-        <h5>LISTADO DE USUARIOS</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={() => {
-            setidPersona("");
-            setnombre(""); 
-            setpaterno(""); 
-            setmaterno("");
-            setcontrasena("");
-            setusuario("");
-            setEstatus("1");
-            setRol("");
-            setRolId("");
-            setSelectedUsuario(null);
-            setShowModal(true);
-          }}>Registrar</button>
-          <div className="mt-4">
-            <input type="text" className="form-control mb-4" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por usuario" />
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Id Usuario</th>
-                  <th>Usuario</th>
-                  <th>Id Persona</th>
-                  <th>Nombre Completo</th>
-                  <th>Id Rol</th>
-                  <th>Roles</th>
-                  <th>Estatus</th>
-                  <th>Opciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((usuario) => (
-                    <tr key={usuario.idUsuario}>
-                      <td>{usuario.idUsuario}</td>
-                      <td>{usuario.usuario}</td>
-                      <td>{usuario.idPersona}</td>
-                      <td>{`${usuario.nombre} ${usuario.paterno} ${usuario.materno}`}</td>
-                      <td>{usuario.rolId}</td>
-                      <td>{usuario.rol}</td>
-                      <td>{usuario.estatus ? 'Activo' : 'Inactivo' }</td>
-                      <td>
-                        <DropdownButton id="dropdown-basic-button" title="Opciones">
-                          <Dropdown.Item onClick={() => {
-                            setSelectedUsuario(usuario);
-                            setShowEditModal(true);
-                          }}>Editar</Dropdown.Item>
-                          <Dropdown.Item onClick={() => {
-                            setSelectedUsuario(usuario);
-                            setShowDeleteModal(true);
-                          }}>Eliminar</Dropdown.Item>
-                          <Dropdown.Item onClick={() => {
-                            setSelectedUsuario(usuario);
-                            setShowAddRoleModal(true);
-                          }}>Agregar Rol</Dropdown.Item>
-                          <Dropdown.Item onClick={() => {
-                            setSelectedUsuario(usuario);
-                            setShowDeleteRoleModal(true);
-                          }}>Eliminar Rol</Dropdown.Item>
-                        </DropdownButton>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="12">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+  const columns = [
+    { name: 'Usuario', selector: row => row.usuario, sortable: true },
+    { name: 'Nombre Completo', selector: row => `${row.nombre} ${row.paterno} ${row.materno}`, sortable: true },
+    { name: 'Roles', selector: row => row.rol, sortable: true },
+    { name: 'Estatus', selector: row => row.estatus ? 'Activo' : 'Inactivo', sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedUsuario(row);
+            setidPersona(row.idPersona);
+            setnombre(row.nombre);
+            setpaterno(row.paterno);
+            setmaterno(row.materno);
+            setusuario(row.usuario);
+            setEstatus(row.estatus);
+            setRolId(row.rolId);
+            setRol(row.rol);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger me-2" onClick={() => {
+            setSelectedUsuario(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+          <button className="btn btn-success me-2" onClick={() => {
+            setSelectedUsuario(row);
+            setShowAddRoleModal(true);
+          }}>
+            <FontAwesomeIcon icon={faUserPlus} /> 
+          </button>
+          <button className="btn btn-warning" onClick={() => {
+            setSelectedUsuario(row);
+            setShowDeleteRoleModal(true);
+          }}>
+            <FontAwesomeIcon icon={faUserMinus} /> 
+          </button>
         </div>
-      </div>
+      )
+    }
+  ];
 
+  const filteredData = usuarioList.filter(item =>
+    item.usuario.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return (
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
+              setidPersona("");
+              setnombre("");
+              setpaterno("");
+              setmaterno("");
+              setcontrasena("");
+              setusuario("");
+              setEstatus("1");
+              setRol("");
+              setRolId("");
+              setSelectedUsuario(null);
+              setShowModal(true);
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO DE USUARIOS</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por usuario" />
+          </div>
+        }
+        columns={columns}
+        data={filteredData}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <UsuarioModales
         idPersona={idPersona} setidPersona={setidPersona}
         nombre={nombre} setnombre={setnombre}

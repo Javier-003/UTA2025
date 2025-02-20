@@ -8,7 +8,6 @@ export const UsuarioModales = ({
   estatus, setEstatus,
   contrasena, setcontrasena,
   rolId, setRolId,
-  rol, setRol,
   showModal, setShowModal,
   showEditModal, setShowEditModal,
   showDeleteModal, setShowDeleteModal,
