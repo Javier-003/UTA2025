@@ -129,18 +129,18 @@ export const AlumnoTramiteModales = ({
                 {/* Campos del formulario */}
 
                 <div className="input-group mb-3">
-                <span className="input-group-text">Alumno:</span>
-                <select className="form-select" value={idPersona} onChange={(event) => setIdPersona(event.target.value)}>
-                  <option value="">Selecciona una persona</option>
-                  {personaList.map((persona) => (
-                    <option key={persona.idPersona} value={persona.idPersona}>
-                     {persona.nombre} {persona.paterno} {persona.materno}
-                    </option> 
-                  ))}
-                </select>
-              </div>
+  <span className="input-group-text">Alumno:</span>
+  <input 
+    type="text" 
+    className="form-control" 
+    value={personaList.find(p => p.idPersona === idPersona)?.nombre + " " +
+           personaList.find(p => p.idPersona === idPersona)?.paterno + " " +
+           (personaList.find(p => p.idPersona === idPersona)?.materno || "") || ""}
+    readOnly
+  />
+</div>
 
-                <div className="input-group mb-3">
+                {/* <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
                 <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
                   <option value="">Selecciona un alumno</option>
@@ -150,7 +150,7 @@ export const AlumnoTramiteModales = ({
                     </option> 
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               <div className="input-group mb-3">
               <span className="input-group-text">Mapa Curricular:</span>

@@ -187,6 +187,7 @@ function Seguimientodetramite() {
         idPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
         fecha={fecha} setFecha={setFecha}
         estatus={estatus} setEstatus={setEstatus}
+        idPersona={idPersona} setIdPersona={setIdPersona}
 
         tramite={tramite} setTramite={setTramite}
         alumno={alumno} setAlumno={setAlumno}
