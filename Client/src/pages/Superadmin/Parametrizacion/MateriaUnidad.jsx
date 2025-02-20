@@ -7,7 +7,7 @@ from '../../../assets/js/Parametrizacion/materiaunidad.js';
 import { MateriaUnidadModales } from '../Parametrizacion/MateriaUnidadModales.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-
+  
 function MateriaUnidad() {
   const [materiaUList, setmateriaUList] = useState([]);
   const [programaEducativo, setProgramaEducativo] = useState("");
