@@ -63,7 +63,6 @@ function Bloque() {
             <table className="table table-bordered">
               <thead>
                 <tr>
-                  <th>IdBloque</th>
                   <th>NOMBRE</th>
                   <th>DURACION</th>
                   <th>HORA INICIO</th>
@@ -76,7 +75,6 @@ function Bloque() {
                 {filteredData.length > 0 ? (
                   filteredData.map((bloque) => (
                     <tr key={bloque.idBloque}>
-                      <td>{bloque.idBloque}</td>
                       <td>{bloque.nombre}</td>
                       <td>{bloque.duracion}</td>
                       <td>{bloque.horaInicio}</td>

@@ -1,73 +1,78 @@
 import Swal from 'sweetalert2'; 
+import { getCargaMaterias, createCargaMaterias, updateCargaMaterias, deleteCargaMaterias } from '../../../api/PlanificacionAcademica/cargamaterias.api.js'; 
 
-import {getCargaMaterias, createCargaMaterias, updateCargaMaterias, deleteCargaMaterias} 
-from '../../../api/PlanificacionAcademica/cargamaterias.api.js'; 
-
-export const getCargaMateriasjs = async (setCargaMateriasjs) => {
+// Obtener todas las cargas de materias
+export const getAllCargaMaterias = async () => {
   try {
     const data = await getCargaMaterias();
-    setCargaMateriasjs(data);
+    if (data.error) throw new Error(data.error);
+    return data;
   } catch (error) {
-    console.error('Error al obtener los datos:', error);
+    console.error("Error al obtener cargas de materias:", error);
+    Swal.fire({
+      title: "Error",
+      text: "No se pudieron cargar las cargas de materias.",
+      icon: "error",
+    });
+    return [];
   }
 };
 
-export const addCargaMaterias = async (id_grupo, idMapaCurricular, tipo, fecha, idProfesor, setShowModal, getCargaMateriasjs) => {
+// Crear una carga de materias
+export const createCargaMateriasForm = async (idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios) => {
+  //console.log("Recibiendo datos", idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios);
   try {
-    await createCargaMaterias(id_grupo, idMapaCurricular, tipo, fecha, idProfesor);
-    getCargaMateriasjs();
+    await createCargaMaterias(idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios);
     Swal.fire({
-      icon: 'success',
-      title: '¡Éxito!',
-      text: 'Materia asociada correctamente',
+      title: "Carga de materias creada",
+      text: "La carga de materias se ha creado correctamente.",
+      icon: "success",
     });
-    setShowModal(false);
   } catch (error) {
-    console.error('Error al asociar una materia:', error);
+    console.error("Error al crear carga de materias:", error);
     Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un problema asociando la materia.',
-    });
-  }
-};
-
-export const updateCargaMateriasjs = async (id_grupo_materia, id_grupo, idMapaCurricular, tipo, idProfesor, setShowEditModal, getCargaMateriasjs) => {
-  try {
-    await updateCargaMaterias(id_grupo_materia, id_grupo, idMapaCurricular, tipo, idProfesor);
-    getCargaMateriasjs();
-    Swal.fire({
-      icon: 'success',
-      title: '¡Éxito!',
-      text: 'Materia asociada actualizada correctamente',
-    });
-    setShowEditModal(false);
-  } catch (error) {
-    console.error('Error al actualizar los datos:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un problema actualizando los datos.',
+      title: "Error",
+      text: "No se pudo crear la carga de materias.",
+      icon: "error",
     });
   }
 };
 
-export const deleteCargaMateriasjs = async (id_grupo_materia, setShowDeleteModal, getEdificio) => {
+// Actualizar una carga de materias
+export const updateCargaMateriasForm = async (idGrupoMateria, idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios) => {
+  console.log("Recibiendo datos", idGrupoMateria, idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios);
   try {
-    await deleteCargaMaterias(id_grupo_materia);
-    getEdificio();
+    await updateCargaMaterias(idGrupoMateria, idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios);
     Swal.fire({
-      icon: 'success',
-      title: '¡Éxito!',
-      text: 'Materia eliminada correctamente',
+      title: "Carga de materias actualizada",
+      text: "La carga de materias se ha actualizado correctamente.",
+      icon: "success",
     });
-    setShowDeleteModal(false);
   } catch (error) {
-    console.error('Error al eliminar la materia:', error);
+    console.error("Error al actualizar carga de materias:", error);
     Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un problema eliminando la materia.',
+      title: "Error",
+      text: "No se pudo actualizar la carga de materias.",
+      icon: "error",
+    });
+  }
+};
+
+// Eliminar una carga de materias
+export const deleteCargaMateriasForm = async (idGrupoMateria) => {
+  try {
+    await deleteCargaMaterias(idGrupoMateria);
+    Swal.fire({
+      title: "Carga de materias eliminada",
+      text: "La carga de materias se ha eliminado correctamente.",
+      icon: "success",
+    });
+  } catch (error) {
+    console.error("Error al eliminar carga de materias:", error);
+    Swal.fire({
+      title: "Error",
+      text: "No se pudo eliminar la carga de materias.",
+      icon: "error",
     });
   }
 };

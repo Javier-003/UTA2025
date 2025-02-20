@@ -6,9 +6,10 @@ from "../../controllers/PlanificacionAcademica/cargamaterias.Controller.js";
 const router = Router();
 
 router.get("/", getCargaMaterias);
+//router.get("/, getFiltroCargaMaterias");
 router.post("/create", createCargaMaterias);
-router.put("/update/:id_grupo_materia", updateCargaMaterias);
-router.delete("/delete/:id_grupo_materia", deleteCargaMaterias);
+router.put("/update/:idGrupoMateria", updateCargaMaterias);
+router.delete("/delete/:idGrupoMateria", deleteCargaMaterias);
 
 export default router;
 

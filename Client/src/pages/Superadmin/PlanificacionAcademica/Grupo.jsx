@@ -86,9 +86,12 @@ function Grupo() {
   };
 
   const filteredGrupoList = grupoList.filter(grupo => 
+    // Filtrar por periodo y programa académico
+    periodo.find(p => p.idPeriodo === grupo.idPeriodo)?.periodo.toLowerCase().includes(searchTerm.toLowerCase()) ||
     grupo.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
     programaAcademico.find(p => p.idProgramaAcademico === grupo.idProgramaAcademico)?.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ).sort((a, b) => a.cuatrimestre - b.cuatrimestre); // Ordenar por cuatrimestre
+
 
   const handleAdd = () => {
     addGrupo(idPeriodo, idProgramaAcademico, idTutor, nombre, cuatrimestre, observacion, estatus, fecha, setShowModal, fetchGrupo)
@@ -124,7 +127,7 @@ function Grupo() {
         setShowModal(true);
       }}>Agregar</button>
       <div className='mt-4'>
-      <input type="text" className="form-control mb-1" value={searchTerm} onChange={handleSearchChange} placeholder="Buscar por nombre o programa académico"/>
+      <input type="text" className="form-control mb-1" value={searchTerm} onChange={handleSearchChange} placeholder="Buscar por Periodo o Programa Academico"/>
         <table className="table table-bordered">
           <thead>
             <tr>
