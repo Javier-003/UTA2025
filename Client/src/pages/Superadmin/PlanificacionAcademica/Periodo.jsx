@@ -70,7 +70,6 @@ const formatDateStringHora = (isoDateString) => {
             <table className="table table-bordered">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>PERIODO</th>
                   <th>FECHA INICIO</th>
                   <th>FECHA FIN</th>
@@ -83,7 +82,6 @@ const formatDateStringHora = (isoDateString) => {
                 {filteredData.length > 0 ? (
                   filteredData.map((periodo) => (
                     <tr key={periodo.idPeriodo}>
-                      <td>{periodo.idPeriodo}</td>
                       <td>{periodo.periodo}</td>
                       <td>{formatDateString(periodo.fechaFin)}</td>
                       <td>{formatDateString(periodo.fechaFin)}</td>

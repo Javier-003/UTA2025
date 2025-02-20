@@ -221,3 +221,5 @@ export const ProfesorModales = ({
     </>
   );
 };
+
+export default ProfesorModales;

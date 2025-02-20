@@ -32,7 +32,7 @@ import Seguimientodetramite from './pages/Superadmin/Tramites/seguimientoTramite
 import NivelEstudio from "./pages/Superadmin/PlanificacionAcademica/NivelEstudio";
 import Grupo from './pages/Superadmin/PlanificacionAcademica/Grupo';
 import Bloque from './pages/Superadmin/PlanificacionAcademica/Bloque';
-import Materias from './pages/Superadmin/PlanificacionAcademica/Cargadematerias';
+import Materias from './pages/Superadmin/PlanificacionAcademica/CargaMaterias';
 import ProgramaAcademico from './pages/Superadmin/PlanificacionAcademica/ProgramaAcademico';
 import MapaCurricular from './pages/Superadmin/PlanificacionAcademica/MapaCurricular';
 import Periodo from "./pages/Superadmin/PlanificacionAcademica/Periodo";
