@@ -54,7 +54,6 @@ function NivelEstudio() {
             <table className="table table-bordered">
               <thead>
                 <tr>
-                  <th>Id NE</th>
                   <th>NOMBRE</th>
                   <th>DESCRIPCION</th>
                   <th>SIGLA</th>
@@ -66,7 +65,6 @@ function NivelEstudio() {
                 {filteredData.length > 0 ? (
                   filteredData.map((nivelEstudio) => (
                     <tr key={nivelEstudio.idnivelEstudio}>
-                      <td>{nivelEstudio.idnivelEstudio}</td>
                       <td>{nivelEstudio.nombre}</td>
                       <td>{nivelEstudio.descripcion}</td>
                       <td>{nivelEstudio.sigla}</td>

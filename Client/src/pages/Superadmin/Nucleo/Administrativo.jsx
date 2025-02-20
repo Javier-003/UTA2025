@@ -1,8 +1,12 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTable from 'react-data-table-component';
 import { getAdministrativo, addAdministrativo, updateAdministrativoFunc, deleteAdministrativoFunc } from '../../../assets/js/Nucleo/administrativo.js';
 import { AdministrativoModales } from '../../Superadmin/Nucleo/AdministrativoModales.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+
 function Administrativo() {  
   const [administrativoList, setAdministrativo] = useState([]);
   const [idPersona, setIdPersona] = useState("");
@@ -22,127 +26,117 @@ function Administrativo() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedAdministrativo, setSelectedAdministrativo] = useState(null);
+
   useEffect(() => { 
     getAdministrativo(setAdministrativo); 
   }, []);
-  useEffect(() => {
-    if (selectedAdministrativo) {
-      setIdPersona(selectedAdministrativo.idPersona);
-      setNombre(selectedAdministrativo.nombre);
-      setPaterno(selectedAdministrativo.paterno);
-      setMaterno(selectedAdministrativo.materno);
-      setIdDepartamento(selectedAdministrativo.idDepartamento);
-      setNombreDepartamento(selectedAdministrativo.nombreDepartamento);
-      setIdPuesto(selectedAdministrativo.idPuesto);
-      setNombrePuesto(selectedAdministrativo.nombrePuesto);
-      setClave(selectedAdministrativo.clave);
-      setHorario(selectedAdministrativo.horario);
-      setNss(selectedAdministrativo.nss);
-      setRfc(selectedAdministrativo.rfc);
-    }
-  }, [selectedAdministrativo]);
-  const filteredData = administrativoList.filter(item =>
-    item.clave.toLowerCase().includes(searchText.toLowerCase())
-  );
+
   const handleAdd = () => {
     addAdministrativo(idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc, setShowModal, () => getAdministrativo(setAdministrativo));
   };
+
   const handleUpdate = () => {
     updateAdministrativoFunc(selectedAdministrativo.idAdministrativo, idPersona, idDepartamento, idPuesto, clave, horario, nss, rfc, setShowEditModal, () => getAdministrativo(setAdministrativo));
   };
+
   const handleDelete = () => {
     deleteAdministrativoFunc(selectedAdministrativo.idAdministrativo, setShowDeleteModal, () => getAdministrativo(setAdministrativo));
   };
-  return (
-    <div className="container">
-      <div>
-        <h5>LISTADO ADMINISTRATIVOS</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={() => {
-            setIdPersona("");
-            setNombre(""); 
-            setPaterno(""); 
-            setMaterno("");
-            setIdDepartamento("");    
-            setNombreDepartamento("");
-            setIdPuesto(""); 
-            setNombrePuesto("");
-            setClave("");
-            setHorario("");
-            setNss("");
-            setRfc("");
-            setSelectedAdministrativo(null);
-            setShowModal(true);
-          }}>Registrar</button>
-          <div className="mt-4">
-            <input
-              type="text"
-              className="form-control mb-1"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Buscar por Clave"
-            />
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>ID A</th>
-                  <th>ID P</th>
-                  <th>Nombre</th>
-                  <th>Paterno</th>
-                  <th>Materno</th>
-                  <th>ID D</th>
-                  <th>DEPARTAMENTO</th>
-                  <th>ID P</th>
-                  <th>PUESTO</th>
-                  <th>CLAVE</th>
-                  <th>HORARIO</th>
-                  <th>NSS</th>
-                  <th>RFC</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((administrativo) => (
-                    <tr key={administrativo.idAdministrativo}>
-                      <td>{administrativo.idAdministrativo}</td>
-                      <td>{administrativo.idPersona}</td>
-                      <td>{administrativo.nombre}</td> 
-                      <td>{administrativo.paterno}</td> 
-                      <td>{administrativo.materno}</td> 
-                      <td>{administrativo.idDepartamento}</td> 
-                      <td>{administrativo.nombreDepartamento}</td>
-                      <td>{administrativo.idPuesto}</td>
-                      <td>{administrativo.nombrePuesto}</td>
-                      <td>{administrativo.clave}</td>
-                      <td>{administrativo.horario}</td>
-                      <td>{administrativo.nss}</td>
-                      <td>{administrativo.rfc}</td>
-                      <td>
-                        <button className="btn btn-warning" onClick={() => {
-                          setSelectedAdministrativo(administrativo);
-                          setShowEditModal(true);
-                        }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {
-                          setSelectedAdministrativo(administrativo);
-                          setShowDeleteModal(true);
-                        }}>Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="13">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+
+  const columns = [
+    { name: 'ID A', selector: row => row.idAdministrativo, sortable: true },
+    { name: 'ID P', selector: row => row.idPersona, sortable: true },
+    { name: 'Nombre', selector: row => `${row.nombre} ${row.paterno} ${row.materno}`, sortable: true },
+    { name: 'Departamento', selector: row => row.nombreDepartamento, sortable: true },
+    { name: 'Puesto', selector: row => row.nombrePuesto, sortable: true },
+    { name: 'Clave', selector: row => row.clave, sortable: true },
+    { name: 'Horario', selector: row => row.horario, sortable: true },
+    { name: 'NSS', selector: row => row.nss, sortable: true },
+    { name: 'RFC', selector: row => row.rfc, sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedAdministrativo(row);
+            setIdPersona(row.idPersona);
+            setNombre(row.nombre);
+            setPaterno(row.paterno);
+            setMaterno(row.materno);
+            setIdDepartamento(row.idDepartamento);
+            setNombreDepartamento(row.nombreDepartamento);
+            setIdPuesto(row.idPuesto);
+            setNombrePuesto(row.nombrePuesto);
+            setClave(row.clave);
+            setHorario(row.horario);
+            setNss(row.nss);
+            setRfc(row.rfc);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger" onClick={() => {
+            setSelectedAdministrativo(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
         </div>
-      </div>
+      )
+    }
+  ];
+
+  const filteredData = administrativoList.filter(item =>
+    item.clave.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return (
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
+              setIdPersona("");
+              setNombre("");
+              setPaterno("");
+              setMaterno("");
+              setIdDepartamento("");
+              setNombreDepartamento("");
+              setIdPuesto("");
+              setNombrePuesto("");
+              setClave("");
+              setHorario("");
+              setNss("");
+              setRfc("");
+              setSelectedAdministrativo(null);
+              setShowModal(true);
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO ADMINISTRATIVOS</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Clave" />
+          </div>
+        }
+        columns={columns}
+        data={filteredData}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <AdministrativoModales
         idPersona={idPersona} setIdPersona={setIdPersona}
         nombre={nombre} setNombre={setNombre}
@@ -162,9 +156,9 @@ function Administrativo() {
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedAdministrativo={selectedAdministrativo}
-      />
+        selectedAdministrativo={selectedAdministrativo}/>
     </div>
   );
 }
+
 export default Administrativo;

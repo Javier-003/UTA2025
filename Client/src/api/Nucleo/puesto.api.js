@@ -18,8 +18,8 @@ export const getPuestos = async () => {
 // Crear un nuevo puesto
 export const createPuesto = async (idDepartamento, nombre) => {
   try {
-   const response =  await axios.post(`${BASE_URL}/puesto/create`, {
-      idDepartamento, nombre,userSession
+    const response = await axios.post(`${BASE_URL}/puesto/create`, {
+      idDepartamento, nombre, userSession
     });
     console.log("Puesto creado:", response.data);
   } catch (error) {
@@ -31,8 +31,8 @@ export const createPuesto = async (idDepartamento, nombre) => {
 // Actualizar un puesto existente
 export const updatePuesto = async (idPuesto, idDepartamento, nombre) => {
   try {
-    const response  = await axios.put(`${BASE_URL}/puesto/update/${idPuesto}`, {
-      idDepartamento, nombre,userSession
+    const response = await axios.put(`${BASE_URL}/puesto/update/${idPuesto}`, {
+      idDepartamento, nombre, userSession
     });
     console.log("Puesto actualizado:", response.data);
   } catch (error) {
@@ -41,7 +41,7 @@ export const updatePuesto = async (idPuesto, idDepartamento, nombre) => {
   }
 };
 
-// Eliminar un usuario
+// Eliminar un puesto
 export const deletePuesto = async (idPuesto) => {
   try {
     const response = await axios.delete(`${BASE_URL}/puesto/delete/${idPuesto}`, {

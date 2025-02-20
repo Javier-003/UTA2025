@@ -59,7 +59,8 @@ export const AsignarPAModales = ({
                 <select className="form-select" value={ProgramaAcademico} onChange={(event) => setProgramaAcademico(event.target.value)}>
                   <option value="">Selecciona un programa</option>
                   {programaList.map((programa) => (
-                    <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>{programa.Titulo_Tsu} {programa.Titulo_Ing}</option>
+                    <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>{programa.nombre
+                    } {programa.nombre}</option>
                   ))}
                 </select>
               </div>

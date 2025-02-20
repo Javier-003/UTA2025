@@ -7,7 +7,10 @@ from '../../../assets/js/Parametrizacion/alumnopa.js';
 function AlumnoPrograma() {
   const [alumnoProgramaList, setAlumnoProgramaList] = useState([]);
   const [idAlumno, setIdAlumno] = useState("");
+
   const [idProgramaAcademico, setIdProgramaAcademico] = useState("");
+  const [programa, setPrograma] = useState("");
+
   const [idPeriodo, setIdPeriodo] = useState("");
   const [matricula, setMatricula] = useState("");
   const [estatus, setEstatus] = useState("");
@@ -15,27 +18,43 @@ function AlumnoPrograma() {
   const [hasta, setHasta] = useState("");
   const [nombre, setNombre] = useState("");
   const [periodo, setPeriodo] = useState("");
-  const [programa, setPrograma] = useState("");
-
+  
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedAlumnoPrograma, setSelectedAlumnoPrograma] = useState(null);
-
+  const [selectedPrograma, setSelectedPrograma] = useState(""); 
+  const [selectedEstatus, setSelectedEstatus] = useState(""); 
   useEffect(() => { 
     getAlumnoPrograma(setAlumnoProgramaList); 
   }, []);
 
-  // Filtrado de datos por nombre
   const filteredData = alumnoProgramaList.filter(item =>
-    item.nombre.toLowerCase().includes(searchText.toLowerCase())
+    (!selectedPrograma || item.programa === selectedPrograma) && 
+    (!selectedEstatus || item.estatus === selectedEstatus) && 
+    item.nombre.toLowerCase().includes(searchText.toLowerCase()) 
   );
 
-  // Formatear fecha (corta la parte de la hora)
-  const formatDateString = (dateString) => {
-    return dateString ? dateString.split('T')[0] : "";
+  const handleAdd = () => {
+    addAlumnoPrograma(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowModal, () => getAlumnoPrograma(setAlumnoProgramaList));
   };
+
+  const handleUpdate = () => {
+    updateAlumnoProgramaFunc(selectedAlumnoPrograma.idAlumnoPrograma, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowEditModal, () => getAlumnoPrograma(setAlumnoProgramaList));
+  };
+
+  const handleDelete = () => {
+    deleteAlumnoProgramaFunc(selectedAlumnoPrograma.idAlumnoPrograma, setShowDeleteModal, () => getAlumnoPrograma(setAlumnoProgramaList));
+  };
+
+  const formatDateString = (dateString) => {
+    if (dateString) {
+      return dateString.split('T')[0];
+    }
+    return dateString;
+  };
+
 
   return (
     <div className="container">
@@ -57,7 +76,23 @@ function AlumnoPrograma() {
         }}>
           Registrar
         </button>
+        <div className="d-flex mb-3">
+              
+              <select className="form-select me-2" value={selectedPrograma} onChange={(e) => setSelectedPrograma(e.target.value)}>
+                <option value="">Todos los Programas</option>
+                {Array.from(new Set(alumnoProgramaList.map(item => item.programa))).map(programa => (
+                  <option key={programa} value={programa}>{programa}</option>
+                ))}
+              </select>
 
+              <select className="form-select" value={selectedEstatus} onChange={(e) => setSelectedEstatus(e.target.value)}>
+                <option value="">Todos los Estatus</option>
+                {Array.from(new Set(alumnoProgramaList.map(item => item.estatus))).map(estatus => (
+                  <option key={estatus} value={estatus}>{estatus}</option>
+                ))}
+              </select>
+              
+          </div>
         <div className="mt-4">
           <input 
             type="text"  

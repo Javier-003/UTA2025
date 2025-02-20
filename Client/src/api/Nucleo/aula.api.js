@@ -2,7 +2,6 @@ import axios from 'axios';
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
-
 const userSession = localStorage.getItem('Username')
 
 // Obtener todas las aulas
@@ -19,11 +18,10 @@ export const getAulas = async () => {
 // Crear una nueva aula
 export const createAula = async (idEdificio, tipo, nombre, sigla) => {
   try {
-    const response =   await axios.post(`${BASE_URL}/aula/create`, {
-      idEdificio, tipo, nombre, sigla,userSession
+    const response = await axios.post(`${BASE_URL}/aula/create`, {
+      idEdificio, tipo, nombre, sigla, userSession
     });
-    
-    console.log("Aula Creado:", response.data);
+    console.log("Aula creada:", response.data);
   } catch (error) {
     console.error("Error al registrar el aula:", error);
     throw new Error('Error al registrar el aula');
@@ -33,7 +31,7 @@ export const createAula = async (idEdificio, tipo, nombre, sigla) => {
 // Actualizar una aula existente
 export const updateAula = async (idAula, idEdificio, tipo, nombre, sigla) => {
   try {
-    const response =  await axios.put(`${BASE_URL}/aula/update/${idAula}`, {
+    const response = await axios.put(`${BASE_URL}/aula/update/${idAula}`, {
       idEdificio, tipo, nombre, sigla, userSession
     });
     console.log("Aula actualizada:", response.data);
@@ -43,8 +41,7 @@ export const updateAula = async (idAula, idEdificio, tipo, nombre, sigla) => {
   }
 };
 
-
-// Eliminar un usuario
+// Eliminar una aula
 export const deleteAula = async (idAula) => {
   try {
     const response = await axios.delete(`${BASE_URL}/aula/delete/${idAula}`, {
