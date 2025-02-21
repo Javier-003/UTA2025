@@ -1,14 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react'
-
 import { getTramites } from "../../../api/Parametrizacion/tramite.api.js";
 import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js";
-<<<<<<< HEAD
 import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";
-=======
-import { getAlumnosPrograma } from "../../../api/Parametrizacion/alumnopa.api.js";
 import { getPersonas } from "../../../api/Nucleo/persona.api.js";
->>>>>>> e12d1340fc8aa3cdb695cfafce564c36fc505af4
 
 export const AlumnoTramiteModales = ({
   idTramite, setIdTramite, 
@@ -32,12 +27,8 @@ export const AlumnoTramiteModales = ({
     useEffect(() => {
       getTramites().then((data) => setTramiteList(data)).catch((error) => console.error("Error al obtener los trámites:", error));
       getPeriodos().then((data) => setPeriodoList(data)).catch((error) => console.error("Error al obtener los periodos:", error));
-<<<<<<< HEAD
       getAlumnoPA().then((data) => setAlumnopaList(data)).catch((error) => console.error("Error al obtener los alumnos con programa:", error));
-=======
-      getAlumnosPrograma().then((data) => setAlumnopaList(data)).catch((error) => console.error("Error al obtener los alumnos con programa:", error));
       getPersonas().then((data) => setPersonaList(data)).catch((error) => console.error("Error al obtener las personas:", error));
->>>>>>> e12d1340fc8aa3cdb695cfafce564c36fc505af4
     }, []);
     
   return (

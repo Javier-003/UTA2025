@@ -40,12 +40,10 @@ function NuevoTramite() {
 
 
   useEffect(() => {
-<<<<<<< HEAD
     getAlumnopatodos(setAlumnoProgramaList);
-=======
+
     getPersonas(setPersonaList);
-    getAlumnoPrograma(setAlumnoProgramaList);
->>>>>>> e12d1340fc8aa3cdb695cfafce564c36fc505af4
+    getAlumnopatodos(setAlumnoProgramaList);
     getPeriodo(setPeriodoList);
     getTramites(setTramiteList);
   }, []);
