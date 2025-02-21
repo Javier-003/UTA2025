@@ -12,9 +12,19 @@ export const getPersona = async (setPersona) => {
   }
 };
 
-export const addPersona = async (nombre, paterno, materno, genero, direccion, telefono, curp, nacimiento, setShowModal, getPersona) => {
+export const addPersona = async (nombre, paterno, materno, nacimiento, curp, genero, direccion, telefono, setShowModal, getPersona) => {
+  console.log("Datos enviados al js:", {
+    nombre,
+    paterno,
+    materno,
+    nacimiento,
+    curp,
+    genero,
+    direccion,
+    telefono,
+  });
   try {
-    await createPersona(nombre, paterno, materno, genero, direccion, telefono, curp, nacimiento);
+    await createPersona(nombre, paterno, materno, nacimiento, curp, genero, direccion, telefono);
     getPersona();
     Swal.fire({
       icon: 'success',

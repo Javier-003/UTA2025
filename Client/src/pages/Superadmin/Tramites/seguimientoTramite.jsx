@@ -14,6 +14,7 @@ function Seguimientodetramite() {
   const [idTramite, setIdTramite] = useState("");
   const [idAlumnoPA, setIdAlumnoPA] = useState("");
   const [idPeriodo, setIdPeriodo] = useState("");
+  const [idPersona, setIdPersona] = useState("");
   const [fecha, setFecha] = useState("");
   const [estatus, setEstatus] = useState("");
 
@@ -49,16 +50,17 @@ function Seguimientodetramite() {
 
 
   const handleAdd = () => {
-    addAlumnoTramite(idTramite, idAlumnoPA, idPeriodo, fecha, estatus, setShowModal, () => getAlumnoTramite(setAlumnoTramite));
+    addAlumnoTramite(idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, setShowModal, () => getAlumnoTramite(setAlumnoTramite));
   };
 
   const handleUpdate = () => {
-    updateAlumnoTramiteFunc(selectedAlumnoTramite.idAlumnoTramite, idTramite, idAlumnoPA, idPeriodo, fecha, estatus, setShowEditModal, () => getAlumnoTramite(setAlumnoTramite));
+    updateAlumnoTramiteFunc(selectedAlumnoTramite.idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, setShowEditModal, () => getAlumnoTramite(setAlumnoTramite));
   };
 
   const handleDelete = () => {
     deleteAlumnoTramiteFunc(selectedAlumnoTramite.idAlumnoTramite, setShowDeleteModal, () => getAlumnoTramite(setAlumnoTramite));
   };
+
 
   // Function to remove "T06:00:00.000Z" from dates
   const formatDateString = (dateString) => {
@@ -123,7 +125,7 @@ function Seguimientodetramite() {
                   <th>ESTATUS</th>
                   <th>PROCESO</th>
                   <th>Editar</th>
-                  <th>Eliminar</th>
+                  {/* <th>Eliminar</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -152,6 +154,7 @@ function Seguimientodetramite() {
                         <button className="btn btn-warning" onClick={() => {
                           setIdTramite(alumnotramite.idTramite);
                           setIdAlumnoPA(alumnotramite.idAlumnoPA);
+                          setIdPersona(alumnotramite.idPersona);
                           setIdPeriodo(alumnotramite.idPeriodo);
                           setFecha(alumnotramite.fecha);
                           setFecha(formatDateString(alumnotramite.fecha))
@@ -160,12 +163,12 @@ function Seguimientodetramite() {
                           setSelectedAlumnoTramite(alumnotramite);
                         }}>Editar</button>
                       </td>
-                      <td>
+                     {/*  <td>
                         <button className="btn btn-danger" onClick={() => {
                           setShowDeleteModal(true);
                           setSelectedAlumnoTramite(alumnotramite);
                         }}>Eliminar</button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))
                 ) : (
@@ -184,6 +187,7 @@ function Seguimientodetramite() {
         idPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
         fecha={fecha} setFecha={setFecha}
         estatus={estatus} setEstatus={setEstatus}
+        idPersona={idPersona} setIdPersona={setIdPersona}
 
         tramite={tramite} setTramite={setTramite}
         alumno={alumno} setAlumno={setAlumno}

@@ -12,6 +12,7 @@ function AlumnoTramite() {
 
   const [idTramite, setIdTramite] = useState("");
   const [idAlumnoPA, setIdAlumnoPA] = useState("");
+  const [idPersona, setIdPersona] = useState("");
   const [idPeriodo, setIdPeriodo] = useState("");
   const [fecha, setFecha] = useState("");
   const [estatus, setEstatus] = useState("");
@@ -46,11 +47,11 @@ function AlumnoTramite() {
 
 
   const handleAdd = () => {
-    addAlumnoTramite(idTramite, idAlumnoPA, idPeriodo, fecha, estatus, setShowModal, () => getAlumnoTramite(setAlumnoTramite));
+    addAlumnoTramite(idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, setShowModal, () => getAlumnoTramite(setAlumnoTramite));
   };
 
   const handleUpdate = () => {
-    updateAlumnoTramiteFunc(selectedAlumnoTramite.idAlumnoTramite, idTramite, idAlumnoPA, idPeriodo, fecha, estatus, setShowEditModal, () => getAlumnoTramite(setAlumnoTramite));
+    updateAlumnoTramiteFunc(selectedAlumnoTramite.idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, setShowEditModal, () => getAlumnoTramite(setAlumnoTramite));
   };
 
   const handleDelete = () => {
@@ -102,6 +103,7 @@ function AlumnoTramite() {
             setIdPeriodo("");
             setFecha("");
             setEstatus("");
+            setIdPersona("");
 
             //FK
             setAlumno("");
@@ -153,6 +155,7 @@ function AlumnoTramite() {
                         <button className="btn btn-warning" onClick={() => {
                           setIdTramite(alumnotramite.idTramite);
                           setIdAlumnoPA(alumnotramite.idAlumnoPA);
+                          setIdPersona(alumnotramite.idPersona);
                           setIdPeriodo(alumnotramite.idPeriodo);
                           setFecha(alumnotramite.fecha);
                           setFecha(formatDateString(alumnotramite.fecha))
@@ -185,6 +188,7 @@ function AlumnoTramite() {
         idPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
         fecha={fecha} setFecha={setFecha}
         estatus={estatus} setEstatus={setEstatus}
+        idPersona={idPersona} setIdPersona={setIdPersona}
 
         tramite={tramite} setTramite={setTramite}
         alumno={alumno} setAlumno={setAlumno}

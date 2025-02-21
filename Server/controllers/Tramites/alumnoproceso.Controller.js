@@ -17,20 +17,20 @@ export const getAlumnoProcesotodos = async(req, res) => {
         CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno
       FROM 
         alumnoproceso ap
-      JOIN 
+      LEFT JOIN 
         actividad act ON ap.idActividad = act.idActividad
-      JOIN 
+      LEFT JOIN 
         tramiteproceso tp ON ap.idTramiteProceso = tp.idTramiteProceso
-      JOIN 
+      LEFT JOIN 
         tramite t ON tp.idTramite = t.idTramite
-      JOIN 
+      LEFT JOIN 
         alumnotramite atr ON ap.idAlumnoTramite = atr.idAlumnoTramite
-      JOIN
+      LEFT JOIN
         alumnopa apa ON atr.idAlumnoPA = apa.idAlumnoPA
-      JOIN
+      LEFT JOIN
         alumno ON apa.idAlumno = alumno.idAlumno
-      JOIN 
-        persona ON alumno.idAlumno = persona.idPersona
+      LEFT JOIN 
+        persona ON atr.idPersona = persona.idPersona
     `;
     // Ejecutar la consulta
     const [rows] = await db.query(query);

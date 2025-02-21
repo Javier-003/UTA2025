@@ -17,6 +17,16 @@ export const getPersonas = async () => {
 
 // Crear una nueva persona
 export const createPersona = async (nombre, paterno, materno, nacimiento, curp, genero, direccion, telefono) => {
+  console.log("LLegando APi:", {
+    nombre,
+    paterno,
+    materno,
+    nacimiento,
+    curp,
+    genero,
+    direccion,
+    telefono,
+  });
   try {
     await axios.post(`${BASE_URL}/persona/create`, {
       nombre, paterno, materno, nacimiento, curp, genero, direccion, telefono,userSession

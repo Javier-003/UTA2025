@@ -3,11 +3,17 @@ import { useState, useEffect } from 'react'
 
 import { getTramites } from "../../../api/Parametrizacion/tramite.api.js";
 import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js";
+<<<<<<< HEAD
 import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";
+=======
+import { getAlumnosPrograma } from "../../../api/Parametrizacion/alumnopa.api.js";
+import { getPersonas } from "../../../api/Nucleo/persona.api.js";
+>>>>>>> e12d1340fc8aa3cdb695cfafce564c36fc505af4
 
 export const AlumnoTramiteModales = ({
   idTramite, setIdTramite, 
   idAlumnoPA, setIdAlumnoPA, 
+  idPersona, setIdPersona, 
   idPeriodo, setIdPeriodo, 
   fecha, setFecha, 
   estatus, setEstatus, 
@@ -21,11 +27,17 @@ export const AlumnoTramiteModales = ({
     const [tramiteList, setTramiteList] = useState([]);
     const [periodoList, setPeriodoList] = useState([]);
     const [alumnopaList, setAlumnopaList] = useState([]);
+    const [personaList, setPersonaList] = useState([]);
 
     useEffect(() => {
       getTramites().then((data) => setTramiteList(data)).catch((error) => console.error("Error al obtener los trámites:", error));
       getPeriodos().then((data) => setPeriodoList(data)).catch((error) => console.error("Error al obtener los periodos:", error));
+<<<<<<< HEAD
       getAlumnoPA().then((data) => setAlumnopaList(data)).catch((error) => console.error("Error al obtener los alumnos con programa:", error));
+=======
+      getAlumnosPrograma().then((data) => setAlumnopaList(data)).catch((error) => console.error("Error al obtener los alumnos con programa:", error));
+      getPersonas().then((data) => setPersonaList(data)).catch((error) => console.error("Error al obtener las personas:", error));
+>>>>>>> e12d1340fc8aa3cdb695cfafce564c36fc505af4
     }, []);
     
   return (
@@ -42,6 +54,19 @@ export const AlumnoTramiteModales = ({
             <div className="modal-body">
 
                   {/* Campos del formulario */}
+
+                  <div className="input-group mb-3">
+                <span className="input-group-text">Alumno:</span>
+                <select className="form-select" value={idPersona} onChange={(event) => setIdPersona(event.target.value)}>
+                  <option value="">Selecciona una persona</option>
+                  {personaList.map((persona) => (
+                    <option key={persona.idPersona} value={persona.idPersona}>
+                     {persona.nombre} {persona.paterno} {persona.materno}
+                    </option> 
+                  ))}
+                </select>
+              </div>
+
                   <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
                 <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
@@ -110,7 +135,20 @@ export const AlumnoTramiteModales = ({
             </div>
             <div className="modal-body">
                 {/* Campos del formulario */}
+
                 <div className="input-group mb-3">
+  <span className="input-group-text">Alumno:</span>
+  <input 
+    type="text" 
+    className="form-control" 
+    value={personaList.find(p => p.idPersona === idPersona)?.nombre + " " +
+           personaList.find(p => p.idPersona === idPersona)?.paterno + " " +
+           (personaList.find(p => p.idPersona === idPersona)?.materno || "") || ""}
+    readOnly
+  />
+</div>
+
+                {/* <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
                 <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
                   <option value="">Selecciona un alumno</option>
@@ -120,7 +158,7 @@ export const AlumnoTramiteModales = ({
                     </option> 
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               <div className="input-group mb-3">
               <span className="input-group-text">Mapa Curricular:</span>
