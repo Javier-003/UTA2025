@@ -1,77 +1,77 @@
 import Swal from 'sweetalert2'; 
 
-import { getAlumnosPrograma, createAlumnoPrograma, updateAlumnoPrograma, deleteAlumnoPrograma } 
+import { createalumnoPA, deletealumnoPA, getAlumnoPA, updatealumnoPA } 
 from '../../../api/Parametrizacion/alumnopa.api.js';
 
-// Obtener todos los registros de alumno_programa
-export const getAlumnoPrograma = async (setAlumnoPrograma) => {
+// Obtener todos los registros de AlumnoPA
+export const getAlumnopatodos = async (setalumnopa) => {
   try {
-    const data = await getAlumnosPrograma();
-    setAlumnoPrograma(data);
+    const data = await getAlumnoPA();
+    setalumnopa(data);
   } catch (error) {
-    console.error('Error al obtener los registros de alumno_programa:', error);
+    console.error('Error al obtener los registros de alumnoPA:', error);
   }
 };
 
-// Crear un nuevo registro de alumno_programa
-export const addAlumnoPrograma = async (idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowModal, getAlumnoPrograma) => {
+// Crear un nuevo registro de AlumnoPA
+export const addAlumnoPa = async (idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowModal, getalumnopa) => {
   try {
-    await createAlumnoPrograma(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta);
-    getAlumnoPrograma();
+    await createalumnoPA(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta);
+    getalumnopa();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Alumno_programa registrado correctamente',
+      text: 'AlumnoPA registrado correctamente',
     });
     setShowModal(false);
   } catch (error) {
-    console.error('Error al agregar el registro de alumno_programa:', error);
+    console.error('Error al agregar el registro de AlumnoPA:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema registrando el registro de alumno_programa.',
+      text: 'Hubo un problema registrando el registro de AlumnoPA.',
     });
   }
 };
 
-// Actualizar un registro de alumno_programa existente
-export const updateAlumnoProgramaFunc = async (idAlumnoPrograma, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowEditModal, getAlumnoPrograma) => {
+// Actualizar un registro de AlumnoPA existente
+export const updateAlumnoPaFunc = async (idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowEditModal, getalumnopa) => {
   try {
-    await updateAlumnoPrograma(idAlumnoPrograma, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta);
-    getAlumnoPrograma();
+    await updatealumnoPA(idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta);
+    getalumnopa();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Alumno_programa actualizado correctamente',
+      text: 'AlumnoPA actualizado correctamente',
     });
     setShowEditModal(false);
   } catch (error) {
-    console.error('Error al actualizar el registro de alumno_programa:', error);
+    console.error('Error al actualizar el registro de AlumnoPA:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema actualizando el registro de alumno_programa.',
+      text: 'Hubo un problema actualizando el registro de AlumnoPA.',
     });
   }
 };
 
-// Eliminar un registro de alumno_programa
-export const deleteAlumnoProgramaFunc = async (idAlumnoPrograma, setShowDeleteModal, getAlumnoPrograma) => {
+// Eliminar un registro de AlumnoPA
+export const deleteAlumnoPAFunc = async (idAlumnoPA, setShowDeleteModal, getalumnopa) => {
   try {
-    await deleteAlumnoPrograma(idAlumnoPrograma);
-    getAlumnoPrograma();
+    await deletealumnoPA(idAlumnoPA);
+    getalumnopa();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
-      text: 'Alumno_programa eliminado correctamente',
+      text: 'AlumnoPA eliminado correctamente',
     });
     setShowDeleteModal(false);
   } catch (error) {
-    console.error('Error al eliminar el registro de alumno_programa:', error);
+    console.error('Error al eliminar el registro de AlumnoPA:', error);
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema eliminando el registro de alumno_programa.',
+      text: 'Hubo un problema eliminando el registro de AlumnoPA.',
     });
   }
 };

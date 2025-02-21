@@ -3,12 +3,13 @@ import axios from 'axios';
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
+const userSession = localStorage.getItem('Username')
 
 // Obtener todos los tramites
 export const getTramites = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/tramite`);
-    return response.data.data; // Retorna los datos de los tramites
+    return response.data.data || []; 
   } catch (error) {
     console.error("Error al obtener los tramites:", error);
     throw new Error('Error al obtener los tramites');
@@ -18,7 +19,7 @@ export const getTramites = async () => {
 // Crear un nuevo tramite
 export const createTramite = async (nombre, desde, hasta) => {
   try {
-    await axios.post(`${BASE_URL}/tramite/create`, { nombre, desde, hasta });
+    await axios.post(`${BASE_URL}/tramite/create`, { nombre, desde, hasta , userSession});
   } catch (error) {
     console.error("Error al registrar el tramite:", error);
     throw new Error('Error al registrar el tramite');
@@ -26,21 +27,27 @@ export const createTramite = async (nombre, desde, hasta) => {
 };
 
 // Actualizar un tramite existente
-export const updateTramite = async (IdTramite, nombre, desde, hasta) => {
+export const updateTramite = async (idTramite, nombre, desde, hasta) => {
   try {
-    await axios.put(`${BASE_URL}/tramite/update/${IdTramite}`, { nombre, desde, hasta });
+    await axios.put(`${BASE_URL}/tramite/update/${idTramite}`, { nombre, desde, hasta ,userSession});
   } catch (error) {
     console.error("Error al actualizar el tramite:", error);
     throw new Error('Error al actualizar el tramite');
   }
 };
 
-// Eliminar un tramite
-export const deleteTramite = async (IdTramite) => {
+// Eliminar un registro de tramite
+export const deleteTramite = async (idTramite) => {
   try {
-    await axios.delete(`${BASE_URL}/tramite/delete/${IdTramite}`);
-  } catch (error) {
-    console.error("Error al eliminar el tramite:", error);
-    throw new Error('Error al eliminar el tramite');
+    const response = await axios.delete(`${BASE_URL}/tramite/delete/${idTramite}`, { data: { userSession } });
+    if (response.status === 200) {
+      console.log("Tramite eliminado correctamente:", response.data);
+      return response.data; 
+    } else {
+      throw new Error('No se pudo eliminar el tramite');
+      }
+    }catch (error) {
+    console.error("Error al eliminar Tramite:", error);
+    throw new Error('Error al eliminar el Tramite');
   }
 };

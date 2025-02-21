@@ -2,12 +2,13 @@ import axios from 'axios';
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
+const userSession = localStorage.getItem('Username')
 
 // Obtener todas los bloques
 export const getBloquees = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/bloque`);
-      return response.data.data; // Retorna los datos de los bloques
+      return response.data.data || []; 
     } catch (error) {
       console.error("Error al obtener los bloques:", error);
       throw new Error('Error al obtener los bloques');
@@ -18,12 +19,7 @@ export const getBloquees = async () => {
 export const createBloque = async (nombre, duracion, horaInicio, horaFin) => {
     try {
         await axios.post(`${BASE_URL}/bloque/create`, {
-            nombre,
-            duracion, 
-            horaInicio, 
-            horaFin,
-            desde: null, // Valor por defecto para Desde
-            hasta: null  // Valor por defecto para Hasta
+            nombre, duracion, horaInicio, horaFin, desde: null, hasta: null, userSession
         });
     } catch (error) {
         console.error("Error al registrar el bloque:", error);
@@ -35,25 +31,28 @@ export const createBloque = async (nombre, duracion, horaInicio, horaFin) => {
 export const updateBloque = async (idBloque, nombre, duracion, horaInicio, horaFin) => {
     try {
         await axios.put(`${BASE_URL}/bloque/update/${idBloque}`, {
-            nombre,
-            duracion, 
-            horaInicio, 
-            horaFin,
-            desde: null, // Valor por defecto para Desde
-            hasta: null  // Valor por defecto para Hasta
-        });
+            nombre, duracion, horaInicio, horaFin, desde: null,hasta: null, userSession
+         });
     } catch (error) {
         console.error("Error al actualizar el bloque:", error);
         throw new Error('Error al actualizar el bloque');
     }
 };
 
-// Eliminar un bloque
+// Eliminar una bloque
 export const deleteBloque = async (idBloque) => {
     try {
-        await axios.delete(`${BASE_URL}/bloque/delete/${idBloque}`);
-    } catch (error) {
-        console.error("Error al eliminar el bloque:", error);
-        throw new Error('Error al eliminar el bloque');
+      const response = await axios.delete(`${BASE_URL}/bloque/delete/${idBloque}`, {
+        data: { userSession } 
+      });
+      if (response.status === 200) {
+        console.log("Bloque eliminado correctamente:", response.data);
+        return response.data; 
+      } else {
+        throw new Error('No se pudo eliminar el bloque');
+        }
+      }catch (error) {
+      throw new Error('Error al eliminar el bloque',error);
     }
-};
+  };
+  

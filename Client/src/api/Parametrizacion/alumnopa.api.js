@@ -2,48 +2,58 @@ import axios from 'axios';
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
+const userSession = localStorage.getItem('Username')
 
-// Obtener todos los registros de alumno_programa
-export const getAlumnosPrograma = async () => {
+// Obtener todos los registros de alumnopa
+export const getAlumnoPA = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/alumnopa`);
-    return response.data.data; // Retorna los datos de los registros de alumno_programa
+    return response.data.data || []; 
   } catch (error) {
-    console.error("Error al obtener los registros de alumno_programa:", error);
-    throw new Error('Error al obtener los registros de alumno_programa');
+    console.error("Error al obtener los registros de alumno pa:", error);
+    throw new Error('Error al obtener los registros de alumno pa');
   }
 };
 
-// Crear un nuevo registro de alumno_programa
-export const createAlumnoPrograma = async (idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta) => {
+// Crear un nuevo registro de alumnopa
+export const createalumnoPA = async (idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta) => {
   try {
-    await axios.post(`${BASE_URL}/alumnopa/create`, {
-      idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta
+    const response = await axios.post(`${BASE_URL}/alumnopa/create`, {
+      idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, userSession
     });
+    console.log("Respuesta del servidor:", response.data);
   } catch (error) {
-    console.error("Error al registrar el alumno_programa:", error);
-    throw new Error('Error al registrar el alumno_programa');
+    if (error.response) {
+      console.error("Error en la respuesta del servidor:", error.response.data);
+    } else {
+      console.error("Error al registrar el alumnopa:", error);
+    }
+    throw new Error('Error al registrar el alumnopa');
   }
 };
 
-// Actualizar un registro de alumno_programa existente
-export const updateAlumnoPrograma = async (idAlumnoPrograma, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta) => {
+// Actualizar un registro de alumnopa existente
+export const updatealumnoPA = async (idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta) => {
   try {
-    await axios.put(`${BASE_URL}/alumnopa/update/${idAlumnoPrograma}`, {
-      idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta
-    });
+    await axios.put(`${BASE_URL}/alumnopa/update/${idAlumnoPA}`, {idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta , userSession });
   } catch (error) {
-    console.error("Error al actualizar el alumno_programa:", error);
-    throw new Error('Error al actualizar el alumno_programa');
+    console.error("Error al actualizar el alumnopa:", error);
+    throw new Error('Error al actualizar el alumnopa');
   }
 };
 
-// Eliminar un registro de alumno_programa
-export const deleteAlumnoPrograma = async (idAlumnoPrograma) => {
+// Eliminar un registro de alumnopa  
+export const deletealumnoPA = async (idAlumnoPA) => {
   try {
-    await axios.delete(`${BASE_URL}/alumnopa/delete/${idAlumnoPrograma}`);
-  } catch (error) {
-    console.error("Error al eliminar el alumno_programa:", error);
-    throw new Error('Error al eliminar el alumno_programa');
+    const response = await axios.delete(`${BASE_URL}/alumnopa/delete/${idAlumnoPA}`, { data: { userSession } });
+    if (response.status === 200) {
+      console.log("Actividad eliminado correctamente:", response.data);
+      return response.data; 
+    } else {
+      throw new Error('No se pudo eliminar el Administrativo');
+      }
+    }catch (error) {
+    console.error("Error al eliminar el alumno pa:", error);
+    throw new Error('Error al eliminar el alumno pa');
   }
 };

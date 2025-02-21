@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 
 import { getTramites } from "../../../api/Parametrizacion/tramite.api.js";
 import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js";
-import { getAlumnosPrograma } from "../../../api/Parametrizacion/alumnopa.api.js";
+import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";
 
 export const AlumnoTramiteModales = ({
   idTramite, setIdTramite, 
@@ -25,7 +25,7 @@ export const AlumnoTramiteModales = ({
     useEffect(() => {
       getTramites().then((data) => setTramiteList(data)).catch((error) => console.error("Error al obtener los trámites:", error));
       getPeriodos().then((data) => setPeriodoList(data)).catch((error) => console.error("Error al obtener los periodos:", error));
-      getAlumnosPrograma().then((data) => setAlumnopaList(data)).catch((error) => console.error("Error al obtener los alumnos con programa:", error));
+      getAlumnoPA().then((data) => setAlumnopaList(data)).catch((error) => console.error("Error al obtener los alumnos con programa:", error));
     }, []);
     
   return (

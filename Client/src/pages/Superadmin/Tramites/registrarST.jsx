@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getAlumnoPrograma } from '../../../assets/js/Parametrizacion/alumnopa.js';
+import { getAlumnopatodos } from '../../../assets/js/Parametrizacion/alumnopa.js';
 import { getPeriodo } from '../../../assets/js/PlanificacionAcademica/periodo.js';
 import { getTramites } from '../../../api/Parametrizacion/tramite.api.js';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ function NuevoTramite() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAlumnoPrograma(setAlumnoProgramaList);
+    getAlumnopatodos(setAlumnoProgramaList);
     getPeriodo(setPeriodoList);
     getTramites(setTramiteList);
   }, []);

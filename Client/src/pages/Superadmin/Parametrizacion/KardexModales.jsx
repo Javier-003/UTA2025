@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { getGrupos } from "../../../api/PlanificacionAcademica/grupo.api.js";
 import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js";
 import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacurricular.api.js";
-import { getAlumnosPrograma } from "../../../api/Parametrizacion/alumnopa.api.js";
+import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";
 
 export const KardexModales = ({
 idAlumnoPrograma, setIdAlumnoPrograma,
@@ -40,7 +40,7 @@ selectedRecord, setselectedKardex
     const [periodoList, setPeriodoList] = useState([]);
 
  useEffect(() => {
-    getAlumnosPrograma().then(data => setAlumnoList(data)).catch(error => console.error("Error al obtener los alumnos:", error));
+    getAlumnoPA().then(data => setAlumnoList(data)).catch(error => console.error("Error al obtener los alumnos:", error));
     getMapaCurriculares().then(data => setMapaList(data)).catch(error => console.error("Error al obtener los mapas curriculares:", error));
     getGrupos().then(data => setGrupoList(data)).catch(error => console.error("Error al obtener los grupos:", error));
     getPeriodos().then(data => setPeriodoList(data)).catch(error => console.error("Error al obtener los periodos:", error));

@@ -1,51 +1,57 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getAlumnoPrograma, addAlumnoPrograma, updateAlumnoProgramaFunc, deleteAlumnoProgramaFunc }
+import { getAlumnopatodos, addAlumnoPa, updateAlumnoPaFunc, deleteAlumnoPAFunc } 
 from '../../../assets/js/Parametrizacion/alumnopa.js';
+import { AsignarPAModales } from '../Parametrizacion/AsignarPAModales.jsx'; 
 
-function AlumnoPrograma() {
-  const [alumnoProgramaList, setAlumnoProgramaList] = useState([]);
+function Alumnopa() {
+
+  const [alumnopaList, setAlumnopaList] = useState([]);
   const [idAlumno, setIdAlumno] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [paterno, setPaterno] = useState("");
+  const [materno, setMaterno] = useState("");
 
   const [idProgramaAcademico, setIdProgramaAcademico] = useState("");
   const [programa, setPrograma] = useState("");
 
   const [idPeriodo, setIdPeriodo] = useState("");
+  
   const [matricula, setMatricula] = useState("");
   const [estatus, setEstatus] = useState("");
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
-  const [nombre, setNombre] = useState("");
   const [periodo, setPeriodo] = useState("");
   
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [selectedAlumnoPrograma, setSelectedAlumnoPrograma] = useState(null);
+  const [selectedAlumnopa, setSelectedAlumnopa] = useState(null);
   const [selectedPrograma, setSelectedPrograma] = useState(""); 
   const [selectedEstatus, setSelectedEstatus] = useState(""); 
+  
   useEffect(() => { 
-    getAlumnoPrograma(setAlumnoProgramaList); 
+    getAlumnopatodos(setAlumnopaList); 
   }, []);
 
-  const filteredData = alumnoProgramaList.filter(item =>
+  const filteredData = alumnopaList.filter(item =>
     (!selectedPrograma || item.programa === selectedPrograma) && 
     (!selectedEstatus || item.estatus === selectedEstatus) && 
     item.nombre.toLowerCase().includes(searchText.toLowerCase()) 
   );
 
   const handleAdd = () => {
-    addAlumnoPrograma(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowModal, () => getAlumnoPrograma(setAlumnoProgramaList));
+    addAlumnoPa(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowModal, () => getAlumnopatodos(setAlumnopaList));
   };
 
   const handleUpdate = () => {
-    updateAlumnoProgramaFunc(selectedAlumnoPrograma.idAlumnoPrograma, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowEditModal, () => getAlumnoPrograma(setAlumnoProgramaList));
+    updateAlumnoPaFunc(selectedAlumnopa.idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowEditModal, () => getAlumnopatodos(setAlumnopaList));
   };
 
   const handleDelete = () => {
-    deleteAlumnoProgramaFunc(selectedAlumnoPrograma.idAlumnoPrograma, setShowDeleteModal, () => getAlumnoPrograma(setAlumnoProgramaList));
+    deleteAlumnoPAFunc(selectedAlumnopa.idAlumnoPA, setShowDeleteModal, () => getAlumnopatodos(setAlumnopaList));
   };
 
   const formatDateString = (dateString) => {
@@ -55,62 +61,55 @@ function AlumnoPrograma() {
     return dateString;
   };
 
-
   return (
     <div className="container">
       <h5>LISTADO DE ALUMNOS EN PROGRAMAS</h5>
       <div className="card-body">
         <button className='btn btn-success' onClick={() => {
           setIdAlumno("");
+          setNombre("");
+          setPaterno("");
+          setMaterno("");
           setIdProgramaAcademico("");
           setIdPeriodo("");
           setMatricula("");
           setEstatus("");
           setDesde("");
           setHasta("");
-          setNombre("");
           setPeriodo("");
           setPrograma("");
-          setSelectedAlumnoPrograma(null);
+          setSelectedAlumnopa(null);
           setShowModal(true);
-        }}>
-          Registrar
-        </button>
+        }}>Registrar</button>
+        <div className="mt-4">
         <div className="d-flex mb-3">
               
               <select className="form-select me-2" value={selectedPrograma} onChange={(e) => setSelectedPrograma(e.target.value)}>
                 <option value="">Todos los Programas</option>
-                {Array.from(new Set(alumnoProgramaList.map(item => item.programa))).map(programa => (
+                {Array.from(new Set(alumnopaList.map(item => item.programa))).map(programa => (
                   <option key={programa} value={programa}>{programa}</option>
                 ))}
               </select>
 
               <select className="form-select" value={selectedEstatus} onChange={(e) => setSelectedEstatus(e.target.value)}>
                 <option value="">Todos los Estatus</option>
-                {Array.from(new Set(alumnoProgramaList.map(item => item.estatus))).map(estatus => (
+                {Array.from(new Set(alumnopaList.map(item => item.estatus))).map(estatus => (
                   <option key={estatus} value={estatus}>{estatus}</option>
                 ))}
               </select>
               
           </div>
-        <div className="mt-4">
-          <input 
-            type="text"  
-            className="form-control mb-3"  
-            value={searchText} 
-            onChange={(e) => setSearchText(e.target.value)}  
-            placeholder="Buscar por nombre" 
-          />
+          <input  type="text"  className="form-control mb-1"  value={searchText} onChange={(e) => setSearchText(e.target.value)}  placeholder="Buscar por nombre" />
 
           <table className="table table-bordered">
             <thead>
               <tr>
-                <th>ID AlumnoPrograma</th>
-                <th>ID Alumno</th>
+                <th>idAlumnoPA</th>
+                <th>idAlumno</th>
                 <th>Nombre</th>
-                <th>ID Programa Académico</th>
+                <th>idProgramaAcademico</th>
                 <th>Programa</th>
-                <th>ID Periodo</th>
+                <th>idPeriodo</th>
                 <th>Periodo</th>
                 <th>Matrícula</th>
                 <th>Estatus</th>
@@ -121,53 +120,81 @@ function AlumnoPrograma() {
               </tr>
             </thead>
             <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((alumnoPrograma) => (
-                  <tr key={alumnoPrograma.idAlumnoPA}>
-                    <td>{alumnoPrograma.idAlumnoPA}</td>
-                    <td>{alumnoPrograma.idAlumno}</td>
-                    <td>{alumnoPrograma.nombre}</td>
-                    <td>{alumnoPrograma.idProgramaAcademico}</td>
-                    <td>{alumnoPrograma.programa || "N/A"}</td>
-                    <td>{alumnoPrograma.idPeriodo}</td>
-                    <td>{alumnoPrograma.periodo}</td>
-                    <td>{alumnoPrograma.matricula}</td>
-                    <td>{alumnoPrograma.estatus}</td>
-                    <td>{formatDateString(alumnoPrograma.desde)}</td>
-                    <td>{formatDateString(alumnoPrograma.hasta)}</td>
+              {selectedPrograma && selectedEstatus && filteredData.length > 0 ? (
+                filteredData.map((alumnopa) => (
+                  <tr key={alumnopa.idAlumnoPA}>
+                    <td>{alumnopa.idAlumnoPA}</td>
+                    <td>{alumnopa.idAlumno}</td>
+                    <td>{alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}  </td>
+                    <td>{alumnopa.idProgramaAcademico}</td>
+                    <td>{alumnopa.programa}</td>
+                    <td>{alumnopa.idPeriodo}</td>
+                    <td>{alumnopa.periodo}</td>
+                    <td>{alumnopa.matricula}</td>
+                    <td>{alumnopa.estatus}</td>
+                    <td>{formatDateString(alumnopa.desde)}</td>
+                    <td>{formatDateString(alumnopa.hasta)}</td>
                     <td>
-                      <button 
-                        className="btn btn-warning btn-sm" 
-                        onClick={() => {
-                          setSelectedAlumnoPrograma(alumnoPrograma);
-                          setShowEditModal(true);
-                        }}>
-                        ✏️
-                      </button>
+                      <button className="btn btn-warning" onClick={() => {
+                        setShowEditModal(true); 
+                        setSelectedAlumnopa(alumnopa);
+                        setIdAlumno(alumnopa.idAlumno);
+                        setIdProgramaAcademico(alumnopa.idProgramaAcademico);
+                        setIdPeriodo(alumnopa.idPeriodo);
+                        setMatricula(alumnopa.matricula);
+                        setEstatus(alumnopa.estatus);
+                        setDesde(formatDateString(alumnopa.desde));
+                        setHasta(formatDateString(alumnopa.hasta));
+                        setNombre(alumnopa.nombre);
+                        setPeriodo(alumnopa.periodo);
+                        setPrograma(alumnopa.programa);
+                      }}>Editar</button>
                     </td>
                     <td>
-                      <button 
-                        className="btn btn-danger btn-sm" 
-                        onClick={() => {
-                          setSelectedAlumnoPrograma(alumnoPrograma);
-                          setShowDeleteModal(true);
-                        }}>
-                        ❌
-                      </button>
+                      <button className="btn btn-danger" onClick={() => {
+                        setShowDeleteModal(true); 
+                        setSelectedAlumnopa(alumnopa);
+                      }}>Eliminar</button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="13" className="text-center">No se encontraron registros</td>
+                  <td colSpan="13">Seleccione un programa y un estatus para ver los registros</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
       </div>
+      
+      <AsignarPAModales
+        idAlumno={idAlumno} setIdAlumno={setIdAlumno} 
+        nombre={nombre} setNombre={setNombre}
+        paterno={paterno} setPaterno={setPaterno}
+        materno={materno} setMaterno={setMaterno}
+
+        idProgramaAcademico={idProgramaAcademico} setIdProgramaAcademico={setIdProgramaAcademico}
+        programa={programa} setPrograma={setPrograma}
+        
+        idPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
+        periodo={periodo} setPeriodo={setPeriodo}
+
+        matricula={matricula} setMatricula={setMatricula}
+        estatus={estatus} setEstatus={setEstatus}
+        desde={desde} setDesde={setDesde}
+        hasta={hasta} setHasta={setHasta}
+
+        showModal={showModal} setShowModal={setShowModal} 
+        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
+        handleAdd={handleAdd} 
+        handleUpdate={handleUpdate} 
+        handleDelete={handleDelete} 
+        selectedAlumnoPrograma={setSelectedAlumnopa}/>
+
     </div>
   );
 }
 
-export default AlumnoPrograma;
+export default Alumnopa;
