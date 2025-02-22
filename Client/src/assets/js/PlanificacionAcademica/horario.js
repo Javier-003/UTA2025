@@ -6,6 +6,7 @@ from '../../../api/PlanificacionAcademica/horario.api.js';
 export const getAllHorario = async () => {
   try {
     const data = await getHorario();
+    console.log("Horarios obtenidos en getAllHorario:", data); // <-- Verifica si recibe datos
     if (data.error) throw new Error(data.error);
     return data;
   } catch (error) {

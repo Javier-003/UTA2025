@@ -3,24 +3,25 @@ import { db } from "../../db/connection.js";
 // Obtener todos los horarios
 export const getHorario = async (req, res) => {
   try {
-    const query = `
-      SELECT h.*, 
-        b.nombre AS turno, 
-        b.horaInicio, 
-        b.horaFin
-      FROM horario AS h
-      INNER JOIN grupomateria AS gm ON gm.idGrupoMateria = h.idGrupoMateria
-      INNER JOIN bloque AS b ON b.idBloque = h.idBloque 
-    `;
-    const [rows] = await db.query(query);
-    if (rows.length > 0) {
-      res.json({ message: "Horario obtenido correctamente", data: rows });
-    } else {
-      res.status(404).json({ message: "No se encontraron datos" });
-    }
+      const [rows] = await db.query(`
+          SELECT 
+              h.idHorario,
+              h.idGrupoMateria,
+              gm.idGrupo,
+              gm.idProfesor,
+              gm.idMapaCurricular,
+              gm.idAula,
+              gm.tipo,
+              h.idBloque,
+              h.dia
+          FROM horario h
+          JOIN grupomateria gm ON h.idGrupoMateria = gm.idGrupoMateria
+      `);
+      console.log("Horarios obtenidos en la API:", rows);
+      res.json(rows);
   } catch (error) {
-    console.error("Error al obtener los horarios:", error);
-    res.status(500).json({ message: "Algo salió mal", error: error.message });
+      console.error("Error al obtener horarios:", error);
+      res.status(500).json({ message: "Error interno del servidor" });
   }
 };
 

@@ -4,6 +4,11 @@
   margin: 0;
 }
 
+.modal-dialog-left {
+  position: fixed;
+  left: 0;
+  margin: 10;
+}
 
 .table-container {
   padding: 0 150px; /* Ajusta el espacio a 20px */

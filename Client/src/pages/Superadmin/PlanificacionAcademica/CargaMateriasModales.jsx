@@ -204,14 +204,33 @@ export const CargaMateriaModales = ({
                                                 <button className="btn btn-primary" onClick={agregarHorario}>Agregar</button>
                                             </div>
                                         </div>
-                                        <ul>
-                                            {horarios.map((horario, index) => (
-                                                <li key={index}>
-                                                    {horario.dia} - {bloques.find(bloque => bloque.idBloque === horario.idBloque)?.nombre}
-                                                    <button className="btn btn-danger" onClick={() => eliminarHorario(index)}>Eliminar</button>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <div className="table-responsive">
+                                            <table className="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Día</th>
+                                                        <th>Bloque</th>
+                                                        <th>Modulo</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {horarios.map((horario, index) => {
+                                                        const bloque = bloques.find(bloque => bloque.idBloque === horario.idBloque);
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>{horario.dia}</td>
+                                                                <td>{bloque?.nombre}</td>
+                                                                <td>{bloque ? `${bloque.horaInicio} - ${bloque.horaFin}` : ''}</td>
+                                                                <td>
+                                                                    <button className="btn btn-danger" onClick={() => eliminarHorario(index)}>Eliminar</button>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

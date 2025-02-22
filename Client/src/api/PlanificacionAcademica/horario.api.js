@@ -10,9 +10,9 @@ export const getHorario = async () => {
     return response.data;
   } catch (error) {
     console.error("Error al obtener horarios:", error.response?.data || error.message);
-    return { error: "No se pudo obtener los horarios." };
+    return [];
   }
-};
+}
 
 // Función para crear un horario
 export const createHorario = async (horario) => {

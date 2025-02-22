@@ -7,6 +7,7 @@ import { getProgramaacademicos } from '../../../api/PlanificacionAcademica/progr
 import { getPeriodos } from '../../../api/PlanificacionAcademica/periodo.api.js';
 import { getGrupos } from '../../../api/PlanificacionAcademica/grupo.api.js';
 import CargaMateriaModales from './CargaMateriasModales.jsx';
+import VerHorarioModal from './HorarioModales.jsx';
 
 function CargaMaterias() {
     const [cargaMateriasList, setCargaMaterias] = useState([]);
@@ -30,6 +31,7 @@ function CargaMaterias() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedCargaMaterias, setSelectedCargaMaterias] = useState(null);
     const [searchText, setSearchText] = useState("");
+    const [showHorarioModal, setShowHorarioModal] = useState(false);
 
     useEffect(() => {
         getAllCargaMaterias().then(data => setCargaMaterias(data));
@@ -68,13 +70,22 @@ function CargaMaterias() {
 
     const filteredData = cargaMateriasList.filter(
         (item) =>
-            (!idPeriodo || item.idPeriodo === idPeriodo) &&
-            (!idProgramaAcademico || item.idProgramaAcademico === idProgramaAcademico) &&
             (item.materia.toLowerCase().includes(searchText.toLowerCase()) ||
             item.profesor.toLowerCase().includes(searchText.toLowerCase()))
     );
 
     const formatDateString = (dateString) => dateString ? dateString.split("T")[0] : "";
+
+    // Agrupar horarios por idGrupoMateria y combinar los días
+    const groupedData = filteredData.reduce((acc, item) => {
+        const existingItem = acc.find(i => i.idGrupoMateria === item.idGrupoMateria);
+        if (existingItem) {
+            existingItem.dias.push(item.dia);
+        } else {
+            acc.push({ ...item, dias: [item.dia] });
+        }
+        return acc;
+    }, []);
 
     return (
         <div className="container">
@@ -82,27 +93,7 @@ function CargaMaterias() {
             <div className="card shadow">
                 <div className="card-body">
                     <div className="row mb-3">
-                        <div className="col-md-3">
-                            <select className="form-select" value={idProgramaAcademico} onChange={(e) => setIdProgramaAcademico(e.target.value)}>
-                                <option value="">Todos los Programas Académicos</option>
-                                    {Array.isArray(programaAcademicoList) && programaAcademicoList.map((programa) => (
-                                        <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>
-                                            {programa.nombre}
-                                        </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="col-md-3">
-                            <select className="form-select" value={idPeriodo} onChange={(e) => setIdPeriodo(e.target.value)}>
-                                <option value="">Todos los Periodos</option>
-                                {periodoList.map((periodo) => (
-                                    <option key={periodo.idPeriodo} value={periodo.idPeriodo}>
-                                        {periodo.periodo}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="col-md-4">
+                        <div className="col-md-9">
                             <input
                                 type="text"
                                 className="form-control"
@@ -119,31 +110,26 @@ function CargaMaterias() {
                             }}>Agregar Materia</button>
                         </div>
                     </div>
-                    <table className="table table-striped">
+                    <table className="table table-bordered">
                         <thead>
                             <tr>
                                 <th>Grupo</th>
                                 <th>Materia</th>
                                 <th>Profesor</th>
-                                <th>Horario</th>
+                                <th>Días</th>
                                 <th>Editar</th>
                                 <th>Eliminar</th>
+                                <th>Ver Horario</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredData.length > 0 ? (
-                                filteredData.map((cargaMateria, index) => (
+                            {groupedData.length > 0 ? (
+                                groupedData.map((cargaMateria, index) => (
                                     <tr key={index}>
                                         <td>{cargaMateria.grupo}</td>
                                         <td>{cargaMateria.materia}</td>
                                         <td>{cargaMateria.profesor}</td>
-                                        <td>
-                                            {cargaMateria.dia && cargaMateria.horaInicio && cargaMateria.horaFin ? (
-                                                <div>{cargaMateria.dia} de {cargaMateria.horaInicio} a {cargaMateria.horaFin}</div>
-                                            ) : (
-                                                <div>No hay horarios asignados</div>
-                                            )}
-                                        </td>
+                                        <td>{cargaMateria.dias.join(', ')}</td>
                                         <td>
                                             <button className='btn btn-warning' onClick={() => {
                                                 console.log("Editar:", cargaMateria);
@@ -168,11 +154,23 @@ function CargaMaterias() {
                                                 setShowDeleteModal(true);
                                             }}>Eliminar</button>
                                         </td>
+                                        <td>
+                                            <button className='btn btn-info' onClick={() => {
+                                                setIdGrupoMateria(cargaMateria.idGrupoMateria);
+                                                console.log("ver rep", horarios);
+                                                // Filtrar los horarios para mostrar solo los que coincidan con el idGrupoMateria
+                                                const horariosFiltrados = horarios.filter(horario => horario.idGrupoMateria === cargaMateria.idGrupoMateria);
+                                                setHorarios(horariosFiltrados);
+                                                setShowHorarioModal(true);
+                                            }}>
+                                                Ver Horario
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5" className="text-center">No se encontraron resultados</td>
+                                    <td colSpan="7" className="text-center">No se encontraron resultados</td>
                                 </tr>
                             )}
                         </tbody>
@@ -195,6 +193,14 @@ function CargaMaterias() {
                 handleUpdate={handleUpdate}
                 handleDelete={handleDelete}
                 selectedCargaMaterias={selectedCargaMaterias}
+            />
+            <VerHorarioModal
+                showModal={showHorarioModal}
+                setShowModal={setShowHorarioModal}
+                horarios={horarios}
+                setHorarios={setHorarios}
+                idGrupoMateria={idGrupoMateria}
+                setIdGrupoMateria={setIdGrupoMateria}
             />
         </div>
     );
