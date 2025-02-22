@@ -4,7 +4,6 @@ import { getnivelestudios } from "../../../api/PlanificacionAcademica/nivelestud
 import { getOfertaAcademica } from "../../../api/PlanificacionAcademica/ofertaacademica.api.js";
 
 export const ProgramaAcademicoModales = ({
-  
   idNivelEstudio, setIdNivelEstudio,
   idOfertaAcademica, setIdOfertaAcademica,
   nombre, setNombre,
@@ -55,182 +54,195 @@ export const ProgramaAcademicoModales = ({
     <>
       {/* Modal para registrar Programa Académico */}
       <div className={`modal fade ${showModal ? 'show' : ''}`} style={{ display: showModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="modalLabel">Registrar Programa Académico</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
+  <div className="modal-dialog  modal-dialog-right modal-dialog-centered ">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title" id="modalLabel">Registrar Programa Académico</h5>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
+      </div>
+      <div className="modal-body">
+        <div className="row">
+          <div className="col-md-6">
+            <div className="input-group mb-3">
+              <span className="input-group-text">Nivel Académico:</span>
+              <select className="form-select" value={idNivelEstudio} onChange={(event) => {
+                console.log("Nivel de Estudio seleccionado:", event.target.value);
+                setIdNivelEstudio(event.target.value);
+              }}>
+                <option value="">Selecciona un nivel</option>
+                {nivelEstudioList.map((nivelEstudio) => (
+                  <option key={nivelEstudio.idnivelEstudio} value={nivelEstudio.idnivelEstudio}>{nivelEstudio.nombre}</option>
+                ))}
+              </select>
             </div>
-            <div className="modal-body">
-              <div className="input-group mb-3">
-                <span className="input-group-text">Nivel Académico:</span>
-                <select className="form-select" value={idNivelEstudio} onChange={(event) => {
-                  console.log("Nivel de Estudio seleccionado:", event.target.value);
-                  setIdNivelEstudio(event.target.value);
-                }}>
-                  <option value="">Selecciona un nivel</option>
-                  {nivelEstudioList.map((nivelEstudio) => (
-                    <option key={nivelEstudio.idnivelEstudio} value={nivelEstudio.idnivelEstudio}>{nivelEstudio.nombre}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Oferta Académica:</span>
-                <select className="form-select" value={idOfertaAcademica} onChange={(event) => {
-                  console.log("Oferta Académica seleccionada:", event.target.value);
-                  setIdOfertaAcademica(event.target.value);
-                }}>
-                  <option value="">Selecciona una oferta</option>
-                  {ofertaAcademicaList.map((ofertaAcademica) => (
-                    <option key={ofertaAcademica.idOfertaAcademica} value={ofertaAcademica.idOfertaAcademica}>{ofertaAcademica.nombre}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Nombre:</span>
-                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Nombre Oficial:</span>
-                <input type="text" className="form-control" value={nombreOficial} onChange={(event) => setNombreOficial(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Descripción:</span>
-                <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Sigla:</span>
-                <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Año:</span>
-                <input type="text" className="form-control" value={anio} onChange={(event) => setAnio(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Total de Periodos:</span>
-                <input type="number" className="form-control" value={totalPeriodos} onChange={(event) => setTotalPeriodos(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Total de Créditos:</span>
-                <input type="number" className="form-control" value={totalCreditos} onChange={(event) => setTotalCreditos(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Desde:</span>
-                <input type="date" className="form-control" value={formatDateString(desde)} onChange={(event) => setDesde(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Hasta:</span>
-                <input type="date" className="form-control" value={formatDateString(hasta)} onChange={(event) => setHasta(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Estatus:</span>
-                <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
-                  <option value="">Selecciona un tipo</option>
-                  <option value="Activo">Activo</option>
-                  <option value="Sin Actividad">Sin Actividad</option>
-                </select>
-              </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Oferta Académica:</span>
+              <select className="form-select" value={idOfertaAcademica} onChange={(event) => {
+                console.log("Oferta Académica seleccionada:", event.target.value);
+                setIdOfertaAcademica(event.target.value);
+              }}>
+                <option value="">Selecciona una oferta</option>
+                {ofertaAcademicaList.map((ofertaAcademica) => (
+                  <option key={ofertaAcademica.idOfertaAcademica} value={ofertaAcademica.idOfertaAcademica}>{ofertaAcademica.nombre}</option>
+                ))}
+              </select>
             </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Cerrar</button>
-              <button type="button" className="btn btn-primary" onClick={() => {
-                console.log("llegando a datos", { idNivelEstudio, idOfertaAcademica, nombre, nombreOficial, descripcion, sigla, anio, totalPeriodos, totalCreditos, desde, hasta, estatus });
-                handleAdd();
-              }}>Registrar</button>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Nombre:</span>
+              <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Nombre Oficial:</span>
+              <input type="text" className="form-control" value={nombreOficial} onChange={(event) => setNombreOficial(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Descripción:</span>
+              <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Sigla:</span>
+              <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="input-group mb-3">
+              <span className="input-group-text">Año:</span>
+              <input type="text" className="form-control" value={anio} onChange={(event) => setAnio(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Total de Periodos:</span>
+              <input type="number" className="form-control" value={totalPeriodos} onChange={(event) => setTotalPeriodos(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Total de Créditos:</span>
+              <input type="number" className="form-control" value={totalCreditos} onChange={(event) => setTotalCreditos(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Desde:</span>
+              <input type="date" className="form-control" value={formatDateString(desde)} onChange={(event) => setDesde(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Hasta:</span>
+              <input type="date" className="form-control" value={formatDateString(hasta)} onChange={(event) => setHasta(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Estatus:</span>
+              <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
+                <option value="">Selecciona un tipo</option>
+                <option value="Activo">Activo</option>
+                <option value="Sin Actividad">Sin Actividad</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Cerrar</button>
+        <button type="button" className="btn btn-primary" onClick={() => {
+          console.log("llegando a datos", { idNivelEstudio, idOfertaAcademica, nombre, nombreOficial, descripcion, sigla, anio, totalPeriodos, totalCreditos, desde, hasta, estatus });
+          handleAdd();
+        }}>Registrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
       {/* Modal para editar Programa Académico */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="editModalLabel">Editar Programa Académico</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowEditModal(false)}></button>
+  <div className="modal-dialog modal-dialog-right modal-dialog-centered ">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h5 className="modal-title" id="editModalLabel">Editar Programa Académico</h5>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowEditModal(false)}></button>
+      </div>
+      <div className="modal-body">
+        <div className="row">
+          <div className="col-md-6">
+            <div className="input-group mb-3">
+              <span className="input-group-text">Nivel Académico:</span>
+              <select className="form-select" value={idNivelEstudio} onChange={(event) => {
+                console.log("Nivel de Estudio seleccionado:", event.target.value);
+                setIdNivelEstudio(event.target.value);
+              }}>
+                <option value="">Selecciona un nivel</option>
+                {nivelEstudioList.map((nivelEstudio) => (
+                  <option key={nivelEstudio.idnivelEstudio} value={nivelEstudio.idnivelEstudio}>{nivelEstudio.nombre}</option>
+                ))}
+              </select>
             </div>
-            <div className="modal-body">
-              <div className="input-group mb-3">
-                <span className="input-group-text">Nivel Académico:</span>
-                <select className="form-select" value={idNivelEstudio} onChange={(event) => {
-                  console.log("Nivel de Estudio seleccionado:", event.target.value);
-                  setIdNivelEstudio(event.target.value);
-                }}>
-                  <option value="">Selecciona un nivel</option>
-                  {nivelEstudioList.map((nivelEstudio) => (
-                    <option key={nivelEstudio.idnivelEstudio} value={nivelEstudio.idnivelEstudio}>{nivelEstudio.nombre}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Oferta Académica:</span>
-                <select className="form-select" value={idOfertaAcademica} onChange={(event) => {
-                  console.log("Oferta Académica seleccionada:", event.target.value);
-                  setIdOfertaAcademica(event.target.value);
-                }}>
-                  <option value="">Selecciona una oferta</option>
-                  {ofertaAcademicaList.map((ofertaAcademica) => (
-                    <option key={ofertaAcademica.idOfertaAcademica} value={ofertaAcademica.idOfertaAcademica}>{ofertaAcademica.nombre}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Nombre:</span>
-                <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Nombre Oficial:</span>
-                <input type="text" className="form-control" value={nombreOficial} onChange={(event) => setNombreOficial(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Descripción:</span>
-                <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Sigla:</span>
-                <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Año:</span>
-                <input type="text" className="form-control" value={anio} onChange={(event) => setAnio(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Total de Periodos:</span>
-                <input type="number" className="form-control" value={totalPeriodos} onChange={(event) => setTotalPeriodos(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Total de Créditos:</span>
-                <input type="number" className="form-control" value={totalCreditos} onChange={(event) => setTotalCreditos(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Desde:</span>
-                <input type="date" className="form-control" value={formatDateString(desde)} onChange={(event) => setDesde(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Hasta:</span>
-                <input type="date" className="form-control" value={formatDateString(hasta)} onChange={(event) => setHasta(event.target.value)} />
-              </div>
-              <div className="input-group mb-3">
-                <span className="input-group-text">Estatus:</span>
-                <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
-                  <option value="">Selecciona un tipo</option>
-                  <option value="Activo">Activo</option>
-                  <option value="Sin Actividad">Sin Actividad</option>
-                </select>
-              </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Oferta Académica:</span>
+              <select className="form-select" value={idOfertaAcademica} onChange={(event) => {
+                console.log("Oferta Académica seleccionada:", event.target.value);
+                setIdOfertaAcademica(event.target.value);
+              }}>
+                <option value="">Selecciona una oferta</option>
+                {ofertaAcademicaList.map((ofertaAcademica) => (
+                  <option key={ofertaAcademica.idOfertaAcademica} value={ofertaAcademica.idOfertaAcademica}>{ofertaAcademica.nombre}</option>
+                ))}
+              </select>
             </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowEditModal(false)}>Cerrar</button>
-              <button type="button" className="btn btn-primary" onClick={handleUpdate}>Actualizar</button>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Nombre:</span>
+              <input type="text" className="form-control" value={nombre} onChange={(event) => setNombre(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Nombre Oficial:</span>
+              <input type="text" className="form-control" value={nombreOficial} onChange={(event) => setNombreOficial(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Descripción:</span>
+              <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Sigla:</span>
+              <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="input-group mb-3">
+              <span className="input-group-text">Año:</span>
+              <input type="text" className="form-control" value={anio} onChange={(event) => setAnio(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Total de Periodos:</span>
+              <input type="number" className="form-control" value={totalPeriodos} onChange={(event) => setTotalPeriodos(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Total de Créditos:</span>
+              <input type="number" className="form-control" value={totalCreditos} onChange={(event) => setTotalCreditos(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Desde:</span>
+              <input type="date" className="form-control" value={formatDateString(desde)} onChange={(event) => setDesde(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Hasta:</span>
+              <input type="date" className="form-control" value={formatDateString(hasta)} onChange={(event) => setHasta(event.target.value)} />
+            </div>
+            <div className="input-group mb-3">
+              <span className="input-group-text">Estatus:</span>
+              <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
+                <option value="">Selecciona un tipo</option>
+                <option value="Activo">Activo</option>
+                <option value="Sin Actividad">Sin Actividad</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
+      <div className="modal-footer">
+        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowEditModal(false)}>Cerrar</button>
+        <button type="button" className="btn btn-primary" onClick={handleUpdate}>Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
       {/* Modal para eliminar Programa Académico */}
       <div className={`modal fade ${showDeleteModal ? 'show' : ''}`} style={{ display: showDeleteModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-right" >
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="deleteModalLabel">Eliminar Programa Académico</h5>

@@ -7,8 +7,8 @@ const router = Router();
 
 router.get("/", getKardex);
 router.post("/create", createKardex);
-router.put("/update/:IdKardex", updateKardex);
-router.delete("/delete/:IdKardex", deleteKardex);
+router.put("/update/:idKardex", updateKardex);
+router.delete("/delete/:idKardex", deleteKardex);
 
 export default router;
 

@@ -6,7 +6,7 @@ import '../assets/css/Navbar.css';
 
 function OffcanvasNavbar() {
   const [activeMenu, setActiveMenu] = useState(null);
-  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
+  const [showModal, setShowModal] = useState(false); 
   const username = localStorage.getItem('Username');
 
   const handleMouseEnter = (menu) => {
@@ -17,12 +17,11 @@ function OffcanvasNavbar() {
     setActiveMenu(null);
   };
 
-  const toggleModal = () => setShowModal(!showModal); // Función para alternar el modal
+  const toggleModal = () => setShowModal(!showModal); 
 
   const handleLogout = () => {
-    // Aquí debes agregar la lógica para cerrar sesión
     localStorage.removeItem('Username');
-    window.location.reload(); // Redirige o recarga la página después de cerrar sesión
+    window.location.reload(); 
   };
 
   return (
@@ -63,8 +62,8 @@ function OffcanvasNavbar() {
               { to: "/Bloque", text: "Bloque", icon: <FaLayerGroup /> },
               { to: "/Aula", text: "Aula", icon: <FaDoorOpen /> },
               { to: "/Historial", text: "Historial", icon: <FaHistory /> } ,
-               
-
+              
+              { to: "/AsignarPA", text: "Asignar Programa Académico", icon: <FaTasks /> },
           ]},
 
           { label: "Planificación Academica", key: "Planificación Academica", icon: <FaUser />, links: [
@@ -74,7 +73,6 @@ function OffcanvasNavbar() {
             { to: "/AdicionProfesor", text: "Adición Profesor", icon: <FaUserPlus /> },
             { to: "/Evaluacion", text: "Evaluación", icon: <FaClipboardCheck /> },
             { to: "/NivelEstudio", text: "Nivel de Estudio", icon: <FaUniversity /> },
-            { to: "/AsignarPA", text: "Asignar Programa Académico", icon: <FaTasks /> },
           ]}, 
 
           { label: "Tramites", key: "Tramites", icon: <FaUser />, links: [

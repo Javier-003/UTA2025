@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacurricular.api.js";
 import { getProgramaacademicos } from "../../../api/PlanificacionAcademica/programa_academico.api.js";
+import Select from 'react-select';
 
 export const MateriaUnidadModales = ({
   idMapaCurricular, setIdMapaCurricular,
@@ -15,13 +16,39 @@ export const MateriaUnidadModales = ({
 }) => {
   const [mapaList, setMapaList] = useState([]);
   const [programaAcademicoList, setProgramaAcademicoList] = useState([]);
-
-  useEffect(() => {getMapaCurriculares().then(data => setMapaList(data)).catch(error => console.error("Error al obtener los mapas curriculares:", error));}, []);
-  useEffect(() => {getProgramaacademicos().then(response => {setProgramaAcademicoList(response.data);}).catch(error => console.error("Error al obtener los PA:", error));}, []);
+  const [filteredOptions, setFilteredOptions] = useState([]);
 
   useEffect(() => {
     console.log("Lista de programaAcademico:", programaAcademicoList);
   }, [programaAcademicoList]);
+
+  useEffect(() => {
+    getMapaCurriculares().then(data => {
+      setMapaList(data);
+      setFilteredOptions(data.slice(-5)); // Mostrar solo los últimos 5 registros inicialmente
+    }).catch(error => console.error("Error al obtener los mapas curriculares:", error));
+  }, []);
+
+  useEffect(() => {
+    getProgramaacademicos().then(response => {
+      setProgramaAcademicoList(response.data);
+    }).catch(error => console.error("Error al obtener los PA:", error));
+  }, []);
+
+  const handleSearch = (inputValue) => {
+    if (!inputValue) {
+      setFilteredOptions(mapaList.slice(-5)); // Si no hay búsqueda, mostrar solo los últimos 5
+    } else {
+      setFilteredOptions(mapaList.filter(mapacurricular =>
+        mapacurricular.materia.toLowerCase().includes(inputValue.toLowerCase())
+      ));
+    }
+  };
+
+  const options = filteredOptions.map(mapacurricular => ({
+    value: mapacurricular.idMapaCurricular,
+    label: mapacurricular.materia
+  }));
 
   return (
     <>
@@ -36,12 +63,14 @@ export const MateriaUnidadModales = ({
             <div className="modal-body">
               <div className="input-group mb-3">
                 <span className="input-group-text">Mapa Curricular:</span>
-                <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
-                  <option value="">Selecciona un programa</option>
-                  {mapaList.map((mapacurricular) => (
-                    <option key={mapacurricular.idMapaCurricular} value={mapacurricular.idMapaCurricular}>{mapacurricular.materia}</option>
-                  ))}
-                </select>
+                <Select 
+                  options={options}
+                  value={options.find(option => option.value === idMapaCurricular)}
+                  onChange={(selectedOption) => setIdMapaCurricular(selectedOption ? selectedOption.value : '')}
+                  onInputChange={handleSearch} // Filtra en tiempo real
+                  isClearable
+                  placeholder="Selecciona una materia"
+                />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Unidad:</span>
@@ -60,7 +89,7 @@ export const MateriaUnidadModales = ({
         </div>
       </div>
 
-      {/* ACTUALIZAR */}
+      {/* Modal para actualizar */}
       <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-right">
           <div className="modal-content">
@@ -72,7 +101,7 @@ export const MateriaUnidadModales = ({
               <div className="input-group mb-3">
                 <span className="input-group-text">Mapa Curricular:</span>
                 <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
-                  <option value="">Selecciona un programa</option>
+                  <option value="">Selecciona un Mapa</option>
                   {mapaList.map((mapacurricular) => (
                     <option key={mapacurricular.idMapaCurricular} value={mapacurricular.idMapaCurricular}>{mapacurricular.materia}</option>
                   ))}
@@ -89,7 +118,9 @@ export const MateriaUnidadModales = ({
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" onClick={() => setShowEditModal(false)}>Cerrar</button>
-              <button type="button" className="btn btn-primary" onClick={handleUpdate}>Actualizar</button>
+              <button type="button" className="btn btn-primary" onClick={() => {
+                handleUpdate();
+              }}>Actualizar</button>
             </div>
           </div>
         </div>         

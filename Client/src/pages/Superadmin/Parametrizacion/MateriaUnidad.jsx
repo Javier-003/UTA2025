@@ -7,7 +7,7 @@ from '../../../assets/js/Parametrizacion/materiaunidad.js';
 import { MateriaUnidadModales } from '../Parametrizacion/MateriaUnidadModales.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
-  
+
 function MateriaUnidad() {
   const [materiaUList, setmateriaUList] = useState([]);
   const [programaEducativo, setProgramaEducativo] = useState("");
@@ -21,8 +21,10 @@ function MateriaUnidad() {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [searchText, setSearchText] = useState(""); 
+  const [searchText, setSearchText] = useState("");
   const [selectedMateriaU, setSelectedMateriaU] = useState(null);
+  const [selectedPrograma, setSelectedPrograma] = useState("");
+  const [selectedUnidad, setSelectedUnidad] = useState("");
 
   useEffect(() => { getMateriajs(setmateriaUList); }, []);
 
@@ -74,11 +76,15 @@ function MateriaUnidad() {
     }
   ];
 
-  const filteredData = materiaUList.filter(item =>
-    item.nombre.toLowerCase().includes(searchText.toLowerCase())
+  const filteredData = materiaUList.filter((item) =>
+    selectedPrograma && selectedUnidad &&
+    item.programaEducativo === selectedPrograma &&
+    item.unidad.toString() === selectedUnidad &&
+    (item.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
+    item.unidad.toString().includes(searchText.toString()))
   );
 
-  return(
+  return (
     <div className="container mt-4">
       <DataTable
         title={
@@ -96,7 +102,23 @@ function MateriaUnidad() {
             }}>
               <FontAwesomeIcon icon={faPlus} /> Registrar
             </button>
-            <h5 className="flex-grow-1 text-center">LISTADO DE MATERIA UNIDAD</h5>
+            <div>
+              <div className="d-flex mb-3">
+                <select className="form-select me-2" value={selectedPrograma} onChange={(e) => setSelectedPrograma(e.target.value)}>
+                  <option value="">Todos los Programas</option>
+                  {Array.from(new Set(materiaUList.map(item => item.programaEducativo))).map(programa => (
+                    <option key={programa} value={programa}>{programa}</option>
+                  ))}
+                </select>
+                <select className="form-select" value={selectedUnidad} onChange={(e) => setSelectedUnidad(e.target.value)}>
+                  <option value="">Todas las Unidades</option>
+                  {Array.from(new Set(materiaUList.map(item => item.unidad))).map(unidad => (
+                    <option key={unidad} value={unidad}>{unidad}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <h5 className="flex-grow-1 text-center">MATERIA UNIDAD</h5>
             <input type="text" className="form-control ms-2 w-25" value={searchText}
               onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Materia Unidad"/>
           </div>
@@ -121,6 +143,7 @@ function MateriaUnidad() {
           }
         }}
       />
+
       <MateriaUnidadModales
         programaEducativo={programaEducativo} setProgramaEducativo={setProgramaEducativo}
         materia={materia} setMateria={setMateria}
@@ -137,9 +160,9 @@ function MateriaUnidad() {
         handleAdd={handleAdd} 
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
-      
-        selectedMateriaU={selectedMateriaU}
-      />
+
+        selectedMateriaU={selectedMateriaU}/>
+
     </div>
   );
 }

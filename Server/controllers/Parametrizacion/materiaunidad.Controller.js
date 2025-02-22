@@ -9,7 +9,7 @@ export const getMateriaUnidadtodos = async (req, res) => {
     m.unidad, 
     m.nombre,
     m.*
-    FROM ut2025.materiaunidad as m 
+    FROM uta2025_20250217.materiaunidad as m 
     INNER JOIN mapacurricular as mc on mc.idMapaCurricular = m.idMapaCurricular
     INNER JOIN programaacademico as p on p.idProgramaAcademico = mc.idProgramaAcademico;`;
     const [rows] = await db.query(query);

@@ -1,5 +1,5 @@
 import '../../../assets/css/App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect , useCallback} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getProgramaAcademico, addProgramaAcademico, updateProgramaAcademicoFunc, deleteProgramaAcademicoFunc } 
 from '../../../assets/js/PlanificacionAcademica/programa_academico.js';
@@ -24,18 +24,15 @@ const ProgramaAcademico = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedProgramaAcademico, setSelectedProgramaAcademico] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
+  const [searchTerm, setSearchTerm] = useState(""); 
 
-  const fetchProgramasAcademicos = () => {
-    getProgramaAcademico((data) => {
-      setProgramaAcademico(data.data);
-      console.log("Lista actualizada:", data.data);
-    });
-  };
+  const fetchProgramasAcademicos = useCallback(async () => {
+    await getProgramaAcademico(setProgramaAcademico);
+  }, []);
 
   useEffect(() => {
     fetchProgramasAcademicos();
-  }, []);
+  }, [fetchProgramasAcademicos]);
 
   const handleAdd = () => {
     addProgramaAcademico(idNivelEstudio, idOfertaAcademica, nombre, nombreOficial, descripcion, sigla, anio, totalPeriodos, totalCreditos, desde, hasta, estatus, setShowModal, fetchProgramasAcademicos);
@@ -86,13 +83,7 @@ const ProgramaAcademico = () => {
       }}>Agregar Programa Académico</button>
 
       <div className='mt-4'>
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Buscar por nivel de estudio o nombre"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
+        <input type="text" className="form-control mb-3" placeholder="Buscar por nivel de estudio o nombre" value={searchTerm} onChange={handleSearchChange} />
         <table className="table">
           <thead>
             <tr>
@@ -166,41 +157,27 @@ const ProgramaAcademico = () => {
       </div>
 
       <ProgramaAcademicoModales
-        showModal={showModal}
-        setShowModal={setShowModal}
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        showDeleteModal={showDeleteModal}
-        setShowDeleteModal={setShowDeleteModal}
+        idNivelEstudio={idNivelEstudio}setIdNivelEstudio={setIdNivelEstudio}
+        idOfertaAcademica={idOfertaAcademica}setIdOfertaAcademica={setIdOfertaAcademica}
+        nombre={nombre}setNombre={setNombre}
+        nombreOficial={nombreOficial}setNombreOficial={setNombreOficial}
+        descripcion={descripcion}setDescripcion={setDescripcion}
+        sigla={sigla}setSigla={setSigla}
+        anio={anio}setAnio={setAnio}
+        totalPeriodos={totalPeriodos}setTotalPeriodos={setTotalPeriodos}
+        totalCreditos={totalCreditos}setTotalCreditos={setTotalCreditos}
+        desde={desde}setDesde={setDesde}
+        hasta={hasta}setHasta={setHasta}
+        estatus={estatus} setEstatus={setEstatus}
+
+        showModal={showModal} setShowModal={setShowModal}
+        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedProgramaAcademico={selectedProgramaAcademico}
-        idNivelEstudio={idNivelEstudio}
-        setIdNivelEstudio={setIdNivelEstudio}
-        idOfertaAcademica={idOfertaAcademica}
-        setIdOfertaAcademica={setIdOfertaAcademica}
-        nombre={nombre}
-        setNombre={setNombre}
-        nombreOficial={nombreOficial}
-        setNombreOficial={setNombreOficial}
-        descripcion={descripcion}
-        setDescripcion={setDescripcion}
-        sigla={sigla}
-        setSigla={setSigla}
-        anio={anio}
-        setAnio={setAnio}
-        totalPeriodos={totalPeriodos}
-        setTotalPeriodos={setTotalPeriodos}
-        totalCreditos={totalCreditos}
-        setTotalCreditos={setTotalCreditos}
-        desde={desde}
-        setDesde={setDesde}
-        hasta={hasta}
-        setHasta={setHasta}
-        estatus={estatus}
-        setEstatus={setEstatus}
-      />
+        selectedProgramaAcademico={selectedProgramaAcademico}/>
+
     </div>
   );
 };

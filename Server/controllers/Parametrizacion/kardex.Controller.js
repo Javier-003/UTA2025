@@ -3,18 +3,18 @@ import { db } from "../../db/connection.js";
 export const getKardex = async (req, res) => {
   try {
     const query = `
-      SELECT k.*,
-        pe.periodo AS periodo, 
-        g.nombre AS grupo,
-        mp.materia AS mapa,
-        CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre
-      FROM integradora_se.kardex AS k
-      INNER JOIN alumno_programa AS ap ON ap.idAlumnoPrograma = k.idAlumnoPrograma
-      INNER JOIN alumno AS a ON a.id_alumno = ap.idAlumno
-      INNER JOIN persona AS p ON p.id_persona = a.id_alumno
-      INNER JOIN mapacurricular AS mp ON mp.id_mapa_curricular = k.id_mapa_curricular
+      SELECT k.*, 
+        pe.periodo, 
+        g.nombre AS grupo, 
+        mp.materia AS mapa, 
+        p.nombre, p.paterno AS paterno, p.materno AS materno
+      FROM uta2025_20250217.kardex AS k
+      INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
+      INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
+      INNER JOIN persona AS p ON p.idPersona = a.idAlumno
+      INNER JOIN mapacurricular AS mp ON mp.idMapaCurricular = k.idmapacurricular
       INNER JOIN grupo AS g ON g.idGrupo = k.idGrupo
-      INNER JOIN periodo AS pe ON pe.id_periodo = k.id_periodo
+      INNER JOIN periodo AS pe ON pe.idPeriodo = k.idPeriodo
     `;
     const [rows] = await db.query(query);
     if (rows.length > 0) {
@@ -30,26 +30,23 @@ export const getKardex = async (req, res) => {
 
 export const createKardex = async (req, res) => {
   try {
-    const { idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo } = req.body;
-
-    if (!idAlumnoPrograma || !id_mapa_curricular || !idGrupo || !id_periodo || !CalificacionFinal || !Tipo) {
+    const { idAlumnoPrograma, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo } = req.body;
+    if (!idAlumnoPrograma || !idMapaCurricular || !idGrupo || !idPeriodo || !calificacionFinal || !tipo) {
       return res.status(400).json({ message: "Todos los campos son requeridos" });
     }
-
     const [rows] = await db.query(
-      "INSERT INTO kardex (idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo) VALUES (?, ?, ?, ?, ?, ?)",
-      [idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo]
+      "INSERT INTO kardex (idAlumnoPrograma, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo) VALUES (?, ?, ?, ?, ?, ?)",
+      [idAlumnoPrograma, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo]
     );
-
     res.status(201).json({
       message: "Kardex creado correctamente",
       idKardex: rows.insertId,
       idAlumnoPrograma,
-      id_mapa_curricular,
+      idMapaCurricular,
       idGrupo,
-      id_periodo,
-      CalificacionFinal,
-      Tipo,
+      idPeriodo,
+      calificacionFinal,
+      tipo,
     });
   } catch (error) {
     console.error("Error al crear kardex:", error);
@@ -59,32 +56,28 @@ export const createKardex = async (req, res) => {
 
 export const updateKardex = async (req, res) => {
   try {
-    const { IdKardex } = req.params;
-    const { idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo } = req.body;
-
-    const [exists] = await db.query("SELECT 1 FROM kardex WHERE IdKardex = ?", [IdKardex]);
+    const { idKardex } = req.params;
+    const { idAlumnoPrograma, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo } = req.body;
+    const [exists] = await db.query("SELECT 1 FROM kardex WHERE idKardex = ?", [idKardex]);
     if (!exists.length) {
       return res.status(404).json({ message: "El kardex no existe" });
     }
-
     const [result] = await db.query(
-      "UPDATE kardex SET idAlumnoPrograma = ?, id_mapa_curricular = ?, idGrupo = ?, id_periodo = ?, CalificacionFinal = ?, Tipo = ? WHERE IdKardex = ?",
-      [idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo, IdKardex]
+      "UPDATE kardex SET idAlumnoPrograma = ?, idMapaCurricular = ?, idGrupo = ?, idPeriodo = ?, calificacionFinal = ?, tipo = ? WHERE idKardex = ?",
+      [idAlumnoPrograma, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, idKardex]
     );
-
     if (result.affectedRows === 0) {
       return res.status(400).json({ message: "No se pudo actualizar el kardex" });
     }
-
     res.status(200).json({
       message: "Kardex actualizado correctamente",
-      IdKardex,
+      idKardex,
       idAlumnoPrograma,
-      id_mapa_curricular,
+      idMapaCurricular,
       idGrupo,
-      id_periodo,
-      CalificacionFinal,
-      Tipo
+      idPeriodo,
+      calificacionFinal,
+      tipo
     });
   } catch (error) {
     console.error("Error al actualizar el kardex:", error);
@@ -94,16 +87,14 @@ export const updateKardex = async (req, res) => {
 
 export const deleteKardex = async (req, res) => {
   try {
-    const { IdKardex } = req.params;
-
-    const [kardex] = await db.query("SELECT idAlumnoPrograma FROM kardex WHERE IdKardex = ?", [IdKardex]);
+    const { idKardex } = req.params;
+    const [kardex] = await db.query("SELECT idAlumnoPrograma FROM kardex WHERE idKardex = ?", [idKardex]);
     if (!kardex.length) {
       return res.status(404).json({ message: "Kardex no encontrado" });
     }
-
-    const [rows] = await db.query("DELETE FROM kardex WHERE IdKardex = ?", [IdKardex]);
+    const [rows] = await db.query("DELETE FROM kardex WHERE idKardex = ?", [idKardex]);
     if (rows.affectedRows > 0) {
-      res.status(200).json({ message: `Kardex con IdKardex ${IdKardex} eliminado correctamente` });
+      res.status(200).json({ message: `Kardex con idKardex ${idKardex} eliminado correctamente` });
     } else {
       res.status(404).json({ message: "No se pudo eliminar el kardex" });
     }

@@ -9,7 +9,7 @@ const userSession = localStorage.getItem('Username')
 export const getnivelestudios = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/nivelestudio`);
-    return response.data.data || [];  // Retorna los datos de las nivelestudio
+    return response.data.data || [];  
   } catch (error) {
     console.error("Error al obtener los nivel de estudio:", error);
     throw new Error('Error al obtener el nivel de estudio');

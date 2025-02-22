@@ -32,16 +32,19 @@ export const AsignarPAModales = ({
 
         const periodosData = await getPeriodos();
         setPeriodoList(periodosData || []);
-
-        const programasData = await getProgramaacademicos();
-        setProgramaAcademicoList(programasData?.data || []);
       } catch (error) {
         console.error("Error al obtener los datos:", error);
       }
     };
-
     fetchData();
   }, []);
+  useEffect(() => {
+    getProgramaacademicos()
+      .then(data => setProgramaAcademicoList(data))
+      .catch(error => console.error("Error al obtener los niveles de estudio:", error));
+  }, []);
+
+
   return (
     <>
       {/* Modal para registrar */}
@@ -66,16 +69,19 @@ export const AsignarPAModales = ({
               </div>
 
               <div className="input-group mb-3">
-                <span className="input-group-text">Programa Académico:</span>
-                <select className="form-select" value={idProgramaAcademico} onChange={(e) => setIdProgramaAcademico(e.target.value)}>
-                  <option value="">Selecciona un programa académico</option>
-                  {programaAcademicoList.map((programa) => (
-                    <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>
-                      {programa.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <span className="input-group-text">Programa Académico:</span>
+                  <select className="form-select" value={idProgramaAcademico} onChange={(event) => {
+                    console.log("Programa Académico seleccionado:", event.target.value);
+                    setIdProgramaAcademico(event.target.value);
+                  }}>
+                    <option value="">Selecciona un Programa Académico</option>
+                    {programaAcademicoList && programaAcademicoList.map((programaAcademico) => (
+                      <option key={programaAcademico.idProgramaAcademico} value={programaAcademico.idProgramaAcademico}>
+                        {programaAcademico.nombreOficial}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
               <div className="input-group mb-3">
                 <span className="input-group-text">Periodo:</span>
@@ -143,13 +149,14 @@ export const AsignarPAModales = ({
                 </select>
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text">Programa Académico:</span>
-                <select className="form-select" value={idProgramaAcademico} onChange={(event) => setIdProgramaAcademico(event.target.value)}>
-                  <option value="">Selecciona un programa académico</option>
-                  {Array.isArray(programaAcademicoList) && programaAcademicoList.map((programa) => (
-                    <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>{programa.nombre}</option>))}
-                </select>
-              </div>
+              <span className="input-group-text">Programa Académico:</span>
+              <select className="form-select" value={idProgramaAcademico} onChange={(event) => {
+                setIdProgramaAcademico(event.target.value);}}>
+              <option value="">Selecciona un Programa Académico</option>
+              {programaAcademicoList && programaAcademicoList.map((programaAcademico) => (
+                <option key={programaAcademico.idProgramaAcademico} value={programaAcademico.idProgramaAcademico}>{programaAcademico.nombreOficial}</option>
+                ))}</select>
+            </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Periodo:</span>
                 <select className="form-select" value={idPeriodo} onChange={(event) => setIdPeriodo(event.target.value)}>

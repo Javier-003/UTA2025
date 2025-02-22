@@ -3,8 +3,8 @@ import { db } from "../../db/connection.js";
 // Obtener todos los mapas curriculares
 export const getMapaCurriculartodos = async (req, res) => {
   try {
-    const query = `SELECT mc.*, pa.nombre AS NombreProgramaAcademico
-                   FROM mapacurricular mc
+    const query = `SELECT mc.*, pa.nombreOficial AS carrera
+                   FROM mapacurricular AS mc
                    JOIN programaacademico pa ON mc.idProgramaAcademico = pa.idProgramaAcademico`;
     const [rows] = await db.query(query);
     if (rows.length > 0) {
@@ -46,18 +46,14 @@ export const updateMapaCurricular = async (req, res) => {
   try {
     const { idMapaCurricular } = req.params;
     const { idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad } = req.body;
-
     const [result] = await db.query(
       "UPDATE mapacurricular SET idProgramaAcademico = ?, ciclo = ?, cuatrimestre = ?, materia = ?, clave = ?, horasSemana = ?, horasTeoricas = ?, horasPracticas = ?, horasTotal = ?, creditos = ?, modalidad = ?, espacio = ?, noUnidad = ? WHERE idMapaCurricular = ?",
       [idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, idMapaCurricular]
     );
-
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "El mapa curricular no existe" });
     }
-
     const [programaacademico] = await db.query("SELECT * FROM programaacademico WHERE idProgramaAcademico = ?", [idProgramaAcademico]);
-
     res.status(200).json({
       message: `'${materia}' ha sido actualizado`,
       idMapaCurricular, idProgramaAcademico,
@@ -75,13 +71,10 @@ export const deleteMapaCurricular = async (req, res) => {
   try {
     const { idMapaCurricular } = req.params;
     const [mapacurricular] = await db.query("SELECT materia FROM mapacurricular WHERE idMapaCurricular = ?", [idMapaCurricular]);
-
     if (!mapacurricular.length) {
       return res.status(404).json({ message: "El mapa curricular no existe" });
     }
-
     const [rows] = await db.query("DELETE FROM mapacurricular WHERE idMapaCurricular = ?", [idMapaCurricular]);
-
     rows.affectedRows
       ? res.status(200).json({ message: `'${mapacurricular[0].materia}' ha sido eliminado` })
       : res.status(400).json({ message: "No se eliminó ningún mapa curricular" });

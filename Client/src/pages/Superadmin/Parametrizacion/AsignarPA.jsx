@@ -14,7 +14,7 @@ function Alumnopa() {
   const [materno, setMaterno] = useState("");
 
   const [idProgramaAcademico, setIdProgramaAcademico] = useState("");
-  const [programa, setPrograma] = useState("");
+  const [carrera, setCarrera] = useState("");
 
   const [idPeriodo, setIdPeriodo] = useState("");
   
@@ -29,7 +29,7 @@ function Alumnopa() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedAlumnopa, setSelectedAlumnopa] = useState(null);
-  const [selectedPrograma, setSelectedPrograma] = useState(""); 
+  const [selectedCarrera, setSelectedCarrera] = useState(""); 
   const [selectedEstatus, setSelectedEstatus] = useState(""); 
   
   useEffect(() => { 
@@ -37,7 +37,7 @@ function Alumnopa() {
   }, []);
 
   const filteredData = alumnopaList.filter(item =>
-    (!selectedPrograma || item.programa === selectedPrograma) && 
+    (!selectedCarrera || item.carrera === selectedCarrera) && 
     (!selectedEstatus || item.estatus === selectedEstatus) && 
     item.nombre.toLowerCase().includes(searchText.toLowerCase()) 
   );
@@ -77,17 +77,18 @@ function Alumnopa() {
           setDesde("");
           setHasta("");
           setPeriodo("");
-          setPrograma("");
+          setCarrera("");
           setSelectedAlumnopa(null);
           setShowModal(true);
         }}>Registrar</button>
         <div className="mt-4">
+        
         <div className="d-flex mb-3">
-              
-              <select className="form-select me-2" value={selectedPrograma} onChange={(e) => setSelectedPrograma(e.target.value)}>
-                <option value="">Todos los Programas</option>
-                {Array.from(new Set(alumnopaList.map(item => item.programa))).map(programa => (
-                  <option key={programa} value={programa}>{programa}</option>
+     
+              <select className="form-select me-2" value={selectedCarrera} onChange={(e) => setSelectedCarrera(e.target.value)}>
+                <option value="">Todos las Carrera</option>
+                {Array.from(new Set(alumnopaList.map(item => item.carrera))).map(carrera => (
+                  <option key={carrera} value={carrera}>{carrera}</option>
                 ))}
               </select>
 
@@ -120,14 +121,14 @@ function Alumnopa() {
               </tr>
             </thead>
             <tbody>
-              {selectedPrograma && selectedEstatus && filteredData.length > 0 ? (
+              {selectedCarrera && selectedEstatus && filteredData.length > 0 ? (
                 filteredData.map((alumnopa) => (
                   <tr key={alumnopa.idAlumnoPA}>
                     <td>{alumnopa.idAlumnoPA}</td>
                     <td>{alumnopa.idAlumno}</td>
                     <td>{alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}  </td>
                     <td>{alumnopa.idProgramaAcademico}</td>
-                    <td>{alumnopa.programa}</td>
+                    <td>{alumnopa.carrera}</td>
                     <td>{alumnopa.idPeriodo}</td>
                     <td>{alumnopa.periodo}</td>
                     <td>{alumnopa.matricula}</td>
@@ -147,7 +148,7 @@ function Alumnopa() {
                         setHasta(formatDateString(alumnopa.hasta));
                         setNombre(alumnopa.nombre);
                         setPeriodo(alumnopa.periodo);
-                        setPrograma(alumnopa.programa);
+                        setCarrera(alumnopa.programa);
                       }}>Editar</button>
                     </td>
                     <td>
@@ -175,7 +176,7 @@ function Alumnopa() {
         materno={materno} setMaterno={setMaterno}
 
         idProgramaAcademico={idProgramaAcademico} setIdProgramaAcademico={setIdProgramaAcademico}
-        programa={programa} setPrograma={setPrograma}
+        carrera={carrera} setCarrera={setCarrera}
         
         idPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
         periodo={periodo} setPeriodo={setPeriodo}

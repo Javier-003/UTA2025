@@ -1,6 +1,5 @@
 import Swal from 'sweetalert2';
-import { getKardex, createKardex, updateKardex, deleteKardex } 
-from '../../../api/Parametrizacion/kardex.api.js';
+import { getKardex, createKardex, updateKardex, deleteKardex } from '../../../api/Parametrizacion/kardex.api.js';
 
 // Obtener todos los registros
 export const getKardexjs = async (setKardexjs) => {
@@ -18,19 +17,18 @@ export const getKardexjs = async (setKardexjs) => {
 };
 
 // Crear un nuevo registro
-export const addKardex = async (idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo, setShowModal, getKardexjs) => {
- 
-  if (!idAlumnoPrograma || !id_mapa_curricular || !idGrupo || !id_periodo || !CalificacionFinal || !Tipo) {
+export const addKardex = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, setShowModal, getKardexjs) => {
+  if (!idAlumnoPA || !idMapaCurricular || !idGrupo || !idPeriodo || !calificacionFinal || !tipo) {
     return Swal.fire({
       icon: 'warning',
       title: 'Advertencia',
       text: 'Todos los campos son obligatorios para registrar un kardex.',
     });
   }
-   
+
   try {
-    await createKardex(idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo);
-      await getKardexjs();
+    await createKardex(idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo);
+    await getKardexjs();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
@@ -65,11 +63,12 @@ export const addKardex = async (idAlumnoPrograma, id_mapa_curricular, idGrupo, i
         text: 'Hubo un error al configurar la solicitud.',
       });
     }
-  }}
+  }
+};
 
 // Actualizar un registro
-export const updateKardexjs = async (IdKardex, idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo, setShowEditModal, getKardexjs) => {
-  if (!IdKardex || !idAlumnoPrograma || !id_mapa_curricular || !idGrupo || !id_periodo || !CalificacionFinal || !Tipo) {
+export const updateKardexjs = async (idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, setShowEditModal, getKardexjs) => {
+  if (!idKardex || !idAlumnoPA || !idMapaCurricular || !idGrupo || !idPeriodo || !calificacionFinal || !tipo) {
     return Swal.fire({
       icon: 'warning',
       title: 'Advertencia',
@@ -77,7 +76,7 @@ export const updateKardexjs = async (IdKardex, idAlumnoPrograma, id_mapa_curricu
     });
   }
   try {
-    await updateKardex(IdKardex, { idAlumnoPrograma, id_mapa_curricular, idGrupo, id_periodo, CalificacionFinal, Tipo });
+    await updateKardex(idKardex, { idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo });
     await getKardexjs();
     Swal.fire({
       icon: 'success',
@@ -96,8 +95,8 @@ export const updateKardexjs = async (IdKardex, idAlumnoPrograma, id_mapa_curricu
 };
 
 // Eliminar un registro
-export const deleteKardexjs = async (IdKardex, setShowDeleteModal, getKardexjs) => {
-  if (!IdKardex) {
+export const deleteKardexjs = async (idKardex, setShowDeleteModal, getKardexjs) => {
+  if (!idKardex) {
     return Swal.fire({
       icon: 'warning',
       title: 'Advertencia',
@@ -105,7 +104,7 @@ export const deleteKardexjs = async (IdKardex, setShowDeleteModal, getKardexjs) 
     });
   }
   try {
-    await deleteKardex(IdKardex);
+    await deleteKardex(idKardex);
     await getKardexjs();
     Swal.fire({
       icon: 'success',

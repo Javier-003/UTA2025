@@ -5,7 +5,7 @@ export const getAlumnopatodos = async (req, res) => {
     const query = `
       SELECT alp.*, 
       pe.periodo,  
-      pa.nombreOficial AS programa, 
+      pa.nombreOficial AS carrera, 
       p.nombre, 
       p.paterno,
       p.materno 

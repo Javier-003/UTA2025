@@ -10,12 +10,8 @@ export const getProgramaacademicos = async () => {
     const response = await axios.get(`${BASE_URL}/programaacademico`);
     return response.data.data || []; 
   } catch (error) {
-    if (error.response) {
-      console.error(`Error ${error.response.status}: ${error.response.data}`);
-    } else {
-      console.error("Error al obtener los programas académicos:", error.message);
-    }
-    return null;
+    console.error("Error al obtener los programas académicos:", error);
+    throw new Error('Error al obtener los programa academico');
   }
 };
 
