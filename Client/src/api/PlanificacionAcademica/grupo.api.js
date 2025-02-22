@@ -7,7 +7,7 @@ const BASE_URL = "http://localhost:3000";
 export const getGrupos = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/grupo`);
-    console.log("🔍 Respuesta completa de la API:", response);
+    //console.log("🔍 Respuesta completa de la API:", response);
 
     // Verifica qué datos estás recibiendo antes de retornarlos
     if (!response.data || typeof response.data !== "object") {

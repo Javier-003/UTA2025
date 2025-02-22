@@ -5,6 +5,7 @@ const BASE_URL = "http://localhost:3000";
 
 // Obtener las cargas de materias
 export const getCargaMaterias = async () => {
+  
   try {
     const response = await axios.get(`${BASE_URL}/cargamaterias`);
     return response.data;
