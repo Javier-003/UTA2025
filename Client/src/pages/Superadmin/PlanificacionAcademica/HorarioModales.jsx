@@ -1,145 +1,110 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react';
-import { getAllHorario, createHorarioForm, updateHorarioForm, deleteHorarioForm } from '../../../assets/js/PlanificacionAcademica/horario.js';
-import { getBloquees } from '../../../api/PlanificacionAcademica/bloque.api.js';
-import { getAllCargaMaterias } from '../../../assets/js/PlanificacionAcademica/cargamaterias.js';
+import { useState, useEffect } from "react";
+import { getAllHorario } from "../../../assets/js/PlanificacionAcademica/horario.js";
+import { getBloquees } from "../../../api/PlanificacionAcademica/bloque.api.js";
+import { getCargaMaterias } from "../../../api/PlanificacionAcademica/cargamaterias.api.js";
+import { getAulas } from "../../../api/Nucleo/aula.api.js"; // Asegúrate de importar la función para obtener las aulas
 
-export const HorarioModales = ({ 
-    idGrupoMateria, setIdGrupoMateria, 
-    idBloque, setIdBloque, 
-    dia, setDia,
-    horarios, setHorarios,
-    showModalHorario, setShowModalHorario, showEditModalHorario, setShowEditModalHorario, showDeleteModalHorario, setShowDeleteModalHorario,
-    handleAddHorario, handleEditHorario, handleDeleteHorario
+export const VerHorarioModal = ({
+    idGrupoMateria, 
+    showModal, 
+    setShowModal
 }) => {
-
     const [bloques, setBloques] = useState([]);
-    const [cargaMateriasList, setCargaMateriasList] = useState([]);
+    const [cargaMaterias, setCargaMaterias] = useState([]);
+    const [horarios, setHorarios] = useState([]);
+    const [aulas, setAulas] = useState([]); // Estado para las aulas
+    const [materiaNombre, setMateriaNombre] = useState("");
 
     useEffect(() => {
-        getAllHorario().then(setHorarios);
-        getBloquees().then(setBloques);
-        getAllCargaMaterias().then(setCargaMateriasList);
+        const fetchBloques = async () => {
+            const data = await getBloquees();
+            setBloques(data);
+        };
+        fetchBloques();
     }, []);
 
-    const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    useEffect(() => {
+        const fetchCargaMaterias = async () => {
+            const data = await getCargaMaterias();
+            setCargaMaterias(data);
+        };
+        fetchCargaMaterias();
+    }, []);
+
+    useEffect(() => {
+        const fetchAulas = async () => {
+            const data = await getAulas();
+            //console.log("📡 Datos recibidos en getAulas:", data);
+            setAulas(data);
+        };
+        fetchAulas();
+    }, []);
+
+    useEffect(() => {
+        const fetchHorarios = async () => {
+            if (!idGrupoMateria) return;  
+            const data = await getAllHorario();
+            const horariosFiltrados = data.filter(h => Number(h.idGrupoMateria) === Number(idGrupoMateria));
+            setHorarios(horariosFiltrados);
+            // Obtener el nombre de la materia
+            const cargaMateria = cargaMaterias.find(cm => cm.idGrupoMateria === Number(idGrupoMateria));
+            if (cargaMateria) {
+                setMateriaNombre(cargaMateria.materia);
+            }
+        };
+        if (showModal) {
+            fetchHorarios();
+        }
+    }, [idGrupoMateria, showModal, cargaMaterias]);
 
     return (
-        <>
-            {/* Agregar horario */}
-            <div className={`modal fade ${showModalHorario ? 'show' : ''}`} id="modalAgregarHorario" tabIndex="-1" aria-labelledby="modalAgregarHorario" aria-hidden="true" style={{ display: `${showModalHorario ? 'block' : 'none'}` }}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Agregar horario</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModalHorario(false)}></button>
-                        </div>
-                        <div className="modal-body">
-                            <form>
-                                <div className="mb-3">
-                                    <label htmlFor="idGrupoMateria" className="form-label">Grupo materia</label>
-                                    <select className="form-select" id="idGrupoMateria" value={idGrupoMateria} onChange={(e) => setIdGrupoMateria(e.target.value)}>
-                                        <option value="">Seleccione un grupo materia</option>
-                                        {cargaMateriasList.map(cargaMateria => (
-                                            <option key={cargaMateria.idGrupoMateria} value={cargaMateria.idGrupoMateria}>{cargaMateria.grupo}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="idBloque" className="form-label">Bloque</label>
-                                    <select className="form-select" id="idBloque" value={idBloque} onChange={(e) => setIdBloque(e.target.value)}>
-                                        <option value="">Seleccione un bloque</option>
-                                        {bloques.map(bloque => (
-                                            <option key={bloque.idBloque} value={bloque.idBloque}>{bloque.nombre} ({bloque.horaInicio} - {bloque.horaFin})</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="dia" className="form-label">Día</label>
-                                    <select className="form-select" id="dia" value={dia} onChange={(e) => setDia(e.target.value)}>
-                                        <option value="">Seleccione un día</option>
-                                        {diasSemana.map((diaSemana, index) => (
-                                            <option key={index} value={diaSemana}>{diaSemana}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </form>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModalHorario(false)}>Cerrar</button>
-                            <button type="button" className="btn btn-primary" onClick={() => handleAddHorario()}>Guardar</button>
-                        </div>
+        <div className={`modal fade ${showModal ? "show" : ""}`} tabIndex="-1" style={{ display: showModal ? "block" : "none" }}>
+            <div className="modal-dialog modal-lg modal-dialog-centered">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Horarios de {materiaNombre}</h5>
+                        <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                    </div>
+                    <div className="table-responsive" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Bloque</th>
+                                    <th>Día</th>
+                                    <th>Hora Inicio - Fin</th>
+                                    <th>Aula</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {horarios.length > 0 ? (
+                                    horarios.map((horario) => {
+                                        const bloque = bloques.find(b => Number(b.idBloque) === Number(horario.idBloque));
+                                        const aula = aulas.find(a => Number(a.idAula) === Number(horario.idAula));
+                                        return (
+                                            <tr key={horario.idHorario}>
+                                                <td>{bloque ? bloque.nombre : "Desconocido"}</td>
+                                                <td>{horario.dia}</td>
+                                                <td>{bloque ? `${bloque.horaInicio} - ${bloque.horaFin}` : "N/A"}</td>
+                                                <td>{aula ? aula.nombre : "Desconocido"}</td>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4" className="text-center">No hay horarios disponibles</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cerrar</button>
                     </div>
                 </div>
             </div>
-            
-            {/* Editar horario */}
-            <div className={`modal fade ${showEditModalHorario ? 'show' : ''}`} id="modalEditarHorario" tabIndex="-1" aria-labelledby="modalEditarHorario" aria-hidden="true" style={{ display: `${showEditModalHorario ? 'block' : 'none'}` }}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Editar horario</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowEditModalHorario(false)}></button>
-                        </div>
-                        <div className="modal-body">
-                            <form>
-                                <div className="mb-3">
-                                    <label htmlFor="idGrupoMateria" className="form-label">Grupo materia</label>
-                                    <select className="form-select" id="idGrupoMateria" value={idGrupoMateria} onChange={(e) => setIdGrupoMateria(e.target.value)}>
-                                        <option value="">Seleccione un grupo materia</option>
-                                        {cargaMateriasList.map(cargaMateria => (
-                                            <option key={cargaMateria.idGrupoMateria} value={cargaMateria.idGrupoMateria}>{cargaMateria.grupo}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="idBloque" className="form-label">Bloque</label>
-                                    <select className="form-select" id="idBloque" value={idBloque} onChange={(e) => setIdBloque(e.target.value)}>
-                                        <option value="">Seleccione un bloque</option>
-                                        {bloques.map(bloque => (
-                                            <option key={bloque.idBloque} value={bloque.idBloque}>{bloque.nombre} ({bloque.horaInicio} - {bloque.horaFin})</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="dia" className="form-label">Día</label>
-                                    <select className="form-select" id="dia" value={dia} onChange={(e) => setDia(e.target.value)}>
-                                        <option value="">Seleccione un día</option>
-                                        {diasSemana.map((diaSemana, index) => (
-                                            <option key={index} value={diaSemana}>{diaSemana}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </form>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowEditModalHorario(false)}>Cerrar</button>
-                            <button type="button" className="btn btn-primary" onClick={() => handleEditHorario()}>Guardar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            {/* Eliminar horario */}
-            <div className={`modal fade ${showDeleteModalHorario ? 'show' : ''}`} id="modalEliminarHorario" tabIndex="-1" aria-labelledby="modalEliminarHorario" aria-hidden="true" style={{ display: `${showDeleteModalHorario ? 'block' : 'none'}` }}>
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Eliminar horario</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModalHorario(false)}></button>
-                        </div>
-                        <div className="modal-body">
-                            <p>¿Está seguro que desea eliminar este horario?</p>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowDeleteModalHorario(false)}>Cancelar</button>
-                            <button type="button" className="btn btn-danger" onClick={() => handleDeleteHorario()}>Eliminar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </>
+        </div>
     );
 };
 
-export default HorarioModales;
+export default VerHorarioModal;

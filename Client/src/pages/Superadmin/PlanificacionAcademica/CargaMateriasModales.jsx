@@ -42,14 +42,15 @@ export const CargaMateriaModales = ({
                 setProfesores(profesoresData);
                 setMapaCurriculares(mapaData);
                 setAulas(aulasData);
-                setBloques(bloquesData);
+                setBloques(bloquesData)
+                // console.log("Bloques cargados:", bloquesData); // 👀 Verifica que los bloques están cargando correctamente
             } catch (error) {
                 console.error("Error al cargar datos:", error);
             }
         };
         fetchData();
     }, []);
-
+    
     useEffect(() => {
         if (selectedCargaMateria) {
             setIdGrupo(selectedCargaMateria.idGrupo || "");
@@ -58,10 +59,31 @@ export const CargaMateriaModales = ({
             setIdAula(selectedCargaMateria.idAula || "");
             setTipo(selectedCargaMateria.tipo || "");
             setFecha(formatDateString(selectedCargaMateria.fecha));
-            setHorarios(selectedCargaMateria.horarios || []);
+    
+            // Transformar los horarios para incluir información del bloque
+            if (selectedCargaMateria.horarios && Array.isArray(selectedCargaMateria.horarios)) {
+                const horariosConBloques = selectedCargaMateria.horarios.map(horario => {
+                    const bloque = bloques.find(b => Number(b.idBloque) === Number(horario.idBloque));
+                    return {
+                        dia: horario.dia,
+                        idBloque: Number(horario.idBloque),
+                        nombreBloque: bloque ? bloque.nombre : "No disponible",
+                        horaInicio: bloque ? bloque.horaInicio : "No disponible",
+                        horaFin: bloque ? bloque.horaFin : "No disponible"
+                    };
+                });
+                setHorarios(horariosConBloques);
+            } else {
+                setHorarios([]);
+            }
         }
-    }, [selectedCargaMateria]);
-
+    }, [selectedCargaMateria, bloques]); // 👈 Asegura que se re-renderice cuando bloques cambie
+    
+    useEffect(() => {
+        // console.log("Horarios cargados en modal:", horarios);
+        // console.log("Bloques disponibles:", bloques);
+    }, [horarios, bloques]);
+    
     const formatDateString = (dateString) => dateString ? dateString.split("T")[0] : "";
 
     const agregarHorario = () => {
@@ -69,12 +91,22 @@ export const CargaMateriaModales = ({
             alert("Selecciona un día y un bloque válido.");
             return;
         }
-
-        setHorarios(prevHorarios => [
-            ...prevHorarios,
-            { dia: nuevoHorario.dia, idBloque: Number(nuevoHorario.idBloque) }
-        ]);
-
+    
+        const bloqueSeleccionado = bloques.find(b => b.idBloque === Number(nuevoHorario.idBloque));
+    
+        if (bloqueSeleccionado) {
+            setHorarios(prevHorarios => [
+                ...prevHorarios,
+                { 
+                    dia: nuevoHorario.dia, 
+                    idBloque: Number(nuevoHorario.idBloque),
+                    nombreBloque: bloqueSeleccionado.nombre,  // Asigna el nombre del bloque
+                    horaInicio: bloqueSeleccionado.horaInicio,  // Asigna hora de inicio
+                    horaFin: bloqueSeleccionado.horaFin         // Asigna hora de fin
+                }
+            ]);
+        }
+    
         setNuevoHorario({ dia: "", idBloque: "" });
     };
 
@@ -87,25 +119,14 @@ export const CargaMateriaModales = ({
         setShowEditModal(false);
         setShowDeleteModal(false);
         setNuevoHorario({ dia: "", idBloque: "" });
+        setHorarios([]); // Limpiar los horarios al cerrar el modal
     };
-
-    useEffect(() => {
-        console.log("Valores en el modal:", {
-            idGrupo,
-            idProfesor,
-            idMapaCurricular,
-            idAula,
-            tipo,
-            fecha,
-            horarios,
-        });
-    }, [showEditModal]);
 
     return (
         <div>
             {/* Modal para agregar carga de materias */}
             <div className={`modal fade ${showModal ? "show" : ""}`} style={{ display: showModal ? "block" : "none" }}>
-                <div className="modal-dialog modal-xl">
+                <div className="modal-dialog modal-dialog-left">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">Crear carga de materias</h5>
@@ -191,7 +212,9 @@ export const CargaMateriaModales = ({
                                                 </select>
                                             </div>
                                             <div className="col-md-4">
-                                                <select className="form-control" value={nuevoHorario.idBloque} onChange={(e) => setNuevoHorario({ ...nuevoHorario, idBloque: e.target.value })}>
+                                                <select className="form-control" 
+                                                    value={nuevoHorario.idBloque} 
+                                                    onChange={(e) => setNuevoHorario({ ...nuevoHorario, idBloque: Number(e.target.value) })}>
                                                     <option value="">Selecciona un bloque</option>
                                                     {bloques.map(bloque => (
                                                         <option key={bloque.idBloque} value={bloque.idBloque}>
@@ -204,14 +227,33 @@ export const CargaMateriaModales = ({
                                                 <button className="btn btn-primary" onClick={agregarHorario}>Agregar</button>
                                             </div>
                                         </div>
-                                        <ul>
-                                            {horarios.map((horario, index) => (
-                                                <li key={index}>
-                                                    {horario.dia} - {bloques.find(bloque => bloque.idBloque === horario.idBloque)?.nombre}
-                                                    <button className="btn btn-danger" onClick={() => eliminarHorario(index)}>Eliminar</button>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <div className="table-responsive" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                            <table className="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Día</th>
+                                                        <th>Bloque</th>
+                                                        <th>Modulo</th>
+                                                        <th>Eliminar</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {horarios.map((horario, index) => {
+                                                        const bloque = bloques.find(b => b.idBloque === Number(horario.idBloque));
+                                                        return (
+                                                            <tr key={index}>
+                                                                <td>{horario.dia}</td>
+                                                                <td>{bloque ? bloque.nombre : "No disponible"}</td>
+                                                                <td>{bloque ? `${bloque.horaInicio} - ${bloque.horaFin}` : "No disponible"}</td>
+                                                                <td>
+                                                                    <button className="btn btn-danger" onClick={() => eliminarHorario(index)}>Eliminar</button>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -227,7 +269,7 @@ export const CargaMateriaModales = ({
             {/* Modal para editar carga de materias */}
             {showEditModal && (
             <div className={`modal fade ${showEditModal ? "show" : ""}`} style={{ display: showEditModal ? "block" : "none" }}>
-                <div className="modal-dialog modal-xl">
+                <div className="modal-dialog modal-dialog-left">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title">Editar carga de materias</h5>
@@ -313,7 +355,9 @@ export const CargaMateriaModales = ({
                                                 </select>
                                             </div>
                                             <div className="col-md-4">
-                                                <select className="form-control" value={nuevoHorario.idBloque} onChange={(e) => setNuevoHorario({ ...nuevoHorario, idBloque: e.target.value })}>
+                                                <select className="form-control" 
+                                                    value={nuevoHorario.idBloque} 
+                                                    onChange={(e) => setNuevoHorario({ ...nuevoHorario, idBloque: Number(e.target.value) })}>
                                                     <option value="">Selecciona un bloque</option>
                                                     {bloques.map(bloque => (
                                                         <option key={bloque.idBloque} value={bloque.idBloque}>
@@ -326,7 +370,7 @@ export const CargaMateriaModales = ({
                                                 <button className="btn btn-primary" onClick={agregarHorario}>Agregar</button>
                                             </div>
                                         </div>
-                                        <div className="table-responsive">
+                                        <div className="table-responsive" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
@@ -338,12 +382,12 @@ export const CargaMateriaModales = ({
                                                 </thead>
                                                 <tbody>
                                                     {horarios.map((horario, index) => {
-                                                        const bloque = bloques.find(bloque => bloque.idBloque === horario.idBloque);
+                                                        const bloque = bloques.find(b => b.idBloque === Number(horario.idBloque));
                                                         return (
                                                             <tr key={index}>
                                                                 <td>{horario.dia}</td>
-                                                                <td>{bloque?.nombre}</td>
-                                                                <td>{bloque ? `${bloque.horaInicio} - ${bloque.horaFin}` : ''}</td>
+                                                                <td>{bloque ? bloque.nombre : "No disponible"}</td>
+                                                                <td>{bloque ? `${bloque.horaInicio} - ${bloque.horaFin}` : "No disponible"}</td>
                                                                 <td>
                                                                     <button className="btn btn-danger" onClick={() => eliminarHorario(index)}>Eliminar</button>
                                                                 </td>
@@ -352,6 +396,7 @@ export const CargaMateriaModales = ({
                                                     })}
                                                 </tbody>
                                             </table>
+                                            <h6>Nota: Agregar Nuevos Horarios</h6>
                                         </div>
                                     </div>
                                 </div>

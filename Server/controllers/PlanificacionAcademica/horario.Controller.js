@@ -5,14 +5,17 @@ export const getHorario = async (req, res) => {
   try {
     const query = `
       SELECT h.*, 
-        b.nombre AS turno, 
-        b.horaInicio, 
-        b.horaFin
+             b.nombre AS turno, 
+             b.horaInicio, 
+             b.horaFin, 
+             gm.idAula 
       FROM horario AS h
       INNER JOIN grupomateria AS gm ON gm.idGrupoMateria = h.idGrupoMateria
-      INNER JOIN bloque AS b ON b.idBloque = h.idBloque 
+      INNER JOIN bloque AS b ON b.idBloque = h.idBloque;
     `;
+
     const [rows] = await db.query(query);
+    
     if (rows.length > 0) {
       res.json({ message: "Horario obtenido correctamente", data: rows });
     } else {
@@ -23,6 +26,7 @@ export const getHorario = async (req, res) => {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+
 
 // Crear un horario
 export const createHorario = async (req, res) => {
