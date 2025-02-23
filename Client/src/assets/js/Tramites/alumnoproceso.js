@@ -1,3 +1,4 @@
+//Act. 
 import Swal from 'sweetalert2';
 import { getAlumnoProcesos, createAlumnoProceso, updateAlumnoProceso, deleteAlumnoProceso }
  from '../../../api/Tramites/alumnoproceso.api.js';

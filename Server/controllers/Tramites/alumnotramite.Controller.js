@@ -1,5 +1,5 @@
 import { db } from "../../db/connection.js"; 
-
+//Act. 
 export const getAlumnoTramitetodos = async (req, res) => {
   try {
     const query = `
