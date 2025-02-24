@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'; //Act. 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getAlumnopatodos } from '../../../assets/js/Parametrizacion/alumnopa.js';
 import { getPeriodo } from '../../../assets/js/PlanificacionAcademica/periodo.js';

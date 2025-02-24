@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getGrupo, addGrupo, updateGrupoFunc, deleteGrupoFunc } from '../../../assets/js/PlanificacionAcademica/grupo.js';
 import { getPeriodo } from '../../../assets/js/PlanificacionAcademica/periodo.js';
 import { getProgramaAcademico } from '../../../assets/js/PlanificacionAcademica/programa_academico.js';
-import { getPersona } from '../../../assets/js/Nucleo/persona.js';
+import { getProfesor } from '../../../assets/js/Nucleo/profesor.js';
 import GrupoModales from './GrupoModales.jsx';
 
 function Grupo() {
@@ -27,15 +27,7 @@ function Grupo() {
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
 
   const fetchGrupo = () => {
-    getGrupo((data) => {
-      if (data) {
-        setGrupo(data);
-        console.log("Lista actualizada:", data);
-      } else {
-        setGrupo([]);
-        console.log("No se recibieron datos.");
-      }
-    });
+    getGrupo(setGrupo); // Pasar setGrupo a getGrupo
   };
   const fetchPeriodo = () => {
     getPeriodo((data) => {
@@ -61,7 +53,7 @@ function Grupo() {
   };
   
   const fetchTutor = () => { 
-    getPersona((data) => {
+    getProfesor((data) => {
       if (data) {
         setTutor(data);
         console.log("Tutores actualizados:", data);
@@ -148,7 +140,7 @@ function Grupo() {
               filteredGrupoList.map((grupo) => (
                 <tr key={grupo.idGrupo}>
                   <td>{grupo.periodo}</td>
-                  <td>{ programaAcademico.find(p => p.idProgramaAcademico === grupo.idProgramaAcademico)?.nombre || "Desconocido" }</td>
+                  <td>{ grupo.programa_academico || "Desconocido" }</td>
                   <td>{grupo.tutor}</td>
                   <td>{grupo.nombre}</td>
                   <td>{grupo.cuatrimestre}</td>

@@ -1,5 +1,5 @@
 import { db } from "../../db/connection.js";
-
+//Act. 
 export const getPersonatodos = async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM persona");

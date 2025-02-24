@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getProgramaacademicos } from "../../../api/PlanificacionAcademica/programa_academico.api.js";
 import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js";
-import { getPersonas } from "../../../api/Nucleo/persona.api.js";
+import { getProfesores } from "../../../api/Nucleo/profesor.api.js";
 
 const GrupoModales = ({
   idPeriodo, setIdPeriodo,
@@ -19,15 +19,12 @@ const GrupoModales = ({
 }) => {
   const [programaAcademicoList, setProgramaAcademicoList] = useState([]);
   const [periodoList, setPeriodoList] = useState([]);
-  const [personaList, setPersonaList] = useState([]);
+  const [profesorList, setProfesorList] = useState([]);
 
   useEffect(() => {
     getProgramaacademicos()
-      .then(response => {
-        console.log("Datos de programas académicos:", response.data);
-        setProgramaAcademicoList(response.data);
-      })
-      .catch(error => console.error("Error al obtener los PA:", error));
+      .then(data => setProgramaAcademicoList(data))
+      .catch(error => console.error("Error al obtener los niveles de estudio:", error));
   }, []);
 
   useEffect(() => {
@@ -37,9 +34,9 @@ const GrupoModales = ({
   }, []);
 
   useEffect(() => {
-    getPersonas()
-      .then(data => setPersonaList(data))
-      .catch(error => console.error("Error al obtener las personas:", error));
+    getProfesores()
+      .then(data => setProfesorList(data))
+      .catch(error => console.error("Error al obtener los profesores:", error));
   }, []);
 
   return (
@@ -64,23 +61,26 @@ const GrupoModales = ({
                 </select>
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text">Programa Académico:</span>
-                <select className="form-select" value={idProgramaAcademico} onChange={(event) => setIdProgramaAcademico(event.target.value)}>
-                  <option value="">Selecciona un programa académico</option>
-                  {Array.isArray(programaAcademicoList) && programaAcademicoList.map((programa) => (
-                    <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>
-                      {programa.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <span className="input-group-text">Programa Académico:</span>
+                  <select className="form-select" value={idProgramaAcademico} onChange={(event) => {
+                    console.log("Programa Académico seleccionado:", event.target.value);
+                    setIdProgramaAcademico(event.target.value);
+                  }}>
+                    <option value="">Selecciona un Programa Académico</option>
+                    {programaAcademicoList && programaAcademicoList.map((programaAcademico) => (
+                      <option key={programaAcademico.idProgramaAcademico} value={programaAcademico.idProgramaAcademico}>
+                        {programaAcademico.nombreOficial}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Tutor:</span>
                 <select className="form-select" value={idTutor} onChange={(event) => setIdTutor(event.target.value)}>
                   <option value="">Selecciona un tutor</option>
-                  {personaList.map((persona) => (
-                    <option key={persona.idPersona} value={persona.idPersona}>
-                      {persona.nombre} {persona.paterno} {persona.materno}
+                  {profesorList.map((profesor) => (
+                    <option key={profesor.idProfesor} value={profesor.idProfesor}>
+                      {profesor.nombre} {profesor.paterno} {profesor.materno}
                     </option>
                   ))}
                 </select>
@@ -151,9 +151,9 @@ const GrupoModales = ({
                 <span className="input-group-text">Tutor:</span>
                 <select className="form-select" value={idTutor} onChange={(event) => setIdTutor(event.target.value)}>
                   <option value="">Selecciona un tutor</option>
-                  {personaList.map((persona) => (
-                    <option key={persona.idPersona} value={persona.idPersona}>
-                      {persona.nombre} {persona.paterno} {persona.materno}
+                  {profesorList.map((profesor) => (
+                    <option key={profesor.idProfesor} value={profesor.idProfesor}>
+                      {profesor.nombre} {profesor.paterno} {profesor.materno}
                     </option>
                   ))}
                 </select>

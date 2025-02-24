@@ -16,12 +16,14 @@ export const getCargaMaterias = async () => {
 
 // Crear una carga de materias
 export const createCargaMaterias = async (idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios) => {
-  //console.log('Datos recibidos en el backend:', idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios);
   try {
     const response = await axios.post(`${BASE_URL}/cargamaterias/create`, { idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios });
     return response.data;
   } catch (error) {
     console.error('Error al crear la carga de materias:', error);
+    if (error.response && error.response.data && error.response.data.error) {
+      throw new Error(error.response.data.error);
+    }
     throw error;
   }
 };
@@ -34,6 +36,9 @@ export const updateCargaMaterias = async (idGrupoMateria, idGrupo, idProfesor, i
     return response.data;
   } catch (error) {
     console.error('Error al actualizar la carga de materias:', error);
+    if (error.response && error.response.data && error.response.data.error) {
+      throw new Error(error.response.data.error);
+    }
     throw error;
   }
 };

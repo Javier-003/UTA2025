@@ -1,5 +1,5 @@
 import { db } from "../../db/connection.js";
-
+//Act. 
 export const getTramiteProcesotodos = async (req, res) => {
   try {
     const query = `

@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2'; //Act. 
 
 import { createPersona, deletePersona, getPersonas, updatePersona } 
 from '../../../api/Nucleo/persona.api.js'; 

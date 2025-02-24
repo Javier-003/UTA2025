@@ -1,5 +1,5 @@
-import { db } from "../../db/connection.js"; 
-
+import { db } from "../../db/conexion.js"; 
+//Act. 
 export const getAlumnoTramitetodos = async (req, res) => {
   try {
     const query = `
@@ -37,37 +37,74 @@ export const getAlumnoTramitetodos = async (req, res) => {
 
 // 🔹 CREAR UN NUEVO TRÁMITE PARA UN ALUMNO
 export const createAlumnoTramite = async (req, res) => {
+  const connection = await db.getConnection(); // 🔹 Obtener conexión del pool
   try {
     const { idTramite, idPersona, idPeriodo, fecha, estatus } = req.body;
-    
+
     if (!idTramite || !idPersona || !idPeriodo || !fecha || !estatus) {
       return res.status(400).json({ message: "Todos los campos son requeridos" });
     }
 
-    // Buscar idAlumno e idAlumnoPA automáticamente
-    const [result] = await db.query(
+    await connection.beginTransaction(); // 🔹 Iniciar transacción
+
+    // Obtener idAlumnoPA asociado a la persona (Se inserta alumnopa si existe)
+    const [result] = await connection.query(
       `SELECT a.idAlumno, pa.idAlumnoPA 
        FROM persona p
        LEFT JOIN alumno a ON p.idPersona = a.idAlumno
        LEFT JOIN alumnopa pa ON a.idAlumno = pa.idAlumno
-       WHERE p.idPersona = ? LIMIT 1;`, 
+       WHERE p.idPersona = ? LIMIT 1;`,
       [idPersona]
     );
 
     const idAlumnoPA = result.length > 0 ? result[0].idAlumnoPA : null;
 
-    // Insertar trámite con idAlumnoPA detectado
-    const [insert] = await db.query(
+    // Insertar nuevo trámite del alumno
+    const [insert] = await connection.query(
       `INSERT INTO alumnotramite (idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus) 
        VALUES (?, ?, ?, ?, ?, ?)`,
       [idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus]
     );
 
-    res.status(201).json({ message: "Alumno Trámite creado correctamente", idAlumnoTramite: insert.insertId });
+    const idAlumnoTramite = insert.insertId;
+
+    // Obtener las actividades del trámite desde tramiteproceso
+    const [tramiteProceso] = await connection.query(
+      `SELECT idTramiteProceso, idActividad, orden 
+       FROM tramiteproceso 
+       WHERE idTramite = ? 
+       ORDER BY orden ASC`,
+      [idTramite]
+    );
+
+    if (tramiteProceso.length > 0) {
+      // Preparar inserciones masivas para alumnoproceso
+      const insertValues = tramiteProceso.map(({ idTramiteProceso, idActividad, orden }) => [
+        idAlumnoTramite, idTramiteProceso, idActividad, orden, "En proceso", null
+      ]);
+
+      // Insertar todas las actividades en alumnoproceso
+      await connection.query(
+        `INSERT INTO alumnoproceso (idAlumnoTramite, idTramiteProceso, idActividad, orden, estatus, observacion) 
+         VALUES ?`,
+        [insertValues]
+      );
+    }
+
+    await connection.commit(); // 🔹 Confirmar la transacción
+
+    res.status(201).json({ 
+      message: "Alumno Trámite y su proceso creado correctamente", 
+      idAlumnoTramite 
+    });
   } catch (error) {
+    await connection.rollback(); // 🔹 Revertir si hay error
     res.status(500).json({ message: "Algo salió mal", error: error.message });
+  } finally {
+    connection.release(); // 🔹 Liberar conexión al pool
   }
 };
+
 
 
 // 🔹 ACTUALIZAR UN TRÁMITE EXISTENTE

@@ -4,10 +4,21 @@
   margin: 0;
 }
 
+<<<<<<< HEAD
 /* App.css */
 .data-table {
   border-radius: 15px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+=======
+.modal-dialog-left {
+  position: fixed;
+  left: 0;
+  margin: 10;
+}
+
+.table-container {
+  padding: 0 150px; /* Ajusta el espacio a 20px */
+>>>>>>> ceabc5de67a4f1ff1fa025e22ab3fd06884bccc3
 }
 

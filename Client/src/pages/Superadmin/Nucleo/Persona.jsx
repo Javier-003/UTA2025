@@ -1,4 +1,4 @@
-import '../../../assets/css/App.css';
+import '../../../assets/css/App.css'; //Act. 
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataTable from 'react-data-table-component';

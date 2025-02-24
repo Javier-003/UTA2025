@@ -1,4 +1,4 @@
-import '../../../assets/css/App.css';
+import '../../../assets/css/App.css'; //Act. 
 import { useNavigate } from 'react-router-dom'; //Botón
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';

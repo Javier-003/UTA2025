@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react' //Act. 
 import { getTramites } from "../../../api/Parametrizacion/tramite.api.js";
 import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js";
 import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";

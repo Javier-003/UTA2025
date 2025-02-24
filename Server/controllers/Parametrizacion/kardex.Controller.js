@@ -8,7 +8,7 @@ export const getKardex = async (req, res) => {
         g.nombre AS grupo, 
         mp.materia AS mapa, 
         p.nombre, p.paterno AS paterno, p.materno AS materno
-      FROM uta2025_20250217.kardex AS k
+      FROM kardex AS k
       INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
       INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
       INNER JOIN persona AS p ON p.idPersona = a.idAlumno

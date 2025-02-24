@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'; //Act. 
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
