@@ -2,11 +2,10 @@ import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataTable from 'react-data-table-component';
-import { getMateriajs, addMateriajs, updateMateriajs, deleteMateriajs } 
-from '../../../assets/js/Parametrizacion/materiaunidad.js';
+import { getMateriajs, addMateriajs, updateMateriajs, deleteMateriajs } from '../../../assets/js/Parametrizacion/materiaunidad.js';
 import { MateriaUnidadModales } from '../Parametrizacion/MateriaUnidadModales.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import {  faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function MateriaUnidad() {
   const [materiaUList, setmateriaUList] = useState([]);
@@ -15,6 +14,7 @@ function MateriaUnidad() {
   const [cuatrimestre, setCuatrimestre] = useState("");
   const [unidad, setUnidad] = useState("");
   const [nombre, setNombre] = useState("");
+  const [nombreOficial, setNombreOficial] = useState("");
   const [idMateriaUnidad, setIdMateriaUnidad] = useState("");
   const [idMapaCurricular, setIdMapaCurricular] = useState("");
 
@@ -23,30 +23,34 @@ function MateriaUnidad() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedMateriaU, setSelectedMateriaU] = useState(null);
-  const [selectedPrograma, setSelectedPrograma] = useState("");
-  const [selectedUnidad, setSelectedUnidad] = useState("");
 
   useEffect(() => { getMateriajs(setmateriaUList); }, []);
 
   const handleAdd = () => {
-    addMateriajs(
-      idMapaCurricular, unidad, nombre, setShowModal, () => getMateriajs(setmateriaUList)
-    );
+    addMateriajs(idMapaCurricular, unidad, nombre, nombreOficial, () => {
+      setShowModal(false);
+      getMateriajs(setmateriaUList);
+    });
   };
 
   const handleUpdate = () => {
-    updateMateriajs(selectedMateriaU.idMateriaUnidad, idMapaCurricular, unidad, nombre, setShowEditModal, () => getMateriajs(setmateriaUList));
+    updateMateriajs(selectedMateriaU.idMateriaUnidad, idMapaCurricular, unidad, nombre, nombreOficial, () => {
+      setShowEditModal(false);
+      getMateriajs(setmateriaUList);
+    });
   };
 
   const handleDelete = () => {
-    deleteMateriajs(selectedMateriaU.idMateriaUnidad, setShowDeleteModal, () => getMateriajs(setmateriaUList));
+    deleteMateriajs(selectedMateriaU.idMateriaUnidad, () => {
+      setShowDeleteModal(false);
+      getMateriajs(setmateriaUList);
+    });
   };
 
   const columns = [
-    { name: 'Programa Educativo', selector: row => row.programaEducativo, sortable: true },
-    { name: 'Materia', selector: row => row.materia, sortable: true },
-    { name: 'Cuatrimestre', selector: row => row.cuatrimestre, sortable: true },
-    { name: 'Unidad', selector: row => row.unidad, sortable: true },
+    { name: 'Materia', selector: row => row.materia, sortable: true , width: '250px'},
+    { name: 'Cuatrimestre', selector: row => row.cuatrimestre, sortable: true, width: '100px' },
+    { name: 'Unidades', selector: row => row.unidad, sortable: true ,width: '100px' },
     { name: 'Nombre', selector: row => row.nombre, sortable: true },
     { 
       name: 'Acciones', 
@@ -60,11 +64,13 @@ function MateriaUnidad() {
               setCuatrimestre(row.cuatrimestre);
               setUnidad(row.unidad);
               setNombre(row.nombre);
+              setNombreOficial(row.nombreOficial);
               setIdMapaCurricular(row.idMapaCurricular);
               setIdMateriaUnidad(row.idMateriaUnidad);
           }}>
             <FontAwesomeIcon icon={faEdit} />
           </button>
+
           <button className="btn btn-danger" onClick={() => {  
               setShowDeleteModal(true); 
               setSelectedMateriaU(row);
@@ -72,97 +78,97 @@ function MateriaUnidad() {
             <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
-      )
+      ),
+      width: '100px'
     }
   ];
 
   const filteredData = materiaUList.filter((item) =>
-    selectedPrograma && selectedUnidad &&
-    item.programaEducativo === selectedPrograma &&
-    item.unidad.toString() === selectedUnidad &&
-    (item.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
+    (!programaEducativo || item.nombreOficial === programaEducativo) &&
+    (!cuatrimestre || item.cuatrimestre.toString() === cuatrimestre.toString()) &&
+    (item.nombreOficial.toLowerCase().includes(searchText.toLowerCase()) ||
     item.unidad.toString().includes(searchText.toString()))
   );
 
   return (
     <div className="container mt-4">
-      <DataTable
-        title={
-          <div className="d-flex justify-content-between align-items-center w-100">
-            <button className='btn btn-success me-2' onClick={() => {
-                setProgramaEducativo("");
-                setMateria("");
-                setCuatrimestre("");
-                setUnidad("");
-                setNombre("");
-                setIdMateriaUnidad("");
-                setIdMapaCurricular("");
-                setSelectedMateriaU(null);
-                setShowModal(true);
-            }}>
-              <FontAwesomeIcon icon={faPlus} /> Registrar
-            </button>
-            <div>
-              <div className="d-flex mb-3">
-                <select className="form-select me-2" value={selectedPrograma} onChange={(e) => setSelectedPrograma(e.target.value)}>
-                  <option value="">Todos los Programas</option>
-                  {Array.from(new Set(materiaUList.map(item => item.programaEducativo))).map(programa => (
-                    <option key={programa} value={programa}>{programa}</option>
-                  ))}
-                </select>
-                <select className="form-select" value={selectedUnidad} onChange={(e) => setSelectedUnidad(e.target.value)}>
-                  <option value="">Todas las Unidades</option>
-                  {Array.from(new Set(materiaUList.map(item => item.unidad))).map(unidad => (
-                    <option key={unidad} value={unidad}>{unidad}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <h5 className="flex-grow-1 text-center">MATERIA UNIDAD</h5>
-            <input type="text" className="form-control ms-2 w-25" value={searchText}
-              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Materia Unidad"/>
-          </div>
-        }
-        columns={columns}
-        data={filteredData}
-        noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
-        paginationComponentOptions={{
-          rowsPerPageText: 'Filas por página',
-          rangeSeparatorText: 'de',
-          noRowsPerPage: true
-        }}
-        highlightOnHover
-        customStyles={{
-          headCells: {
-            style: { backgroundColor: '#f8f9fa' }
-          },
-          cells: {
-            style: { border: '1px solid #ddd' }
-          }
-        }}
-      />
+      <h5 className="text-center">MATERIA</h5>
+        <DataTable
+            title={
+                <div className="d-flex justify-content-between align-items-center w-100">
+                    <button className='btn btn-success me-2' onClick={() => {
+                        setProgramaEducativo("");
+                        setMateria("");
+                        setCuatrimestre("");
+                        setUnidad("");
+                        setNombre("");
+                        setNombreOficial("");
+                        setIdMateriaUnidad("");
+                        setIdMapaCurricular("");
+                        setSelectedMateriaU(null);
+                        setShowModal(true);
+                    }}>
+                       Registrar
+                    </button>
+                    
+                    <h5 className="mb-0">Programa Académico</h5>
+                    <div className="d-flex align-items-center ms-2">
+                        <select className="form-select" value={programaEducativo} onChange={(e) => setProgramaEducativo(e.target.value)}>
+                            <option value="">Selecciona un Programa Académico</option>
+                            {Array.from(new Set(materiaUList.map(item => item.nombreOficial))).map(nombreOficial => (
+                                <option key={nombreOficial} value={nombreOficial}>{nombreOficial}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <h5 className="mb-0">Cuatrimestre</h5>
+                    <div className="d-flex align-items-center ms-2">
+                        <select className="form-select" value={cuatrimestre} onChange={(e) => setCuatrimestre(e.target.value)}>
+                            <option value="">Selecciona un Cuatrimestre</option>
+                            {Array.from(new Set(materiaUList.map(item => item.cuatrimestre))).map(cuatrimestre => (
+                                <option key={cuatrimestre} value={cuatrimestre}>{cuatrimestre}</option>
+                            ))}
+                        </select>
+                    </div>                    
+                    <input type="text" className="form-control ms-2 w-25" value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Materia"/>
+                </div>
+            }
+            columns={columns}
+            data={filteredData}
+            noDataComponent="No hay registros para mostrar"
+            pagination
+            paginationPerPage={10}
+            paginationComponentOptions={{
+                rowsPerPageText: 'Filas por página',
+                rangeSeparatorText: 'de',
+                noRowsPerPage: true
+            }}
+            highlightOnHover
+            customStyles={{
+                headCells: {
+                    style: { backgroundColor: '#f8f9fa' }
+                },
+                cells: {
+                    style: { border: '1px solid #ddd' }
+                }
+            }}
+        />
 
-      <MateriaUnidadModales
-        programaEducativo={programaEducativo} setProgramaEducativo={setProgramaEducativo}
-        materia={materia} setMateria={setMateria}
-        cuatrimestre={cuatrimestre} setCuatrimestre={setCuatrimestre}
-        unidad={unidad} setUnidad={setUnidad}
-        nombre={nombre} setNombre={setNombre}
-        idMapaCurricular={idMapaCurricular} setIdMapaCurricular={setIdMapaCurricular}
-        idMateriaUnidad={idMateriaUnidad} setIdMateriaUnidad={setIdMateriaUnidad}
-
-        showModal={showModal} setShowModal={setShowModal}
-        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
-        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-
-        handleAdd={handleAdd} 
-        handleUpdate={handleUpdate} 
-        handleDelete={handleDelete}
-
-        selectedMateriaU={selectedMateriaU}/>
-
+        <MateriaUnidadModales
+            programaEducativo={programaEducativo} setProgramaEducativo={setProgramaEducativo}
+            materia={materia} setMateria={setMateria}
+            cuatrimestre={cuatrimestre} setCuatrimestre={setCuatrimestre}
+            unidad={unidad} setUnidad={setUnidad}
+            nombre={nombre} setNombre={setNombre}
+            nombreOficial={nombreOficial} setNombreOficial={setNombreOficial}
+            idMapaCurricular={idMapaCurricular} setIdMapaCurricular={setIdMapaCurricular}
+            idMateriaUnidad={idMateriaUnidad} setIdMateriaUnidad={setIdMateriaUnidad}
+            showModal={showModal} setShowModal={setShowModal}
+            showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+            showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
+            handleAdd={handleAdd} 
+            handleUpdate={handleUpdate} 
+            handleDelete={handleDelete}
+            selectedMateriaU={selectedMateriaU}/>
     </div>
   );
 }

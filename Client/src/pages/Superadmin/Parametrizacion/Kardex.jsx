@@ -14,7 +14,6 @@ function Kardex() {
   const [calificacionFinal, setCalificacionFinal] = useState("");
   const [tipo, setTipo] = useState("");
 
-  // FK
   const [nombre, setNombre] = useState("");
   const [mapa, setMapa] = useState("");
   const [grupo, setGrupo] = useState("");
@@ -24,7 +23,7 @@ function Kardex() {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [searchText, setSearchText] = useState(""); // Buscador 
+  const [searchText, setSearchText] = useState(""); 
 
   const [selectedKardex, setSelectedKardex] = useState(null);
 
@@ -133,7 +132,7 @@ function Kardex() {
                     <tr key={kardex.idKardex}>
                       <td>{kardex.idKardex}</td>
                       <td>{kardex.idAlumnoPA}</td>
-                      <td>{kardex.nombre}</td>
+                      <td>{kardex.nombre}{kardex.paterno}{kardex.materno}</td>
                       <td>{kardex.idMapaCurricular}</td>
                       <td>{kardex.mapa}</td>
                       <td>{kardex.idGrupo}</td>

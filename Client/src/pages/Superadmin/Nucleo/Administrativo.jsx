@@ -44,8 +44,6 @@ function Administrativo() {
   };
 
   const columns = [
-    { name: 'ID A', selector: row => row.idAdministrativo, sortable: true },
-    { name: 'ID P', selector: row => row.idPersona, sortable: true },
     { name: 'Nombre', selector: row => `${row.nombre} ${row.paterno} ${row.materno}`, sortable: true },
     { name: 'Departamento', selector: row => row.nombreDepartamento, sortable: true },
     { name: 'Puesto', selector: row => row.nombrePuesto, sortable: true },
@@ -89,7 +87,7 @@ function Administrativo() {
   const filteredData = administrativoList.filter(item =>
     item.clave.toLowerCase().includes(searchText.toLowerCase())
   );
-
+  const dataToDisplay = searchText ? filteredData : administrativoList.slice(-10);
   return (
     <div className="container mt-4">
       <DataTable
@@ -118,7 +116,7 @@ function Administrativo() {
           </div>
         }
         columns={columns}
-        data={filteredData}
+        data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
         pagination
         paginationPerPage={10}
