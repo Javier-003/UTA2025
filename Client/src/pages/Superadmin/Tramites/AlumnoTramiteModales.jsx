@@ -58,6 +58,7 @@ export const AlumnoTramiteModales = ({
                 </select>
               </div>
 
+                  {/*
                   <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
                 <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
@@ -69,6 +70,7 @@ export const AlumnoTramiteModales = ({
                   ))}
                 </select>
               </div>
+              */}
 
               <div className="input-group mb-3">
               <span className="input-group-text">Trámite:</span>

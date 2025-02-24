@@ -9,6 +9,7 @@ function Kardex() {
   const [kardexList, setkardexList] = useState([]);
   const [selectedAlumno, setselectedAlumno] = useState(""); // Filtro
 
+
   useEffect(() => {
     getKardexjs(setkardexList);
   }, []);
