@@ -6,7 +6,7 @@ import Select from 'react-select';
 
 export const MateriaUnidadModales = ({
   idMapaCurricular, setIdMapaCurricular,
-  unidad, setUnidad, 
+  unidad, setUnidad,
   nombre, setNombre,
   showModal, setShowModal,
   showEditModal, setShowEditModal,
@@ -73,8 +73,14 @@ export const MateriaUnidadModales = ({
                 />
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text">Unidad:</span>
-                <input type="text" className="form-control" value={unidad} onChange={(event) => setUnidad(event.target.value)} />
+                <span className="input-group-text">Unidades:</span>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  value={unidad} 
+                  onChange={(event) => setUnidad(event.target.value)} 
+                  placeholder="Ejemplo: 1,2,3,4,5"
+                />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre:</span>
@@ -108,8 +114,14 @@ export const MateriaUnidadModales = ({
                 </select>
               </div>
               <div className="input-group mb-3">
-                <span className="input-group-text">Unidad:</span>
-                <input type="text" className="form-control" value={unidad} onChange={(event) => setUnidad(event.target.value)} />
+                <span className="input-group-text">Unidades:</span>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  value={unidad} 
+                  onChange={(event) => setUnidad(event.target.value)} 
+                  placeholder="Ejemplo: 1,2,3,4,5"
+                />
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Nombre:</span>

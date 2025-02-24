@@ -81,6 +81,14 @@ function Usuario() {
           }}>
             <FontAwesomeIcon icon={faTrash} />
           </button>
+        </div>
+      )
+    },    
+    {
+      name: 'Agregar Rol y Eliminar',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+
           <button className="btn btn-success me-2" onClick={() => {
             setSelectedUsuario(row);
             setShowAddRoleModal(true);
@@ -101,7 +109,8 @@ function Usuario() {
   const filteredData = usuarioList.filter(item =>
     item.usuario.toLowerCase().includes(searchText.toLowerCase())
   );
-
+  const dataToDisplay = searchText ? filteredData : usuarioList.slice(-10);
+  
   return (
     <div className="container mt-4">
       <DataTable
@@ -127,7 +136,7 @@ function Usuario() {
           </div>
         }
         columns={columns}
-        data={filteredData}
+        data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
         pagination
         paginationPerPage={10}

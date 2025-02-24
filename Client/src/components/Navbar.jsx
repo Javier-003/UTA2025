@@ -39,31 +39,33 @@ function OffcanvasNavbar() {
 
               { to: "/Usuario", text: "Usuario", icon: <FaUserPlus /> },
               { to: "/Tramite", text: "Trámite", icon: <FaFileAlt /> },
+
               { to: "/Persona", text: "Persona", icon: <FaAddressCard /> },
-              
-              { to: "/Actividad", text: "Actividad", icon: <FaTasks /> },   
+              { to: "/Actividad", text: "Actividad", icon: <FaTasks /> },  
+
               { to: "/Alumno", text: "Alumno", icon: <FaGraduationCap /> },  
-              
               { to: "/TramiteProceso", text: "Trámite Proceso", icon: <FaEdit /> },  
 
               { to: "/Profesor", text: "Profesor", icon: <FaChalkboardTeacher /> },
-              
-              { to: "/OfertaAcademica", text: "Oferta Académica", icon: <FaUniversity /> } ,
-              { to: "/Administrativo", text: "Administrativo", icon: <FaUserTie /> },
-              { to: "/ProgramaAcademico", text: "Programa Académico", icon: <FaBook /> },
-              
-              { to: "/Departamento", text: "Departamento", icon: <FaBriefcase /> },
+              { to: "/NivelEstudio", text: "Nivel de Estudio", icon: <FaUniversity /> },
 
-              { to: "/MapaCurricular", text: "Mapa Curricular", icon: <FaMapSigns /> },
+              { to: "/Administrativo", text: "Administrativo", icon: <FaUserTie /> },
+              { to: "/OfertaAcademica", text: "Oferta Académica", icon: <FaUniversity /> } ,
+
+              { to: "/Departamento", text: "Departamento", icon: <FaBriefcase /> },
+              { to: "/ProgramaAcademico", text: "Programa Académico", icon: <FaBook /> },
+
               { to: "/Puesto", text: "Puesto", icon: <FaBriefcase /> },
-              
-              { to: "/MateriaUnidad", text: "Materia Unidad", icon: <FaClipboard />},
+              { to: "/MapaCurricular", text: "Mapa Curricular", icon: <FaMapSigns /> },
+
               { to: "/Edificio", text: "Edificio", icon: <FaRegBuilding /> },
-              { to: "/Bloque", text: "Bloque", icon: <FaLayerGroup /> },
+              { to: "/MateriaUnidad", text: "Materia Unidad", icon: <FaClipboard />},
+
               { to: "/Aula", text: "Aula", icon: <FaDoorOpen /> },
-              { to: "/Historial", text: "Historial", icon: <FaHistory /> } ,
+              { to: "/Bloque", text: "Bloque", icon: <FaLayerGroup /> },
               
-              { to: "/AsignarPA", text: "Asignar Programa Académico", icon: <FaTasks /> },
+              { to: "/AsignarPA", text: "AsignarPA", icon: <FaTasks /> },
+              { to: "/Historial", text: "Historial", icon: <FaHistory /> } ,
           ]},
 
           { label: "Planificación Academica", key: "Planificación Academica", icon: <FaUser />, links: [
@@ -72,7 +74,6 @@ function OffcanvasNavbar() {
             { to: "/Materias", text: "Carga de Materias", icon: <FaClipboardList /> },
             { to: "/AdicionProfesor", text: "Adición Profesor", icon: <FaUserPlus /> },
             { to: "/Evaluacion", text: "Evaluación", icon: <FaClipboardCheck /> },
-            { to: "/NivelEstudio", text: "Nivel de Estudio", icon: <FaUniversity /> },
           ]}, 
 
           { label: "Tramites", key: "Tramites", icon: <FaUser />, links: [

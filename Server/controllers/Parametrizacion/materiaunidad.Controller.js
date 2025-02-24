@@ -3,20 +3,56 @@ import { db } from "../../db/connection.js";
 export const getMateriaUnidadtodos = async (req, res) => {
   try {
     const query = `SELECT 
-    p.nombre AS programaEducativo,
-    mc.materia, 
-    mc.cuatrimestre, 
-    m.unidad, 
-    m.nombre,
-    m.*
+      p.nombreOficial,
+      mc.materia, 
+      mc.cuatrimestre, 
+      m.unidad, 
+      m.idMateriaUnidad, 
+      m.idMapaCurricular,
+      m.nombre 
     FROM uta2025_20250217.materiaunidad as m 
     INNER JOIN mapacurricular as mc on mc.idMapaCurricular = m.idMapaCurricular
     INNER JOIN programaacademico as p on p.idProgramaAcademico = mc.idProgramaAcademico;`;
+
     const [rows] = await db.query(query);
+
     if (rows.length > 0) {
-      res.json({ message: "Materia Unidad obtenidos correctamente", data: rows });
+      const result = rows.reduce((acc, row) => {
+        const { nombreOficial, materia, cuatrimestre, unidad, idMateriaUnidad, idMapaCurricular, nombre } = row;
+        
+        const key = `${nombreOficial}-${materia}-${cuatrimestre}`;
+
+        if (!acc[key]) {
+          acc[key] = {
+            nombreOficial,
+            materia,
+            cuatrimestre,
+            idMateriaUnidad,
+            idMapaCurricular,
+            nombre: [],
+            unidad: []
+          };
+        }
+
+        acc[key].unidad.push(unidad);
+        acc[key].nombre.push(nombre);
+
+        return acc;
+      }, {});
+
+      // Convertir arreglos de unidad y nombre a cadenas de números y nombres separadas por comas, respectivamente
+      const formattedResult = Object.values(result).map(item => ({
+        ...item,
+        unidad: item.unidad.join(', '),
+        nombre: item.nombre.join(', ')
+      }));
+
+      res.json({
+        message: "Materias y Unidades obtenidas correctamente",
+        data: formattedResult
+      });
     } else {
-      res.status(404).json({ message: "No se encontraron materias unidad" });
+      res.status(404).json({ message: "No se encontraron materias y unidades" });
     }
   } catch (error) {
     return res.status(500).json({ message: "Algo salió mal", error: error.message });

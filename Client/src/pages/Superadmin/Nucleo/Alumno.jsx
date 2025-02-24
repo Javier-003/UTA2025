@@ -40,8 +40,6 @@ function Alumno() {
   };
 
   const columns = [
-    { name: 'Id A', selector: row => row.idAlumno, sortable: true },
-    { name: 'Id P', selector: row => row.idPersona, sortable: true },
     { name: 'Nombre del Alumno', selector: row => `${row.nombre} ${row.paterno} ${row.materno}`, sortable: true },
     { name: 'Email', selector: row => row.email, sortable: true },
     { name: 'NSS', selector: row => row.nss, sortable: true },
@@ -78,6 +76,9 @@ function Alumno() {
     item.email.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  
+  const dataToDisplay = searchText ? filteredData : alumnoList.slice(-10);
+
   return (
     <div className="container mt-4">
       <DataTable
@@ -102,7 +103,7 @@ function Alumno() {
           </div>
         }
         columns={columns}
-        data={filteredData}
+        data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
         pagination
         paginationPerPage={10}

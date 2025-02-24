@@ -48,12 +48,8 @@ function Profesor() {
   };
 
   const columns = [
-    { name: 'Id', selector: row => row.idProfesor, sortable: true },
-    { name: 'Id P', selector: row => row.idPersona, sortable: true },
     { name: 'Persona', selector: row => `${row.nombre} ${row.paterno} ${row.materno}`, sortable: true },
-    { name: 'Id D', selector: row => row.idDepartamento, sortable: true },
     { name: 'Departamento', selector: row => row.nombreDepartamento, sortable: true },
-    { name: 'Id P', selector: row => row.idPuesto, sortable: true },
     { name: 'Puesto', selector: row => row.nombrePuesto, sortable: true },
     { name: 'Clave', selector: row => row.clave, sortable: true },
     { name: 'Perfil', selector: row => row.perfil, sortable: true },
@@ -102,6 +98,9 @@ function Profesor() {
     item.clave.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  
+  const dataToDisplay = searchText ? filteredData : profesorList.slice(-10);
+
   return (
     <div className="container mt-4">
       <DataTable
@@ -133,7 +132,7 @@ function Profesor() {
           </div>
         }
         columns={columns}
-        data={filteredData}
+        data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
         pagination
         paginationPerPage={10}
