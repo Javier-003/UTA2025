@@ -4,13 +4,14 @@ import { db } from "../../db/connection.js";
 export const getGruposTodos = async (req, res) => {
   try {
     const query = `SELECT g.*, p.periodo, 
-    CONCAT(COALESCE(pa.nombre, ''), ' ', COALESCE(pa.nombreOficial, '')) AS programa_academico,
+    pa.nombre AS programa_academico,
     CONCAT(tutor.nombre, ' ', tutor.paterno, ' ', tutor.materno) AS tutor
     FROM grupo g
     JOIN periodo p ON g.idPeriodo = p.idPeriodo
     JOIN programaacademico pa ON g.idProgramaAcademico = pa.idProgramaAcademico
     JOIN profesor ON g.idTutor = profesor.idProfesor
     JOIN persona tutor ON profesor.idProfesor = tutor.idPersona`;
+    
     const [rows] = await db.query(query);
     res.json(rows);
   } catch (error) {
@@ -18,6 +19,7 @@ export const getGruposTodos = async (req, res) => {
     res.status(500).json({ error: "Error al obtener los grupos" });
   }
 };
+
 
 // crear un grupo
 export const createGrupo = async (req, res) => {
