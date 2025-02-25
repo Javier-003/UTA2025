@@ -85,37 +85,29 @@ const MapaCurricular = () => {
   
   return (
     <div className="container">
-      <div className="">
-        <h5>Mapa Curricular</h5>
-        <div className="card-body">
+      <div className="card-body">
+        <div className="d-flex justify-content-between align-items-center">
           <button className="btn btn-success" onClick={() => setShowModal(true)}>
-            Agregar Mapa Curriculara
-          </button>
-
+            Agregar </button>
+            <h5>Mapa Curricular</h5>
+            <input  type="text" className="form-control ms-2 w-25" placeholder="Buscar por materia" value={searchTerm} onChange={handleSearchChange}/>
+          </div>
+          <div className="card-body">
           <div className="mt-4">
             <div className="d-flex mb-3">
               <select className="form-select me-2"
                 value={selectedCarrera} onChange={(e) => setSelectedCarrera(e.target.value)}>
                 <option value="">Todas las Carreras</option>
                 {Array.from(new Set(mapaCurricular.map((item) => item.carrera))).map((carrera) => (<option key={carrera} value={carrera}>
-                      {carrera}</option>
-                  )
-                )}
+                      {carrera}</option>))}
               </select>
-
               <select className="form-select"
                 value={selectedCuatrimestre} onChange={(e) => setSelectedCuatrimestre(e.target.value)} >
                 <option value="">Todos los Cuatrimestres</option>
                 {Array.from(new Set(mapaCurricular.map((item) => item.cuatrimestre))).map((cuatrimestre) => (
-                  <option key={cuatrimestre} value={cuatrimestre}>
-                    {cuatrimestre}
-                  </option>
-                ))}
+                  <option key={cuatrimestre} value={cuatrimestre}>{cuatrimestre}</option>))}
               </select>
             </div>
-
-            <input  type="text" className="form-control mb-1" placeholder="Buscar por materia" value={searchTerm} onChange={handleSearchChange}/>
-        
             <table className="table table-bordered">
               <thead>
                 <tr>
@@ -137,45 +129,40 @@ const MapaCurricular = () => {
                 </tr>
               </thead>
               <tbody>
-  {selectedCarrera && selectedCuatrimestre && filteredMapaCurricular.length > 0 ? (
-    filteredMapaCurricular.map((mapa) => (
-      <tr key={mapa.idMapaCurricular}>
-        <td>{mapa.carrera}</td>
-        <td>{mapa.ciclo}</td>
-        <td>{mapa.cuatrimestre}</td>
-        <td>{mapa.materia}</td>
-        <td>{mapa.clave}</td>
-        <td>{mapa.horasSemana}</td>
-        <td>{mapa.horasTeoricas}</td>
-        <td>{mapa.horasPracticas}</td>
-        <td>{mapa.horasTotal}</td>
-        <td>{mapa.creditos}</td>
-        <td>{mapa.modalidad}</td>
-        <td>{mapa.espacio}</td>
-        <td>{mapa.noUnidad}</td>
-        <td>
-          <button className="btn btn-warning me-2" onClick={() => handleEditClick(mapa)}>
-            Editar
-          </button>
-        </td>
-        <td>
-          <button className="btn btn-danger" onClick={() => handleDeleteClick(mapa)}>
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="15">Seleccione una carrera y un cuatrimestre para ver los registros</td>
-    </tr>
-  )}
-</tbody>
-
-            </table>
-          </div>
-        </div>
-      </div>
+                {selectedCarrera && selectedCuatrimestre && filteredMapaCurricular.length > 0 ? (
+                   filteredMapaCurricular.map((mapa) => (
+                   <tr key={mapa.idMapaCurricular}>
+                   <td>{mapa.carrera}</td>
+                   <td>{mapa.ciclo}</td>
+                   <td>{mapa.cuatrimestre}</td>
+                   <td>{mapa.materia}</td>
+                   <td>{mapa.clave}</td>
+                   <td>{mapa.horasSemana}</td>
+                   <td>{mapa.horasTeoricas}</td>
+                   <td>{mapa.horasPracticas}</td>
+                   <td>{mapa.horasTotal}</td>
+                   <td>{mapa.creditos}</td>
+                   <td>{mapa.modalidad}</td>
+                   <td>{mapa.espacio}</td>
+                   <td>{mapa.noUnidad}</td>
+                   <td>
+                    <button className="btn btn-warning me-2" onClick={() => handleEditClick(mapa)}>Editar</button>
+                   </td>
+                   <td>
+                    <button className="btn btn-danger" onClick={() => handleDeleteClick(mapa)}>Eliminar</button>
+                   </td>
+                  </tr>
+                ))
+              ) : (
+            <tr>
+              <td colSpan="15">Seleccione una carrera y un cuatrimestre para ver los registros</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
       <MapaCurricularModales
       idProgramaAcademico={idProgramaAcademico} setIdProgramaAcademico={setIdProgramaAcademico} 

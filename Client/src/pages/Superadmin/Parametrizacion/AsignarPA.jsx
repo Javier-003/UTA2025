@@ -63,8 +63,8 @@ function Alumnopa() {
 
   return (
     <div className="container">
-      <h5>LISTADO DE ALUMNOS EN PROGRAMAS</h5>
       <div className="card-body">
+        <div className="d-flex justify-content-between align-items-center">
         <button className='btn btn-success' onClick={() => {
           setIdAlumno("");
           setNombre("");
@@ -80,37 +80,30 @@ function Alumnopa() {
           setCarrera("");
           setSelectedAlumnopa(null);
           setShowModal(true);
-        }}>Registrar</button>
+          }}>Registrar</button>
+          <h5 className="text-center flex-grow-1">LISTADO DE ALUMNOS EN PROGRAMAS</h5>
+          <input type="text" className="form-control ms-2 w-25"  value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por nombre" />
+      </div>
+
         <div className="mt-4">
-        
-        <div className="d-flex mb-3">
-     
-              <select className="form-select me-2" value={selectedCarrera} onChange={(e) => setSelectedCarrera(e.target.value)}>
-                <option value="">Todos las Carrera</option>
-                {Array.from(new Set(alumnopaList.map(item => item.carrera))).map(carrera => (
-                  <option key={carrera} value={carrera}>{carrera}</option>
-                ))}
-              </select>
-
-              <select className="form-select" value={selectedEstatus} onChange={(e) => setSelectedEstatus(e.target.value)}>
-                <option value="">Todos los Estatus</option>
-                {Array.from(new Set(alumnopaList.map(item => item.estatus))).map(estatus => (
-                  <option key={estatus} value={estatus}>{estatus}</option>
-                ))}
-              </select>
-              
+          <div className="d-flex mb-3">
+            <select className="form-select me-2" value={selectedCarrera} onChange={(e) => setSelectedCarrera(e.target.value)}>
+              <option value="">Todos las Carrera</option>
+              {Array.from(new Set(alumnopaList.map(item => item.carrera))).map(carrera => (
+                <option key={carrera} value={carrera}>{carrera}</option>))}
+            </select>
+            <select className="form-select" value={selectedEstatus} onChange={(e) => setSelectedEstatus(e.target.value)}>
+              <option value="">Todos los Estatus</option>
+              {Array.from(new Set(alumnopaList.map(item => item.estatus))).map(estatus => (
+                <option key={estatus} value={estatus}>{estatus}</option>))}
+            </select>
           </div>
-          <input  type="text"  className="form-control mb-1"  value={searchText} onChange={(e) => setSearchText(e.target.value)}  placeholder="Buscar por nombre" />
-
+  
           <table className="table table-bordered">
             <thead>
               <tr>
-                <th>idAlumnoPA</th>
-                <th>idAlumno</th>
                 <th>Nombre</th>
-                <th>idProgramaAcademico</th>
                 <th>Programa</th>
-                <th>idPeriodo</th>
                 <th>Periodo</th>
                 <th>Matrícula</th>
                 <th>Estatus</th>
@@ -124,12 +117,8 @@ function Alumnopa() {
               {selectedCarrera && selectedEstatus && filteredData.length > 0 ? (
                 filteredData.map((alumnopa) => (
                   <tr key={alumnopa.idAlumnoPA}>
-                    <td>{alumnopa.idAlumnoPA}</td>
-                    <td>{alumnopa.idAlumno}</td>
-                    <td>{alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}  </td>
-                    <td>{alumnopa.idProgramaAcademico}</td>
+                    <td>{alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}</td>
                     <td>{alumnopa.carrera}</td>
-                    <td>{alumnopa.idPeriodo}</td>
                     <td>{alumnopa.periodo}</td>
                     <td>{alumnopa.matricula}</td>
                     <td>{alumnopa.estatus}</td>
@@ -137,7 +126,7 @@ function Alumnopa() {
                     <td>{formatDateString(alumnopa.hasta)}</td>
                     <td>
                       <button className="btn btn-warning" onClick={() => {
-                        setShowEditModal(true); 
+                        setShowEditModal(true);
                         setSelectedAlumnopa(alumnopa);
                         setIdAlumno(alumnopa.idAlumno);
                         setIdProgramaAcademico(alumnopa.idProgramaAcademico);
@@ -150,6 +139,7 @@ function Alumnopa() {
                         setPeriodo(alumnopa.periodo);
                         setCarrera(alumnopa.programa);
                       }}>Editar</button>
+  
                     </td>
                     <td>
                       <button className="btn btn-danger" onClick={() => {

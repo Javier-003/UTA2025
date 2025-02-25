@@ -28,7 +28,6 @@ function Bitacora() {
   );
 
   const columns = [
-    { name: 'ID BITÁCORA', selector: row => row.idbitacora, sortable: true },
     { name: 'NOMBRE DE USUARIO', selector: row => row.nombreUsuario, sortable: true },
     { name: 'MOVIMIENTO', selector: row => row.movimiento, sortable: true },
     { name: 'ACCIÓN', selector: row => row.accion, sortable: true },

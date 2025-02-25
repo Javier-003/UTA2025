@@ -50,49 +50,38 @@ function TramiteProceso() {
 
   return (
     <div className="container">
-      <h5>LISTADO DE TRÁMITE PROCESO</h5>
       <div className="card-body">
-
-        {/* Filtros */}
+        <div className="d-flex justify-content-between align-items-center">
+          <button className='btn btn-success' onClick={() => {
+            setIdActividad("");
+            setNombreActividad("");
+            setobjeto("");
+            setorden("");
+            setSelectedTramiteProceso(null);
+            setShowModal(true);
+            }}>{selectedTramite ? `Registrar ${NombreTramite}` : "Registrar"}
+          </button>
+          <h5>LISTADO DE TRÁMITE PROCESO</h5>
+          <input type="text"className="form-control ms-2 w-25"value={searchText} onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Actividad" />
+        </div>
+        <br/>
         <div className="d-flex mb-3">
-          <select
-            className="form-select me-2"
-            value={selectedTramite}
-            onChange={(e) => {
-              const selectedId = e.target.value;
-              setSelectedTramite(selectedId);
-
+          <select className="form-select me-2"  value={selectedTramite}
+            onChange={(e) => {  const selectedId = e.target.value; setSelectedTramite(selectedId);
               // Buscar el trámite correcto, asegurando que comparamos correctamente tipos de datos
               const tramite = tramiteList.find((t) => t.idTramite == selectedId); // Usamos == para evitar problemas de tipo
               setNombreTramite(tramite ? tramite.nombre : "Registrar");
               setIdTramite(selectedId);
-            }}
-          >
-            <option value="">Mostrar todos los trámites</option>
-            {tramiteList.map((tramite) => (
-              <option key={tramite.idTramite} value={tramite.idTramite}>
+            }}>
+              <option value="">Mostrar todos los trámites</option>
+              {tramiteList.map((tramite) => (<option key={tramite.idTramite} value={tramite.idTramite}>
                 {tramite.nombre}
               </option>
             ))}
           </select>
         </div>
-
-        {/* Botón de registro dinámico */}
-        <button className='btn btn-success' onClick={() => {
-          setIdActividad("");
-          setNombreActividad("");
-          setobjeto("");
-          setorden("");
-          setSelectedTramiteProceso(null);
-          setShowModal(true);
-        }}>
-          {selectedTramite ? `Registrar ${NombreTramite}` : "Registrar"}
-        </button>
-
-        {/* Tabla de trámites proceso */}
-        <div className="mt-4">
-          <input type="text" className="form-control mb-1" value={searchText}
-            onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Actividad" />
+      
+        <div className="mt-4">    
           <table className="table table-bordered">
             <thead>
               <tr>
@@ -161,8 +150,8 @@ function TramiteProceso() {
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedTramiteProceso={selectedTramiteProceso}
-      />
+        selectedTramiteProceso={selectedTramiteProceso}/>
+
     </div>
   );
 }

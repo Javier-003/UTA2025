@@ -1,9 +1,11 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getEdificio, addEdificio, updateEdificioFunc, deleteEdifcioFunc } 
-from '../../../assets/js/Nucleo/edificio.js';
+import DataTable from 'react-data-table-component';
+import { getEdificio, addEdificio, updateEdificioFunc, deleteEdifcioFunc } from '../../../assets/js/Nucleo/edificio.js';
 import { EdificioModales } from '../Nucleo/EdificioModales.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Edificio() {
   const [nombre, setnombre] = useState("");
@@ -29,79 +31,87 @@ function Edificio() {
     deleteEdifcioFunc(selectedEdificio.idEdificio, setShowDeleteModal, () => getEdificio(setEdificio));
   };
 
+  const columns = [
+    { name: 'Nombre del Edificio', selector: row => row.nombre, sortable: true },
+    { name: 'Sigla', selector: row => row.sigla, sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedEdificio(row);
+            setnombre(row.nombre);
+            setsigla(row.sigla);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger" onClick={() => {
+            setSelectedEdificio(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      )
+    }
+  ];
+
   const filteredData = edificioList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  return(
-    <div className="container">
-      <div className="">
-        <h5>LISTADO DE EDIFICIOS</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={() => {
+  const dataToDisplay = searchText ? filteredData : edificioList.slice(-10);
+
+  return (
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
               setnombre("");
               setsigla("");
               setSelectedEdificio(null);
               setShowModal(true);
-          }}>Registrar</button>
-          <div className="mt-4">
-            <input type="text" className="form-control mb-1" value={searchText}
-              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Edificio"/>
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>IdEdificio</th>
-                  <th>NOMBRE</th>
-                  <th>SIGLA</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((edificio) => (
-                    <tr key={edificio.idEdificio}>
-                      <td>{edificio.idEdificio}</td>
-                      <td>{edificio.nombre}</td>
-                      <td>{edificio.sigla}</td>
-                      <td>
-                        <button className="btn btn-warning" onClick={() => {
-                            setShowEditModal(true); 
-                            setSelectedEdificio(edificio);
-                            setnombre(edificio.nombre);
-                            setsigla(edificio.sigla);
-                        }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {  
-                          setShowDeleteModal(true); 
-                          setSelectedEdificio(edificio);
-                        }}>Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO DE EDIFICIOS</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText}
+              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por nombre"/>
           </div>
-        </div>
-      </div>
-
+        }
+        columns={columns}
+        data={dataToDisplay}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <EdificioModales
         nombre={nombre} setnombre={setnombre}
         sigla={sigla} setsigla={setsigla}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-        handleAdd={handleAdd} 
-        handleUpdate={handleUpdate} 
+        handleAdd={handleAdd}
+        handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedEdificio={selectedEdificio}/>
-
+        selectedEdificio={selectedEdificio}
+      />
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getPuesto, addPuesto, updatePuestoFunc, deletePuestoFunc } 
-from '../../../assets/js/Nucleo/puesto.js';
+import DataTable from 'react-data-table-component';
+import { getPuesto, addPuesto, updatePuestoFunc, deletePuestoFunc } from '../../../assets/js/Nucleo/puesto.js';
 import { PuestoModales } from '../Nucleo/PuestoModales.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Puesto() {
   const [puestoList, setPuesto] = useState([]);
@@ -20,102 +22,102 @@ function Puesto() {
     getPuesto(setPuesto);
   }, []);
 
-  const filteredData = puestoList.filter((item) =>
-    item.nombre.toLowerCase().includes(searchText.toLowerCase())
-  );
-
   const handleAdd = () => {
     addPuesto(idDepartamento, nombre, setShowModal, () => getPuesto(setPuesto));
   };
 
   const handleUpdate = () => {
-    updatePuestoFunc( selectedPuesto.idPuesto,idDepartamento,nombre, setShowEditModal,() => getPuesto(setPuesto));
+    updatePuestoFunc(selectedPuesto.idPuesto, idDepartamento, nombre, setShowEditModal, () => getPuesto(setPuesto));
   };
 
   const handleDelete = () => {
-    deletePuestoFunc(selectedPuesto.idPuesto,setShowDeleteModal,() => getPuesto(setPuesto));
+    deletePuestoFunc(selectedPuesto.idPuesto, setShowDeleteModal, () => getPuesto(setPuesto));
   };
 
+  const columns = [
+    { name: 'Puesto', selector: row => row.nombre, sortable: true },
+    { name: 'Departamento', selector: row => row.nombreDepartamento, sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedPuesto(row);
+            setidDepartamento(row.idDepartamento);
+            setnombre(row.nombre);
+            setnombreDepartamento(row.nombreDepartamento);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger" onClick={() => {
+            setSelectedPuesto(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      )
+    }
+  ];
+
+  const filteredData = puestoList.filter(item =>
+    item.nombre.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const dataToDisplay = searchText ? filteredData : puestoList.slice(-10);
+
   return (
-    <div className="container">
-      <div className="">
-        <h5>LISTADO DE PUESTOS</h5>
-        <div className="card-body">
-          <button
-            className="btn btn-success"
-            onClick={() => {
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
               setidDepartamento("");
               setnombre("");
               setnombreDepartamento("");
               setSelectedPuesto(null);
               setShowModal(true);
-            }}>Registrar</button>
-          <div className="mt-4">
-            <input type="text" className="form-control mb-1" value={searchText} 
-              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Nombre"/>
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>ID Puesto</th>
-                  <th>ID Departamento</th>
-                  <th>Nombre</th>
-                  <th>Nombre del Departamento</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((puesto) => (
-                    <tr key={puesto.idPuesto}>
-                      <td>{puesto.idPuesto}</td>
-                      <td>{puesto.idDepartamento}</td>
-                      <td>{puesto.nombre}</td>
-                      <td>{puesto.nombreDepartamento}</td>
-                      <td>
-                        <button
-                          className="btn btn-warning"
-                          onClick={() => {
-                            setShowEditModal(true);
-                            setSelectedPuesto(puesto);
-                            setidDepartamento(puesto.idEDepartamento);
-                            setnombre(puesto.nombre);
-                            setnombreDepartamento(puesto.nombreDepartamento);
-                          }} >Editar</button>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => {
-                            setShowDeleteModal(true);
-                            setSelectedPuesto(puesto);
-                          }} >Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO DE PUESTOS</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText}
+              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por nombre"/>
           </div>
-        </div>
-      </div>
+        }
+        columns={columns}
+        data={dataToDisplay}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <PuestoModales
         idDepartamento={idDepartamento} setidDepartamento={setidDepartamento}
         nombre={nombre} setnombre={setnombre}
-        nombreDepartamento={nombreDepartamento} setnombreDepartamento={setnombreDepartamento} 
+        nombreDepartamento={nombreDepartamento} setnombreDepartamento={setnombreDepartamento}
         showModal={showModal} setShowModal={setShowModal}
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        showDeleteModal={showDeleteModal}
-        setShowDeleteModal={setShowDeleteModal}
+        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedPuesto={selectedPuesto}/>
+        selectedPuesto={selectedPuesto}
+      />
     </div>
   );
 }

@@ -1,10 +1,11 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getActividad, addActividad, updateActividadFunc, deleteActividadFunc } 
-from '../../../assets/js/Parametrizacion/actividad.js';
-
+import DataTable from 'react-data-table-component';
+import { getActividad, addActividad, updateActividadFunc, deleteActividadFunc } from '../../../assets/js/Parametrizacion/actividad.js';
 import { ActividadModales } from './ActividadModales.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Actividad() {
   const [nombre, setnombre] = useState("");
@@ -27,71 +28,83 @@ function Actividad() {
     deleteActividadFunc(selectedActividad.idActividad, setShowDeleteModal, () => getActividad(setActividad));
   };
 
+  const columns = [
+    { name: 'Nombre de Actividad', selector: row => row.nombre, sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedActividad(row);
+            setnombre(row.nombre);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger" onClick={() => {
+            setSelectedActividad(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      )
+    }
+  ];
+
   const filteredData = actividadList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  return (
-    <div className="container">
-      <div className="">
-        <h5>LISTADO DE ACTIVIDADES</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={() => {
-            setnombre("");
-            setSelectedActividad(null);
-            setShowModal(true);
-            }}>Registrar</button>
-          <div className="mt-4">
-            <input type="text"className="form-control mb-1"value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}placeholder="Buscar actividad"/>
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>ID ACTIVIDAD</th>
-                  <th>NOMBRE</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((actividad) => (
-                    <tr key={actividad.idActividad}>
-                      <td>{actividad.idActividad}</td>
-                      <td>{actividad.nombre}</td>
-                      <td>
-                        <button className="btn btn-warning"  onClick={() => {
-                            setShowEditModal(true); 
-                            setSelectedActividad(actividad); 
-                            setnombre(actividad.nombre);
-                          }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {  
-                          setShowDeleteModal(true); setSelectedActividad(actividad)}}>Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+  const dataToDisplay = searchText ? filteredData : actividadList.slice(-10);
 
+  return (
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
+              setnombre("");
+              setSelectedActividad(null);
+              setShowModal(true);
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO DE ACTIVIDADES</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText}
+              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar actividad"/>
+          </div>
+        }
+        columns={columns}
+        data={dataToDisplay}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <ActividadModales
         nombre={nombre} setnombre={setnombre}
         showModal={showModal} setShowModal={setShowModal}
-        showEditModal={showEditModal}setShowEditModal={setShowEditModal}
-        showDeleteModal={showDeleteModal}setShowDeleteModal={setShowDeleteModal}
+        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd} 
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
-        selectedActividad={selectedActividad}/>        
+        selectedActividad={selectedActividad}
+      />
     </div>
   );
 }

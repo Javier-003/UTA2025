@@ -1,9 +1,8 @@
 import '../../../assets/css/App.css';
-import { useState, useEffect , useCallback} from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getProgramaAcademico, addProgramaAcademico, updateProgramaAcademicoFunc, deleteProgramaAcademicoFunc } 
-from '../../../assets/js/PlanificacionAcademica/programa_academico.js';
-import {ProgramaAcademicoModales} from './ProgramaAcademicoModales.jsx';
+import { getProgramaAcademico, addProgramaAcademico, updateProgramaAcademicoFunc, deleteProgramaAcademicoFunc } from '../../../assets/js/PlanificacionAcademica/programa_academico.js';
+import { ProgramaAcademicoModales } from './ProgramaAcademicoModales.jsx';
 
 const ProgramaAcademico = () => {
   const [programaAcademicoList, setProgramaAcademico] = useState([]);
@@ -24,7 +23,9 @@ const ProgramaAcademico = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedProgramaAcademico, setSelectedProgramaAcademico] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedNivelEstudio, setSelectedNivelEstudio] = useState("");
+  const [selectedOfertaAcademica, setSelectedOfertaAcademica] = useState("");
 
   const fetchProgramasAcademicos = useCallback(async () => {
     await getProgramaAcademico(setProgramaAcademico);
@@ -57,15 +58,18 @@ const ProgramaAcademico = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredProgramaAcademicoList = programaAcademicoList.filter(programaAcademico => 
-    programaAcademico.nivelEstudio.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    programaAcademico.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProgramaAcademicoList = programaAcademicoList.filter(programaAcademico =>
+    (!selectedNivelEstudio || programaAcademico.nivelEstudio === selectedNivelEstudio) &&
+    (!selectedOfertaAcademica || programaAcademico.ofertaAcademica === selectedOfertaAcademica) &&
+    (programaAcademico.nivelEstudio.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    programaAcademico.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
     <div className="container">
-      <h5>LISTADO DE PROGRAMA ACADÉMICO</h5>
-      <button className="btn btn-success" onClick={() =>{ 
+      
+      <div className="d-flex justify-content-between align-items-center">
+     <button className="btn btn-success" onClick={() => {
         setIdNivelEstudio("");
         setIdOfertaAcademica("");
         setNombre("");
@@ -80,15 +84,31 @@ const ProgramaAcademico = () => {
         setEstatus("");
         setSelectedProgramaAcademico(null);
         setShowModal(true);
-      }}>Agregar Programa Académico</button>
+      }}>Agregar</button>
 
+      <h5>LISTADO DE PROGRAMA ACADÉMICO</h5>
+        <input type="text"  className="form-control ms-2 w-25" placeholder="Buscar por nivel de estudio o nombre" value={searchTerm} onChange={handleSearchChange} />
+      </div>
+ 
       <div className='mt-4'>
-        <input type="text" className="form-control mb-3" placeholder="Buscar por nivel de estudio o nombre" value={searchTerm} onChange={handleSearchChange} />
+        <div className="d-flex mb-3">
+          <select className="form-select me-2" value={selectedNivelEstudio} onChange={(e) => setSelectedNivelEstudio(e.target.value)}>
+            <option value="">Seleccione un Nivel de Estudio</option>
+            {Array.from(new Set(programaAcademicoList.map(item => item.nivelEstudio))).map(nivelEstudio => (
+              <option key={nivelEstudio} value={nivelEstudio}>{nivelEstudio}</option>
+            ))}
+          </select>
+
+          <select className="form-select" value={selectedOfertaAcademica} onChange={(e) => setSelectedOfertaAcademica(e.target.value)}>
+            <option value="">Seleccione una Ofertas Académicas</option>
+            {Array.from(new Set(programaAcademicoList.map(item => item.ofertaAcademica))).map(ofertaAcademica => (
+              <option key={ofertaAcademica} value={ofertaAcademica}>{ofertaAcademica}</option>
+            ))}
+          </select>
+        </div>
         <table className="table">
           <thead>
             <tr>
-              <th>Nivel Estudio</th>
-              <th>Oferta Académica</th>
               <th>Nombre</th>
               <th>Nombre Oficial</th>
               <th>Descripción</th>
@@ -104,11 +124,9 @@ const ProgramaAcademico = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredProgramaAcademicoList.length > 0 ? (
+            {selectedNivelEstudio && selectedOfertaAcademica && filteredProgramaAcademicoList.length > 0 ? (
               filteredProgramaAcademicoList.map((programaAcademico) => (
                 <tr key={programaAcademico.idProgramaAcademico}>
-                  <td>{programaAcademico.nivelEstudio}</td>
-                  <td>{programaAcademico.ofertaAcademica}</td>
                   <td>{programaAcademico.nombre}</td>
                   <td>{programaAcademico.nombreOficial}</td>
                   <td>{programaAcademico.descripcion}</td>
@@ -149,13 +167,13 @@ const ProgramaAcademico = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={13}>No hay datos</td>
+                <td colSpan={11}>Seleccione un Nivel de Estudio y una Oferta Académica para ver los registros</td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
-
+      
       <ProgramaAcademicoModales
         idNivelEstudio={idNivelEstudio}setIdNivelEstudio={setIdNivelEstudio}
         idOfertaAcademica={idOfertaAcademica}setIdOfertaAcademica={setIdOfertaAcademica}
@@ -169,7 +187,6 @@ const ProgramaAcademico = () => {
         desde={desde}setDesde={setDesde}
         hasta={hasta}setHasta={setHasta}
         estatus={estatus} setEstatus={setEstatus}
-
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}

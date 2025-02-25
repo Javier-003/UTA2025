@@ -1,9 +1,11 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getDepartamento, addDepartamento, updateDepartamentoFunc, deleteDepartamentoFunc } 
-from '../../../assets/js/Nucleo/departamento.js';
+import DataTable from 'react-data-table-component';
+import { getDepartamento, addDepartamento, updateDepartamentoFunc, deleteDepartamentoFunc } from '../../../assets/js/Nucleo/departamento.js';
 import { DepartamentoModales } from '../Nucleo/DepartamentoModales.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Departamento() {
   const [nombre, setnombre] = useState("");
@@ -29,79 +31,87 @@ function Departamento() {
     deleteDepartamentoFunc(selectedDepartamento.idDepartamento, setShowDeleteModal, () => getDepartamento(setDepartamento));
   };
 
+  const columns = [
+    { name: 'Nombre del Departamento', selector: row => row.nombre, sortable: true },
+    { name: 'Sigla', selector: row => row.sigla, sortable: true },
+    {
+      name: 'Acciones',
+      cell: row => (
+        <div className="d-flex justify-content-between">
+          <button className="btn btn-primary me-2" onClick={() => {
+            setSelectedDepartamento(row);
+            setnombre(row.nombre);
+            setsigla(row.sigla);
+            setShowEditModal(true);
+          }}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="btn btn-danger" onClick={() => {
+            setSelectedDepartamento(row);
+            setShowDeleteModal(true);
+          }}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      )
+    }
+  ];
+
   const filteredData = departamentoList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  const dataToDisplay = searchText ? filteredData : departamentoList.slice(-10);
+
   return (
-    <div className="container">
-      <div className="">
-        <h5>LISTADO DE DEPARTAMENTOS</h5>
-        <div className="card-body">
-          <button className='btn btn-success' onClick={() => {
+    <div className="container mt-4">
+      <DataTable
+        title={
+          <div className="d-flex justify-content-between align-items-center w-100">
+            <button className='btn btn-success me-2' onClick={() => {
               setnombre("");
               setsigla("");
               setSelectedDepartamento(null);
               setShowModal(true);
-          }}>Registrar</button>        
-          <div className="mt-4">
-            <input type="text" className="form-control mb-1"  value={searchText}
-              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar Departamento" />
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>NOMBRE</th>
-                  <th>SIGLA</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((departamento) => (
-                    <tr key={departamento.idDepartamento}>
-                      <td>{departamento.idDepartamento}</td>
-                      <td>{departamento.nombre}</td>
-                      <td>{departamento.sigla}</td>
-                      <td>
-                        <button className="btn btn-warning" onClick={() => {
-                            setShowEditModal(true); 
-                            setSelectedDepartamento(departamento);
-                            setnombre(departamento.nombre);
-                            setsigla(departamento.sigla);
-                          }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {  
-                          setShowDeleteModal(true); 
-                          setSelectedDepartamento(departamento);
-                        }}>Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4">No hay registros para mostrar</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+            }}>
+              <FontAwesomeIcon icon={faPlus} /> Registrar
+            </button>
+            <h5 className="flex-grow-1 text-center">LISTADO DE DEPARTAMENTOS</h5>
+            <input type="text" className="form-control ms-2 w-25" value={searchText}
+              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por nombre"/>
           </div>
-        </div>
-      </div>
-
+        }
+        columns={columns}
+        data={dataToDisplay}
+        noDataComponent="No hay registros para mostrar"
+        pagination
+        paginationPerPage={10}
+        paginationComponentOptions={{
+          rowsPerPageText: 'Filas por página',
+          rangeSeparatorText: 'de',
+          noRowsPerPage: true
+        }}
+        highlightOnHover
+        customStyles={{
+          headCells: {
+            style: { backgroundColor: '#f8f9fa' }
+          },
+          cells: {
+            style: { border: '1px solid #ddd' }
+          }
+        }}
+      />
       <DepartamentoModales
-        nombre={nombre}  setnombre={setnombre}
-        sigla={sigla}  setsigla={setsigla}
-        showModal={showModal}  setShowModal={setShowModal}
-        showEditModal={showEditModal}  setShowEditModal={setShowEditModal}
+        nombre={nombre} setnombre={setnombre}
+        sigla={sigla} setsigla={setsigla}
+        showModal={showModal} setShowModal={setShowModal}
+        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
-        selectedDepartamento={selectedDepartamento}/>
-
+        selectedDepartamento={selectedDepartamento}
+      />
     </div>
   );
 }
