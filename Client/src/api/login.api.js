@@ -24,6 +24,41 @@ export const accessLogin = async (username, password) => {
   }
 };
 
+export const forgotLogin = async (username) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/login/olvidaste`, {
+      Username: username,
+    });
+
+    if (response.status === 200) {
+      return response.data.Username; // Devuelve el nombre de usuario encontrado
+    } else {
+      throw new Error(response.data.message); // Lanza un error si la respuesta no es 200
+    }
+  } catch (error) {
+    console.error("Error al recuperar usuario:", error);
+    throw new Error(error.response?.data?.message || "Error de conexión"); // Mensaje de error más claro
+  }
+};
+
+export const changePassword = async (username, newPassword, repeatPassword) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/login/recuperar/${username}`, {
+      newPassword,
+      repeatPassword,
+    });
+
+    if (response.status === 200) {
+      return response.data.message; // Devuelve el mensaje de éxito
+    } else {
+      throw new Error(response.data.message); // Lanza un error si la respuesta no es 200
+    }
+  } catch (error) {
+    console.error("Error al cambiar la contraseña:", error);
+    throw new Error(error.response?.data?.message || "Error de conexión"); // Mensaje de error más claro
+  }
+};
+
 export const logoutLogin = async()  => {
   const response = await axios.post(`${BASE_URL}/login/logout`)
   return response.data

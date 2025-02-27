@@ -2,20 +2,25 @@ import { db } from "../../db/connection.js";
 
 export const getKardex = async (req, res) => {
   try {
-    const query = `
-      SELECT k.*, 
-        pe.periodo, 
-        g.nombre AS grupo, 
-        mp.materia AS mapa, 
-        p.nombre, p.paterno AS paterno, p.materno AS materno
-      FROM kardex AS k
-      INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
-      INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
-      INNER JOIN persona AS p ON p.idPersona = a.idAlumno
-      INNER JOIN mapacurricular AS mp ON mp.idMapaCurricular = k.idmapacurricular
-      INNER JOIN grupo AS g ON g.idGrupo = k.idGrupo
-      INNER JOIN periodo AS pe ON pe.idPeriodo = k.idPeriodo
-    `;
+    const query = `SELECT k.*, 
+    ap.matricula, 
+    pe.periodo, 
+    pa.nombreOficial, 
+    g.nombre AS grupo, 
+    mp.materia AS mapa, 
+    mp.clave, 
+    mp.cuatrimestre, 
+    p.nombre, 
+    p.paterno AS paterno, 
+    p.materno AS materno
+    FROM kardex AS k
+    INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
+    INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
+    INNER JOIN persona AS p ON p.idPersona = a.idAlumno
+    INNER JOIN mapacurricular AS mp ON mp.idMapaCurricular = k.idmapacurricular
+    INNER JOIN grupo AS g ON g.idGrupo = k.idGrupo
+    INNER JOIN periodo AS pe ON pe.idPeriodo = k.idPeriodo
+    INNER JOIN programaacademico AS pa ON pa.idProgramaAcademico = ap.idProgramaAcademico;`;
     const [rows] = await db.query(query);
     if (rows.length > 0) {
       res.json({ message: "Kardex obtenido correctamente", data: rows });

@@ -21,14 +21,14 @@ function OffcanvasNavbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('Username');
-    window.location.reload(); 
+    window.location.href = "/Login"
   };
 
   return (
     <div style={{ marginTop: '100px' }}>
       <div className="navbar">
         <div className="navbar-brand">
-          {username ? username : "Servicios Escolares"}
+          {username }
         </div>
         <div className="menu">
           {[

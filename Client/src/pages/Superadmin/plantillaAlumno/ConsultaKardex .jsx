@@ -9,10 +9,7 @@ function Kardex() {
     const [kardexList, setkardexList] = useState([]);
     const [selectedAlumno, setselectedAlumno] = useState("");
 
-
-  useEffect(() => {
-    getKardexjs(setkardexList);
-  }, []);
+    useEffect(() => { getKardexjs(setkardexList);}, []);
 
     // FILTRO PARA LA BÚSQUEDA
     const filteredData = kardexList.filter((item) => !selectedAlumno || `${item.nombre} ${item.paterno} ${item.materno}` === selectedAlumno);

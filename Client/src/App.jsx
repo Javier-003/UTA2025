@@ -1,7 +1,7 @@
-import { Routes, Route, Outlet } from 'react-router-dom';
+import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
 
 import Login from './pages/Login/Login';
-
+import Recuperar from './pages/Login/Recuperar';
 import Navbar from './components/Navbar';
 
 import Inicio from './pages/Superadmin/Inicio';
@@ -52,14 +52,7 @@ import OfertaAcademica from './pages/Superadmin/PlanificacionAcademica/OfertaAca
 // -------------------------- PLANTILLA ALUMNO --------------------------------
 import Consultadekadex from './pages/Superadmin/plantillaAlumno/ConsultaKardex ';
 
-
-
-
-
-
-
-//import horario from './pages/Superadmin/cargamaterias.horario';
-
+const userSession = localStorage.getItem('Username')
 
 // Layout para páginas con Navbar
 function LayoutWithNavbar() {
@@ -75,7 +68,8 @@ function App() {
   return (
     <Routes>
       {/* Rutas sin Navbar */}
-      <Route path="/Login" element={<Login />} />
+      <Route path="/Login" element={ userSession ? (<Navigate replace to="/" />) : (<Login />) } />
+      <Route path="/Recuperar" element={<Recuperar />} />
 
       {/* Rutas con Navbar */}
       <Route element={<LayoutWithNavbar />}>

@@ -60,6 +60,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas
 app.use("/login",login);
+app.use("/olvidaste",login);
+app.use("/recuperar",login);
 app.use("/",indexRoutes);
 //Gestion de Usarios
 app.use("/rol",rolRoutes);
