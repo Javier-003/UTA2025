@@ -56,7 +56,7 @@ function Actividad() {
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const dataToDisplay = searchText ? filteredData : actividadList.slice(-10);
+  const dataToDisplay = searchText ? filteredData : actividadList.slice(-40);
 
   return (
     <div className="container mt-4">

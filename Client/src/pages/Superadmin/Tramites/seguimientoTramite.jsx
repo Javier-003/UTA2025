@@ -145,9 +145,16 @@ function Seguimientodetramite() {
                       <td>{formatDateString(alumnotramite.fecha)}</td>
                       <td>{alumnotramite.estatus}</td>
 
-                        {/* Nueva columna de proceso con icono */}
+                        {/* Nueva columna de proceso con filtro por idalumnotramite */}
                       <td className="text-center">
-                        <i className="bi bi-hourglass-split text-primary fs-5"></i>
+                      <button
+                          className="btn btn-secondary"
+                          onClick={() => {
+                            navigate(`/procedimientoTramite?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
+                          }}
+                        >
+                          <i className="bi bi-person-gear text-white fs-5"></i>
+                        </button>
                       </td>
 
                       <td>

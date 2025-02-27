@@ -28,6 +28,8 @@ import AlumnoProceso from './pages/Superadmin/Tramites/AlumnoProceso';
 
 import RegistrarST from './pages/Superadmin/Tramites/registrarST'
 import Seguimientodetramite from './pages/Superadmin/Tramites/seguimientoTramite';
+import ProcedimientoTramite from './pages/Superadmin/Tramites/procedimientoTramite';
+
 // -------------------------- PLANIFICACIÓN ACADEMICA -------------------------
 import NivelEstudio from "./pages/Superadmin/PlanificacionAcademica/NivelEstudio";
 import Grupo from './pages/Superadmin/PlanificacionAcademica/Grupo';
@@ -105,6 +107,7 @@ function App() {
         <Route path="/SeguimientoTramite" element={<Seguimientodetramite />} />
         <Route path="/Consultadekadex" element={<Consultadekadex />} />
         <Route path="/nuevoTramiteAlumno" element={<RegistrarST/>} />
+        <Route path="/procedimientoTramite" element={<ProcedimientoTramite />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
