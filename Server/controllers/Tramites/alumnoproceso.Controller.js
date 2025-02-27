@@ -14,6 +14,8 @@ export const getAlumnoProcesotodos = async(req, res) => {
         apa.matricula AS matricula,
         act.nombre AS NombreActividad,
         t.nombre AS tramite, 
+        prog.nombreOficial AS programa,
+        tp.objeto, 
         CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno
       FROM 
         alumnoproceso ap
@@ -31,6 +33,7 @@ export const getAlumnoProcesotodos = async(req, res) => {
         alumno ON apa.idAlumno = alumno.idAlumno
       LEFT JOIN 
         persona ON atr.idPersona = persona.idPersona
+      LEFT JOIN programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico;
     `;
     // Ejecutar la consulta
     const [rows] = await db.query(query);
