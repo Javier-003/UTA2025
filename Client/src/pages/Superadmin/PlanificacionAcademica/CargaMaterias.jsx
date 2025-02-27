@@ -9,6 +9,7 @@ import { getPeriodos } from '../../../api/PlanificacionAcademica/periodo.api.js'
 import { getGrupos } from '../../../api/PlanificacionAcademica/grupo.api.js';
 import CargaMateriaModales from './CargaMateriasModales.jsx';
 import VerHorarioModal from './HorarioModales.jsx';
+import ConsultarHorario from '../plantillaAlumno/ConsultarHorario.jsx';
 import Swal from 'sweetalert2';
 
 function CargaMaterias() {
@@ -157,6 +158,7 @@ function CargaMaterias() {
                                                 </option>
                                             ))}
                                         </select>
+                                        {idGrupo && <ConsultarHorario idGrupo={idGrupo} />}
                                 </div>
                             </div>
                         </div>
@@ -270,6 +272,7 @@ function CargaMaterias() {
                 idGrupoMateria={idGrupoMateria}
                 setIdGrupoMateria={setIdGrupoMateria}
             />
+            
         </div>
     );
 }
