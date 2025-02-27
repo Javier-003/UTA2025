@@ -4,21 +4,32 @@
   margin: 0;
 }
 
-<<<<<<< HEAD
 /* App.css */
 .data-table {
   border-radius: 15px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-=======
+}
+
 .modal-dialog-left {
   position: fixed;
   left: 0;
   margin: 10;
 }
 
+.modal-dialog-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Centrado vertical */
+}
+
+.modal-content {
+  margin: auto; /* Centrado horizontal */
+}
+
+
 .table-container {
   padding: 0 150px; /* Ajusta el espacio a 20px */
->>>>>>> ceabc5de67a4f1ff1fa025e22ab3fd06884bccc3
 }
 
