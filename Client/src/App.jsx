@@ -39,7 +39,7 @@ import ProgramaAcademico from './pages/Superadmin/PlanificacionAcademica/Program
 import MapaCurricular from './pages/Superadmin/PlanificacionAcademica/MapaCurricular';
 import Periodo from "./pages/Superadmin/PlanificacionAcademica/Periodo";
 import AdicionProfesor from "./pages/Superadmin/PlanificacionAcademica/AdicionProfesor";
-
+import SubirCalificacion from './pages/Profesor/SubirCalificacion';
 
 // -------------------------- PARAMETRIZACIÓN --------------------------------
 import AsignarPA from './pages/Superadmin/Parametrizacion/AsignarPA';
@@ -93,6 +93,7 @@ function App() {
         <Route path="/Periodo" element={<Periodo />} />
         <Route path="/OfertaAcademica" element={<OfertaAcademica />} /> {/* Usar el componente OfertaAcademica */}
         <Route path="/AdicionProfesor" element={<AdicionProfesor />} />
+        <Route path="/SubirCalificacion" element={<SubirCalificacion />} /> {/* Usar el componente SubirCalificacion */}
         <Route path="/Departamento" element={<Departamento />} />
         <Route path="/Puesto" element={<Puesto />} />
         <Route path="/Edificio" element={<Edificio />} />

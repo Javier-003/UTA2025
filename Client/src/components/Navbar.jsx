@@ -82,6 +82,7 @@ function OffcanvasNavbar() {
             { to: "/SeguimientoTramite", text: "Seguimiento Trámite", icon: <FaClipboardCheck /> },
             { to: "/Consultadekadex", text: "Consulta de Kardex", icon: <FaClipboardList /> }, 
             { to: "/Kardex", text: "Kardex", icon: <FaClipboardList /> },
+            { to: "/SubirCalificacion", text: "Subir Calificación", icon: <FaClipboardCheck /> },
           ]}
 
           ].map(({ label, key, icon, links }) => (
