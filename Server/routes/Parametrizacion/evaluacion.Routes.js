@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/",getEvaluacion);
 router.post("/create",createEvaluacion );
-router.put("/update/:IdEvaluacion",updateEvaluacion);
-router.delete("/delete/:IdEvaluacion",deleteEvaluacion);
+router.put("/update/:idEvaluacion",updateEvaluacion);
+router.delete("/delete/:idEvaluacion",deleteEvaluacion);
 
 export default router;

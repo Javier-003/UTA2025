@@ -1,162 +1,135 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {getEvaluacionjs, addEvaluacion, updateEvaluacionjs, deleteEvaluacionjs}
+import { getEvaluacionTodos, addEvaluacion, updateEvaluacionFunc, deleteEvaluacionFunc } 
 from '../../../assets/js/Parametrizacion/evaluacion.js';
-import {EvaluacionModales} from '../Parametrizacion/EvaluacionModales.jsx'; 
+import { EvaluacionModales } from '../Parametrizacion/EvaluacionModales.jsx';
 
 function Evaluacion() {
-
-const [evaluacionList, setevaluacionList] = useState([]);
-
-const [IdKardex, setIdKardex] = useState("");
-const [id_mapa_curricular, setId_mapa_curricular] = useState("");
-const [Faltas, setFaltas] = useState("");
-const [Calificacion, setCalificacion] = useState("");
-const [Estatus, setEstatus] = useState("");
-const [Nombre, setNombre] = useState("");
-const [IdMateriaUnidad, setIdMateriaUnidad] = useState("");
-
-//FK
-const [kardex, setkardex] = useState("");
-const [mapa, setmapa] = useState("");
-const [unidad, setunidad] = useState("");
-
-//Alertas (vienen de los archivos js)
+  const [evaluacionList, setevaluacionList] = useState([]);
+  const [idKadex, setIdKadex] = useState("");
+  const [idMapaCurricular, setIdMapaCurricular] = useState("");
+  const [faltas, setFaltas] = useState("");
+  const [calificacion, setCalificacion] = useState("");
+  const [estatus, setEstatus] = useState("");
+  const [idMateriaUnidad, setIdMateriaUnidad] = useState("");
+  const [kardex, setKardex] = useState("");
+  const [mapa, setMapa] = useState("");
+  const [nombreUnidad, setNombreUnidad] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [searchText, setSearchText] = useState(""); //Buscador 
-
+  const [searchText, setSearchText] = useState("");
   const [selectedEvaluacion, setselectedEvaluacion] = useState(null);
-
-  useEffect(() => {getEvaluacionjs(setevaluacionList);}, []);
-
+  
+  useEffect(() => {
+    getEvaluacionTodos(setevaluacionList);
+  }, []);
 
   const filteredData = evaluacionList.filter(item => {
     return (
-      (item.Nombre || "").toLowerCase().includes(searchText.toLowerCase()) ||
-      (item.Estatus || "").toLowerCase().includes(searchText.toLowerCase()) ||
+      (item.nombreUnidad || "").toLowerCase().includes(searchText.toLowerCase()) ||
+      (item.estatus || "").toLowerCase().includes(searchText.toLowerCase()) ||
       (item.mapa || "").toLowerCase().includes(searchText.toLowerCase())
     );
   });
 
-const handleAdd = () => {  
-      addEvaluacion(
-        IdKardex, 
-        id_mapa_curricular, 
-        Faltas, 
-        Calificacion, 
-        Estatus, 
-        Nombre, 
-        IdMateriaUnidad,
-        setShowModal, 
-        () =>getEvaluacionjs(setevaluacionList));
-        
-    };
-  
-    const handleUpdate = () => {
-      updateEvaluacionjs(
-        selectedEvaluacion.IdEvaluacion, 
-        IdKardex, 
-        id_mapa_curricular, 
-        Faltas, 
-        Calificacion, 
-        Estatus, 
-        Nombre, 
-        IdMateriaUnidad,
-        setShowModal, 
-        setShowEditModal, () => getEvaluacionjs(setevaluacionList));
-    };
-  
-    const handleDelete = () => {
-      deleteEvaluacionjs(selectedEvaluacion.IdEvaluacion, 
-        setShowDeleteModal,
-        () => getEvaluacionjs(setevaluacionList));
-    };
-  
-    
+  const handleAdd = () => {
+    addEvaluacion(
+      idKadex,idMapaCurricular,idMateriaUnidad,calificacion,faltas,nombreUnidad,estatus,setShowModal,
+      () => getEvaluacionTodos(setevaluacionList)
+    );
+  };
 
+  const handleUpdate = () => {
+    updateEvaluacionFunc(
+      selectedEvaluacion.idEvaluacion,
+      idKadex,idMapaCurricular,idMateriaUnidad,calificacion,faltas,nombreUnidad,estatus,setShowEditModal,
+      () => getEvaluacionTodos(setevaluacionList)
+    );
+  };
 
-  return(
-   <div className="container">
-             <div className="">
-               <h5>Evaluación</h5>
-               <div className="card-body">
-                 <button className='btn btn-success' onClick={() => {
-                  setIdKardex("");
-                  setId_mapa_curricular("");
-                  setFaltas("");
-                  setCalificacion("");
-                  setEstatus("");
-                  setNombre("");
-                  setIdMateriaUnidad("");
-                  
-                  // FK
-                  setmapa("");
-                  setunidad("");   
-                  setkardex("");               
-                  
-                   setselectedEvaluacion(null);
-                   setShowModal(true);
-   
-                   }}>Registrar</button>
-                 <div className="mt-4">
-                   <input type="text"className="form-control mb-1"value={searchText}
-                     onChange={(e) => setSearchText(e.target.value)}placeholder="Buscar por Nombre, estatus o Mapa Curricular"/>
-                   <table className="table table-bordered">
-                     <thead>
-                       <tr>
-                       <th>id Evaluación</th>
-                       <th>id Kardex</th>
-                        <th>Kardex</th>
-                        <th>id mapa curricular</th>
-                        <th>mapa</th>
-                        <th>Nombre</th>
-                        <th>Faltas</th>
-                        <th>Calificacion</th>
-                        <th>Estatus</th>
-                        <th>Id Materia Unidad</th>
-                        <th>unidad</th>
-                         <th>Editar</th>
-                         <th>Eliminar</th>
-                       </tr>
-                     </thead>
-   
-                     <tbody>
-                       {filteredData.length > 0 ? (
-                         filteredData.map((evaluacion) => (
-                           <tr key={evaluacion.IdEvaluacion}>
-                             <td>{evaluacion.IdEvaluacion}</td>
-                             <td>{evaluacion.IdKardex}</td>
-                             <td>{evaluacion.kardex}</td>
-                             <td>{evaluacion.id_mapa_curricular}</td>
-                             <td>{evaluacion.mapa}</td>
-                             <td>{evaluacion.Nombre}</td>
-                             <td>{evaluacion.Faltas}</td>
-                             <td>{evaluacion.Calificacion}</td>
-                             <td>{evaluacion.Estatus}</td>
-                             <td>{evaluacion.IdMateriaUnidad}</td>
-                             <td>{evaluacion.unidad}</td>
-                             <td>
-                                <button className="btn btn-warning" onClick={() => {
-                          setShowEditModal(true); 
+  const handleDelete = () => {
+    deleteEvaluacionFunc(
+      selectedEvaluacion.idEvaluacion,
+      setShowDeleteModal,
+      () => getEvaluacionTodos(setevaluacionList)
+    );
+  };
+  
+  return (
+    <div className="container">
+      <div className="card-body">
+        <div className="d-flex justify-content-between align-items-center">
+          <button className='btn btn-success' onClick={() => {
+            setIdKadex("");
+            setIdMapaCurricular("");
+            setFaltas("");
+            setCalificacion("");
+            setEstatus("");
+            setNombreUnidad("");
+            setIdMateriaUnidad("");
+            setMapa("");
+            setNombreUnidad("");
+            setKardex("");
+            setselectedEvaluacion(null);
+            setShowModal(true);
+          }}>Registrar</button>
+          <h5 className="text-center flex-grow-1" >Evaluación</h5>
+          <input type="text" className="form-control ms-2 w-25"  value={searchText}onChange={(e) =>
+             setSearchText(e.target.value)} placeholder="Buscar por Nombre, estatus o Mapa Curricular" />
+        </div>
+        <div className="mt-4">
+          <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>id Evaluación</th>
+                  <th>id Kardex</th>
+                  <th>id mapa curricular</th>
+                  <th>mapa</th>
+                  <th>Faltas</th>
+                  <th>Calificacion</th>
+                  <th>Estatus</th>
+                  <th>Id Materia Unidad</th>
+                  <th>unidad</th>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.length > 0 ? (
+                  filteredData.map((evaluacion) => (
+                    <tr key={evaluacion.idEvaluacion}>
+                      <td>{evaluacion.idEvaluacion}</td>
+                      <td>{evaluacion.idKadex}</td>
+                      <td>{evaluacion.idMapaCurricular}</td>
+                      <td>{evaluacion.materia}</td>
+                      
+                      <td>{evaluacion.faltas}</td>
+                      <td>{evaluacion.calificacion}</td>
+                      <td>{evaluacion.estatus}</td>
+                      <td>{evaluacion.idMateriaUnidad}</td>
+                      <td>{evaluacion.nombreUnidad}</td>
+                      <td>
+                        <button className="btn btn-warning" onClick={() => {
+                          setShowEditModal(true);
                           setselectedEvaluacion(evaluacion);
-                          setIdKardex(evaluacion.IdKardex);
-                          setkardex(evaluacion.kardex);
-                          setId_mapa_curricular(evaluacion.id_mapa_curricular);
-                          setmapa(evaluacion.mapa);
-                          setNombre(evaluacion.Nombre);
-                          setFaltas(evaluacion.Faltas);
-                          setCalificacion(evaluacion.Calificacion);
-                          setEstatus(evaluacion.Estatus);
-                          setIdMateriaUnidad(evaluacion.IdMateriaUnidad);
-                          setunidad(evaluacion.unidad);
-                         }}>Editar</button>
-                             </td>
-                             <td>
-                               <button className="btn btn-danger" onClick={() => {  
-                                 setShowDeleteModal(true); setselectedEvaluacion(evaluacion)}}>Eliminar</button>
+                          setIdKadex(evaluacion.idKadex);
+                          setKardex(evaluacion.kardex);
+                          setIdMapaCurricular(evaluacion.idMapaCurricular);
+                          setMapa(evaluacion.mapa);
+                          setNombreUnidad(evaluacion.nombreUnidad);
+                          setFaltas(evaluacion.faltas);
+                          setCalificacion(evaluacion.calificacion);
+                          setEstatus(evaluacion.estatus);
+                          setIdMateriaUnidad(evaluacion.idMateriaUnidad);
+                          setNombreUnidad(evaluacion.unidad);
+                        }}>Editar</button>
+                      </td>
+                      <td>
+                        <button className="btn btn-danger" onClick={() => {
+                          setShowDeleteModal(true); setselectedEvaluacion(evaluacion);
+                        }}>Eliminar</button>
                              </td>
                            </tr>
                          ))
@@ -169,34 +142,30 @@ const handleAdd = () => {
                    </table>
                  </div>
                </div>
-             </div>
+               
+      <EvaluacionModales
+      idKardex={idKadex} setIdKardex={setIdKadex}
+      idMapaCurricular={idMapaCurricular} setIdMapaCurricular={setIdMapaCurricular}
+      
+      faltas={faltas} setFaltas={setFaltas}
+      calificacion={calificacion} setCalificacion={setCalificacion}
+      estatus={estatus} setEstatus={setEstatus}
+      
+      idMateriaUnidad={idMateriaUnidad} setIdMateriaUnidad={setIdMateriaUnidad}
+      
+      kardex={kardex} setKardex={setKardex}
+      mapa={mapa} setMapa={setMapa}
+      nombreUnidad={nombreUnidad} setNombreUnidad={setNombreUnidad}
 
-             <EvaluacionModales
-             IdKardex={IdKardex} setIdKardex={setIdKardex}
-             id_mapa_curricular={id_mapa_curricular} setId_mapa_curricular={setId_mapa_curricular}
-             Faltas={Faltas} setFaltas={setFaltas}
-             Calificacion={Calificacion} setCalificacion={setCalificacion}
-             Estatus={Estatus} setEstatus={setEstatus}
-             Nombre={Nombre} setNombre={setNombre}
-             IdMateriaUnidad={IdMateriaUnidad} setIdMateriaUnidad={setIdMateriaUnidad}
-             
-             // FK
-             kardex={kardex} setKardex={setkardex}
-             mapa={mapa} setMapa={setmapa}
-             unidad={unidad} setUnidad={setunidad}
-                      
-            // Alertas (vienen de los archivos js)
-            showModal={showModal} setShowModal={setShowModal}
-            showEditModal={showEditModal} setShowEditModal={setShowEditModal}
-            showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-            handleAdd={handleAdd} 
-            handleUpdate={handleUpdate} 
-            handleDelete={handleDelete} 
-            setselectedEvaluacion={setselectedEvaluacion}
-             />
-       
-           </div>
+      showModal={showModal} setShowModal={setShowModal}
+      showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+      showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
+      handleAdd={handleAdd} 
+      handleUpdate={handleUpdate} 
+      handleDelete={handleDelete} 
+      setselectedEvaluacion={setselectedEvaluacion}/>   
+    </div>
   );
 }
-  
+
 export default Evaluacion

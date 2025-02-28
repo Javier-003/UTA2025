@@ -1,7 +1,7 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getKardexjs } from '../../../assets/js/Parametrizacion/kardex.js';
+import { getKardexTodos } from '../../../assets/js/Parametrizacion/kardex.js';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
@@ -9,7 +9,7 @@ function Kardex() {
     const [kardexList, setkardexList] = useState([]);
     const [selectedAlumno, setselectedAlumno] = useState("");
 
-    useEffect(() => { getKardexjs(setkardexList);}, []);
+    useEffect(() => { getKardexTodos(setkardexList);}, []);
 
     // FILTRO PARA LA BÚSQUEDA
     const filteredData = kardexList.filter((item) => !selectedAlumno || `${item.nombre} ${item.paterno} ${item.materno}` === selectedAlumno);
