@@ -74,6 +74,23 @@ export const createCargaMaterias = async (req, res) => {
             error: `⚠️ El horario ${horario.dia}, bloque ${existeHorario[0].nombreBloque} ya está ocupado por la materia ${existeHorario[0].materia} en el grupo ${existeHorario[0].grupo}.` 
           });
         }
+
+        // Verificar si el aula ya está asignada a otro bloque en el mismo horario
+        const [existeAula] = await db.query(
+          `SELECT h.idGrupoMateria, a.nombre AS aula, b.nombre AS nombreBloque 
+           FROM horario h
+           INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
+           INNER JOIN aula a ON a.idAula = gm.idAula
+           INNER JOIN bloque b ON b.idBloque = h.idBloque
+           WHERE gm.idAula = ? AND h.dia = ? AND h.idBloque = ?`,
+          [idAula, horario.dia, horario.idBloque]
+        );
+
+        if (existeAula.length > 0) {
+          return res.status(400).json({ 
+            error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.` 
+          });
+        }
       }
     }
 
@@ -157,6 +174,23 @@ export const updateCargaMaterias = async (req, res) => {
         if (existeHorario.length > 0) {
           return res.status(400).json({ 
             error: `⚠️ No se puede actualizar: el horario ${horario.dia}, bloque ${existeHorario[0].nombreBloque} ya está ocupado por la materia ${existeHorario[0].materia} en el grupo ${existeHorario[0].grupo}.`
+          });
+        }
+
+        // Verificar si el aula ya está asignada a otro bloque en el mismo horario
+        const [existeAula] = await db.query(
+          `SELECT h.idGrupoMateria, a.nombre AS aula, b.nombre AS nombreBloque 
+           FROM horario h
+           INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
+           INNER JOIN aula a ON a.idAula = gm.idAula
+           INNER JOIN bloque b ON b.idBloque = h.idBloque
+           WHERE gm.idAula = ? AND h.dia = ? AND h.idBloque = ? AND h.idGrupoMateria != ?`,
+          [idAula, horario.dia, horario.idBloque, idGrupoMateria]
+        );
+
+        if (existeAula.length > 0) {
+          return res.status(400).json({ 
+            error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.` 
           });
         }
       }
