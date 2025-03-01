@@ -12,7 +12,7 @@ function AlumnoTramite() {
 
   const [idTramite, setIdTramite] = useState("");
   const [idAlumnoPA, setIdAlumnoPA] = useState("");
-  const [idPersona, setIdPersona] = useState("");
+  const [idPersona, setIdPersona] = useState(""); 
   const [idPeriodo, setIdPeriodo] = useState("");
   const [fecha, setFecha] = useState("");
   const [estatus, setEstatus] = useState("");

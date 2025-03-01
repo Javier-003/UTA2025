@@ -86,9 +86,13 @@ export const TramiteProcesoModales = ({
       {/* Fondo completamente negro cuando el modal está abierto */}
       {showObjetoModal && (
         <div style={{
-          position: "fixed",  top: 0, left: 0,
-          width: "100vw",  height: "100vh",  backgroundColor: "black",
-          opacity: 1,  zIndex: 1040 // Más alto que el fondo normal de Bootstrap
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100vw",
+          height: "100vh",
+          backgroundColor: "rgba(0, 0, 0, 0.5)", // Negro con 50% de transparencia
+          zIndex: 1040
         }}></div>
       )}
 

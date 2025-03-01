@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function Tramite() {
-  const [nombre, setnombre] = useState("");
+  const [nombre, setnombre] = useState(""); 
   const [desde, setdesde] = useState('');
   const [hasta, sethasta] = useState(''); // Inicializamos hasta como cadena vacía
   const [tramiteList, setTramite] = useState([]);

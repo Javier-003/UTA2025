@@ -1,10 +1,10 @@
-import '../../../assets/css/App.css'; //Act.
-import { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from 'react';
+import { Modal, Button } from 'react-bootstrap';
 import { getAlumnoProceso, updateAlumnoProcesoFunc } from '../../../assets/js/Tramites/alumnoproceso.js';
 import { AlumnoProcesoModales } from './AlumnoProcesoModales.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEdit, FaClipboardList, FaArrowLeft } from 'react-icons/fa';
+import * as TramiteObjetos from './tramiteObjetos.jsx'; // Importar todas las funciones de TramiteObjetos.jsx
 
 function ProcedimientoTramite() {
   const [alumnoprocesoList, setAlumnoProceso] = useState([]);
@@ -14,11 +14,13 @@ function ProcedimientoTramite() {
   const [orden, setOrden] = useState("");
   const [estatus, setEstatus] = useState("");
   const [observacion, setObservacion] = useState("");
-  
-  const [tramite, setTramite] = useState(""); 
-  const [showModal, setShowModal] = useState(false);
+  const [tramite, setTramite] = useState("");
+  const [showRegistroModal, setShowRegistroModal] = useState(false); // Modal de registro
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedAlumnoProceso, setSelectedAlumnoProceso] = useState(null);
+
+  const [currentObjeto, setCurrentObjeto] = useState(null); // Estado para el objeto actual
+  const [showObjetoModal, setShowObjetoModal] = useState(false); // Modal del objeto
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,6 +46,23 @@ function ProcedimientoTramite() {
       setShowEditModal, () => getAlumnoProceso(setAlumnoProceso)
     );
   };
+
+  // Función para manejar el clic en el botón "objeto"
+  const handleObjetoClick = (objeto) => {
+    console.log("Objeto seleccionado:", objeto); // Depuración
+    setCurrentObjeto(objeto);
+    setShowObjetoModal(true);
+  };
+
+  // Función para cerrar el modal del objeto
+  const handleCloseObjetoModal = () => {
+    setShowObjetoModal(false);
+    setCurrentObjeto(null);
+  };
+
+  // Obtener el componente del modal correspondiente al objeto actual
+  const ModalComponent = currentObjeto ? TramiteObjetos[`${currentObjeto}`] : null;
+  console.log("ModalComponent:", ModalComponent); // Depuración
 
   return (
     <div className="container mt-4">
@@ -76,6 +95,7 @@ function ProcedimientoTramite() {
                     <FaClipboardList className="me-2" /> {alumnoproceso.NombreActividad}
                   </h5>
                   <p className="mb-1"><strong>Orden:</strong> {alumnoproceso.orden}</p>
+                  <p className="mb-1"><strong>Objeto:</strong> {alumnoproceso.objeto}</p>
                   <p className="mb-1"><strong>Trámite:</strong> {alumnoproceso.tramite}</p>
                   <p className="mb-1"><strong>Observación:</strong> {alumnoproceso.observacion || "Ninguna"}</p>
                   <p className="mb-1">
@@ -98,6 +118,10 @@ function ProcedimientoTramite() {
                     }}>
                       <FaEdit /> Editar
                     </button>
+
+                    <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleObjetoClick(alumnoproceso.objeto)}>
+                      <FaEdit /> objeto {alumnoproceso.objeto}
+                    </button>
                   </div>
                 </div>
               </div>
@@ -108,6 +132,11 @@ function ProcedimientoTramite() {
         )}
       </div>
 
+      {/* Modal del objeto */}
+      {ModalComponent && (
+        <ModalComponent show={showObjetoModal} handleClose={handleCloseObjetoModal} />
+      )}
+
       {/* Modales */}
       <AlumnoProcesoModales
         idAlumnoTramite={idAlumnoTramite} setIdAlumnoTramite={setIdAlumnoTramite}
@@ -116,7 +145,7 @@ function ProcedimientoTramite() {
         orden={orden} setOrden={setOrden}
         estatus={estatus} setEstatus={setEstatus}
         observacion={observacion} setObservacion={setObservacion}
-        showModal={showModal} setShowModal={setShowModal}
+        showModal={showRegistroModal} setShowModal={setShowRegistroModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         handleUpdate={handleUpdate}
         setSelectedAlumnoProceso={setSelectedAlumnoProceso}
