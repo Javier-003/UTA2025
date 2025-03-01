@@ -8,28 +8,29 @@ import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacur
 export const EvaluacionModales = ({
   idKardex, setIdKardex,
   idMapaCurricular, setIdMapaCurricular,
+  idMateriaUnidad,setIdMateriaUnidad, 
   faltas, setFaltas,
   calificacion, setCalificacion,
   estatus, setEstatus,
   nombreUnidad, setNombreUnidad,
-  idMateriaUnidad, setIdMateriaUnidad,
   showModal, setShowModal,
   showEditModal, setShowEditModal,
   showDeleteModal, setShowDeleteModal,
   handleAdd, handleUpdate, handleDelete,
   setselectedEvaluacion
 }) => {
-  const [setevaluacionList] = useState([]);
+  const [evaluacionList, setevaluacionList] = useState([]);
   const [kardexList, setkardexList] = useState([]);
   const [mapaList, setMapaList] = useState([]);
   const [unidadList, setunidadList] = useState([]);
   
   useEffect(() => {
-    getEvaluacion().then(data => setevaluacionList(data)).catch(error => console.error("Error al obtener las ecvaluaciones:", error));
+    getEvaluacion().then(data => setevaluacionList(data)).catch(error => console.error("Error al obtener las evaluaciones:", error));
     getKardex().then(data => setkardexList(data)).catch(error => console.error("Error al obtener los kardex:", error));
     getMapaCurriculares().then(data => setMapaList(data)).catch(error => console.error("Error al obtener los mapas curriculares:", error));
     getMateriaU().then(data => setunidadList(data)).catch(error => console.error("Error al obtener las materias unidades:", error));
-  }, [setevaluacionList]);
+  }, [evaluacionList]);
+
 
   return (
     <>
@@ -47,11 +48,12 @@ export const EvaluacionModales = ({
                   <option value="">Selecciona un Kardex</option>
                   {kardexList.map((kardex) => (
                     <option key={kardex.idKardex} value={kardex.idKardex}>
-                        {kardex.idKardex}
+                        {kardex.idKardex} 
                     </option>
                   ))}
                 </select>
-              </div>
+              </div>     
+            
               <div className="input-group mb-3">
                 <span className="input-group-text">Mapa curricular:</span>
                 <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
@@ -62,20 +64,24 @@ export const EvaluacionModales = ({
                   ))}
                 </select>
               </div>
+
               <div className="input-group mb-3">
-                <span className="input-group-text">Materia Unidad:</span>
+                <span className="input-group-text">Selecciona una Unidad:</span>
                 <select className="form-select" value={idMateriaUnidad} onChange={(event) => setIdMateriaUnidad(event.target.value)}>
-                  <option value="">Selecciona una Materia Unidad</option>
-                  {unidadList.map((mUnidad) => (
-                    <option key={mUnidad.IdMateriaUnidad} value={mUnidad.idMateriaUnidad}>
-                        {mUnidad.unidad} {mUnidad.Nombre}</option>  
+                  <option value="">Selecciona una Unidad</option>
+                  {unidadList.map((materiaunidad) => (
+                    <option key={materiaunidad.idMateriaUnidad} value={materiaunidad.idMateriaUnidad}>
+                        {materiaunidad.nombre}</option>
                   ))}
                 </select>
               </div>
+
+
               <div className="input-group mb-3">
                 <span className="input-group-text"> Nombre:</span>
                 <input type="text" className="form-control" value={nombreUnidad} onChange={(event) => setNombreUnidad(event.target.value)} />
               </div>
+
               <div className="input-group mb-3">
                 <span className="input-group-text">Faltas:</span>
                 <input type="number" className="form-control" value={faltas} onChange={(event) => setFaltas(event.target.value)} />
@@ -116,29 +122,28 @@ export const EvaluacionModales = ({
               <select className="form-select" value={idKardex} onChange={(event) => setIdKardex(event.target.value)}>
                 <option value="">Selecciona un kardex</option>
                 {kardexList.map((kardex) => (
-                  <option key={kardex.IdKardex} value={kardex.IdKardex}>{kardex.IdKardex}</option>
+                  <option key={kardex.idKardex} value={kardex.idKardex}>
+                        {kardex.idKardex}</option>
                 ))}
               </select>
-              </div>
-
-          <div className="input-group mb-3">
-                <span className="input-group-text">Mapa curricular:</span>
-                <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
-                  <option value="">Selecciona una materia</option>
+            </div>
+            
+            <div className="input-group mb-3">
+              <span className="input-group-text">Mapa curricular:</span>
+              <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
+                <option value="">Selecciona una materia</option>
                   {mapaList.map((mapa) => (
-                    <option key={mapa.idMapaCurricular} value={mapa.idMapaCurricular}>
-                        {mapa.materia}</option>
-                  ))}
-                </select>
-              </div>
+                <option key={mapa.idMapaCurricular} value={mapa.idMapaCurricular}>{mapa.materia}</option> ))}
+              </select>
+            </div>
 
-              <div className="input-group mb-3">
-                <span className="input-group-text">Materia Unidad:</span>
+            <div className="input-group mb-3">
+                <span className="input-group-text">Selecciona una Unidad:</span>
                 <select className="form-select" value={idMateriaUnidad} onChange={(event) => setIdMateriaUnidad(event.target.value)}>
-                  <option value="">Selecciona una Materia Unidad</option>
-                  {unidadList.map((mUnidad) => (
-                    <option key={mUnidad.IdMateriaUnidad} value={mUnidad.IdMateriaUnidad}>
-                        {mUnidad.unidad} {mUnidad.Nombre}</option>  
+                  <option value="">Selecciona una materia</option>
+                  {unidadList.map((materiaunidad) => (
+                    <option key={materiaunidad.idMateriaUnidad} value={materiaunidad.idMateriaUnidad}>
+                        {materiaunidad.nombre}</option>
                   ))}
                 </select>
               </div>

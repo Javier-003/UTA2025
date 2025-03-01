@@ -16,6 +16,7 @@ function Evaluacion() {
   const [kardex, setKardex] = useState("");
   const [mapa, setMapa] = useState("");
   const [nombreUnidad, setNombreUnidad] = useState("");
+  
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -63,15 +64,14 @@ function Evaluacion() {
         <div className="d-flex justify-content-between align-items-center">
           <button className='btn btn-success' onClick={() => {
             setIdKadex("");
+            setKardex("");
             setIdMapaCurricular("");
-            setFaltas("");
+            setIdMateriaUnidad("");
             setCalificacion("");
             setEstatus("");
-            setNombreUnidad("");
-            setIdMateriaUnidad("");
             setMapa("");
+            setFaltas("");
             setNombreUnidad("");
-            setKardex("");
             setselectedEvaluacion(null);
             setShowModal(true);
           }}>Registrar</button>
@@ -83,15 +83,16 @@ function Evaluacion() {
           <table className="table table-bordered">
               <thead>
                 <tr>
-                  <th>id Evaluación</th>
-                  <th>id Kardex</th>
-                  <th>id mapa curricular</th>
-                  <th>mapa</th>
-                  <th>Faltas</th>
+                  <th>ID E</th>
+                  <th>ID K</th>
+                  <th>ID MP</th>
+                  <th>Materia</th>
+                  <th>Id MU</th>
+                  <th>Unidad</th>
                   <th>Calificacion</th>
+                  <th>Faltas</th>
+                  <th>Nombre Unidad</th>
                   <th>Estatus</th>
-                  <th>Id Materia Unidad</th>
-                  <th>unidad</th>
                   <th>Editar</th>
                   <th>Eliminar</th>
                 </tr>
@@ -101,15 +102,15 @@ function Evaluacion() {
                   filteredData.map((evaluacion) => (
                     <tr key={evaluacion.idEvaluacion}>
                       <td>{evaluacion.idEvaluacion}</td>
-                      <td>{evaluacion.idKadex}</td>
+                      <td>{evaluacion.idKadex} </td>
                       <td>{evaluacion.idMapaCurricular}</td>
                       <td>{evaluacion.materia}</td>
-                      
-                      <td>{evaluacion.faltas}</td>
-                      <td>{evaluacion.calificacion}</td>
-                      <td>{evaluacion.estatus}</td>
                       <td>{evaluacion.idMateriaUnidad}</td>
+                      <td>{evaluacion.nombre}</td>
+                      <td>{evaluacion.calificacion}</td>
+                      <td>{evaluacion.faltas}</td>
                       <td>{evaluacion.nombreUnidad}</td>
+                      <td>{evaluacion.estatus}</td>
                       <td>
                         <button className="btn btn-warning" onClick={() => {
                           setShowEditModal(true);
@@ -118,12 +119,11 @@ function Evaluacion() {
                           setKardex(evaluacion.kardex);
                           setIdMapaCurricular(evaluacion.idMapaCurricular);
                           setMapa(evaluacion.mapa);
-                          setNombreUnidad(evaluacion.nombreUnidad);
                           setFaltas(evaluacion.faltas);
                           setCalificacion(evaluacion.calificacion);
                           setEstatus(evaluacion.estatus);
                           setIdMateriaUnidad(evaluacion.idMateriaUnidad);
-                          setNombreUnidad(evaluacion.unidad);
+                          setNombreUnidad(evaluacion.nombreUnidad);
                         }}>Editar</button>
                       </td>
                       <td>
@@ -142,28 +142,23 @@ function Evaluacion() {
                    </table>
                  </div>
                </div>
-               
-      <EvaluacionModales
-      idKardex={idKadex} setIdKardex={setIdKadex}
-      idMapaCurricular={idMapaCurricular} setIdMapaCurricular={setIdMapaCurricular}
-      
-      faltas={faltas} setFaltas={setFaltas}
-      calificacion={calificacion} setCalificacion={setCalificacion}
-      estatus={estatus} setEstatus={setEstatus}
-      
-      idMateriaUnidad={idMateriaUnidad} setIdMateriaUnidad={setIdMateriaUnidad}
-      
-      kardex={kardex} setKardex={setKardex}
-      mapa={mapa} setMapa={setMapa}
-      nombreUnidad={nombreUnidad} setNombreUnidad={setNombreUnidad}
-
-      showModal={showModal} setShowModal={setShowModal}
-      showEditModal={showEditModal} setShowEditModal={setShowEditModal}
-      showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-      handleAdd={handleAdd} 
-      handleUpdate={handleUpdate} 
-      handleDelete={handleDelete} 
-      setselectedEvaluacion={setselectedEvaluacion}/>   
+               <EvaluacionModales
+               idKardex={idKadex} setIdKardex={setIdKadex}
+               idMapaCurricular={idMapaCurricular} setIdMapaCurricular={setIdMapaCurricular}
+               mapa={mapa} setMapa={setMapa}
+               faltas={faltas} setFaltas={setFaltas}
+               calificacion={calificacion} setCalificacion={setCalificacion}
+               estatus={estatus} setEstatus={setEstatus}
+               idMateriaUnidad={idMateriaUnidad} setIdMateriaUnidad={setIdMateriaUnidad}
+               kardex={kardex} setKardex={setKardex}
+               nombreUnidad={nombreUnidad} setNombreUnidad={setNombreUnidad}
+               showModal={showModal} setShowModal={setShowModal}
+               showEditModal={showEditModal} setShowEditModal={setShowEditModal}
+               showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
+               handleAdd={handleAdd} 
+               handleUpdate={handleUpdate} 
+               handleDelete={handleDelete} 
+               setselectedEvaluacion={setselectedEvaluacion}/>   
     </div>
   );
 }

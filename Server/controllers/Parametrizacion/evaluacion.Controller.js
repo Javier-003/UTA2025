@@ -3,12 +3,23 @@ import { db } from "../../db/connection.js";
 export const getEvaluacion = async (req, res) => {
   try {
     const query = `
-SELECT eva.idEvaluacion, 
-      eva.idKadex, eva.idMapaCurricular, eva.idMateriaUnidad, eva.calificacion, eva.faltas, eva.nombreUnidad, eva.estatus, 
-      mc.materia
+      SELECT 
+        eva.idEvaluacion, 
+        eva.idKadex, 
+        eva.idMapaCurricular, 
+        eva.idMateriaUnidad, 
+        eva.calificacion, 
+        eva.faltas, 
+        eva.nombreUnidad, 
+        eva.estatus, 
+        mc.materia,
+        mu.nombre
       FROM evaluacion AS eva
-      JOIN mapacurricular AS mc ON eva.idMapaCurricular = mc.idMapaCurricular`;
+      JOIN mapacurricular AS mc ON eva.idMapaCurricular = mc.idMapaCurricular
+      JOIN materiaunidad AS mu ON eva.idMateriaUnidad = mu.idMateriaUnidad`;
+
     const [rows] = await db.query(query);
+
     if (rows.length > 0) {
       res.json({ message: "Evaluación obtenida correctamente", data: rows });
     } else {
@@ -19,6 +30,7 @@ SELECT eva.idEvaluacion,
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+
 
 export const createEvaluacion = async (req, res) => {
   try {
