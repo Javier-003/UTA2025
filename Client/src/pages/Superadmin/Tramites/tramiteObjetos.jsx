@@ -5,8 +5,6 @@ import { getActividades } from "../../../api/Parametrizacion/actividad.api.js";
 import React from 'react';
 import { Modal, Button, Form, Row, Col, Alert  } from 'react-bootstrap';// Asegúrate de que esto esté presente en cada archivo donde uses useState o useEffect
 
-
-
 // ------------------------------------------ PAGO INSCRIPCIÓN -------------------------------------------------------
 export const tramiteValidaPagoInscripcion = ({
   idAlumnoTramite, setIdAlumnoTramite,
@@ -16,15 +14,12 @@ export const tramiteValidaPagoInscripcion = ({
   show,
 }) => {
   const [alumnotramiteList, setAlumnotramiteList] = useState([]);
-
   useEffect(() => {
     getAlumnoTramites()
       .then((data) => setAlumnotramiteList(data))
       .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
   }, []);
-
   const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
-
   return (
     <Modal show={show} onHide={handleClose} centered>
       {/* Encabezado con color elegante */}
@@ -171,43 +166,162 @@ export const tramiteEntregaAN = ({
 };
 
 // ------------------------------------------ CERTIFICADO DE SECUNDARIA -------------------------------------------------------
-export const tramiteEntregaCS = ({ show, handleClose }) => {
+export const tramiteEntregaCS = ({
+  idAlumnoTramite, setIdAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+}) => {
+  const [alumnotramiteList, setAlumnotramiteList] = useState([]);
+
+  useEffect(() => {
+    getAlumnoTramites()
+      .then((data) => setAlumnotramiteList(data))
+      .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
+  }, []);
+
+  const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Entrega de Certificado de Secundaria</Modal.Title>
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Entrega de Certificado de Secundaria</Modal.Title>
       </Modal.Header>
+      
       <Modal.Body>
-        <p>Aquí puedes gestionar la entrega del Certificado de Secundaria.</p>
+        {/* Nombre del alumno resaltado pero sin exagerar */}
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="light" className="border border-primary text-center fw-semibold fs-5">
+              Alumno: <span className="text-primary">{alumno}</span>
+            </Alert>
+          </Col>
+        </Row>
+
+        <Form>
+          {/* Observaciones con diseño limpio */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Observaciones</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Escribe aquí cualquier observación (opcional)"
+            />
+          </Form.Group>
+
+          {/* Estatus con un diseño limpio y elegante */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Estado del Trámite</Form.Label>
+            <Form.Select
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
+            >
+              <option value="">Seleccionar</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Concluido">Concluido</option>
+            </Form.Select>
+          </Form.Group>
+        </Form>
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Entregar
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            handleUpdate();
+            handleClose();
+          }}
+        >
+          Guardar Cambios
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
+
 // Función para la entrega de CURP
-export const tramiteEntregaCURP = ({ show, handleClose }) => {
+export const tramiteEntregaCURP = ({
+  idAlumnoTramite, setIdAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+}) => {
+  const [alumnotramiteList, setAlumnotramiteList] = useState([]);
+
+  useEffect(() => {
+    getAlumnoTramites()
+      .then((data) => setAlumnotramiteList(data))
+      .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
+  }, []);
+
+  const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Entrega de CURP</Modal.Title>
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Entrega de CURP</Modal.Title>
       </Modal.Header>
+      
       <Modal.Body>
-        <p>Aquí puedes gestionar la entrega de la CURP.</p>
+        {/* Nombre del alumno resaltado pero sin exagerar */}
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="light" className="border border-primary text-center fw-semibold fs-5">
+              Alumno: <span className="text-primary">{alumno}</span>
+            </Alert>
+          </Col>
+        </Row>
+
+        <Form>
+          {/* Observaciones con diseño limpio */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Observaciones</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Escribe aquí cualquier observación (opcional)"
+            />
+          </Form.Group>
+
+          {/* Estatus con un diseño limpio y elegante */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Estado del Trámite</Form.Label>
+            <Form.Select
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
+            >
+              <option value="">Seleccionar</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Concluido">Concluido</option>
+            </Form.Select>
+          </Form.Group>
+        </Form>
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Entregar
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            handleUpdate();
+            handleClose();
+          }}
+        >
+          Guardar Cambios
         </Button>
       </Modal.Footer>
     </Modal>
@@ -215,21 +329,80 @@ export const tramiteEntregaCURP = ({ show, handleClose }) => {
 };
 
 // Función para la entrega de INE
-export const tramiteEntregaINE = ({ show, handleClose }) => {
+export const tramiteEntregaINE = ({
+  idAlumnoTramite, setIdAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+}) => {
+  const [alumnotramiteList, setAlumnotramiteList] = useState([]);
+
+  useEffect(() => {
+    getAlumnoTramites()
+      .then((data) => setAlumnotramiteList(data))
+      .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
+  }, []);
+
+  const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Entrega de INE</Modal.Title>
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Entrega de INE</Modal.Title>
       </Modal.Header>
+      
       <Modal.Body>
-        <p>Aquí puedes gestionar la entrega de la INE.</p>
+        {/* Nombre del alumno resaltado pero sin exagerar */}
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="light" className="border border-primary text-center fw-semibold fs-5">
+              Alumno: <span className="text-primary">{alumno}</span>
+            </Alert>
+          </Col>
+        </Row>
+
+        <Form>
+          {/* Observaciones con diseño limpio */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Observaciones</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Escribe aquí cualquier observación (opcional)"
+            />
+          </Form.Group>
+
+          {/* Estatus con un diseño limpio y elegante */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Estado del Trámite</Form.Label>
+            <Form.Select
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
+            >
+              <option value="">Seleccionar</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Concluido">Concluido</option>
+            </Form.Select>
+          </Form.Group>
+        </Form>
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Entregar
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            handleUpdate();
+            handleClose();
+          }}
+        >
+          Guardar Cambios
         </Button>
       </Modal.Footer>
     </Modal>
@@ -237,43 +410,162 @@ export const tramiteEntregaINE = ({ show, handleClose }) => {
 };
 
 // Función para la entrega de Fotos
-export const tramiteEntregaFotos = ({ show, handleClose }) => {
+export const tramiteEntregaFotos = ({
+  idAlumnoTramite, setIdAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+}) => {
+  const [alumnotramiteList, setAlumnotramiteList] = useState([]);
+
+  useEffect(() => {
+    getAlumnoTramites()
+      .then((data) => setAlumnotramiteList(data))
+      .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
+  }, []);
+
+  const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Entrega de Fotos</Modal.Title>
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Entrega de Fotos</Modal.Title>
       </Modal.Header>
+      
       <Modal.Body>
-        <p>Aquí puedes gestionar la entrega de las Fotos.</p>
+        {/* Nombre del alumno resaltado pero sin exagerar */}
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="light" className="border border-primary text-center fw-semibold fs-5">
+              Alumno: <span className="text-primary">{alumno}</span>
+            </Alert>
+          </Col>
+        </Row>
+
+        <Form>
+          {/* Observaciones con diseño limpio */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Observaciones</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Escribe aquí cualquier observación (opcional)"
+            />
+          </Form.Group>
+
+          {/* Estatus con un diseño limpio y elegante */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Estado del Trámite</Form.Label>
+            <Form.Select
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
+            >
+              <option value="">Seleccionar</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Concluido">Concluido</option>
+            </Form.Select>
+          </Form.Group>
+        </Form>
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Entregar
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            handleUpdate();
+            handleClose();
+          }}
+        >
+          Guardar Cambios
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
+
 // Función para la entrega de Comprobante de Domicilio
-export const tramiteEntregaCompDomicilio = ({ show, handleClose }) => {
+export const tramiteEntregaCompDomicilio = ({
+  idAlumnoTramite, setIdAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+}) => {
+  const [alumnotramiteList, setAlumnotramiteList] = useState([]);
+
+  useEffect(() => {
+    getAlumnoTramites()
+      .then((data) => setAlumnotramiteList(data))
+      .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
+  }, []);
+
+  const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Entrega de Comprobante de Domicilio</Modal.Title>
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Entrega de Comprobante de Domicilio</Modal.Title>
       </Modal.Header>
+      
       <Modal.Body>
-        <p>Aquí puedes gestionar la entrega del Comprobante de Domicilio.</p>
+        {/* Nombre del alumno resaltado pero sin exagerar */}
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="light" className="border border-primary text-center fw-semibold fs-5">
+              Alumno: <span className="text-primary">{alumno}</span>
+            </Alert>
+          </Col>
+        </Row>
+
+        <Form>
+          {/* Observaciones con diseño limpio */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Observaciones</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Escribe aquí cualquier observación (opcional)"
+            />
+          </Form.Group>
+
+          {/* Estatus con un diseño limpio y elegante */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Estado del Trámite</Form.Label>
+            <Form.Select
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
+            >
+              <option value="">Seleccionar</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Concluido">Concluido</option>
+            </Form.Select>
+          </Form.Group>
+        </Form>
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Entregar
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            handleUpdate();
+            handleClose();
+          }}
+        >
+          Guardar Cambios
         </Button>
       </Modal.Footer>
     </Modal>
@@ -347,21 +639,80 @@ export const tramiteRegistraGrupoMaterias = ({ show, handleClose }) => {
 };
 
 // Función para reinscribir a un alumno
-export const tramiteReinscribir = ({ show, handleClose }) => {
+  export const tramiteReinscribir = ({
+    idAlumnoTramite, setIdAlumnoTramite,
+    estatus, setEstatus,
+    observacion, setObservacion,
+    handleUpdate, handleClose,
+    show,
+  }) => {
+    const [alumnotramiteList, setAlumnotramiteList] = useState([]);
+  
+    useEffect(() => {
+      getAlumnoTramites()
+        .then((data) => setAlumnotramiteList(data))
+        .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
+    }, []);
+  
+    const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Reinscribir Alumno</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <p>Aquí puedes reinscribir a un alumno.</p>
+  <Modal show={show} onHide={handleClose}>
+    {/* Encabezado con color elegante */}
+    <Modal.Header closeButton className="bg-primary text-white">
+      <Modal.Title className="fw-bold">Reinscribir Alumno</Modal.Title>
+    </Modal.Header>
+    
+    <Modal.Body>
+        {/* Nombre del alumno resaltado pero sin exagerar */}
+        <Row className="mb-3">
+          <Col>
+            <Alert variant="light" className="border border-primary text-center fw-semibold fs-5">
+              Alumno: <span className="text-primary">{alumno}</span>
+            </Alert>
+          </Col>
+        </Row>
+
+        <Form>
+          {/* Observaciones con diseño limpio */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Observaciones</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={observacion}
+              onChange={(e) => setObservacion(e.target.value)}
+              placeholder="Escribe aquí cualquier observación (opcional)"
+            />
+          </Form.Group>
+
+          {/* Estatus con un diseño limpio y elegante */}
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Estado del Reinscribir el Alumno</Form.Label>
+            <Form.Select
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
+            >
+              <option value="">Seleccionar</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Concluido">Concluido</option>
+            </Form.Select>
+          </Form.Group>
+        </Form>
       </Modal.Body>
+
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
           Cerrar
         </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Reinscribir
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            handleUpdate();
+            handleClose();
+          }}
+        >
+          Guardar Cambios
         </Button>
       </Modal.Footer>
     </Modal>
