@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { getAlumnoProceso, updateAlumnoProcesoFunc } from '../../../assets/js/Tramites/alumnoproceso.js';
-import { AlumnoProcesoModales } from './AlumnoProcesoModales.jsx';
+//import { AlumnoProcesoModales } from './AlumnoProcesoModales.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEdit, FaClipboardList, FaArrowLeft } from 'react-icons/fa';
 import * as TramiteObjetos from './tramiteObjetos.jsx'; // Importar todas las funciones de TramiteObjetos.jsx
+
 
 function ProcedimientoTramite() {
   const [alumnoprocesoList, setAlumnoProceso] = useState([]);
@@ -39,13 +40,13 @@ function ProcedimientoTramite() {
     .filter((item) => item.idAlumnoTramite == idAlumnoTramiteParam)
     .sort((a, b) => a.orden - b.orden);
 
-  const handleUpdate = () => {
-    updateAlumnoProcesoFunc(
-      selectedAlumnoProceso.idAlumnoProceso,
-      idAlumnoTramite, idTramiteProceso, idActividad, orden, estatus, observacion,
-      setShowEditModal, () => getAlumnoProceso(setAlumnoProceso)
-    );
-  };
+    const handleUpdate = () => {
+      updateAlumnoProcesoFunc(
+        selectedAlumnoProceso.idAlumnoProceso,
+        idAlumnoTramite, idTramiteProceso, idActividad, orden, estatus, observacion,
+        setShowEditModal, () => getAlumnoProceso(setAlumnoProceso)
+      );
+    };
 
   // Función para manejar el clic en el botón "objeto"
   const handleObjetoClick = (objeto) => {
@@ -53,6 +54,8 @@ function ProcedimientoTramite() {
     setCurrentObjeto(objeto);
     setShowObjetoModal(true);
   };
+
+  
 
   // Función para cerrar el modal del objeto
   const handleCloseObjetoModal = () => {
@@ -105,7 +108,15 @@ function ProcedimientoTramite() {
                     </span>
                   </p>
                   <div className="mt-3">
+                   
+
+               {/* <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleObjetoClick(alumnoproceso.objeto)
+                    }>
+                      <FaEdit /> objeto {alumnoproceso.objeto}
+                    </button> */}
+
                     <button className="btn btn-sm btn-outline-primary me-2" onClick={() => {
+                      handleObjetoClick(alumnoproceso.objeto);
                       setIdAlumnoTramite(alumnoproceso.idAlumnoTramite);
                       setIdTramiteProceso(alumnoproceso.idTramiteProceso);
                       setIdActividad(alumnoproceso.idActividad);
@@ -113,15 +124,11 @@ function ProcedimientoTramite() {
                       setEstatus(alumnoproceso.estatus);
                       setObservacion(alumnoproceso.observacion);
                       setTramite(alumnoproceso.tramite);
-                      setShowEditModal(true);
                       setSelectedAlumnoProceso(alumnoproceso);
-                    }}>
-                      <FaEdit /> Editar
+                      }}>
+                         <i className="bi bi-card-checklist"></i> Proceso
                     </button>
 
-                    <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleObjetoClick(alumnoproceso.objeto)}>
-                      <FaEdit /> objeto {alumnoproceso.objeto}
-                    </button>
                   </div>
                 </div>
               </div>
@@ -134,22 +141,18 @@ function ProcedimientoTramite() {
 
       {/* Modal del objeto */}
       {ModalComponent && (
-        <ModalComponent show={showObjetoModal} handleClose={handleCloseObjetoModal} />
-      )}
-
-      {/* Modales */}
-      <AlumnoProcesoModales
-        idAlumnoTramite={idAlumnoTramite} setIdAlumnoTramite={setIdAlumnoTramite}
-        idTramiteProceso={idTramiteProceso} setIdTramiteProceso={setIdTramiteProceso}
-        idActividad={idActividad} setIdActividad={setIdActividad}
-        orden={orden} setOrden={setOrden}
-        estatus={estatus} setEstatus={setEstatus}
-        observacion={observacion} setObservacion={setObservacion}
-        showModal={showRegistroModal} setShowModal={setShowRegistroModal}
-        showEditModal={showEditModal} setShowEditModal={setShowEditModal}
-        handleUpdate={handleUpdate}
-        setSelectedAlumnoProceso={setSelectedAlumnoProceso}
-      />
+  <ModalComponent 
+    show={showObjetoModal} 
+    handleClose={handleCloseObjetoModal} 
+    idAlumnoTramite={idAlumnoTramite} setIdAlumnoTramite={setIdAlumnoTramite}
+    idTramiteProceso={idTramiteProceso} setIdTramiteProceso={setIdTramiteProceso}
+    idActividad={idActividad} setIdActividad={setIdActividad}
+    orden={orden} setOrden={setOrden}
+    estatus={estatus} setEstatus={setEstatus}
+    observacion={observacion} setObservacion={setObservacion}
+    handleUpdate={handleUpdate}  // Asegurar que handleUpdate está pasando correctamente
+  />
+)}
     </div>
   );
 }
