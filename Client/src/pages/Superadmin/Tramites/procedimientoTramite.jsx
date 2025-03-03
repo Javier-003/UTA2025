@@ -6,6 +6,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEdit, FaClipboardList, FaArrowLeft } from 'react-icons/fa';
 import * as TramiteObjetos from './tramiteObjetos.jsx'; // Importar todas las funciones de TramiteObjetos.jsx
 
+//Alumno
+import { getAlumno, addAlumno} 
+from '../../../assets/js/Nucleo/alumno.js';
+
+//AlumnoPA
+import { getAlumnopatodos, addAlumnoPa} 
+from '../../../assets/js/Parametrizacion/alumnopa.js';
 
 function ProcedimientoTramite() {
   const [alumnoprocesoList, setAlumnoProceso] = useState([]);
@@ -20,6 +27,30 @@ function ProcedimientoTramite() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedAlumnoProceso, setSelectedAlumnoProceso] = useState(null);
 
+//ALUMNO
+  const [alumnoList, setAlumno] = useState([]);
+  const [idPersona, setidPersona] = useState("");
+  const [nombre, setnombre] = useState("");
+  const [paterno, setpaterno] = useState("");
+  const [materno, setmaterno] = useState("");
+  const [email, setemail] = useState("");
+  const [nss, setnss] = useState("");
+  const [fecha, setfecha] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedAlumno, setSelectedAlumno] = useState(null);
+
+//ALUMNOPA
+  const [alumnopaList, setAlumnopaList] = useState([]);
+  const [idAlumno, setIdAlumno] = useState("");
+  const [idProgramaAcademico, setIdProgramaAcademico] = useState("");
+  const [carrera, setCarrera] = useState("");
+  const [idPeriodo, setIdPeriodo] = useState("");
+  const [matricula, setMatricula] = useState("");
+  const [estatusAlumnoPA, setEstatusAlumnoPA] = useState("");
+  const [desde, setDesde] = useState("");
+  const [hasta, setHasta] = useState("");
+  const [selectedAlumnopa, setSelectedAlumnopa] = useState(null);
+
   const [currentObjeto, setCurrentObjeto] = useState(null); // Estado para el objeto actual
   const [showObjetoModal, setShowObjetoModal] = useState(false); // Modal del objeto
 
@@ -31,6 +62,18 @@ function ProcedimientoTramite() {
   useEffect(() => {
     getAlumnoProceso(setAlumnoProceso);
   }, []);
+
+  useEffect(() => {
+    getAlumnoProceso(setAlumnoProceso);
+}, []);
+
+useEffect(() => {
+    if (alumnoprocesoList.length > 0) {
+        console.log("Datos de alumnoproceso:", alumnoprocesoList[0]); // Ver el primer objeto
+        console.log("Claves del objeto:", Object.keys(alumnoprocesoList[0])); // Verificar nombres de las claves
+    }
+}, [alumnoprocesoList]);
+
 
   if (!idAlumnoTramiteParam) {
     return <h5 className="text-danger text-center mt-4">⚠ Acceso denegado: Falta seleccionar un trámite.</h5>;
@@ -48,6 +91,22 @@ function ProcedimientoTramite() {
       );
     };
 
+    //ALUMNO
+      const handleAdd = () => {
+        console.log("Datos enviados:", {
+          idPersona, email, nss, fecha,
+        });
+        addAlumno(idPersona, email, nss, fecha, setShowModal, () => getAlumno(setAlumno));
+      };
+     
+      //ALUMNO PA
+      const handleAddPA = () => {
+        console.log("Datos enviados a PA:", {idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta});
+          addAlumnoPa(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta, setShowModal, () => getAlumnopatodos(setAlumnopaList));
+        };
+
+      
+
   // Función para manejar el clic en el botón "objeto"
   const handleObjetoClick = (objeto) => {
     console.log("Objeto seleccionado:", objeto); // Depuración
@@ -56,7 +115,6 @@ function ProcedimientoTramite() {
   };
 
   
-
   // Función para cerrar el modal del objeto
   const handleCloseObjetoModal = () => {
     setShowObjetoModal(false);
@@ -98,6 +156,7 @@ function ProcedimientoTramite() {
                     <FaClipboardList className="me-2" /> {alumnoproceso.NombreActividad}
                   </h5>
                   <p className="mb-1"><strong>Orden:</strong> {alumnoproceso.orden}</p>
+                  <p className="mb-1"><strong>Orden:</strong> {alumnoproceso.idpersona}</p>
                   <p className="mb-1"><strong>Objeto:</strong> {alumnoproceso.objeto}</p>
                   <p className="mb-1"><strong>Trámite:</strong> {alumnoproceso.tramite}</p>
                   <p className="mb-1"><strong>Observación:</strong> {alumnoproceso.observacion || "Ninguna"}</p>
@@ -115,19 +174,24 @@ function ProcedimientoTramite() {
                       <FaEdit /> objeto {alumnoproceso.objeto}
                     </button> */}
 
-                    <button className="btn btn-sm btn-outline-primary me-2" onClick={() => {
-                      handleObjetoClick(alumnoproceso.objeto);
-                      setIdAlumnoTramite(alumnoproceso.idAlumnoTramite);
-                      setIdTramiteProceso(alumnoproceso.idTramiteProceso);
-                      setIdActividad(alumnoproceso.idActividad);
-                      setOrden(alumnoproceso.orden);
-                      setEstatus(alumnoproceso.estatus);
-                      setObservacion(alumnoproceso.observacion);
-                      setTramite(alumnoproceso.tramite);
-                      setSelectedAlumnoProceso(alumnoproceso);
-                      }}>
-                         <i className="bi bi-card-checklist"></i> Proceso
-                    </button>
+                  <button className="btn btn-sm btn-outline-primary me-2" onClick={() => {
+                    handleObjetoClick(alumnoproceso.objeto);
+                    setIdAlumnoTramite(alumnoproceso.idAlumnoTramite);
+                    setIdTramiteProceso(alumnoproceso.idTramiteProceso);
+                    setIdActividad(alumnoproceso.idActividad);
+                    setOrden(alumnoproceso.orden);
+                    setEstatus(alumnoproceso.estatus);
+                    setObservacion(alumnoproceso.observacion);
+                    setTramite(alumnoproceso.tramite);
+                    setSelectedAlumnoProceso(alumnoproceso);
+                    setidPersona(alumnoproceso.idPersona); // Asegúrate de que esto esté correctamente definido
+                    console.log("idPersona al abrir el modal:", alumnoproceso.idPersona); // Depuración
+
+                    setIdAlumno(alumnoproceso.idAlumno); 
+                    console.log("idAlumno al abrir el modal:", alumnoproceso.idAlumno); // Depuración
+                  }}>
+                    <i className="bi bi-card-checklist"></i> Proceso
+                  </button>
 
                   </div>
                 </div>
@@ -141,7 +205,9 @@ function ProcedimientoTramite() {
 
       {/* Modal del objeto */}
       {ModalComponent && (
-  <ModalComponent 
+   <ModalComponent 
+
+   //MODALES GENERICOS
     show={showObjetoModal} 
     handleClose={handleCloseObjetoModal} 
     idAlumnoTramite={idAlumnoTramite} setIdAlumnoTramite={setIdAlumnoTramite}
@@ -150,7 +216,32 @@ function ProcedimientoTramite() {
     orden={orden} setOrden={setOrden}
     estatus={estatus} setEstatus={setEstatus}
     observacion={observacion} setObservacion={setObservacion}
-    handleUpdate={handleUpdate}  // Asegurar que handleUpdate está pasando correctamente
+    handleUpdate={handleUpdate}  
+
+    //MODAL ALUMNO
+    idPersona={idPersona} setidPersona={setidPersona}
+    nombre={nombre} setnombre={setnombre}
+    paterno={paterno} setpaterno={setpaterno}
+    materno={materno} setmaterno={setmaterno}
+    email={email} setemail={setemail}
+    fecha={fecha} setfecha={setfecha}
+    nss={nss} setnss={setnss}
+    showModal={showModal} setShowModal={setShowModal}
+    handleAdd={handleAdd}
+    selectedAlumno={selectedAlumno}
+
+    //MODAL ALUMNOPA
+    idAlumno={idAlumno} setIdAlumno={setIdAlumno} 
+    idProgramaAcademico={idProgramaAcademico} setIdProgramaAcademico={setIdProgramaAcademico}
+    carrera={carrera} setCarrera={setCarrera}
+    idPeriodo={idPeriodo} setIdPeriodo={setIdPeriodo}
+    matricula={matricula} setMatricula={setMatricula}
+    estatusAlumnoPA={estatusAlumnoPA} setEstatusAlumnoPA={setEstatusAlumnoPA}
+    desde={desde} setDesde={setDesde}
+    hasta={hasta} setHasta={setHasta}
+    handleAddPA={handleAddPA}
+    setSelectedAlumnopa={setSelectedAlumnopa}
+
   />
 )}
     </div>

@@ -1,6 +1,6 @@
 import { db } from "../../db/connection.js";
 //Act. 
-export const getAlumnoProcesotodos = async(req, res) => {
+export const getAlumnoProcesotodos = async (req, res) => {
   try {
     const query = `
       SELECT 
@@ -16,6 +16,10 @@ export const getAlumnoProcesotodos = async(req, res) => {
         t.nombre AS tramite, 
         prog.nombreOficial AS programa,
         tp.objeto, 
+        alumno.idAlumno AS idAlumno,
+        persona.idpersona AS idPersona,
+        apa.idAlumnoPA, 
+        apa.estatus AS estatusAlumnoPA,
         CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno
       FROM 
         alumnoproceso ap
@@ -27,23 +31,27 @@ export const getAlumnoProcesotodos = async(req, res) => {
         tramite t ON tp.idTramite = t.idTramite
       LEFT JOIN 
         alumnotramite atr ON ap.idAlumnoTramite = atr.idAlumnoTramite
-      LEFT JOIN
-        alumnopa apa ON atr.idAlumnoPA = apa.idAlumnoPA
-      LEFT JOIN
-        alumno ON apa.idAlumno = alumno.idAlumno
       LEFT JOIN 
         persona ON atr.idPersona = persona.idPersona
-      LEFT JOIN programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico;
+      LEFT JOIN 
+        alumno ON persona.idPersona = alumno.idAlumno  
+      LEFT JOIN 
+        alumnopa apa ON alumno.idAlumno = apa.idAlumno
+      LEFT JOIN 
+        programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico;
     `;
+
     // Ejecutar la consulta
     const [rows] = await db.query(query);
+
     if (rows.length > 0) {
-      res.json({ message: "Alumno en Proceso obtenidos correctamente", data: rows });
+      res.json({ message: "Alumnos en proceso obtenidos correctamente", data: rows });
     } else {
       res.status(404).json({ message: "No se encontraron alumnos en proceso" });
     }
   } catch (error) {
-    return res.status(500).json({ message: "Algo salió mal", error: error.message });
+    console.error("Error en getAlumnoProcesotodos:", error);
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
 

@@ -77,7 +77,7 @@ function Alumno() {
   );
 
   
-  const dataToDisplay = searchText ? filteredData : alumnoList.slice(-10);
+  const dataToDisplay = searchText ? filteredData : alumnoList.slice(-50);
 
   return (
     <div className="container mt-4">
