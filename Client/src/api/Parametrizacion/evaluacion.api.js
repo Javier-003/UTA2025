@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000";
+const userSession = localStorage.getItem('Username');
 
 // Obtener todos los registros de evaluacion
 export const getEvaluacion = async () => {
@@ -16,9 +17,9 @@ export const getEvaluacion = async () => {
 // Crear una nueva evaluación
 export const createEvaluacion = async (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) => {
   try {
-    const data = { idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus };
-    console.log("Datos enviados al servidor:", data);
-    const response = await axios.post(`${BASE_URL}/evaluacion/create`, data);
+    const response = await axios.post(`${BASE_URL}/evaluacion/create`, {
+      idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus, userSession
+    });
     console.log("Respuesta del servidor:", response.data);
   } catch (error) {
     if (error.response) {
@@ -31,10 +32,11 @@ export const createEvaluacion = async (idKadex, idMapaCurricular, idMateriaUnida
 };
 
 // Actualizar una evaluación existente
-export const updateEvaluacion = async (idEvaluacion, idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) => {
+export const updateEvaluacion = async (idEvaluacion, idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) => {
   try {
-    const data = { idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus };
-    await axios.put(`${BASE_URL}/evaluacion/update/${idEvaluacion}`, data);
+    await axios.put(`${BASE_URL}/evaluacion/update/${idEvaluacion}`, {
+      idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus, userSession
+    });
   } catch (error) {
     console.error("Error al actualizar la evaluación:", error);
     throw new Error('Error al actualizar la evaluación');
@@ -44,7 +46,7 @@ export const updateEvaluacion = async (idEvaluacion, idKardex, idMapaCurricular,
 // Eliminar una evaluación
 export const deleteEvaluacion = async (idEvaluacion) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/evaluacion/delete/${idEvaluacion}`);
+    const response = await axios.delete(`${BASE_URL}/evaluacion/delete/${idEvaluacion}`, { data: { userSession } });
     if (response.status === 200) {
       console.log("Evaluación eliminada correctamente:", response.data);
       return response.data; 

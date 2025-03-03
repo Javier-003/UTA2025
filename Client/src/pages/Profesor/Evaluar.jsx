@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquarePen, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { getKardex } from '../../api/Parametrizacion/kardex.api.js';
-import { getEvaluacionTodos, addEvaluacion } from '../../assets/js/Parametrizacion/evaluacion.js';
+import { getEvaluacionTodos, addEvaluacion, updateEvaluacionFunc } from '../../assets/js/Parametrizacion/evaluacion.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { EvaluacionModales } from './EvaluacionModales.jsx';
 
 function Evaluar() {
     const location = useLocation();
+    const navigate = useNavigate();
     const { cargaMateria } = location.state || {};
+    console.log("Datos recibidos en Evaluar:", cargaMateria);
     const [alumnos, setAlumnos] = useState([]);
     const [evaluaciones, setEvaluaciones] = useState([]);
     const [selectedAlumno, setSelectedAlumno] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
 
     const [idKardex, setIdKardex] = useState("");
     const [idMapaCurricular, setIdMapaCurricular] = useState("");
@@ -50,24 +55,27 @@ function Evaluar() {
         }
     }, [cargaMateria]);
 
-    const handleAsignarCalificacion = (alumno) => {
+    const handleAsignarCalificacion = (alumno, evaluacion = null) => {
+        console.log("Datos del alumno seleccionado:", alumno);
+        console.log("Datos de cargaMateria:", cargaMateria);
         setSelectedAlumno(alumno);
         setIdKardex(alumno.idKardex || "");
-        setIdMapaCurricular(alumno.idMapaCurricular || "");
+        setIdMapaCurricular(cargaMateria.idMapaCurricular || "");
         setIdMateriaUnidad(alumno.idMateriaUnidad || "");
-        setCalificacion("");
-        setEstatus("");
+        setCalificacion(evaluacion ? evaluacion.calificacion : "");
+        setEstatus(evaluacion ? evaluacion.estatus : "");
         setMapa(alumno.mapa || "");
-        setFaltas("");
+        setFaltas(evaluacion ? evaluacion.faltas : "");
         setNombreUnidad(alumno.nombreUnidad || "");
-        setselectedEvaluacion(null);
+        setselectedEvaluacion(evaluacion);
+        setIsEditMode(!!evaluacion);
         setShowModal(true);
     };
 
     const handleAddCalificacion = () => {
         if (selectedAlumno) {
             console.log("Alumno seleccionado:", selectedAlumno);
-            addEvaluacion(
+            console.log("Datos para agregar evaluación:", {
                 idKardex,
                 idMapaCurricular,
                 idMateriaUnidad,
@@ -75,23 +83,58 @@ function Evaluar() {
                 faltas,
                 nombreUnidad,
                 estatus
-            ).then(() => {
-                getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
-                    setEvaluaciones(data);
-                    setShowModal(false);
-                });
-            }).catch(error => console.error("Error al agregar la calificación:", error));
+            });
+            if (isEditMode && selectedEvaluacion) {
+                updateEvaluacionFunc(
+                    selectedEvaluacion.idEvaluacion,
+                    idKardex,
+                    idMapaCurricular,
+                    idMateriaUnidad,
+                    calificacion,
+                    faltas,
+                    nombreUnidad,
+                    estatus
+                ).then(() => {
+                    getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
+                        setEvaluaciones(data);
+                        setShowModal(false);
+                    });
+                }).catch(error => console.error("Error al actualizar la calificación:", error));
+            } else {
+                addEvaluacion(
+                    idKardex,
+                    idMapaCurricular,
+                    idMateriaUnidad,
+                    calificacion,
+                    faltas,
+                    nombreUnidad,
+                    estatus
+                ).then(() => {
+                    getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
+                        setEvaluaciones(data);
+                        setShowModal(false);
+                    });
+                }).catch(error => console.error("Error al agregar la calificación:", error));
+            }
         }
     };
 
     const getCalificacion = (idAlumno) => {
+        console.log(`Buscando calificación para Alumno ID: ${idAlumno}, Materia Unidad ID: ${idMateriaUnidad}`);
         const evaluacion = evaluaciones.find(e => e.idAlumnoPA === idAlumno);
         return evaluacion ? evaluacion.calificacion : 'N/A';
+    };
+
+    const getEvaluacion = (idAlumno) => {
+        return evaluaciones.find(e => e.idAlumnoPA === idAlumno);
     };
 
     return (
         <div className="container">
             <h2>Evaluar Materia</h2>
+            <button className="btn btn-secondary mb-3" onClick={() => navigate('/SubirCalificacion')}>
+                Regresar
+            </button>
             {cargaMateria && (
                 <div className="card shadow mb-3">
                     <div className="card-body">
@@ -123,8 +166,16 @@ function Evaluar() {
                                             className="btn btn-primary"
                                             onClick={() => handleAsignarCalificacion(alumno)}
                                         >
-                                            Registrar calificación
+                                            <FontAwesomeIcon icon={faSquarePen} /> {/*Evaluar*/}
                                         </button>
+                                        {getEvaluacion(alumno.idAlumnoPA) && (
+                                            <button 
+                                                className="btn btn-warning ms-2"
+                                                onClick={() => handleAsignarCalificacion(alumno, getEvaluacion(alumno.idAlumnoPA))}
+                                            >
+                                                <FontAwesomeIcon icon={faEdit} /> {/*Editar*/}
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))

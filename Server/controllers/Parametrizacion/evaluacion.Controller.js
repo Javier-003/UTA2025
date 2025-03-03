@@ -13,12 +13,10 @@ export const getEvaluacion = async (req, res) => {
         eva.nombreUnidad, 
         eva.estatus, 
         mc.materia,
-        mu.nombre,
-        kadex.idAlumnoPA
+        mu.nombre
       FROM evaluacion AS eva
       JOIN mapacurricular AS mc ON eva.idMapaCurricular = mc.idMapaCurricular
-      JOIN materiaunidad AS mu ON eva.idMateriaUnidad = mu.idMateriaUnidad
-      JOIN kardex AS kadex ON eva.idKadex = kadex.idKardex`;
+      JOIN materiaunidad AS mu ON eva.idMateriaUnidad = mu.idMateriaUnidad`;
 
     const [rows] = await db.query(query);
 
@@ -33,32 +31,24 @@ export const getEvaluacion = async (req, res) => {
   }
 };
 
-// Crear una nueva evaluación
 export const createEvaluacion = async (req, res) => {
-  const { idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus } = req.body;
-  console.log("Datos recibidos en createEvaluacion:", req.body);
-  if (!idKadex || !idMapaCurricular || !idMateriaUnidad || !calificacion || !faltas || !nombreUnidad || !estatus) {
-    console.log("Validación fallida:", {
-      idKadex: !!idKadex,
-      idMapaCurricular: !!idMapaCurricular,
-      idMateriaUnidad: !!idMateriaUnidad,
-      calificacion: !!calificacion,
-      faltas: !!faltas,
-      nombreUnidad: !!nombreUnidad,
-      estatus: !!estatus
-    });
-    return res.status(400).json({ message: 'Todos los campos son requeridos' });
-  }
   try {
-    const query = `INSERT INTO evaluacion (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    console.log("Consulta SQL:", query);
-    const [result] = await db.query(query, [idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus]);
-    console.log("Resultado de la consulta:", result);
-    res.json({ id: result.insertId, message: "Evaluación registrada correctamente" });
+    const { idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad } = req.body;
+    if (!idKadex || !idMapaCurricular || !faltas || !calificacion || !estatus || !nombreUnidad || !idMateriaUnidad) {
+      return res.status(400).json({ message: "Todos los campos son requeridos" });
+    }
+    const [rows] = await db.query(
+      "INSERT INTO evaluacion (idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad]
+    );
+    res.status(201).json({
+      message: "Evaluación creada correctamente",
+      idEvaluacion: rows.insertId,
+      idKadex,idMapaCurricular,faltas,calificacion,estatus,nombreUnidad,idMateriaUnidad,
+    });
   } catch (error) {
-    console.error("Error al registrar la evaluación:", error);
-    res.status(500).json({ error: "Error al registrar la evaluación" });
+    console.error("Error al crear la evaluación:", error);
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
 
@@ -66,14 +56,15 @@ export const updateEvaluacion = async (req, res) => {
   try {
     const { idEvaluacion } = req.params;
     const { idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad } = req.body;
+    console.log("Datos recibidos en updateEvaluacion:", req.body);
     const [exists] = await db.query("SELECT 1 FROM evaluacion WHERE idEvaluacion = ?", [idEvaluacion]);
     if (!exists.length) {
       return res.status(404).json({ message: "La evaluación no existe" });
     }
-    const [result] = await db.query(
-      "UPDATE evaluacion SET idKadex = ?, idMapaCurricular = ?, faltas = ?, calificacion = ?, estatus = ?, nombreUnidad = ?, idMateriaUnidad = ? WHERE idEvaluacion = ?",
-      [idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad, idEvaluacion]
-    );
+    const query = "UPDATE evaluacion SET idKadex = ?, idMapaCurricular = ?, faltas = ?, calificacion = ?, estatus = ?, nombreUnidad = ?, idMateriaUnidad = ? WHERE idEvaluacion = ?";
+    console.log("Consulta SQL:", query);
+    const [result] = await db.query(query, [idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad, idEvaluacion]);
+    console.log("Resultado de la consulta:", result);
     if (result.affectedRows === 0) {
       return res.status(400).json({ message: "No se pudo actualizar la evaluación" });
     }
