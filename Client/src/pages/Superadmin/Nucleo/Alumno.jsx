@@ -32,8 +32,12 @@ function Alumno() {
   };
   
   const handleUpdate = () => {
-    updateAlumnoFunc(selectedAlumno.idAlumno, email, nss, fecha, setShowEditModal, () => getAlumno(setAlumno));
+    // Format the date to 'yyyy-MM-dd'
+    const formattedFecha = new Date(fecha).toISOString().split('T')[0];
+  
+    updateAlumnoFunc(selectedAlumno.idAlumno, email, formattedFecha, nss, setShowEditModal, () => getAlumno(setAlumno));
   };
+  
   
   const handleDelete = () => {
     deleteAlumnoFunc(selectedAlumno.idAlumno, setShowDeleteModal, () => getAlumno(setAlumno));
@@ -56,7 +60,11 @@ function Alumno() {
             setmaterno(row.materno);
             setemail(row.email);
             setnss(row.nss);
-            setfecha(row.fecha);
+            
+            // Convert the date to 'yyyy-MM-dd' format
+            const formattedFecha = new Date(row.fecha).toISOString().split('T')[0];
+            setfecha(formattedFecha);
+            
             setShowEditModal(true);
           }}>
             <FontAwesomeIcon icon={faEdit} />
@@ -71,6 +79,7 @@ function Alumno() {
       )
     }
   ];
+  
 
   const filteredData = alumnoList.filter(item =>
     item.email.toLowerCase().includes(searchText.toLowerCase())

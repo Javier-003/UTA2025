@@ -34,10 +34,12 @@ export const addAlumno = async (idPersona, email, fecha, nss, setShowModal, getA
     });
   }
 };
-
 export const updateAlumnoFunc = async (idAlumno, email, fecha, nss, setShowEditModal, getAlumno) => {
   try {
-    await updateAlumno(idAlumno, email, nss, fecha);
+    // Convert fecha to MySQL DATETIME format
+    const formattedFecha = new Date(fecha).toISOString().slice(0, 19).replace('T', ' ');
+
+    await updateAlumno(idAlumno, email, formattedFecha, nss);
     getAlumno();
     Swal.fire({
       icon: 'success',
@@ -54,6 +56,7 @@ export const updateAlumnoFunc = async (idAlumno, email, fecha, nss, setShowEditM
     });
   }
 };
+
 
 export const deleteAlumnoFunc = async (idAlumno, setShowDeleteModal, getAlumno) => {
   try {
