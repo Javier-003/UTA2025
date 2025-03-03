@@ -4,26 +4,26 @@ import { getEvaluacion, createEvaluacion, updateEvaluacion, deleteEvaluacion }
 from '../../../api/Parametrizacion/evaluacion.api.js';
 
 // Obtener todos los registros de Evaluacion
-export const getEvaluacionTodos = async (setEvaluacion) => {
+export const getEvaluacionTodos = async (idGrupoMateria) => {
   try {
-    const data = await getEvaluacion();
-    setEvaluacion(data);
+    const data = await getEvaluacion(idGrupoMateria);
+    return data;
   } catch (error) {
     console.error('Error al obtener los registros de evaluación:', error);
+    throw new Error('Error al obtener los registros de evaluación');
   }
 };
 
 // Crear un nuevo registro de Evaluacion
-export const addEvaluacion = async (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus, setShowModal, getEvaluacionTodos) => {
+export const addEvaluacion = async (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) => {
   try {
+    console.log("Datos enviados a createEvaluacion:", { idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus });
     await createEvaluacion(idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
-    getEvaluacionTodos();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
       text: 'Evaluación registrada correctamente',
     });
-    setShowModal(false);
   } catch (error) {
     console.error('Error al agregar el registro de evaluación:', error);
     Swal.fire({
@@ -35,16 +35,14 @@ export const addEvaluacion = async (idKadex, idMapaCurricular, idMateriaUnidad, 
 };
 
 // Actualizar un registro de Evaluacion existente
-export const updateEvaluacionFunc = async (idEvaluacion, idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus, setShowEditModal, getEvaluacionTodos) => {
+export const updateEvaluacionFunc = async (idEvaluacion, idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) => {
   try {
-    await updateEvaluacion(idEvaluacion, idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
-    getEvaluacionTodos();
+    await updateEvaluacion(idEvaluacion, idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
       text: 'Evaluación actualizada correctamente',
     });
-    setShowEditModal(false);
   } catch (error) {
     console.error('Error al actualizar el registro de evaluación:', error);
     Swal.fire({
@@ -56,16 +54,14 @@ export const updateEvaluacionFunc = async (idEvaluacion, idKadex, idMapaCurricul
 };
 
 // Eliminar un registro de Evaluacion
-export const deleteEvaluacionFunc = async (idEvaluacion, setShowDeleteModal, getEvaluacionTodos) => {
+export const deleteEvaluacionFunc = async (idEvaluacion) => {
   try {
     await deleteEvaluacion(idEvaluacion);
-    getEvaluacionTodos();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
       text: 'Evaluación eliminada correctamente',
     });
-    setShowDeleteModal(false);
   } catch (error) {
     console.error('Error al eliminar el registro de evaluación:', error);
     Swal.fire({
