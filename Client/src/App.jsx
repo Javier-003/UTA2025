@@ -39,7 +39,8 @@ import ProgramaAcademico from './pages/Superadmin/PlanificacionAcademica/Program
 import MapaCurricular from './pages/Superadmin/PlanificacionAcademica/MapaCurricular';
 import Periodo from "./pages/Superadmin/PlanificacionAcademica/Periodo";
 import AdicionProfesor from "./pages/Superadmin/PlanificacionAcademica/AdicionProfesor";
-import SubirCalificacion from './pages/Profesor/SubirCalificacion';
+import SubirCalificacion from './pages/Profesor/SubirCalificacion'; // Importar el componente SubirCalificacion
+import Evaluar from './pages/Profesor/Evaluar'; // Importar el componente Evaluar
 
 // -------------------------- PARAMETRIZACIÓN --------------------------------
 import AsignarPA from './pages/Superadmin/Parametrizacion/AsignarPA';
@@ -53,7 +54,6 @@ import OfertaAcademica from './pages/Superadmin/PlanificacionAcademica/OfertaAca
 
 // -------------------------- PLANTILLA ALUMNO --------------------------------
 import Consultadekadex from './pages/Superadmin/plantillaAlumno/ConsultaKardex ';
-
 const userSession = localStorage.getItem('Username')
 
 // Layout para páginas con Navbar
@@ -94,6 +94,7 @@ function App() {
         <Route path="/OfertaAcademica" element={<OfertaAcademica />} /> {/* Usar el componente OfertaAcademica */}
         <Route path="/AdicionProfesor" element={<AdicionProfesor />} />
         <Route path="/SubirCalificacion" element={<SubirCalificacion />} /> {/* Usar el componente SubirCalificacion */}
+        <Route path="/Evaluar" element={<Evaluar />} /> {/* Usar el componente Evaluar */}
         <Route path="/Departamento" element={<Departamento />} />
         <Route path="/Puesto" element={<Puesto />} />
         <Route path="/Edificio" element={<Edificio />} />
