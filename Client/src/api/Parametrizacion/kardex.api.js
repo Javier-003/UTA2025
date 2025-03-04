@@ -18,8 +18,15 @@ export const getKardex = async () => {
 export const createKardex = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo) => {
   try {
     const response = await axios.post(`${BASE_URL}/kardex/create`, {
-      idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, userSession
+      idAlumnoPA: idAlumnoPA || null,
+      idMapaCurricular: idMapaCurricular ? idMapaCurricular : null, 
+      idGrupo: idGrupo || null,
+      idPeriodo: idPeriodo || null,
+      calificacionFinal: calificacionFinal || null,
+      tipo: tipo || null,
+      userSession
     });
+
     console.log("Respuesta del servidor:", response.data);
   } catch (error) {
     if (error.response) {
@@ -30,6 +37,7 @@ export const createKardex = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeri
     throw new Error('Error al registrar el kardex');
   }
 };
+
 
 // Actualizar un registro de kardex existente
 export const updateKardex = async (idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo) => {

@@ -1,4 +1,4 @@
-import { db } from "../../db/connection.js";
+import { db } from "../../db/conexion.js";
 
 export const getKardex = async (req, res) => {
   try {
@@ -33,26 +33,97 @@ export const getKardex = async (req, res) => {
   }
 };
 
+
+
 export const createKardex = async (req, res) => {
+  const { idAlumnoPA, idGrupo, tipo } = req.body; // 👈 Recibimos solo estos campos
+  let connection;
+
   try {
-    const { idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo } = req.body;
-    if (!idAlumnoPA || !idMapaCurricular || !idGrupo || !idPeriodo || !calificacionFinal || !tipo) {
-      return res.status(400).json({ message: "Todos los campos son requeridos" });
-    }
-    const [rows] = await db.query(
-      "INSERT INTO kardex (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo) VALUES (?, ?, ?, ?, ?, ?)",
-      [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo]
+    // 1. Obtener una conexión a la base de datos
+    connection = await db.getConnection(); // 👈 Usas db.getConnection()
+    await connection.beginTransaction(); // 👈 Iniciar transacción
+
+    // 2. Obtener el idPeriodo desde la tabla grupo
+    const [grupoRows] = await connection.query(
+      "SELECT idPeriodo FROM grupo WHERE idGrupo = ?",
+      [idGrupo]
     );
-    res.status(201).json({
-      message: "Kardex creado correctamente",
-      idKardex: rows.insertId,
-      idAlumnoPA,idMapaCurricular,idGrupo,idPeriodo,calificacionFinal,tipo,
-    });
+
+    if (grupoRows.length === 0) {
+      throw new Error("Grupo no encontrado");
+    }
+
+    const idPeriodo = grupoRows[0].idPeriodo; // 👈 idPeriodo obtenido
+
+    // 3. Insertar en la tabla alumnoperiodo
+    await connection.query(
+      "INSERT INTO alumnoperiodo (idAlumnoPA, idPeriodo, Observacion) VALUES (?, ?, ?)",
+      [idAlumnoPA, idPeriodo, "Inscripción automática desde kardex"] // 👈 Observación opcional
+    );
+
+    // 4. Obtener todos los idMapaCurricular asociados al idGrupo
+    const [grupoMateriaRows] = await connection.query(
+      "SELECT idMapaCurricular FROM grupomateria WHERE idGrupo = ?",
+      [idGrupo]
+    );
+
+    if (grupoMateriaRows.length === 0) {
+      throw new Error("No se encontraron materias para el grupo seleccionado");
+    }
+
+    // 5. Insertar en kardex por cada idMapaCurricular y obtener el idKardex
+    for (const materia of grupoMateriaRows) {
+      const { idMapaCurricular } = materia;
+
+      // Insertar en kardex
+      const [kardexResult] = await connection.query(
+        "INSERT INTO kardex (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo) VALUES (?, ?, ?, ?, ?, ?)",
+        [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, null, tipo] // 👈 calificacionFinal es null por defecto
+      );
+
+      const idKardex = kardexResult.insertId; // 👈 idKardex generado
+
+      // 6. Obtener las unidades de la materia (materiaunidad)
+      const [materiaUnidadRows] = await connection.query(
+        "SELECT idMateriaUnidad, nombre FROM materiaunidad WHERE idMapaCurricular = ?",
+        [idMapaCurricular]
+      );
+
+      if (materiaUnidadRows.length === 0) {
+        console.warn(`No se encontraron unidades para la materia con idMapaCurricular: ${idMapaCurricular}`);
+        continue; // 👈 Continuar con la siguiente materia si no hay unidades
+      }
+
+      // 7. Insertar en evaluacion por cada unidad de la materia
+      for (const unidad of materiaUnidadRows) {
+        const { idMateriaUnidad, nombre } = unidad;
+
+        await connection.query(
+          "INSERT INTO evaluacion (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) VALUES (?, ?, ?, ?, ?, ?, ?)",
+          [idKardex, idMapaCurricular, idMateriaUnidad, null, null, nombre, "Abierto"] // 👈 calificacion y faltas son null por defecto
+        );
+      }
+    }
+
+    // 8. Confirmar la transacción
+    await connection.commit();
+    res.status(201).json({ message: "Kardex, alumnoperiodo y evaluaciones creados correctamente" });
   } catch (error) {
-    console.error("Error al crear kardex:", error);
+    // 9. Revertir la transacción en caso de error
+    if (connection) {
+      await connection.rollback();
+    }
+    console.error("Error al crear kardex, alumnoperiodo y evaluaciones:", error);
     res.status(500).json({ message: "Algo salió mal", error: error.message });
+  } finally {
+    // 10. Liberar la conexión
+    if (connection) {
+      connection.release();
+    }
   }
 };
+
 
 export const updateKardex = async (req, res) => {
   try {

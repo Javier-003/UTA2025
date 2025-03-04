@@ -36,6 +36,8 @@ function Seguimientodetramite() {
   const navigate = useNavigate();//BOTÓN
 
 
+//PORCENTAJE 
+
   useEffect(() => { 
     getAlumnoTramite(setAlumnoTramite); 
     getTramites().then(setTramiteList); // Obtiene todos los trámites para el filtro

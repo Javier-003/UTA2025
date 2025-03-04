@@ -12,7 +12,9 @@ import { getPeriodos } from "../../../api/PlanificacionAcademica/periodo.api.js"
 import { getProgramaacademicos } from "../../../api/PlanificacionAcademica/programa_academico.api.js";
 
 //KARDEX
-
+import { getGrupos } from "../../../api/PlanificacionAcademica/grupo.api.js";
+import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacurricular.api.js";
+import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";
 
 const TramiteModal = ({
   title,
@@ -485,6 +487,248 @@ export const tramiteRegistraPAs = ({
   );
 };
 
+export const tramiteRegistraGrupoMateriasss = ({
+  idMapaCurricular, setIdMapaCurricular,
+  idGrupo, setIdGrupo,idAlumnoPA,setIdAlumnoPA,
+  idPeriodoKardex,  setIdPeriodoKardex, 
+  calificacionFinal, setCalificacionFinal,
+  tipo, setTipo,
+  showModal, setShowModal, 
+  handleKardex,
+  setSelectedKardex, handleClose, 
+  show,
+}) => {
+
+    const [alumnoList, setAlumnoList] = useState([]);
+    const [mapaList, setMapaList] = useState([]);
+    const [grupoList, setGrupoList] = useState([]);
+    const [periodoList, setPeriodoList] = useState([]);
+   
+    useEffect(() => {
+    getAlumnoPA().then(data => setAlumnoList(data)).catch(error => console.error("Error al obtener los alumnos:", error));
+    getMapaCurriculares().then(data => setMapaList(data)).catch(error => console.error("Error al obtener los mapas curriculares:", error));
+    getGrupos().then(data => setGrupoList(data)).catch(error => console.error("Error al obtener los grupos:", error));
+    getPeriodos().then(data => setPeriodoList(data)).catch(error => console.error("Error al obtener los periodos:", error));
+  }, []);
+  
+  return (
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Dar de alta Alumno</Modal.Title>
+      </Modal.Header>
+      
+      <Modal.Body>
+        {/* Nombre del alumno resaltado pero sin exagerar */}
+        <div className="input-group mb-3">
+                <span className="input-group-text">Alumno:</span>
+                <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)}>
+                  <option value="">Selecciona un alumno</option>
+                  {alumnoList.map((alumnopa) => (
+                    <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
+                        {alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}  
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="input-group mb-3">
+              <span className="input-group-text">Mapa Curricular:</span>
+              <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
+                <option value="">Selecciona un programa</option>
+                {mapaList.map((mapacurricular) => (
+                  <option key={mapacurricular.idmapaCurricular} value={mapacurricular.idMapaCurricular}>{mapacurricular.materia}</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group mb-3">
+                <span className="input-group-text">Grupo:</span>
+                <select className="form-select" value={idGrupo} onChange={(event) => setIdGrupo(event.target.value)}>
+                  <option value="">Selecciona un grupo</option>
+                  {grupoList.map((grupo) => (
+                    <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">Periodo:</span>
+                <select className="form-select" value={idPeriodoKardex} onChange={(event) => setIdPeriodoKardex(event.target.value)}>
+                  <option value="">Selecciona un periodo</option>
+                  {periodoList.map((periodo) => (
+                    <option key={periodo.idPeriodo} value={periodo.idPeriodo}>{periodo.periodo}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">Calificación Final:</span>
+                <input type="text" className="form-control" value={calificacionFinal} onChange={(event) => setCalificacionFinal(event.target.value)} />
+              </div>
+              <div className="input-group mb-3">
+                <span className="input-group-text">Tipo:</span>
+                <select className="form-select" value={tipo} onChange={(event) => setTipo(event.target.value)}>
+                  <option value="">Selecciona un tipo</option>
+                  <option value="Ordinaria">Ordinaria</option>
+                  <option value="Extraordinaria">Extraordinaria</option>
+                </select>
+              </div>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cerrar
+        </Button>
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            handleKardex();
+            handleClose();
+          }}
+        >
+          Guardar Cambios
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
+export const tramiteRegistraGrupoMaterias2 = ({
+  idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex,
+  handleKardex, handleClose, show,
+}) => {
+  
+  const [grupoList, setGrupoList] = useState([]);
+  const [alumnoList, setAlumnoList] = useState([]);
+  const tipo = "Ordinaria"; // 👈 Siempre será "Activo" (No editable ni visible)
+
+  useEffect(() => {
+    getAlumnoPA().then(data => setAlumnoList(data)).catch(error => console.error("Error al obtener los alumnos:", error));
+    getGrupos().then(data => setGrupoList(data)).catch(error => console.error("Error al obtener los grupos:", error));
+  }, []);
+
+  return (
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Dar de alta Alumno</Modal.Title>
+      </Modal.Header>
+      
+      <Modal.Body>
+        {/* Alumno (visible pero no editable) */}
+        <div className="input-group mb-3">
+                <span className="input-group-text">Alumno:</span>
+                <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)} disabled>
+                  <option value="">Selecciona un alumno</option>
+                  {alumnoList.map((alumnopa) => (
+                    <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
+                        {alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}  
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+        {/* Grupo (único campo seleccionable) */}
+        <div className="input-group mb-3">
+          <span className="input-group-text">Grupo:</span>
+          <select className="form-select" value={idGrupo} onChange={(event) => setIdGrupo(event.target.value)}>
+            <option value="">Selecciona un grupo</option>
+            {grupoList.map((grupo) => (
+              <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Campos ocultos (Periodo y Tipo) */}
+        <input type="hidden" value={idPeriodoKardex} name="idPeriodoKardex" />
+        <input type="hidden" value={tipo} name="tipo" />
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cerrar
+        </Button>
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            console.log("Tipo antes de enviar:", tipo);
+            handleKardex(); 
+            handleClose();
+          }}
+        >
+          Guardar Cambios
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
+export const tramiteRegistraGrupoMaterias8 = ({
+  idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex,
+  handleKardex, handleClose, show,
+}) => {
+  
+  const [grupoList, setGrupoList] = useState([]);
+  const [alumnoList, setAlumnoList] = useState([]);
+  const tipo = "Ordinaria"; // 👈 Siempre será "Activo" (No editable ni visible)
+
+  useEffect(() => {
+    getAlumnoPA().then(data => setAlumnoList(data)).catch(error => console.error("Error al obtener los alumnos:", error));
+    getGrupos().then(data => setGrupoList(data)).catch(error => console.error("Error al obtener los grupos:", error));
+  }, []);
+
+  return (
+    <Modal show={show} onHide={handleClose} centered>
+      {/* Encabezado con color elegante */}
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">Dar de alta Alumno</Modal.Title>
+      </Modal.Header>
+      
+      <Modal.Body>
+        {/* Alumno (visible pero no editable) */}
+        <div className="input-group mb-3">
+                <span className="input-group-text">Alumno:</span>
+                <select className="form-select" value={idAlumnoPA} onChange={(event) => setIdAlumnoPA(event.target.value)} disabled>
+                  <option value="">Selecciona un alumno</option>
+                  {alumnoList.map((alumnopa) => (
+                    <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
+                        {alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}  
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+        {/* Grupo (único campo seleccionable) */}
+        <div className="input-group mb-3">
+          <span className="input-group-text">Grupo:</span>
+          <select className="form-select" value={idGrupo} onChange={(event) => setIdGrupo(event.target.value)}>
+            <option value="">Selecciona un grupo</option>
+            {grupoList.map((grupo) => (
+              <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Campos ocultos (Periodo y Tipo) */}
+        <input type="hidden" value={tipo} name="tipo" />
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cerrar
+        </Button>
+        <Button 
+          variant="primary" 
+          onClick={() => {
+            console.log("Tipo antes de enviar:", tipo);
+            handleKardex(); 
+            handleClose();
+          }}
+        >
+          Guardar Cambios
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
 // ------------------------------------------ ALUMNO PA -------------------------------------------------------
 
 const TramiteModalRegistroPA = ({
@@ -676,105 +920,145 @@ export const tramiteRegistraPA = (props) => (
 );
 
 
+// ------------------------------------------ CARGAR DATOS (KARDEX, EVALUACIÓN) -------------------------------------------------------
 
+export const tramiteRegistraGrupoMaterias = ({ 
+  idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex,
+  handleKardex, handleClose, show,
+}) => {
+  
+  const [grupoList, setGrupoList] = useState([]);
+  const [alumnoList, setAlumnoList] = useState([]);
+  const [datosTemporalmente, setDatosTemporalmente] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-// ------------------------------------------ ALUMNO GRUPO (KARDEX) -------------------------------------------------------
-export const tramiteRegistraGrupoMaterias = ({ show, handleClose }) => {
+  const tipo = "Ordinaria";
+
+  useEffect(() => {
+    getAlumnoPA()
+      .then(data => setAlumnoList(data))
+      .catch(error => console.error("Error al obtener los alumnos:", error));
+    
+    getGrupos()
+      .then(data => setGrupoList(data))
+      .catch(error => console.error("Error al obtener los grupos:", error));
+  }, []);
+
+  // Función para guardar los datos temporalmente y abrir el modal de confirmación
+  const handleGuardarTemporal = () => {
+    const alumnoSeleccionado = alumnoList.find(alumno => alumno.idAlumnoPA === idAlumnoPA);
+    const grupoSeleccionado = grupoList.find(grupo => String(grupo.idGrupo) === String(idGrupo)); // Asegurar comparación correcta
+
+    console.log("Alumno seleccionado:", alumnoSeleccionado); // Debug
+    console.log("Grupo seleccionado:", grupoSeleccionado); // Debug
+
+    const datos = {
+      idAlumnoPA,
+      nombreAlumno: alumnoSeleccionado 
+        ? `${alumnoSeleccionado.nombre} ${alumnoSeleccionado.paterno} ${alumnoSeleccionado.materno}`
+        : "Desconocido",
+      idGrupo,
+      nombreGrupo: grupoSeleccionado ? grupoSeleccionado.nombre : "Desconocido",
+      tipo,
+      idPeriodoKardex,
+    };
+
+    setDatosTemporalmente(datos);
+    setShowConfirmModal(true);
+  };
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Registrar Grupo de Materias</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <p>Aquí puedes registrar un nuevo grupo de materias.</p>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Cerrar
-        </Button>
-        <Button variant="primary" onClick={handleClose}>
-          Registrar
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <>
+      {/* Modal principal */}
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title className="fw-bold">Asignar Grupo a Alumno</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {/* Alumno */}
+          <div className="input-group mb-3">
+            <span className="input-group-text">Alumno:</span>
+            <select className="form-select" value={idAlumnoPA} disabled>
+              <option value="">Selecciona un alumno</option>
+              {alumnoList.map((alumnopa) => (
+                <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
+                  {alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Grupo */}
+          <div className="input-group mb-3">
+            <span className="input-group-text">Grupo:</span>
+            <select 
+              className="form-select" 
+              value={idGrupo} 
+              onChange={(event) => setIdGrupo(event.target.value)}
+            >
+              <option value="">Selecciona un grupo</option>
+              {grupoList.map((grupo) => (
+                <option key={grupo.idGrupo} value={grupo.idGrupo}>
+                  {grupo.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Campo oculto */}
+          <input type="hidden" value={tipo} name="tipo" />
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cerrar
+          </Button>
+          <Button variant="primary" onClick={handleGuardarTemporal}>
+            Guardar Cambios
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de confirmación */}
+      <TramiteReinscribir
+        show={showConfirmModal}
+        handleClose={() => setShowConfirmModal(false)}
+        datos={datosTemporalmente}
+        handleConfirm={() => {
+          handleKardex(datosTemporalmente);
+          setShowConfirmModal(false);
+          handleClose();
+        }}
+      />
+    </>
   );
 };
 
-// ------------------------------------------ CARGAR DATOS (KARDEX, EVALUACIÓN) -------------------------------------------------------
-export const tramiteReinscribir = ({
-    idAlumnoTramite, setIdAlumnoTramite,
-    estatus, setEstatus,
-    observacion, setObservacion,
-    handleUpdate, handleClose,
-    show,
-  }) => {
-    const [alumnotramiteList, setAlumnotramiteList] = useState([]);
-  
-    useEffect(() => {
-      getAlumnoTramites()
-        .then((data) => setAlumnotramiteList(data))
-        .catch((error) => console.error("Error al obtener los alumnos trámites:", error));
-    }, []);
-  
-    const alumno = alumnotramiteList.find(alumno => alumno.idAlumnoTramite === idAlumnoTramite)?.alumno || "Desconocido";
-
+// Modal de confirmación
+export const TramiteReinscribir = ({ show, handleClose, datos, handleConfirm }) => {
   return (
-  <Modal show={show} onHide={handleClose}>
-    {/* Encabezado con color elegante */}
-    <Modal.Header closeButton className="bg-primary text-white">
-      <Modal.Title className="fw-bold">Reinscribir Alumno</Modal.Title>
-    </Modal.Header>
-    
-    <Modal.Body>
-        {/* Nombre del alumno resaltado pero sin exagerar */}
-        <Row className="mb-3">
-          <Col>
-            <Alert variant="light" className="border border-primary text-center fw-semibold fs-5">
-              Alumno: <span className="text-primary">{alumno}</span>
-            </Alert>
-          </Col>
-        </Row>
-
-        <Form>
-          {/* Observaciones con diseño limpio */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold">Observaciones</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              value={observacion}
-              onChange={(e) => setObservacion(e.target.value)}
-              placeholder="Escribe aquí cualquier observación (opcional)"
-            />
-          </Form.Group>
-
-          {/* Estatus con un diseño limpio y elegante */}
-          <Form.Group className="mb-3">
-            <Form.Label className="fw-semibold">Estado del Reinscribir el Alumno</Form.Label>
-            <Form.Select
-              value={estatus}
-              onChange={(e) => setEstatus(e.target.value)}
-            >
-              <option value="">Seleccionar</option>
-              <option value="En proceso">En proceso</option>
-              <option value="Concluido">Concluido</option>
-            </Form.Select>
-          </Form.Group>
-        </Form>
+    <Modal show={show} onHide={handleClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirmar Registro e Impactar Historial</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {datos ? (
+          <>
+            <p><strong>Alumno:</strong> {datos.nombreAlumno} </p>
+            <p><strong>Grupo:</strong> {datos.nombreGrupo} ({datos.idGrupo})</p>
+            <p><strong>Tipo:</strong> {datos.tipo}</p>
+          </>
+        ) : (
+          <p>No hay datos seleccionados.</p>
+        )}
       </Modal.Body>
-
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          Cerrar
+          Cancelar
         </Button>
-        <Button 
-          variant="primary" 
-          onClick={() => {
-            handleUpdate();
-            handleClose();
-          }}
-        >
-          Guardar Cambios
+        <Button variant="primary" onClick={handleConfirm}>
+          Confirmar y Registrar
         </Button>
       </Modal.Footer>
     </Modal>
