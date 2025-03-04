@@ -1,124 +1,137 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FaUser, FaBook,  FaClipboardCheck, FaSignOutAlt, FaHistory, FaUserPlus, FaAddressCard, FaGraduationCap, FaUserTie, FaChalkboardTeacher, FaTasks, FaFileAlt, FaClipboardList, FaEdit, FaLayerGroup, FaMapSigns, FaRegBuilding, FaDoorOpen, FaUniversity, FaBriefcase, FaClipboard } from 'react-icons/fa';
-import { Modal, Button } from 'react-bootstrap';
-import '../assets/css/Navbar.css';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
+import { 
+  FaSignOutAlt, FaUser, FaBuilding, FaUserTie, FaGraduationCap, FaCalendarAlt,FaUpload,
+  FaChalkboardTeacher, FaBriefcase, FaDoorOpen, FaUniversity, FaClipboardList, 
+  FaTasks, FaMapSigns, FaBook, FaHistory, FaLayerGroup, FaFileAlt, FaClipboardCheck 
+} from "react-icons/fa";
+import "../assets/css/Navbar.css";
 
 function OffcanvasNavbar() {
   const [activeMenu, setActiveMenu] = useState(null);
-  const [showModal, setShowModal] = useState(false); 
-  const username = localStorage.getItem('Username');
+  const [showModal, setShowModal] = useState(false);
+  const username = localStorage.getItem("Username");
 
-  const handleMouseEnter = (menu) => {
-    setActiveMenu(menu);
-  };
-
-  const handleMouseLeave = () => {
-    setActiveMenu(null);
-  };
-
-  const toggleModal = () => setShowModal(!showModal); 
+  const toggleModal = () => setShowModal(!showModal);
 
   const handleLogout = () => {
-    localStorage.removeItem('Username');
-    window.location.href = "/Login"
+    localStorage.removeItem("Username");
+    window.location.href = "/Login";
   };
 
   return (
-    <div style={{ marginTop: '100px' }}>
-      <div className="navbar">
-        <div className="navbar-brand">
-          {username }
-        </div>
-        <div className="menu">
-          {[
-            { label: "Ajustes", key: "gestionUsuarios", icon: <FaUser />, links: [
-              { text: "Núcleo", isTitle: true },
+    <div style={{ marginTop: "150px" }}>
+      <nav className="navbar">
+        <div className="navbar-brand">{username}</div>
 
-              { text: "Parametrización", isTitle: true }, 
-
-              { to: "/Usuario", text: "Usuario", icon: <FaUserPlus /> },
-              { to: "/Tramite", text: "Trámite", icon: <FaFileAlt /> },
-
-              { to: "/Persona", text: "Persona", icon: <FaAddressCard /> },
-              { to: "/Actividad", text: "Actividad", icon: <FaTasks /> },  
-
-              { to: "/Alumno", text: "Alumno", icon: <FaGraduationCap /> },  
-              { to: "/TramiteProceso", text: "Trámite Proceso", icon: <FaEdit /> },  
-
-              { to: "/Profesor", text: "Profesor", icon: <FaChalkboardTeacher /> },
-              { to: "/NivelEstudio", text: "Nivel de Estudio", icon: <FaUniversity /> },
-
-              { to: "/Administrativo", text: "Administrativo", icon: <FaUserTie /> },
-              { to: "/OfertaAcademica", text: "Oferta Académica", icon: <FaUniversity /> } ,
-
-              { to: "/Departamento", text: "Departamento", icon: <FaBriefcase /> },
-              { to: "/ProgramaAcademico", text: "Programa Académico", icon: <FaBook /> },
-
-              { to: "/Puesto", text: "Puesto", icon: <FaBriefcase /> },
-              { to: "/MapaCurricular", text: "Mapa Curricular", icon: <FaMapSigns /> },
-
-              { to: "/Edificio", text: "Edificio", icon: <FaRegBuilding /> },
-              { to: "/MateriaUnidad", text: "Materia Unidad", icon: <FaClipboard />},
-
-              { to: "/Aula", text: "Aula", icon: <FaDoorOpen /> },
-              { to: "/Bloque", text: "Bloque", icon: <FaLayerGroup /> },
-              
-              { to: "/AsignarPA", text: "AsignarPA", icon: <FaTasks /> },
-              { to: "/Historial", text: "Historial", icon: <FaHistory /> } ,
-          ]},
-
-          { label: "Planificación Academica", key: "Planificación Academica", icon: <FaUser />, links: [
-            { to: "/Periodo", text: "Apertura Periodo", icon: <FaRegBuilding /> },        
-            { to: "/Grupo", text: "Grupo", icon: <FaLayerGroup /> },
-            { to: "/Materias", text: "Carga de Materias", icon: <FaClipboardList /> },
-            { to: "/AdicionProfesor", text: "Adición Profesor", icon: <FaUserPlus /> },
-            { to: "/Evaluacion", text: "Evaluación", icon: <FaClipboardCheck /> },
-          ]}, 
-
-          { label: "Tramites", key: "Tramites", icon: <FaUser />, links: [
-            { to: "/AlumnoProceso", text: "Alumno Proceso", icon: <FaLayerGroup /> }, 
-            { to: "/AlumnoTramite", text: "Alumno Tramite", icon: <FaClipboardList /> },  
-            { to: "/SeguimientoTramite", text: "Seguimiento Trámite", icon: <FaClipboardCheck /> },
-            { to: "/Consultadekadex", text: "Consulta de Kardex", icon: <FaClipboardList /> }, 
-            { to: "/Kardex", text: "Kardex", icon: <FaClipboardList /> },
-            { to: "/SubirCalificacion", text: "Subir Calificación", icon: <FaClipboardCheck /> },
-          ]}
-
-          ].map(({ label, key, icon, links }) => (
-            <div key={key}  className={`menu-item ${activeMenu === key ? 'open' : ''}`}
-              onMouseEnter={() => handleMouseEnter(key)} onMouseLeave={handleMouseLeave}>
-              <span>{icon} {label}</span>
-              {activeMenu === key && (
-                <div className="submenu">
-                  {links.map(({ to, text, icon }) => (
-                    <Link key={to} to={to}>{icon} {text}</Link>
-                  ))}
+        {/* Menú principal */}
+        <div className="nav-links">
+          {/* Menú Ajustes */}
+          <div className="dropdown"
+            onMouseEnter={() => setActiveMenu("ajustes")}
+            onMouseLeave={() => setActiveMenu(null)}>
+            <span><FaUser /> Ajustes</span>
+            {activeMenu === "ajustes" && (
+              <div className="dropdown-content">
+                <div className="column">
+                  <h3>Núcleo</h3>
+                  <Link to="/"><FaBook /> Inicio</Link>
+                  <Link to="/Usuario"><FaUser /> Usuario</Link>
+                  <Link to="/Persona"><FaClipboardList /> Persona</Link>
+                  <Link to="/Alumno"><FaGraduationCap /> Alumno</Link>
+                  <Link to="/Profesor"><FaChalkboardTeacher /> Profesor</Link>
+                  <Link to="/Administrativo"><FaUserTie /> Administrativo</Link>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-        <button className="logout-btn" onClick={toggleModal}><FaSignOutAlt /></button>
-      </div>
-      {/* Modal para confirmar cierre de sesión */}
-      <Modal show={showModal} onHide={toggleModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Cerrar Sesión</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>¿Estás seguro de que deseas cerrar sesión, {username}?</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={toggleModal}>
-            Cancelar
-          </Button>
-          <Button variant="danger" onClick={handleLogout}>
-            Cerrar Sesión
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                <div className="column">
+                  <Link to="/Departamento"><FaBriefcase /> Departamento</Link>
+                  <Link to="/Puesto"><FaUserTie /> Puesto</Link>
+                  <Link to="/Edificio"><FaBuilding /> Edificio</Link>
+                  <Link to="/Aula"><FaDoorOpen /> Aula</Link>
+                  <Link to="/AsignarPA"><FaUniversity /> Asignar PA</Link>
+                  <Link to="/Historial"><FaHistory /> Historial</Link>
+                </div>
+                <div className="column">
+                  <h3>Parametrización</h3>
+                  <Link to="/Actividad"><FaTasks /> Actividad</Link>
+                  <Link to="/Tramite"><FaClipboardCheck /> Trámite</Link>
+                  <Link to="/TramiteProceso"><FaClipboardList /> Trámite Proceso</Link>
+                </div>
+                <div className="column">
+                  <Link to="/NivelEstudio"><FaUniversity /> Nivel de Estudio</Link>
+                  <Link to="/OfertaAcademica"><FaBook /> Oferta Académica</Link>
+                  <Link to="/ProgramaAcademico"><FaLayerGroup /> Programa Académico</Link>
+                  <Link to="/MapaCurricular"><FaMapSigns /> Mapa Curricular</Link>
+                  <Link to="/MateriaUnidad"><FaFileAlt /> Materia Unidad</Link>
+                  <Link to="/Bloque"><FaLayerGroup /> Bloque</Link>
+                </div>
+              </div>
+            )}
+          </div>
 
+          {/* Menú Planificación Académica */}
+          <div className="dropdown"
+            onMouseEnter={() => setActiveMenu("planificacion")}
+            onMouseLeave={() => setActiveMenu(null)}>
+            <span><FaBook /> Planificación Académica</span>
+            {activeMenu === "planificacion" && (
+              <div className="dropdown-content">
+                <div className="column">
+                  <h3>Planificación</h3>
+                  <Link to="/Periodo"><FaCalendarAlt /> Periodo</Link>
+                  <Link to="/Grupo"><FaLayerGroup /> Grupo</Link>
+                  <Link to="/Materias"><FaBook /> Carga de Materias</Link>
+                </div>
+                <div className="column">
+                  <Link to="/AdicionProfesor"><FaChalkboardTeacher /> Adición de Profesor</Link>
+                  <Link to="/Evaluacion"><FaClipboardCheck /> Evaluación</Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Menú Trámites */}
+          <div className="dropdown"
+            onMouseEnter={() => setActiveMenu("tramites")}
+            onMouseLeave={() => setActiveMenu(null)}>
+            <span><FaClipboardList /> Trámites</span>
+            {activeMenu === "tramites" && (
+              <div className="dropdown-content">
+                <div className="column">
+                  <h3>Trámites</h3>
+                  <Link to="/AlumnoProceso"><FaTasks /> Alumno Proceso</Link>
+                  <Link to="/AlumnoTramite"><FaClipboardList /> Alumno Trámite</Link>
+                  <Link to="/SeguimientoTramite"><FaClipboardCheck /> Seguimiento Trámite</Link>
+                </div>
+                <div className="column">
+                  <Link to="/SubirCalificacion"><FaUpload /> Subir Calificación</Link>
+                  <Link to="/Consultadekadex"><FaBook /> Consulta de Kardex</Link>
+                  <Link to="/Kardex"><FaHistory /> Kardex</Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Botón de Cerrar Sesión */}
+        <button className="logout-btn" onClick={toggleModal}>
+          <FaSignOutAlt />
+        </button>
+
+        {/* Modal para Confirmar Cierre de Sesión */}
+        <Modal show={showModal} onHide={toggleModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Cerrar Sesión</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>¿Estás seguro de que deseas cerrar sesión, {username}?</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={toggleModal}>Cancelar</Button>
+            <Button variant="danger" onClick={handleLogout}>Cerrar Sesión</Button>
+          </Modal.Footer>
+        </Modal>
+      </nav>
     </div>
   );
 }
