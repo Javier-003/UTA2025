@@ -3,7 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { getAlumnoProceso, updateAlumnoProcesoFunc } from '../../../assets/js/Tramites/alumnoproceso.js';
 //import { AlumnoProcesoModales } from './AlumnoProcesoModales.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FaEdit, FaClipboardList, FaArrowLeft } from 'react-icons/fa';
+import { FaEdit, FaClipboardList, FaArrowLeft, FaUserGraduate } from 'react-icons/fa';
 import * as TramiteObjetos from './tramiteObjetos.jsx'; // Importar todas las funciones de TramiteObjetos.jsx
 
 //Alumno
@@ -245,78 +245,110 @@ useEffect(() => {
       </button>
 
       {/* Tarjeta con información del alumno */}
-      <div className="card border-0 shadow-sm p-4 mb-4 bg-white rounded">
-        <h5 className="text-primary fw-bold">{filteredData[0]?.tramite || "Trámite Desconocido"}</h5>
-        <p className="card-text"><strong>👤 Alumno:</strong> {filteredData[0]?.NombreAlumno}</p>
-        <p className="card-text"><strong>🎓 Matrícula:</strong> {filteredData[0]?.matricula}</p>
-        <p className="card-text"><strong>🏫 Programa Académico:</strong> {filteredData[0]?.programa}</p>
+
+<div className="card border-0 shadow-sm mb-4" style={{
+  backgroundColor: '#f9f9f9',
+  borderLeft: '6px solid #6c757d',
+  borderRadius: '10px',
+}}>
+  <div className="card-body p-4">
+    {/* Título de la tarjeta */}
+    <h5 className="text-dark fw-bold border-bottom border-2 border-dark pb-2 d-flex align-items-center" style={{ letterSpacing: '1px' }}>
+      <FaUserGraduate className="me-2" size={24} color="#6c757d" />
+      {filteredData[0]?.tramite || "Trámite Desconocido"}
+    </h5>
+
+    {/* Información del alumno */}
+    <div className="row mt-3">
+      <div className="col-md-4 mb-3">
+        <p className="text-muted mb-1" style={{ fontWeight: '500' }}><strong>👤 Alumno</strong></p>
+        <div className="p-2 bg-white rounded shadow-sm">
+          <p className="text-dark fw-bold mb-0">{filteredData[0]?.NombreAlumno}</p>
+        </div>
       </div>
+
+      <div className="col-md-4 mb-3">
+        <p className="text-muted mb-1" style={{ fontWeight: '500' }}><strong>🎓 Matrícula</strong></p>
+        <div className="p-2 bg-white rounded shadow-sm">
+          <p className="text-dark fw-bold mb-0">{filteredData[0]?.matricula}</p>
+        </div>
+      </div>
+
+      <div className="col-md-4 mb-3">
+        <p className="text-muted mb-1" style={{ fontWeight: '500' }}><strong>🏫 Programa Académico</strong></p>
+        <div className="p-2 bg-white rounded shadow-sm">
+          <p className="text-dark fw-bold mb-0">{filteredData[0]?.programa}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
       {/* Lista de actividades en forma de tarjetas */}
       <div className="row">
-        {filteredData.length > 0 ? (
-          filteredData.map((alumnoproceso) => (
-            <div key={alumnoproceso.idAlumnoProceso} className="col-md-6">
-              <div className="card border-0 shadow-sm mb-4 bg-light">
-                <div className="card-body">
-                  <h5 className="card-title text-primary">
-                    <FaClipboardList className="me-2" /> {alumnoproceso.NombreActividad}
-                  </h5>
-                  <p className="mb-1"><strong>Orden:</strong> {alumnoproceso.orden}</p>
-                  <p className="mb-1"><strong>Orden:</strong> {alumnoproceso.idpersona}</p>
-                  <p className="mb-1"><strong>Objeto:</strong> {alumnoproceso.objeto}</p>
-                  <p className="mb-1"><strong>Trámite:</strong> {alumnoproceso.tramite}</p>
-                  <p className="mb-1"><strong>Observación:</strong> {alumnoproceso.observacion || "Ninguna"}</p>
-                  <p className="mb-1">
-                    <strong>Estatus:</strong>
-                    <span className={`badge ${alumnoproceso.estatus === "Concluido" ? "bg-success" : "bg-warning text-dark"} ms-2`}>
-                      {alumnoproceso.estatus}
-                    </span>
-                  </p>
-                  <div className="mt-3">
-                   
+  {filteredData.length > 0 ? (
+    filteredData.map((alumnoproceso) => (
+      <div key={alumnoproceso.idAlumnoProceso} className="col-md-6">
+        <div className="card border-0 shadow-sm mb-4 bg-light position-relative rounded-3">
+          <div className="card-body p-4">
 
-               {/* <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleObjetoClick(alumnoproceso.objeto)
-                    }>
-                      <FaEdit /> objeto {alumnoproceso.objeto}
-                    </button> */}
-
-                  <button className="btn btn-sm btn-outline-primary me-2" onClick={() => {
-                    handleObjetoClick(alumnoproceso.objeto);
-                    setIdAlumnoTramite(alumnoproceso.idAlumnoTramite);
-                    setIdTramiteProceso(alumnoproceso.idTramiteProceso);
-                    setIdActividad(alumnoproceso.idActividad);
-                    setOrden(alumnoproceso.orden);
-                    setEstatus(alumnoproceso.estatus);
-                    setObservacion(alumnoproceso.observacion);
-                    setTramite(alumnoproceso.tramite);
-                    setSelectedAlumnoProceso(alumnoproceso);
-
-                    setidPersona(alumnoproceso.idPersona); // Asegúrate de que esto esté correctamente definido
-                    console.log("idPersona al abrir el modal:", alumnoproceso.idPersona); // Depuración
-
-                    setIdAlumno(alumnoproceso.idAlumno); 
-                    console.log("idAlumno al abrir el modal:", alumnoproceso.idAlumno); // Depuración
-
-                    setIdAlumnoPA(alumnoproceso.idAlumnoPA); 
-                    // setIdPeriodo(alumnoproceso.idPeriodo); 
-                    // setIdPeriodoKardex(alumnoproceso.idPeriodoKardex);
-                    console.log("idAlumnoPA al abrir el modal:", alumnoproceso.idAlumnoPA); // Depuración
-                   // console.log("idPeriodo al abrir el modal:", alumnoproceso.idPeriodo); 
-                    // console.log("idPeriodo al abrir el modal:", alumnoproceso.idPeriodoKardex); // Depuración
-                  }}>
-                    <i className="bi bi-card-checklist"></i> Proceso
-                  </button>
-
-                  </div>
-                </div>
-              </div>
+            {/* Orden en la esquina superior derecha */}
+            <div className="position-absolute top-0 end-0 m-3">
+              <span className="badge bg-primary fs-6 px-3 py-2 shadow-sm">
+                Orden: {alumnoproceso.orden}
+              </span>
             </div>
-          ))
-        ) : (
-          <p className="text-muted text-center">No hay actividades registradas.</p>
-        )}
+
+            {/* Título con mejor diseño */}
+            <h5 className="card-title text-dark fw-bold d-flex align-items-center mb-3">
+              <FaClipboardList className="me-2 text-primary" size={24} /> 
+              <span className="border-bottom border-2 border-primary pb-1">
+                {alumnoproceso.NombreActividad}
+              </span>
+            </h5>
+
+            {/* Observación destacada */}
+            <div className="mt-3 p-3 bg-white rounded shadow-sm border-start border-4 border-primary">
+              <strong>Observación:</strong> 
+              <p className="mb-0 text-muted">{alumnoproceso.observacion || "Ninguna"}</p>
+            </div>
+
+            {/* Footer con estatus y botón de proceso */}
+            <div className="d-flex justify-content-between align-items-center mt-4">
+              {/* Estatus en la esquina inferior izquierda */}
+              <span className={`badge px-3 py-2 ${
+                alumnoproceso.estatus === "Concluido" ? "bg-success" : "bg-warning text-dark"
+              }`}>
+                {alumnoproceso.estatus === "Concluido" ? "Concluido" : "En proceso"}
+              </span>
+
+              {/* Botón de proceso */}
+              <button className="btn btn-outline-primary btn-sm px-4 shadow-sm d-flex align-items-center" onClick={() => {
+                handleObjetoClick(alumnoproceso.objeto);
+                setIdAlumnoTramite(alumnoproceso.idAlumnoTramite);
+                setIdTramiteProceso(alumnoproceso.idTramiteProceso);
+                setIdActividad(alumnoproceso.idActividad);
+                setOrden(alumnoproceso.orden);
+                setEstatus(alumnoproceso.estatus);
+                setObservacion(alumnoproceso.observacion);
+                setTramite(alumnoproceso.tramite);
+                setSelectedAlumnoProceso(alumnoproceso);
+                setidPersona(alumnoproceso.idPersona);
+                setIdAlumno(alumnoproceso.idAlumno);
+                setIdAlumnoPA(alumnoproceso.idAlumnoPA);
+              }}>
+                <i className="bi bi-card-checklist me-2"></i> Proceso
+              </button>
+            </div>
+
+          </div>
+        </div>
       </div>
+    ))
+  ) : (
+    <p className="text-muted text-center">No hay actividades registradas.</p>
+  )}
+</div>
 
       {/* Modal del objeto */}
       {ModalComponent && (

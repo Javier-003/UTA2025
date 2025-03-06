@@ -1064,3 +1064,9 @@ export const TramiteReinscribir = ({ show, handleClose, datos, handleConfirm }) 
     </Modal>
   );
 };
+
+
+
+
+
+

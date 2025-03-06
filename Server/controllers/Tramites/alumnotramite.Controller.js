@@ -113,6 +113,19 @@ export const updateAlumnoTramite = async (req, res) => {
     const { idAlumnoTramite } = req.params;
     const { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus } = req.body;
 
+
+     // Mostrar en consola los datos recibidos
+     console.log('Datos recibidos para actualización:', {
+      idAlumnoTramite,
+      idTramite,
+      idPersona,
+      idAlumnoPA,
+      idPeriodo,
+      fecha,
+      estatus
+    }); 
+
+  
     // Verificar si el trámite existe
     const [exists] = await db.query("SELECT 1 FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
     if (!exists.length) return res.status(404).json({ message: "Alumno Trámite no encontrado" });

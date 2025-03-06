@@ -102,19 +102,33 @@ export const deleteAlumnoProceso = async (req, res) => {
   try {
     const { idAlumnoProceso } = req.params;
 
+    // Consulta simplificada solo para obtener el nombre del alumno
     const [proceso] = await db.query(
-      "SELECT CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno FROM alumnoproceso ap JOIN alumnotramite atr ON ap.idAlumnoTramite = atr.idAlumnoTramite JOIN alumnopa apa ON atr.idAlumnoPA = apa.idAlumnoPA JOIN alumno ON apa.idAlumno = alumno.idAlumno JOIN persona ON alumno.idAlumno = persona.idPersona WHERE ap.idAlumnoProceso = ?",
+      "SELECT CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno " +
+      "FROM alumnoproceso ap " +
+      "JOIN alumnotramite atr ON ap.idAlumnoTramite = atr.idAlumnoTramite " +
+      "JOIN persona ON atr.idPersona = persona.idPersona " +
+      "WHERE ap.idAlumnoProceso = ?",
       [idAlumnoProceso]
     );
 
-    if (!proceso.length) return res.status(404).json({ message: "Alumno Proceso no encontrado" });
+    // Verificar si encontramos al alumno
+    if (!proceso.length) {
+      return res.status(404).json({ message: "Alumno Proceso no encontrado" });
+    }
 
+    // Eliminar el alumno del proceso
     const [rows] = await db.query("DELETE FROM alumnoproceso WHERE idAlumnoProceso = ?", [idAlumnoProceso]);
 
-    rows.affectedRows
-      ? res.status(200).json({ message: `Proceso de '${proceso[0].NombreAlumno}' eliminado correctamente` })
-      : res.status(404).json({ message: "Alumno Proceso no encontrado" });
+    if (rows.affectedRows) {
+      // Si se eliminó, devolver un mensaje de éxito
+      res.status(200).json({ message: `Proceso de '${proceso[0].NombreAlumno}' eliminado correctamente` });
+    } else {
+      // Si no se afectaron filas, algo salió mal
+      res.status(404).json({ message: "Alumno Proceso no encontrado" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+

@@ -130,16 +130,16 @@ export const AlumnoTramiteModales = ({
                 {/* Campos del formulario */}
 
                 <div className="input-group mb-3">
-  <span className="input-group-text">Alumno:</span>
-  <input 
-    type="text" 
-    className="form-control" 
-    value={personaList.find(p => p.idPersona === idPersona)?.nombre + " " +
-           personaList.find(p => p.idPersona === idPersona)?.paterno + " " +
-           (personaList.find(p => p.idPersona === idPersona)?.materno || "") || ""}
-    readOnly
-  />
-</div>
+                  <span className="input-group-text">Alumno:</span>
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    value={personaList.find(p => p.idPersona === idPersona)?.nombre + " " +
+                          personaList.find(p => p.idPersona === idPersona)?.paterno + " " +
+                          (personaList.find(p => p.idPersona === idPersona)?.materno || "") || ""}
+                    readOnly
+                  />
+                </div>
 
                 {/* <div className="input-group mb-3">
                 <span className="input-group-text">Alumno:</span>
@@ -155,10 +155,10 @@ export const AlumnoTramiteModales = ({
 
               <div className="input-group mb-3">
               <span className="input-group-text">Tramite:</span>
-              <select className="form-select" value={idTramite} onChange={(event) => setIdTramite(event.target.value)}>
+              <select className="form-select" value={idTramite} onChange={(event) => setIdTramite(event.target.value)} disabled>
                 <option value="">Selecciona un Tramite</option>
                 {tramiteList.map((tramiteList) => (
-                  <option key={tramiteList.idTramite} value={tramiteList.idTramite}>{tramiteList.nombre}</option>
+                  <option key={tramiteList.idTramite} value={tramiteList.idTramite}>{tramiteList.nombre} </option>
                 ))}
               </select>
             </div>
@@ -175,7 +175,7 @@ export const AlumnoTramiteModales = ({
 
               <div className="input-group mb-3">
                   <span className="input-group-text">Fecha:</span>
-                  <input type="date" className="form-control" value={fecha} onChange={(event) => setFecha(event.target.value)} />                         
+                  <input type="date" className="form-control" value={fecha} onChange={(event) => setFecha(event.target.value)} disabled/>                         
               </div>
 
               <div className="input-group mb-3">
