@@ -18,6 +18,14 @@ from '../../../assets/js/Parametrizacion/alumnopa.js';
 import {getKardexTodos, addKardexFun} 
 from '../../../assets/js/Parametrizacion/kardex.js';
 
+//------------ EXPORTAMOS DATOS DEL PORCENTAJE --------------------
+export const calcularPorcentajeConcluido = (filteredData) => {
+  if (filteredData.length === 0) return 0;
+  const concluidas = filteredData.filter(item => item.estatus === "Concluido").length;
+  return Math.round((concluidas / filteredData.length) * 100);
+}; 
+// ----------------------------------------------------------------
+
 function ProcedimientoTramite() {
   const [alumnoprocesoList, setAlumnoProceso] = useState([]);
   const [idAlumnoTramite, setIdAlumnoTramite] = useState("");
@@ -82,7 +90,6 @@ function ProcedimientoTramite() {
   };
   
   
-
   useEffect(() => {
     getAlumnoProceso(setAlumnoProceso);
   }, []);
