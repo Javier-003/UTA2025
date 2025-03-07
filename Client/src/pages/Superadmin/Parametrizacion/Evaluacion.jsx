@@ -6,7 +6,7 @@ from '../../../assets/js/Parametrizacion/evaluacion.js';
 import { EvaluacionModales } from '../Parametrizacion/EvaluacionModales.jsx';
 
 function Evaluacion() {
-  const [evaluacionList, setevaluacionList] = useState([]);
+  const [evaluacionList, setEvaluacion] = useState([]);
   const [idKadex, setIdKadex] = useState("");
   const [idMapaCurricular, setIdMapaCurricular] = useState("");
   const [faltas, setFaltas] = useState("");
@@ -16,7 +16,6 @@ function Evaluacion() {
   const [kardex, setKardex] = useState("");
   const [mapa, setMapa] = useState("");
   const [nombreUnidad, setNombreUnidad] = useState("");
-  
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,7 +23,7 @@ function Evaluacion() {
   const [selectedEvaluacion, setselectedEvaluacion] = useState(null);
   
   useEffect(() => {
-    getEvaluacionTodos(setevaluacionList);
+    getEvaluacionTodos(setEvaluacion);
   }, []);
 
   const filteredData = evaluacionList.filter(item => {
@@ -35,27 +34,22 @@ function Evaluacion() {
     );
   });
 
-  const handleAdd = () => {
-    addEvaluacion(
-      idKadex,idMapaCurricular,idMateriaUnidad,calificacion,faltas,nombreUnidad,estatus,setShowModal,
-      () => getEvaluacionTodos(setevaluacionList)
-    );
+  const handleAdd = async () => {
+    await addEvaluacion(idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
+    setShowModal(false);
+    getEvaluacionTodos(setEvaluacion);
   };
-
-  const handleUpdate = () => {
-    updateEvaluacionFunc(
-      selectedEvaluacion.idEvaluacion,
-      idKadex,idMapaCurricular,idMateriaUnidad,calificacion,faltas,nombreUnidad,estatus,setShowEditModal,
-      () => getEvaluacionTodos(setevaluacionList)
-    );
+  
+  const handleUpdate = async () => {
+    await updateEvaluacionFunc(selectedEvaluacion.idEvaluacion, idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
+    setShowEditModal(false);
+    getEvaluacionTodos(setEvaluacion);
   };
-
-  const handleDelete = () => {
-    deleteEvaluacionFunc(
-      selectedEvaluacion.idEvaluacion,
-      setShowDeleteModal,
-      () => getEvaluacionTodos(setevaluacionList)
-    );
+  
+  const handleDelete = async () => {
+    await deleteEvaluacionFunc(selectedEvaluacion.idEvaluacion);
+    setShowDeleteModal(false);
+    getEvaluacionTodos(setEvaluacion);
   };
   
   return (
@@ -88,10 +82,10 @@ function Evaluacion() {
                   <th>ID MP</th>
                   <th>Materia</th>
                   <th>Id MU</th>
-                  <th>Unidad</th>
+                  <th>Materia Unidad</th>
                   <th>Calificacion</th>
                   <th>Faltas</th>
-                  <th>Nombre Unidad</th>
+                  <th>Unidad</th>
                   <th>Estatus</th>
                   <th>Editar</th>
                   <th>Eliminar</th>

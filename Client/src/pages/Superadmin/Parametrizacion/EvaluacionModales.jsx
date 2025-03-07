@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
-import { getEvaluacion } from "../../../api/Parametrizacion/evaluacion.api.js";
 import { getMateriaU } from "../../../api/Parametrizacion/materiaunidad.api.js";
 import { getKardex } from "../../../api/Parametrizacion/kardex.api.js";
 import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacurricular.api.js";
@@ -19,18 +18,15 @@ export const EvaluacionModales = ({
   handleAdd, handleUpdate, handleDelete,
   setselectedEvaluacion
 }) => {
-  const [evaluacionList, setevaluacionList] = useState([]);
   const [kardexList, setkardexList] = useState([]);
   const [mapaList, setMapaList] = useState([]);
   const [unidadList, setunidadList] = useState([]);
   
   useEffect(() => {
-    getEvaluacion().then(data => setevaluacionList(data)).catch(error => console.error("Error al obtener las evaluaciones:", error));
     getKardex().then(data => setkardexList(data)).catch(error => console.error("Error al obtener los kardex:", error));
     getMapaCurriculares().then(data => setMapaList(data)).catch(error => console.error("Error al obtener los mapas curriculares:", error));
     getMateriaU().then(data => setunidadList(data)).catch(error => console.error("Error al obtener las materias unidades:", error));
-  }, [evaluacionList]);
-
+  }, []);
 
   return (
     <>
@@ -47,41 +43,31 @@ export const EvaluacionModales = ({
                 <select className="form-select" value={idKardex} onChange={(event) => setIdKardex(event.target.value)}>
                   <option value="">Selecciona un Kardex</option>
                   {kardexList.map((kardex) => (
-                    <option key={kardex.idKardex} value={kardex.idKardex}>
-                        {kardex.idKardex} 
-                    </option>
-                  ))}
+                    <option key={kardex.idKardex} value={kardex.idKardex}>{kardex.idKardex}  </option> ))}
                 </select>
               </div>     
-            
               <div className="input-group mb-3">
                 <span className="input-group-text">Mapa curricular:</span>
                 <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
                   <option value="">Selecciona una materia</option>
                   {mapaList.map((mapa) => (
                     <option key={mapa.idMapaCurricular} value={mapa.idMapaCurricular}>
-                        {mapa.materia}</option>
-                  ))}
+                        {mapa.materia}</option> ))}
                 </select>
               </div>
-
               <div className="input-group mb-3">
-                <span className="input-group-text">Selecciona una Unidad:</span>
+                <span className="input-group-text">Materia Unidad:</span>
                 <select className="form-select" value={idMateriaUnidad} onChange={(event) => setIdMateriaUnidad(event.target.value)}>
-                  <option value="">Selecciona una Unidad</option>
+                  <option value="">Selecciona una Materia Unidad</option>
                   {unidadList.map((materiaunidad) => (
                     <option key={materiaunidad.idMateriaUnidad} value={materiaunidad.idMateriaUnidad}>
-                        {materiaunidad.nombre}</option>
-                  ))}
+                        {materiaunidad.nombre}</option>))}
                 </select>
               </div>
-
-
               <div className="input-group mb-3">
-                <span className="input-group-text"> Nombre:</span>
+                <span className="input-group-text">Nombre Unidad:</span>
                 <input type="text" className="form-control" value={nombreUnidad} onChange={(event) => setNombreUnidad(event.target.value)} />
               </div>
-
               <div className="input-group mb-3">
                 <span className="input-group-text">Faltas:</span>
                 <input type="number" className="form-control" value={faltas} onChange={(event) => setFaltas(event.target.value)} />
@@ -107,7 +93,6 @@ export const EvaluacionModales = ({
         </div>
       </div>
 
-
     <div className={`modal fade ${showEditModal ? 'show' : ''}`} style={{ display: showEditModal ? 'block' : 'none' }} tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
       <div className="modal-dialog modal-dialog-right">
         <div className="modal-content">
@@ -115,19 +100,15 @@ export const EvaluacionModales = ({
             <h5 className="modal-title" id="editModalLabel">Editar Evaluación</h5>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowEditModal(false)}></button>
           </div>
-
           <div className="modal-body">
             <div className="input-group mb-3">
               <span className="input-group-text">Kardex:</span>
               <select className="form-select" value={idKardex} onChange={(event) => setIdKardex(event.target.value)}>
                 <option value="">Selecciona un kardex</option>
                 {kardexList.map((kardex) => (
-                  <option key={kardex.idKardex} value={kardex.idKardex}>
-                        {kardex.idKardex}</option>
-                ))}
+                  <option key={kardex.idKardex} value={kardex.idKardex}>{kardex.idKardex}</option>))}
               </select>
             </div>
-            
             <div className="input-group mb-3">
               <span className="input-group-text">Mapa curricular:</span>
               <select className="form-select" value={idMapaCurricular} onChange={(event) => setIdMapaCurricular(event.target.value)}>
@@ -136,33 +117,28 @@ export const EvaluacionModales = ({
                 <option key={mapa.idMapaCurricular} value={mapa.idMapaCurricular}>{mapa.materia}</option> ))}
               </select>
             </div>
-
             <div className="input-group mb-3">
-                <span className="input-group-text">Selecciona una Unidad:</span>
+                <span className="input-group-text">Materia Unidad</span>
                 <select className="form-select" value={idMateriaUnidad} onChange={(event) => setIdMateriaUnidad(event.target.value)}>
-                  <option value="">Selecciona una materia</option>
+                  <option value="">Seleccione una Materia Unidad</option>
                   {unidadList.map((materiaunidad) => (
                     <option key={materiaunidad.idMateriaUnidad} value={materiaunidad.idMateriaUnidad}>
                         {materiaunidad.nombre}</option>
                   ))}
                 </select>
               </div>
-
               <div className="input-group mb-3">
-                <span className="input-group-text"> Nombre:</span>
+                <span className="input-group-text">Nombre Unidad:</span>
                 <input type="text" className="form-control" value={nombreUnidad} onChange={(event) => setNombreUnidad(event.target.value)} />
               </div>
-
               <div className="input-group mb-3">
                 <span className="input-group-text">Faltas:</span>
                 <input type="number" className="form-control" value={faltas} onChange={(event) => setFaltas(event.target.value)} />
               </div>
-
               <div className="input-group mb-3">
                 <span className="input-group-text">Calificación:</span>
                 <input type="number" className="form-control" value={calificacion} onChange={(event) => setCalificacion(event.target.value)} />
               </div>
-
               <div className="input-group mb-3">
                 <span className="input-group-text">Estatus:</span>
                 <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
@@ -196,6 +172,7 @@ export const EvaluacionModales = ({
         </div>
       </div>
     </div> 
+    
     </>
   );
 }

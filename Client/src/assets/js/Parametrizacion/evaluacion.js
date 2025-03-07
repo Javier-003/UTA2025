@@ -4,13 +4,12 @@ import { getEvaluacion, createEvaluacion, updateEvaluacion, deleteEvaluacion }
 from '../../../api/Parametrizacion/evaluacion.api.js';
 
 // Obtener todos los registros de Evaluacion
-export const getEvaluacionTodos = async (idGrupoMateria) => {
+export const getEvaluacionTodos = async (setEvaluacion) => {
   try {
-    const data = await getEvaluacion(idGrupoMateria);
-    return data;
+    const data = await getEvaluacion();
+    setEvaluacion(data);
   } catch (error) {
-    console.error('Error al obtener los registros de evaluación:', error);
-    throw new Error('Error al obtener los registros de evaluación');
+    console.error('Error al obtener los registros de Evaluación:', error);
   }
 };
 
