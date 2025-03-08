@@ -1,29 +1,17 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getEvaluacionTodos, addEvaluacion, updateEvaluacionFunc, deleteEvaluacionFunc } 
-from '../../../assets/js/Parametrizacion/evaluacion.js';
-import { EvaluacionModales } from '../Parametrizacion/EvaluacionModales.jsx';
+import { getEvaluacion } from '../../../api/Parametrizacion/evaluacion.api.js';
 
 function Evaluacion() {
-  const [evaluacionList, setEvaluacion] = useState([]);
-  const [idKadex, setIdKadex] = useState("");
-  const [idMapaCurricular, setIdMapaCurricular] = useState("");
-  const [faltas, setFaltas] = useState("");
-  const [calificacion, setCalificacion] = useState("");
-  const [estatus, setEstatus] = useState("");
-  const [idMateriaUnidad, setIdMateriaUnidad] = useState("");
-  const [kardex, setKardex] = useState("");
-  const [mapa, setMapa] = useState("");
-  const [nombreUnidad, setNombreUnidad] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [evaluacionList, setevaluacionList] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [selectedEvaluacion, setselectedEvaluacion] = useState(null);
-  
+
   useEffect(() => {
-    getEvaluacionTodos(setEvaluacion);
+    getEvaluacion().then(data => {
+      console.log("Datos de evaluación obtenidos:", data);
+      setevaluacionList(data);
+    }).catch(error => console.error("Error al obtener los registros de evaluación:", error));
   }, []);
 
   const filteredData = evaluacionList.filter(item => {
@@ -34,127 +22,62 @@ function Evaluacion() {
     );
   });
 
-  const handleAdd = async () => {
-    await addEvaluacion(idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
-    setShowModal(false);
-    getEvaluacionTodos(setEvaluacion);
-  };
-  
-  const handleUpdate = async () => {
-    await updateEvaluacionFunc(selectedEvaluacion.idEvaluacion, idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
-    setShowEditModal(false);
-    getEvaluacionTodos(setEvaluacion);
-  };
-  
-  const handleDelete = async () => {
-    await deleteEvaluacionFunc(selectedEvaluacion.idEvaluacion);
-    setShowDeleteModal(false);
-    getEvaluacionTodos(setEvaluacion);
-  };
-  
   return (
     <div className="container">
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-center">
-          <button className='btn btn-success' onClick={() => {
-            setIdKadex("");
-            setKardex("");
-            setIdMapaCurricular("");
-            setIdMateriaUnidad("");
-            setCalificacion("");
-            setEstatus("");
-            setMapa("");
-            setFaltas("");
-            setNombreUnidad("");
-            setselectedEvaluacion(null);
-            setShowModal(true);
-          }}>Registrar</button>
-          <h5 className="text-center flex-grow-1" >Evaluación</h5>
-          <input type="text" className="form-control ms-2 w-25"  value={searchText}onChange={(e) =>
-             setSearchText(e.target.value)} placeholder="Buscar por Nombre, estatus o Mapa Curricular" />
+          <h5 className="text-center flex-grow-1">Evaluación</h5>
+          <input
+            type="text"
+            className="form-control ms-2 w-25"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            placeholder="Buscar por Nombre, estatus o Mapa Curricular"
+          />
         </div>
         <div className="mt-4">
           <table className="table table-bordered">
-              <thead>
+            <thead>
+              <tr>
+                <th>ID E</th>
+                <th>ID K</th>
+                <th>ID MP</th>
+                <th>Materia</th>
+                <th>Id MU</th>
+                <th>Unidad</th>
+                <th>Calificacion</th>
+                <th>Faltas</th>
+                <th>Nombre Unidad</th>
+                <th>Estatus</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.length > 0 ? (
+                filteredData.map((evaluacion) => (
+                  <tr key={evaluacion.idEvaluacion}>
+                    <td>{evaluacion.idEvaluacion}</td>
+                    <td>{evaluacion.idKadex}</td>
+                    <td>{evaluacion.idMapaCurricular}</td>
+                    <td>{evaluacion.materia}</td>
+                    <td>{evaluacion.idMateriaUnidad}</td>
+                    <td>{evaluacion.nombre}</td>
+                    <td>{evaluacion.calificacion}</td>
+                    <td>{evaluacion.faltas}</td>
+                    <td>{evaluacion.nombreUnidad}</td>
+                    <td>{evaluacion.estatus}</td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
-                  <th>ID E</th>
-                  <th>ID K</th>
-                  <th>ID MP</th>
-                  <th>Materia</th>
-                  <th>Id MU</th>
-                  <th>Materia Unidad</th>
-                  <th>Calificacion</th>
-                  <th>Faltas</th>
-                  <th>Unidad</th>
-                  <th>Estatus</th>
-                  <th>Editar</th>
-                  <th>Eliminar</th>
+                  <td colSpan="10">No hay registros para mostrar</td>
                 </tr>
-              </thead>
-              <tbody>
-                {filteredData.length > 0 ? (
-                  filteredData.map((evaluacion) => (
-                    <tr key={evaluacion.idEvaluacion}>
-                      <td>{evaluacion.idEvaluacion}</td>
-                      <td>{evaluacion.idKadex} </td>
-                      <td>{evaluacion.idMapaCurricular}</td>
-                      <td>{evaluacion.materia}</td>
-                      <td>{evaluacion.idMateriaUnidad}</td>
-                      <td>{evaluacion.nombre}</td>
-                      <td>{evaluacion.calificacion}</td>
-                      <td>{evaluacion.faltas}</td>
-                      <td>{evaluacion.nombreUnidad}</td>
-                      <td>{evaluacion.estatus}</td>
-                      <td>
-                        <button className="btn btn-warning" onClick={() => {
-                          setShowEditModal(true);
-                          setselectedEvaluacion(evaluacion);
-                          setIdKadex(evaluacion.idKadex);
-                          setKardex(evaluacion.kardex);
-                          setIdMapaCurricular(evaluacion.idMapaCurricular);
-                          setMapa(evaluacion.mapa);
-                          setFaltas(evaluacion.faltas);
-                          setCalificacion(evaluacion.calificacion);
-                          setEstatus(evaluacion.estatus);
-                          setIdMateriaUnidad(evaluacion.idMateriaUnidad);
-                          setNombreUnidad(evaluacion.nombreUnidad);
-                        }}>Editar</button>
-                      </td>
-                      <td>
-                        <button className="btn btn-danger" onClick={() => {
-                          setShowDeleteModal(true); setselectedEvaluacion(evaluacion);
-                        }}>Eliminar</button>
-                             </td>
-                           </tr>
-                         ))
-                       ) : (
-                         <tr>
-                           <td colSpan="4">No hay registros para mostrar</td>
-                         </tr>
-                       )}
-                     </tbody>
-                   </table>
-                 </div>
-               </div>
-               <EvaluacionModales
-               idKardex={idKadex} setIdKardex={setIdKadex}
-               idMapaCurricular={idMapaCurricular} setIdMapaCurricular={setIdMapaCurricular}
-               mapa={mapa} setMapa={setMapa}
-               faltas={faltas} setFaltas={setFaltas}
-               calificacion={calificacion} setCalificacion={setCalificacion}
-               estatus={estatus} setEstatus={setEstatus}
-               idMateriaUnidad={idMateriaUnidad} setIdMateriaUnidad={setIdMateriaUnidad}
-               kardex={kardex} setKardex={setKardex}
-               nombreUnidad={nombreUnidad} setNombreUnidad={setNombreUnidad}
-               showModal={showModal} setShowModal={setShowModal}
-               showEditModal={showEditModal} setShowEditModal={setShowEditModal}
-               showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
-               handleAdd={handleAdd} 
-               handleUpdate={handleUpdate} 
-               handleDelete={handleDelete} 
-               setselectedEvaluacion={setselectedEvaluacion}/>   
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default Evaluacion
+export default Evaluacion;

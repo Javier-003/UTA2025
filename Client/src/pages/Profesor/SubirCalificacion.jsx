@@ -38,12 +38,12 @@ function SubirCalificacion() {
             ))
         );
 
-    // Filtrar cargaMateriasList por periodo, profesor, término de búsqueda y semestre
+    // Filtrar cargaMateriasList solo si se selecciona un periodo, un profesor o se realiza una búsqueda
     const filteredData = cargaMateriasList.filter(cargaMateria => 
-        (!idPeriodo || cargaMateria.periodo === idPeriodo) &&
-        (!idProfesor || cargaMateria.idProfesor === parseInt(idProfesor)) &&
-        (cargaMateria.profesor.toLowerCase().includes(searchTerm.toLowerCase()) || 
-         cargaMateria.materia.toLowerCase().includes(searchTerm.toLowerCase()))
+        (idPeriodo && cargaMateria.periodo === idPeriodo) &&
+        ((idProfesor && cargaMateria.idProfesor === parseInt(idProfesor)) ||
+        (searchTerm && (cargaMateria.profesor.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                        cargaMateria.materia.toLowerCase().includes(searchTerm.toLowerCase()))))
     );
 
     // Agrupar datos por idGrupoMateria para evitar duplicados
@@ -69,7 +69,7 @@ function SubirCalificacion() {
 
     return (
         <div className="container">
-            <h2>Subir Calificaciones</h2>
+            <h2>Carga de Calificaciones</h2>
             <div className="card shadow">
                 <div className="card-body">
                     <div className="row">
@@ -78,6 +78,7 @@ function SubirCalificacion() {
                             <select className="form-select" value={idPeriodo} onChange={(e) => {
                                 setIdPeriodo(e.target.value);
                                 setIdProfesor(""); // Resetear el profesor seleccionado al cambiar el periodo
+                                setSearchTerm(""); // Resetear el término de búsqueda al cambiar el periodo
                             }}>
                                 <option value="">Selecciona un Periodo</option>
                                 {periodoList && periodoList.map((periodo) => (
@@ -89,7 +90,7 @@ function SubirCalificacion() {
                         </div>
                         <div className="col-md-4">
                             <h6 className="card-title">Profesor</h6>
-                            <select className="form-select" value={idProfesor} onChange={(e) => setIdProfesor(e.target.value)}>
+                            <select className="form-select" value={idProfesor} onChange={(e) => setIdProfesor(e.target.value)} disabled={!idPeriodo}>
                                 <option value="">Selecciona un Profesor</option>
                                 {profesoresFiltrados.length > 0 ? (
                                     profesoresFiltrados.map((profesor) => (
@@ -103,13 +104,14 @@ function SubirCalificacion() {
                             </select>
                         </div>
                         <div className="col-md-4">
-                            <h6 className="card-title">Buscar por Materia o por apellido del Profesor</h6>
+                            <h6 className="card-title">Buscar Materia o Nombre del Profesor</h6>
                             <input 
                                 type="text" 
                                 className="form-control" 
                                 value={searchTerm} 
                                 onChange={(e) => setSearchTerm(e.target.value)} 
-                                placeholder="Buscar por Materia o por apellido del Profesor"
+                                placeholder="Buscar por Materia o por Nombre del Profesor"
+                                disabled={!idPeriodo}
                             />
                         </div>
                     </div>
