@@ -15,14 +15,21 @@ const formatDateString = (dateString) => {
   return dateString;
 };
 
+// Function to remove ".000Z" from dates and keep date and time
+const formatDateStringHora = (isoDateString) => {
+  if (isoDateString) {
+    return isoDateString.replace('T', ' ').replace('.000Z', '');
+  }
+  return isoDateString;
+};
 
 function OfertaAcademica() {
   const [ofertaAcademicaList, setOfertaAcademica] = useState([]);
   const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState(null); // Set to null by default
+  const [descripcion, setDescripcion] = useState("");
   const [sigla, setSigla] = useState("");
   const [desde, setDesde] = useState("");
-  const [hasta, setHasta] = useState(null); // Set to null by default
+  const [hasta, setHasta] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -49,10 +56,10 @@ function OfertaAcademica() {
 
   const columns = [
     { name: 'Nombre', selector: row => row.nombre, sortable: true },
-    { name: 'Descripción', selector: row => row.descripcion || '', sortable: true },
+    { name: 'Descripción', selector: row => row.descripcion, sortable: true },
     { name: 'Sigla', selector: row => row.sigla, sortable: true },
     { name: 'Desde', selector: row => formatDateString(row.desde), sortable: true },
-    { name: 'Hasta', selector: row => row.hasta ? formatDateString(row.hasta) : '', sortable: true },
+    { name: 'Hasta', selector: row => formatDateString(row.hasta), sortable: true },
     {
       name: 'Acciones',
       cell: row => (
@@ -63,7 +70,7 @@ function OfertaAcademica() {
             setDescripcion(row.descripcion);
             setSigla(row.sigla);
             setDesde(formatDateString(row.desde));
-            setHasta(row.hasta ? formatDateString(row.hasta) : '');
+            setHasta(formatDateString(row.hasta));
             setShowEditModal(true);
           }}>
             <FontAwesomeIcon icon={faEdit} />
@@ -92,10 +99,10 @@ function OfertaAcademica() {
           <div className="d-flex justify-content-between align-items-center w-100">
             <button className='btn btn-success me-2' onClick={() => {
               setNombre("");
-              setDescripcion(null); // Set to null when opening modal
+              setDescripcion("");
               setSigla("");
               setDesde("");
-              setHasta(null); // Set to null when opening modal
+              setHasta("");
               setShowModal(true);
             }}>
               <FontAwesomeIcon icon={faPlus} /> Agregar Oferta Académica

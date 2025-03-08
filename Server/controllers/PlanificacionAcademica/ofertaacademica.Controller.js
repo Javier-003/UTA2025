@@ -26,14 +26,12 @@ export const getOfertaAcademicaTodos = async (req, res) => {
         });
     }
 };
-
-
 export const createOfertaAcademica = async (req, res) => {
     try {
-        const { nombre, descripcion = null, sigla, desde, hasta = null } = req.body;
+        const { nombre, descripcion, sigla, desde, hasta } = req.body;
         // Verificación de campos requeridos
-        if (!nombre || !sigla || !desde) {
-            return res.status(400).json({ message: "Los campos nombre, sigla y desde son requeridos." });
+        if (!nombre || !descripcion || !sigla || !desde || !hasta) {
+            return res.status(400).json({ message: "Todos los campos son requeridos: nombre, descripcion, sigla, desde, hasta" });
         }
         // Insertar oferta academica en la base de datos
         const [rows] = await db.query(
@@ -55,15 +53,13 @@ export const createOfertaAcademica = async (req, res) => {
         res.status(500).json({ message: "Algo salió mal", error: error.message });
     }
 };
-
-
 export const updateOfertaAcademica = async (req, res) => {
     try {
         const { idOfertaAcademica } = req.params; // El id se pasa como parámetro en la URL
-        const { nombre, descripcion = null, sigla, desde, hasta = null } = req.body; // Los datos a actualizar se pasan en el cuerpo de la solicitud
+        const { nombre, descripcion, sigla, desde, hasta } = req.body; // Los datos a actualizar se pasan en el cuerpo de la solicitud
         // Verificación de campos requeridos
-        if (!nombre || !sigla || !desde) {
-            return res.status(400).json({ message: "Los campos nombre, sigla y desde son requeridos." });
+        if (!nombre || !descripcion || !sigla || !desde || !hasta) {
+            return res.status(400).json({ message: "Todos los campos son requeridos: nombre, descripcion, sigla, desde, hasta" });
         }
         // Actualizar oferta academica en la base de datos
         const [result] = await db.query(
@@ -80,8 +76,6 @@ export const updateOfertaAcademica = async (req, res) => {
         res.status(500).json({ message: "Algo salió mal", error: error.message });
     }
 };
-
-
 export const deleteOfertaAcademica = async (req, res) => {
     try {
         const { idOfertaAcademica } = req.params; // El id se pasa como parámetro en la URL
