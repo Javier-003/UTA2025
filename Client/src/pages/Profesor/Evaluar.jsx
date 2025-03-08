@@ -22,22 +22,23 @@ function Evaluar() {
         if (cargaMateria) {
             // console.log("📌 CargaMateria recibida:", cargaMateria);
             getKardex(cargaMateria.idGrupoMateria).then(data => {
-                console.log("📌 Datos de Kardex recibidos:", data);
+                // console.log("📌 Datos de Kardex recibidos:", data);
                 const alumnosFiltrados = data.filter(alumno =>
                     alumno.idMapaCurricular === cargaMateria.idMapaCurricular &&
-                    alumno.idGrupo === cargaMateria.idGrupo
+                    alumno.idGrupo === cargaMateria.idGrupo &&
+                    alumno.estatus === 'Activo' // Filtrar solo alumnos activos
                 );
                 // console.log("✅ Alumnos filtrados:", alumnosFiltrados);
                 setAlumnos(alumnosFiltrados);
             }).catch(error => console.error("❌ Error al obtener alumnos:", error));
-
+            
             getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
                 // console.log("📌 Evaluaciones recibidas:", data);
                 const evaluacionesFiltradas = data.filter(evaluacion => 
                     evaluacion.idMapaCurricular === cargaMateria.idMapaCurricular &&
                     evaluacion.materia === cargaMateria.materia
                 );
-                console.log("✅ Evaluaciones filtradas:", evaluacionesFiltradas);
+                // console.log("✅ Evaluaciones filtradas:", evaluacionesFiltradas);
                 setEvaluaciones(evaluacionesFiltradas);
                 const initialCalificaciones = {};
                 evaluacionesFiltradas.forEach(evaluacion => {
