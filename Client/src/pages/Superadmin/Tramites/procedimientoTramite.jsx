@@ -71,6 +71,7 @@ function ProcedimientoTramite() {
   const [idPeriodoKardex, setIdPeriodoKardex] = useState("");
   const [calificacionFinal, setCalificacionFinal] = useState("");
   const [tipo, setTipo] = useState("");
+  const [estatusKardex, setEstatusKardex] = useState("");
   const [selectedKardex, setSelectedKardex] = useState(null);
 
   const [currentObjeto, setCurrentObjeto] = useState(null); // Estado para el objeto actual
@@ -184,9 +185,10 @@ useEffect(() => {
       //ASOCIAR GRUPO/KARDEX
       const handleKardex = () => {  
         const tipo = "Ordinaria";
-        console.log("Datos enviados a KARDEX:", {idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal, tipo});
+        const estatusKardex = "Activo";
+        console.log("Datos enviados a KARDEX:", {idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal, tipo, estatusKardex});
      
-        addKardexFun( idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal,  tipo, setShowModal,  () => {
+        addKardexFun( idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal,  tipo, estatusKardex, setShowModal,  () => {
         getKardexTodos(setKardexList) 
         getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
         });
@@ -403,6 +405,7 @@ useEffect(() => {
     idPeriodoKardex={idPeriodoKardex} setIdPeriodoKardex={setIdPeriodoKardex}
     calificacionFinal={calificacionFinal} setCalificacionFinal={setCalificacionFinal}
     tipo={tipo} setTipo={setTipo}
+    estatusKardex={estatusKardex} setEstatusKardex={setEstatusKardex}
     handleKardex={handleKardex}
     setSelectedKardex={setSelectedKardex}
 

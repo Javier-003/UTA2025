@@ -36,7 +36,7 @@ export const getKardex = async (req, res) => {
 
 
 export const createKardex = async (req, res) => {
-  const { idAlumnoPA, idGrupo, tipo } = req.body; // 👈 Recibimos solo estos campos
+  const { idAlumnoPA, idGrupo, tipo, estatus } = req.body; // 👈 Recibimos solo estos campos
   let connection;
 
   try {
@@ -59,7 +59,7 @@ export const createKardex = async (req, res) => {
     // 3. Insertar en la tabla alumnoperiodo
     await connection.query(
       "INSERT INTO alumnoperiodo (idAlumnoPA, idPeriodo, Observacion) VALUES (?, ?, ?)",
-      [idAlumnoPA, idPeriodo, "Inscripción automática desde kardex"] // 👈 Observación opcional
+      [idAlumnoPA, idPeriodo, "Dato ingresado automáticamente"] // 👈 Observación opcional
     );
 
     // 4. Obtener todos los idMapaCurricular asociados al idGrupo
@@ -78,8 +78,8 @@ export const createKardex = async (req, res) => {
 
       // Insertar en kardex
       const [kardexResult] = await connection.query(
-        "INSERT INTO kardex (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo) VALUES (?, ?, ?, ?, ?, ?)",
-        [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, null, tipo] // 👈 calificacionFinal es null por defecto
+        "INSERT INTO kardex (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, null, tipo, estatus] // 👈 calificacionFinal es null por defecto
       );
 
       const idKardex = kardexResult.insertId; // 👈 idKardex generado
@@ -128,21 +128,21 @@ export const createKardex = async (req, res) => {
 export const updateKardex = async (req, res) => {
   try {
     const { idKardex } = req.params;
-    const { idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo } = req.body;
+    const { idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus } = req.body;
     const [exists] = await db.query("SELECT 1 FROM kardex WHERE idKardex = ?", [idKardex]);
     if (!exists.length) {
       return res.status(404).json({ message: "El kardex no existe" });
     }
     const [result] = await db.query(
-      "UPDATE kardex SET idAlumnoPA = ?, idMapaCurricular = ?, idGrupo = ?, idPeriodo = ?, calificacionFinal = ?, tipo = ? WHERE idKardex = ?",
-      [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, idKardex]
+      "UPDATE kardex SET idAlumnoPA = ?, idMapaCurricular = ?, idGrupo = ?, idPeriodo = ?, calificacionFinal = ?, tipo = ?, estatus = ?  WHERE idKardex = ?",
+      [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus, idKardex]
     );
     if (result.affectedRows === 0) {
       return res.status(400).json({ message: "No se pudo actualizar el kardex" });
     }
     res.status(200).json({
       message: "Kardex actualizado correctamente",
-      idKardex,idAlumnoPA,idMapaCurricular,idGrupo,idPeriodo,calificacionFinal,tipo
+      idKardex,idAlumnoPA,idMapaCurricular,idGrupo,idPeriodo,calificacionFinal, tipo, estatus
     });
   } catch (error) {
     console.error("Error al actualizar el kardex:", error);

@@ -15,9 +15,9 @@ export const getKardexTodos = async (setKardex) => {
 };
 
 // Crear un nuevo registro de Kardex
-export const addKardexFun = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, setShowModal, getKardex) => {
+export const addKardexFun = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus, setShowModal, getKardex) => {
   try {
-    await createKardex(idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo);
+    await createKardex(idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus);
     getKardex();
     Swal.fire({
       icon: 'success',
@@ -36,9 +36,9 @@ export const addKardexFun = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeri
 };
 
 // Actualizar un registro de Kardex existente
-export const updateKardexFunc = async (idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, setShowEditModal, getKardex) => {
+export const updateKardexFunc = async (idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus, setShowEditModal, getKardex) => {
   try {
-    await updateKardex(idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo);
+    await updateKardex(idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus);
     getKardex();
     Swal.fire({
       icon: 'success',

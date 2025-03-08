@@ -122,6 +122,20 @@ export const tramiteEntregaCompDomicilio = (props) => (
   <TramiteModal title="Entrega de Comprobante de Domicilio" {...props} />
 );
 
+// ---------------- REINSCRIPCIÓN -------------------
+export const tramiteValidaPagoReinscripcion = (props) => (
+  <TramiteModal title="Valdación de Pago de Reinscripción" {...props} />
+);
+
+// ---------------- BAJA TEMPORAL -------------------
+export const tramiteValidaPagoBajaTemporal = (props) => (
+  <TramiteModal title="Valdación de Pago Baja Temporal" {...props} />
+);
+
+export const tramiteValidaAdeudos = (props) => (
+  <TramiteModal title="Valdación de Adeudos" {...props} />
+);
+
 
 // ------------------------------------------ REGISTRAR ALUMNO -------------------------------------------------------
 const TramiteModalRegistro = ({
@@ -923,7 +937,7 @@ export const tramiteRegistraPA = (props) => (
 // ------------------------------------------ CARGAR DATOS (KARDEX, EVALUACIÓN) -------------------------------------------------------
 
 export const tramiteRegistraGrupoMaterias = ({ 
-  idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex,
+  idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex, 
   handleKardex, handleClose, show,
 }) => {
   
@@ -933,6 +947,7 @@ export const tramiteRegistraGrupoMaterias = ({
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const tipo = "Ordinaria";
+  const estatusKardex = "Activo";
 
   useEffect(() => {
     getAlumnoPA()
@@ -960,6 +975,7 @@ export const tramiteRegistraGrupoMaterias = ({
       idGrupo,
       nombreGrupo: grupoSeleccionado ? grupoSeleccionado.nombre : "Desconocido",
       tipo,
+      estatusKardex,
       idPeriodoKardex,
     };
 
@@ -1008,6 +1024,7 @@ export const tramiteRegistraGrupoMaterias = ({
 
           {/* Campo oculto */}
           <input type="hidden" value={tipo} name="tipo" />
+          <input type="hidden" value={estatusKardex} name="estatusKardex" />
         </Modal.Body>
 
         <Modal.Footer>
@@ -1048,6 +1065,7 @@ export const TramiteReinscribir = ({ show, handleClose, datos, handleConfirm }) 
             <p><strong>Alumno:</strong> {datos.nombreAlumno} </p>
             <p><strong>Grupo:</strong> {datos.nombreGrupo} ({datos.idGrupo})</p>
             <p><strong>Tipo:</strong> {datos.tipo}</p>
+            <p><strong>Estatus:</strong> {datos.estatusKardex}</p>
           </>
         ) : (
           <p>No hay datos seleccionados.</p>
@@ -1066,7 +1084,7 @@ export const TramiteReinscribir = ({ show, handleClose, datos, handleConfirm }) 
 };
 
 
-
-
-
-
+//------------------------- CAMBIO DE ESTATUS BAJA TEMPORAL (UPDATE KARDEX) ------------------------------
+export const tramiteBajaTemporal = (props) => (
+  <TramiteModal title="Cambio Baja Temporal, se realizará el update de Kardex" {...props} />
+);
