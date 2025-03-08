@@ -105,12 +105,28 @@ function OffcanvasNavbar() {
                 </div>
                 <div className="column">
                   <Link to="/SubirCalificacion"><FaUpload /> Subir Calificación</Link>
-                  <Link to="/Consultadekadex"><FaBook /> Consulta de Kardex</Link>
                   <Link to="/Kardex"><FaHistory /> Kardex</Link>
                 </div>
               </div>
             )}
           </div>
+          
+          {/* Menú Servicio */}
+          <div className="dropdown"
+            onMouseEnter={() => setActiveMenu("tramites")}
+            onMouseLeave={() => setActiveMenu(null)}>
+            <span><FaClipboardList />Servicio</span>
+            {activeMenu === "tramites" && (
+              <div className="dropdown-content">
+                <div className="column">
+                  <h3>Servicio</h3>
+                  <Link to="/Constancia"><FaTasks />Constancia</Link>
+                  <Link to="/Consultadekadex"><FaBook />Consulta de Kardex</Link>
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
 
         {/* Botón de Cerrar Sesión */}
