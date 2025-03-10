@@ -114,7 +114,7 @@ function Evaluar() {
                         <p><strong>Grupo:</strong> {cargaMateria.grupo}</p>
                         <p><strong>Profesor:</strong> {cargaMateria.profesor}</p>
                         <p><strong>Periodo:</strong> {cargaMateria.periodo}</p>
-                        <p><strong>Programa Académico:</strong> {cargaMateria.programaAcademico}</p>
+                        {/* <p><strong>Programa Académico:</strong> {cargaMateria.programaAcademico}</p> */}
                         <div className="d-flex justify-content-between">
                             <button className="btn btn-primary mb-2" onClick={handleSubmitCalificaciones}>Subir Calificaciones</button>
                             <ListaEvaluacion cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
@@ -146,18 +146,20 @@ function Evaluar() {
                                         <td>{`${alumno.paterno} ${alumno.materno} ${alumno.nombre}`}</td>
                                         {unidades.map((unidad, idx) => {
                                             const evalUnidad = evalAlumno.find(e => e.idMateriaUnidad === unidad);
+                                            const calificacion = calificaciones[alumno.idKardex]?.[unidad] || ''; // Mantener vacío si no hay calificación
                                             return (
-                                                <td key={idx}>
-                                                    <input
-                                                        type="number"
-                                                        className="form-control"
-                                                        value={calificaciones[alumno.idKardex]?.[unidad] || ''}
-                                                        onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
-                                                        disabled={evalUnidad?.estatus === 'Cerrado'}
-                                                    />
-                                                </td>
+                                            <td key={idx}>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    value={calificacion}
+                                                    placeholder="N/A" // Mostrar "N/A" cuando el campo está vacío
+                                                    onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
+                                                    disabled={evalUnidad?.estatus === 'Cerrado'}
+                                                />
+                                            </td>
                                             );
-                                        })}
+                                            })}
                                         <td>
                                             <button 
                                                 className="btn btn-warning"
