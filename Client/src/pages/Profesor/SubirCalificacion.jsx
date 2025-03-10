@@ -63,9 +63,11 @@ function SubirCalificacion() {
 
     // Definir la función handleButtonClick para manejar la navegación
     const handleButtonClick = (cargaMateria) => {
-        console.log("Datos enviados a Evaluar:", cargaMateria);
-        navigate('/Evaluar', { state: { cargaMateria } });
+        const programaAcademico = getProgramaAcademicoPorGrupo(cargaMateria.idGrupo);
+        console.log("Datos enviados a Evaluar:", { ...cargaMateria, programaAcademico });
+        navigate('/Evaluar', { state: { cargaMateria: { ...cargaMateria, programaAcademico } } });
     };
+    
 
     return (
         <div className="container">

@@ -5,6 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { getKardex } from '../../api/Parametrizacion/kardex.api.js';
 import { getEvaluacionTodos, updateEvaluacionFunc } from '../../assets/js/Parametrizacion/evaluacion.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ListaEvaluacion from "./ListaEvaluacion.jsx";
 import { EvaluacionModales } from './EvaluacionModales.jsx';
 
 function Evaluar() {
@@ -17,28 +18,24 @@ function Evaluar() {
     const [showModal, setShowModal] = useState(false);
     const [selectedEvaluacion, setSelectedEvaluacion] = useState(null);
     const [calificaciones, setCalificaciones] = useState({});
+    const programaAcademico = cargaMateria?.programaAcademico || "No disponible"; // Programa académico por defecto
 
     useEffect(() => {
         if (cargaMateria) {
-            // console.log("📌 CargaMateria recibida:", cargaMateria);
             getKardex(cargaMateria.idGrupoMateria).then(data => {
-                // console.log("📌 Datos de Kardex recibidos:", data);
                 const alumnosFiltrados = data.filter(alumno =>
                     alumno.idMapaCurricular === cargaMateria.idMapaCurricular &&
                     alumno.idGrupo === cargaMateria.idGrupo &&
                     alumno.estatus === 'Activo' // Filtrar solo alumnos activos
                 );
-                // console.log("✅ Alumnos filtrados:", alumnosFiltrados);
                 setAlumnos(alumnosFiltrados);
             }).catch(error => console.error("❌ Error al obtener alumnos:", error));
             
             getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
-                // console.log("📌 Evaluaciones recibidas:", data);
                 const evaluacionesFiltradas = data.filter(evaluacion => 
                     evaluacion.idMapaCurricular === cargaMateria.idMapaCurricular &&
                     evaluacion.materia === cargaMateria.materia
                 );
-                // console.log("✅ Evaluaciones filtradas:", evaluacionesFiltradas);
                 setEvaluaciones(evaluacionesFiltradas);
                 const initialCalificaciones = {};
                 evaluacionesFiltradas.forEach(evaluacion => {
@@ -103,7 +100,6 @@ function Evaluar() {
     };
 
     const unidades = [...new Set(evaluaciones.map(e => e.idMateriaUnidad))].sort();
-    // console.log("📌 Unidades encontradas para la materia seleccionada:", unidades);
 
     return (
         <div className="container">
@@ -118,7 +114,11 @@ function Evaluar() {
                         <p><strong>Grupo:</strong> {cargaMateria.grupo}</p>
                         <p><strong>Profesor:</strong> {cargaMateria.profesor}</p>
                         <p><strong>Periodo:</strong> {cargaMateria.periodo}</p>
-                        <button className="btn btn-primary" onClick={handleSubmitCalificaciones}>Subir Calificaciones</button>
+                        <p><strong>Programa Académico:</strong> {cargaMateria.programaAcademico}</p>
+                        <div className="d-flex justify-content-between">
+                            <button className="btn btn-primary mb-2" onClick={handleSubmitCalificaciones}>Subir Calificaciones</button>
+                            <ListaEvaluacion cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
+                        </div>
                     </div>
                 </div>
             )}
@@ -132,14 +132,13 @@ function Evaluar() {
                             {unidades.map((unidad, index) => (
                                 <th key={index}>Parcial {index + 1}</th>
                             ))}
-                            <th>Acción</th>
+                            <th>Faltas</th>
                         </tr>
                     </thead>
                     <tbody>
                         {alumnos.length > 0 ? (
                             alumnos.map((alumno, index) => {
                                 const evalAlumno = evaluaciones.filter(e => e.idKadex === alumno.idKardex);
-                                // console.log(`📌 Evaluaciones para ${alumno.nombre}:`, evalAlumno);
                                 return (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
