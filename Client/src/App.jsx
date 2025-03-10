@@ -55,7 +55,7 @@ import OfertaAcademica from './pages/Superadmin/PlanificacionAcademica/OfertaAca
 // -------------------------- PLANTILLA ALUMNO --------------------------------
 import Consultadekadex from './pages/Superadmin/plantillaAlumno/ConsultaKardex ';
 import Constancia from './pages/Superadmin/Servicio/Constancia';
-
+import Acercade from './pages/Login/Acercade';
 const userSession = localStorage.getItem('Username')
 
 // Layout para páginas con Navbar
@@ -74,6 +74,7 @@ function App() {
       {/* Rutas sin Navbar */}
       <Route path="/Login" element={ userSession ? (<Navigate replace to="/" />) : (<Login />) } />
       <Route path="/Recuperar" element={<Recuperar />} />
+      <Route path="/Acercade" element={<Acercade />} />
 
       {/* Rutas con Navbar */}
       <Route element={<LayoutWithNavbar />}>
@@ -93,10 +94,10 @@ function App() {
         <Route path="/MapaCurricular" element={<MapaCurricular />} />
         <Route path="/NivelEstudio" element={<NivelEstudio />} />
         <Route path="/Periodo" element={<Periodo />} />
-        <Route path="/OfertaAcademica" element={<OfertaAcademica />} /> {/* Usar el componente OfertaAcademica */}
+        <Route path="/OfertaAcademica" element={<OfertaAcademica />} /> 
         <Route path="/AdicionProfesor" element={<AdicionProfesor />} />
-        <Route path="/SubirCalificacion" element={<SubirCalificacion />} /> {/* Usar el componente SubirCalificacion */}
-        <Route path="/Evaluar" element={<Evaluar />} /> {/* Usar el componente Evaluar */}
+        <Route path="/SubirCalificacion" element={<SubirCalificacion />} /> 
+        <Route path="/Evaluar" element={<Evaluar />} /> 
         <Route path="/Departamento" element={<Departamento />} />
         <Route path="/Puesto" element={<Puesto />} />
         <Route path="/Edificio" element={<Edificio />} />
