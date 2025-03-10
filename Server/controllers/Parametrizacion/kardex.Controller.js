@@ -163,3 +163,70 @@ export const deleteKardex = async (req, res) => {
     res.status(500).json({ message: "Algo salió mal" });
   }
 };
+
+
+export const updateTransaccionKardex = async (req, res) => {
+  let connection;
+  try {
+    // Obtener una conexión explícita del pool
+    connection = await db.getConnection();
+
+    // Iniciar transacción
+    await connection.beginTransaction();
+
+    const { idKardex } = req.params;
+    const { idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus } = req.body;
+
+    // Verificar si el kardex existe
+    const [exists] = await connection.query("SELECT 1 FROM kardex WHERE idKardex = ?", [idKardex]);
+    if (!exists.length) {
+      await connection.rollback(); // Revertir transacción
+      connection.release(); // Liberar la conexión
+      return res.status(404).json({ message: "El kardex no existe" });
+    }
+
+    // Actualizar el kardex
+    const [result] = await connection.query(
+      "UPDATE kardex SET idAlumnoPA = ?, idMapaCurricular = ?, idGrupo = ?, idPeriodo = ?, calificacionFinal = ?, tipo = ?, estatus = ? WHERE idKardex = ?",
+      [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus, idKardex]
+    );
+
+    if (result.affectedRows === 0) {
+      await connection.rollback(); // Revertir transacción
+      connection.release(); // Liberar la conexión
+      return res.status(400).json({ message: "No se pudo actualizar el kardex" });
+    }
+
+    // Si el estatus es 'Baja temporal', realizar actualizaciones en cascada
+    if (estatus === 'Baja temporal') {
+      // Actualizar todos los kardex con el mismo idAlumnoPA e idGrupo
+      await connection.query(
+        "UPDATE kardex SET estatus = ? WHERE idAlumnoPA = ? AND idGrupo = ?",
+        ['Baja temporal', idAlumnoPA, idGrupo]
+      );
+
+      // Actualizar el estatus en la tabla alumnopa
+      await connection.query(
+        "UPDATE alumnopa SET estatus = ? WHERE idAlumnoPA = ?",
+        ['Baja temporal', idAlumnoPA]
+      );
+    }
+
+    // Confirmar transacción
+    await connection.commit();
+    connection.release(); // Liberar la conexión
+
+    res.status(200).json({
+      message: "Kardex actualizado correctamente",
+      idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus
+    });
+  } catch (error) {
+    // Revertir transacción en caso de error
+    if (connection) {
+      await connection.rollback();
+      connection.release(); // Liberar la conexión
+    }
+    console.error("Error al actualizar el kardex:", error);
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
+  }
+};

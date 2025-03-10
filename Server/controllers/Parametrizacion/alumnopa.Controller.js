@@ -79,6 +79,35 @@ export const updateAlumnopa = async (req, res) => {
   }
 };
 
+// ----------- alumnopa UPDATE TRANSACCIÓN (AFECTA A KARDEX TAMBIÉN) --------------------------------------------------------
+export const transaccionUpdateAlumnopa = async (req, res) => {
+  try {
+    const { idAlumnoPA } = req.params;
+    const { idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta = null } = req.body;
+    const [exists] = await db.query("SELECT 1 FROM alumnopa WHERE idAlumnoPA = ?", [idAlumnoPA]);
+    if (!exists.length) {
+      return res.status(404).json({ message: "El alumnopa no existe" });
+    }
+    const [result] = await db.query(
+      "UPDATE alumnopa SET idAlumno = ?, idProgramaAcademico = ?, idPeriodo = ?, matricula = ?, estatus = ?, desde = ?, hasta = ? WHERE idAlumnoPA = ?",
+      [idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, idAlumnoPA]
+    );
+    if (result.affectedRows === 0) {
+      return res.status(400).json({ message: "No se pudo actualizar el idAlumnoPA" });
+    }
+    res.status(200).json({
+      message: `${matricula} actualizado correctamente`,
+      idAlumnoPA, idAlumno,idProgramaAcademico,idPeriodo,
+      matricula,estatus,desde,hasta,
+    });
+  } catch (error) {
+    console.error("Error al actualizar alumnopa:", error);
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
+  }
+};
+
+
+
 // Eliminar alumnopa
 export const deleteAlumnopa = async (req, res) => {
   try {

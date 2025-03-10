@@ -4,41 +4,75 @@ export const getAlumnoProcesotodos = async (req, res) => {
   try {
     const query = `
       SELECT 
-        ap.idAlumnoProceso,
-        ap.idAlumnoTramite,
-        ap.idTramiteProceso,
-        ap.idActividad,
-        ap.orden,
-        ap.estatus,
-        ap.observacion,
-        apa.matricula AS matricula,
-        act.nombre AS NombreActividad,
-        t.nombre AS tramite, 
-        prog.nombreOficial AS programa,
-        tp.objeto, 
-        alumno.idAlumno AS idAlumno,
-        persona.idpersona AS idPersona,
-        apa.idAlumnoPA, 
-        apa.estatus AS estatusAlumnoPA,
-        CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno
-      FROM 
-        alumnoproceso ap
-      LEFT JOIN 
-        actividad act ON ap.idActividad = act.idActividad
-      LEFT JOIN 
-        tramiteproceso tp ON ap.idTramiteProceso = tp.idTramiteProceso
-      LEFT JOIN 
-        tramite t ON tp.idTramite = t.idTramite
-      LEFT JOIN 
-        alumnotramite atr ON ap.idAlumnoTramite = atr.idAlumnoTramite
-      LEFT JOIN 
-        persona ON atr.idPersona = persona.idPersona
-      LEFT JOIN 
-        alumno ON persona.idPersona = alumno.idAlumno  
-      LEFT JOIN 
-        alumnopa apa ON alumno.idAlumno = apa.idAlumno
-      LEFT JOIN 
-        programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico;
+  ap.idAlumnoProceso,
+  ap.idAlumnoTramite,
+  ap.idTramiteProceso,
+  ap.idActividad,
+  ap.orden,
+  ap.estatus,
+  ap.observacion,
+  apa.matricula AS matricula,
+  apa.desde AS desde,
+  apa.hasta AS hasta,
+  apa.idProgramaAcademico AS idProgramaAcademico,
+  apa.idPeriodo AS idPeriodo,
+  MAX(k.idKardex) AS idKardex,  -- O el valor que necesites
+  MAX(k.idMapaCurricular) AS idMapaCurricular,
+  MAX(k.idGrupo) AS idGrupo,
+  MAX(k.idPeriodo) AS idPeriodoKardex,
+  MAX(k.estatus) AS estatusKardex,
+  MAX(k.tipo) AS tipo, 
+  act.nombre AS NombreActividad,
+  t.nombre AS tramite, 
+  prog.nombreOficial AS programa,
+  tp.objeto, 
+  alumno.idAlumno AS idAlumno,
+  persona.idpersona AS idPersona,
+  apa.idAlumnoPA, 
+  apa.estatus AS estatusAlumnoPA,
+  CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno
+FROM 
+  alumnoproceso ap
+LEFT JOIN 
+  actividad act ON ap.idActividad = act.idActividad
+LEFT JOIN 
+  tramiteproceso tp ON ap.idTramiteProceso = tp.idTramiteProceso
+LEFT JOIN 
+  tramite t ON tp.idTramite = t.idTramite
+LEFT JOIN 
+  alumnotramite atr ON ap.idAlumnoTramite = atr.idAlumnoTramite
+LEFT JOIN 
+  persona ON atr.idPersona = persona.idPersona
+LEFT JOIN 
+  alumno ON persona.idPersona = alumno.idAlumno  
+LEFT JOIN 
+  alumnopa apa ON alumno.idAlumno = apa.idAlumno
+LEFT JOIN 
+  kardex k ON k.idAlumnoPA = apa.idAlumnoPA
+LEFT JOIN 
+  programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico
+GROUP BY 
+  ap.idAlumnoProceso,
+  ap.idAlumnoTramite,
+  ap.idTramiteProceso,
+  ap.idActividad,
+  ap.orden,
+  ap.estatus,
+  ap.observacion,
+  apa.matricula,
+  apa.desde,
+  apa.hasta,
+  apa.idProgramaAcademico,
+  apa.idPeriodo,
+  act.nombre,
+  t.nombre,
+  prog.nombreOficial,
+  tp.objeto,
+  alumno.idAlumno,
+  persona.idpersona,
+  apa.idAlumnoPA, 
+  apa.estatus;
+
     `;
 
     // Ejecutar la consulta

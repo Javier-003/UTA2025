@@ -67,3 +67,15 @@ export const deleteKardex = async (idKardex) => {
     throw new Error('Error al eliminar el kardex');
   }
 };
+
+// Actualizar un registro de kardex existente
+export const updateTransaccionKardex = async (idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus) => {
+  try {
+    await axios.put(`${BASE_URL}/kardex/update2/${idKardex}`, {
+      idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus, userSession
+    });
+  } catch (error) {
+    console.error("Error al actualizar el kardex:", error);
+    throw new Error('Error al actualizar el kardex');
+  }
+};

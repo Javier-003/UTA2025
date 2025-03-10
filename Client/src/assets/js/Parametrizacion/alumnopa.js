@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'; 
 
-import { createalumnoPA, deletealumnoPA, getAlumnoPA, updatealumnoPA } 
+import { createalumnoPA, deletealumnoPA, getAlumnoPA, updatealumnoPA, transaccionUpdateAlumnopa } 
 from '../../../api/Parametrizacion/alumnopa.api.js';
 
 // Obtener todos los registros de AlumnoPA
@@ -54,6 +54,30 @@ export const updateAlumnoPaFunc = async (idAlumnoPA, idAlumno, idProgramaAcademi
     });
   }
 };
+
+
+// Actualizar un registro de AlumnoPA existente
+export const transaccionUpdateAlumnopaJS = async (idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta, setShowEdit2Modal, getalumnopa) => {
+  console.log("Datos enviados UPDATE PA JS:", {idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta});
+  try {
+    await transaccionUpdateAlumnopa(idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta);
+    getalumnopa();
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: 'EStado actualizado correctamente',
+    });
+    setShowEdit2Modal(false);
+  } catch (error) {
+    console.error('Error al actualizar el Estado:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema actualizando el estado.',
+    });
+  }
+};
+
 
 // Eliminar un registro de AlumnoPA
 export const deleteAlumnoPAFunc = async (idAlumnoPA, setShowDeleteModal, getalumnopa) => {

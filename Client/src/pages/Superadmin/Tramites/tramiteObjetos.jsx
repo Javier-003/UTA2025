@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {  Modal, Button, Form, Row, Col, Alert, Tabs, Tab  } from 'react-bootstrap';
+import {  Modal, Button, Form, Row, Col, Alert, Tabs, Tab, Badge  } from 'react-bootstrap';
 import { getAlumnoTramites } from '../../../api/Tramites/alumnotramite.api.js';
+
 
 
 //ALUMNO
@@ -1085,6 +1086,398 @@ export const TramiteReinscribir = ({ show, handleClose, datos, handleConfirm }) 
 
 
 //------------------------- CAMBIO DE ESTATUS BAJA TEMPORAL (UPDATE KARDEX) ------------------------------
+
+const TramiteModalBajaTemporal = ({
+  title,
+  idAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+  idAlumnoPA,
+  idMapaCurricular, setIdMapaCurricular,
+  idGrupo, setIdGrupo,
+  idPeriodoKardex, setIdPeriodoKardex,
+  calificacionFinal, setCalificacionFinal,
+  tipo, setTipo, estatusKardex, setEstatusKardex,
+  handleUpdateKardex
+}) => {
+
+  const [alumnoList, setAlumnoList] = useState([]);
+  const [mapaList, setMapaList] = useState([]);
+  const [grupoList, setGrupoList] = useState([]);
+  const [periodoList, setPeriodoList] = useState([]);
+  const [activeTab, setActiveTab] = useState('tramite');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  useEffect(() => {
+    getAlumnoPA().then(setAlumnoList);
+    getMapaCurriculares().then(setMapaList);
+    getGrupos().then(setGrupoList);
+    getPeriodos().then(setPeriodoList);
+  }, []);
+
+  const alumnoData = alumnoList.find(a => a.idAlumnoPA === idAlumnoPA);
+  const nombreCompleto = alumnoData
+    ? `${alumnoData.nombre} ${alumnoData.paterno} ${alumnoData.materno}`
+    : 'Desconocido';
+
+  const mapa = mapaList.find(m => m.idMapaCurricular === idMapaCurricular)?.materia || 'Desconocido';
+  const grupo = grupoList.find(g => g.idGrupo === idGrupo)?.nombre || 'Desconocido';
+  const periodo = periodoList.find(p => p.idPeriodo === idPeriodoKardex)?.periodo || 'Desconocido';
+
+  const handleConfirm = () => setShowConfirmModal(true);
+  const handleCancelConfirm = () => setShowConfirmModal(false);
+
+  const handleAcceptConfirm = () => {
+    handleUpdateKardex();
+    setShowConfirmModal(false);
+    handleClose();
+  };
+
+  return (
+    <>
+      <Modal show={show} onHide={handleClose} centered size="lg">
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title className="fw-bold text-uppercase">{title}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="bg-light">
+          <Tabs
+            activeKey={activeTab}
+            onSelect={(key) => setActiveTab(key)}
+            className="mb-4 nav-pills justify-content-center"
+          >
+            {/* Tab Trámite */}
+            <Tab eventKey="tramite" title="Información Trámite">
+              <Row className="mb-3">
+                <Col>
+                  <Alert variant="secondary" className="text-center fw-semibold fs-5 mb-4 shadow-sm">
+                    Alumno: <span className="text-primary">{nombreCompleto}</span>
+                  </Alert>
+                </Col>
+              </Row>
+
+              <div className="mb-4">
+                <label className="fw-semibold mb-2">Observaciones</label>
+                <textarea
+                  className="form-control"
+                  rows={3}
+                  value={observacion}
+                  onChange={(e) => setObservacion(e.target.value)}
+                  placeholder="Escribe aquí cualquier observación (opcional)"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="fw-semibold mb-2">Estado del Trámite</label>
+                <select
+                  className="form-select"
+                  value={estatus}
+                  onChange={(e) => setEstatus(e.target.value)}
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="En proceso">En proceso</option>
+                  <option value="Concluido">Concluido</option>
+                </select>
+              </div>
+            </Tab>
+
+            {/* Tab Baja Temporal */}
+            <Tab eventKey="registro" title="Baja Temporal">
+              <Alert variant="light" className="border border-danger p-3 text-center shadow-sm">
+                <h5 className="text-danger mb-3 fw-bold text-uppercase">Baja Temporal del Alumno</h5>
+                <p className="text-muted mb-0">
+                  La baja temporal implica <strong className="text-danger">no derecho a evaluación</strong> mientras dure el estatus.
+                </p>
+              </Alert>
+
+              <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Alumno:</label>
+                  <div className="form-control bg-white">{nombreCompleto}</div>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Grupo:</label>
+                  <div className="form-control bg-white">{grupo}</div>
+                </Col>
+              </Row>
+
+              <input
+                type="hidden"
+                value="Baja Temporal"
+                name="estatusKardex"
+              />
+
+              <div className="mb-3">
+                <label className="fw-semibold">Nuevo Estatus:</label>
+                <select
+                  className="form-select border-danger text-danger"
+                  value="Baja Temporal"
+                  disabled
+                >
+                  <option>Baja Temporal</option>
+                </select>
+              </div>
+
+              <Alert variant="warning" className="p-3 mt-4 shadow-sm">
+                <p className="fw-semibold mb-0 text-center">
+                  ⚠️ Al cambiar el estatus a <strong>Baja Temporal</strong>, el alumno <u>no tendrá derecho a evaluación</u> en este programa académico.
+                </p>
+              </Alert>
+            </Tab>
+          </Tabs>
+        </Modal.Body>
+
+        <Modal.Footer className="justify-content-between">
+          <Button variant="outline-secondary" onClick={handleClose}>Cerrar</Button>
+
+          {activeTab === 'tramite' ? (
+            <Button variant="primary" onClick={() => { handleUpdate(); handleClose(); }}>
+              Guardar Cambios
+            </Button>
+          ) : (
+            <Button variant="danger" onClick={handleConfirm} className="fw-bold">
+              Confirmar Baja Temporal
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Confirmación Baja */}
+      <Modal show={showConfirmModal} onHide={handleCancelConfirm} centered>
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="fw-bold text-danger">Confirmar Baja Temporal</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="text-center">
+          <h4 className="text-danger fw-bold mb-3">¡Atención!</h4>
+          <p className="fs-5 text-muted mb-3">
+            ¿Estás seguro que deseas cambiar el estatus del alumno a <strong className="text-danger">Baja Temporal</strong>?
+          </p>
+          <p className="text-danger fw-semibold">
+            Esta acción impactará el kardex. <br />
+            El alumno <u>no tendrá derecho a evaluación</u>.
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer className="justify-content-center border-0">
+          <Button variant="outline-secondary" onClick={handleCancelConfirm} className="px-4 py-2">Cancelar</Button>
+          <Button variant="danger" onClick={handleAcceptConfirm} className="px-4 py-2 fw-bold">Confirmar</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
 export const tramiteBajaTemporal = (props) => (
-  <TramiteModal title="Cambio Baja Temporal, se realizará el update de Kardex" {...props} />
+  <TramiteModalBajaTemporal title="Baja Programa Académico" {...props} />
 );
+//------------------------- REACTIVA ALUMNO ------------------------------
+
+const TramiteModalReactivar = ({
+  title,
+  idAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+  idAlumno,
+  idProgramaAcademico,
+  idPeriodo,
+  matricula,
+  estatusAlumnoPA,
+  handleUpdatePA
+}) => {
+
+  const [alumnotramiteList, setAlumnotramiteList] = useState([]);
+  const [programaAcademicoList, setProgramaAcademicoList] = useState([]);
+  const [periodoList, setPeriodoList] = useState([]);
+  const [alumnoList, setAlumnoList] = useState([]);
+  const [activeTab, setActiveTab] = useState('tramite');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  useEffect(() => {
+    getAlumnoTramites().then(setAlumnotramiteList);
+    getAlumnos().then(setAlumnoList);
+    getPeriodos().then(setPeriodoList);
+    getProgramaacademicos().then(setProgramaAcademicoList);
+  }, []);
+
+  const alumnoData = alumnoList.find(a => a.idAlumno === idAlumno);
+  const programa = programaAcademicoList.find(p => p.idProgramaAcademico === idProgramaAcademico)?.nombreOficial || 'Desconocido';
+  const periodo = periodoList.find(p => p.idPeriodo === idPeriodo)?.periodo || 'Desconocido';
+
+  const nombreCompleto = alumnoData
+    ? `${alumnoData.nombre} ${alumnoData.paterno} ${alumnoData.materno}`
+    : 'Desconocido';
+
+  const handleConfirm = () => setShowConfirmModal(true);
+  const handleCancelConfirm = () => setShowConfirmModal(false);
+
+  const handleAcceptConfirm = () => {
+    handleUpdatePA();
+    setShowConfirmModal(false);
+    handleClose();
+  };
+
+  return (
+    <>
+      <Modal show={show} onHide={handleClose} centered size="lg">
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title className="fw-bold text-uppercase">{title}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="bg-light">
+          <Tabs
+            activeKey={activeTab}
+            onSelect={(key) => setActiveTab(key)}
+            className="mb-4 nav-pills justify-content-center"
+          >
+            {/* Tab Trámite */}
+            <Tab eventKey="tramite" title="Información Trámite">
+              <Row className="mb-3">
+                <Col>
+                  <Alert variant="secondary" className="text-center fw-semibold fs-5 mb-4 shadow-sm">
+                    Alumno: <span className="text-primary">{nombreCompleto}</span>
+                  </Alert>
+                </Col>
+              </Row>
+
+              <div className="mb-4">
+                <label className="fw-semibold mb-2">Observaciones</label>
+                <textarea
+                  className="form-control"
+                  rows={3}
+                  value={observacion}
+                  onChange={(e) => setObservacion(e.target.value)}
+                  placeholder="Escribe aquí cualquier observación (opcional)"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="fw-semibold mb-2">Estado del Trámite</label>
+                <select
+                  className="form-select"
+                  value={estatus}
+                  onChange={(e) => setEstatus(e.target.value)}
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="En proceso">En proceso</option>
+                  <option value="Concluido">Concluido</option>
+                </select>
+              </div>
+            </Tab>
+
+            {/* Tab Reactivación */}
+            <Tab eventKey="registro" title="Reactivar Programa Académico">
+              <Alert variant="light" className="border border-primary p-3 text-center shadow-sm">
+                <h5 className="text-primary mb-3 fw-bold text-uppercase">Reactivar Programa Académico</h5>
+                <p className="text-muted mb-0">
+                  La reactivación implica que el alumno quedará nuevamente <strong className="text-primary">inscrito en el programa académico</strong>.
+                </p>
+              </Alert>
+
+              <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Alumno:</label>
+                  <div className="form-control bg-white">{nombreCompleto}</div>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Programa Académico:</label>
+                  <div className="form-control bg-white">{programa}</div>
+                </Col>
+              </Row>
+
+              {/* <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Periodo:</label>
+                  <div className="form-control bg-white">{periodo}</div>
+                </Col>
+              </Row> */}
+
+              <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Matrícula:</label>
+                  <div className="form-control bg-white">{matricula}</div>
+                </Col>
+              </Row>
+
+              <input
+                type="hidden"
+                value="Activo"
+                name="estatusAlumnoPA"
+              />
+
+              <div className="mb-3">
+                <label className="fw-semibold">Nuevo Estatus:</label>
+                <select
+                  className="form-select border-primary text-primary"
+                  value="Activo"
+                  disabled
+                >
+                  <option>Activo</option>
+                </select>
+              </div>
+
+              <Alert variant="warning" className="p-3 mt-4 shadow-sm">
+                <p className="fw-semibold mb-0 text-center">
+                  ⚠️ Al cambiar el estatus a <strong>Activo</strong>, el alumno quedará <u>inscrito nuevamente</u> en este programa académico. Sin embargo, las materias <u>no se activarán automáticamente</u>; para ello será necesario realizar el proceso de reinscripción.
+                </p>
+              </Alert>
+            </Tab>
+          </Tabs>
+        </Modal.Body>
+
+        <Modal.Footer className="justify-content-between">
+          <Button variant="outline-secondary" onClick={handleClose}>Cerrar</Button>
+
+          {activeTab === 'tramite' ? (
+            <Button variant="primary" onClick={() => { handleUpdate(); handleClose(); }}>
+              Guardar Cambios
+            </Button>
+          ) : (
+            <Button variant="primary" onClick={handleConfirm} className="fw-bold">
+              Confirmar Reactivación
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Confirmación Reactivación */}
+      <Modal show={showConfirmModal} onHide={handleCancelConfirm} centered>
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="fw-bold text-primary">Confirmar Reactivación</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="text-center">
+          <h4 className="text-primary fw-bold mb-3">¡Atención!</h4>
+          <p className="fs-5 text-muted mb-3">
+            ¿Estás seguro que deseas reactivar al alumno en el <strong className="text-primary">programa académico</strong>?
+          </p>
+          <p className="text-primary fw-semibold">
+            Esto permitirá que el alumno <u>se inscriba nuevamente</u>. <br />
+            Deberás realizar el proceso de reinscripción de materias.
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer className="justify-content-center border-0">
+          <Button variant="outline-secondary" onClick={handleCancelConfirm} className="px-4 py-2">Cancelar</Button>
+          <Button variant="primary" onClick={handleAcceptConfirm} className="px-4 py-2 fw-bold">Confirmar</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
+export const tramiteReactivaAlumno = (props) => (
+  <TramiteModalReactivar title="REACTIVAR ALUMNO Y PROGRAMA ACADÉMICO" {...props} />
+);
+
+

@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { getKardex, createKardex, updateKardex, deleteKardex } 
+import { getKardex, createKardex, updateKardex, deleteKardex, updateTransaccionKardex } 
 from "../../controllers/Parametrizacion/kardex.Controller.js";
 
 import bitacora from "../../middleware/bitacora.js";
@@ -12,5 +12,6 @@ router.post("/create",bitacora('Creación', 'Se agrego a un Kardex'), createKard
 router.put("/update/:idKardex", bitacora('Actualización', 'Se actualizo un Kardex'), updateKardex);
 router.delete("/delete/:idKardex",bitacora('Eliminación', 'Se elimino un Kardex') , deleteKardex);
 
-export default router;
+router.put("/update2/:idKardex", bitacora('Actualización', 'Se actualizo un Kardex con transacción'), updateTransaccionKardex);
 
+export default router;

@@ -11,11 +11,11 @@ import { getAlumno, addAlumno}
 from '../../../assets/js/Nucleo/alumno.js';
 
 //AlumnoPA
-import { getAlumnopatodos, addAlumnoPa} 
+import { getAlumnopatodos, addAlumnoPa, transaccionUpdateAlumnopaJS} 
 from '../../../assets/js/Parametrizacion/alumnopa.js';
 
 //Kardex/Grupo
-import {getKardexTodos, addKardexFun} 
+import {getKardexTodos, addKardexFun, updateTransaccionKardexjs} 
 from '../../../assets/js/Parametrizacion/kardex.js';
 
 //------------ EXPORTAMOS DATOS DEL PORCENTAJE --------------------
@@ -61,10 +61,12 @@ function ProcedimientoTramite() {
   const [estatusAlumnoPA, setEstatusAlumnoPA] = useState("");
   const [desde, setDesde] = useState("");
   const [hasta, setHasta] = useState("");
+  const [showEdit2Modal, setShowEdit2Modal] = useState(false);
   const [selectedAlumnopa, setSelectedAlumnopa] = useState(null);
 
 //KARDEX/GRUPO
   const [kardexList, setKardexList] = useState([]);
+  const [idKardex, setIdKardex] = useState("");
   const [idAlumnoPA, setIdAlumnoPA] = useState("");
   const [idMapaCurricular, setIdMapaCurricular] = useState("");
   const [idGrupo, setIdGrupo] = useState("");
@@ -143,6 +145,15 @@ useEffect(() => {
        });
      }; 
 
+     const handleUpdatePA = () => {
+      const estatusAlumnoPA = "Activo";
+      console.log("Datos enviados actualización PA:", {idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta});
+      transaccionUpdateAlumnopaJS(idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta, setShowEdit2Modal, () => {
+        getAlumnopatodos(setAlumnopaList)
+        getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
+       });
+     }; 
+
 
      /*
      const handleAddPA = () => {
@@ -194,6 +205,19 @@ useEffect(() => {
         });
       };
 
+      const handleUpdateKardex = () => {  
+       // const estatusKardex = "Baja temporal";
+       const tipo = "Ordinaria";
+       const estatusKardex = "Baja temporal";
+      console.log("Datos enviados a UPDATE KARDEX:", {idKardex, idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal, tipo, estatusKardex});
+       
+        updateTransaccionKardexjs(idKardex, idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal,  tipo, estatusKardex, setShowEdit2Modal,  () => {
+        getKardexTodos(setKardexList) 
+        getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
+        });
+      };
+
+
   // Función para manejar el clic en el botón "objeto"
   const handleObjetoClick = (objeto) => {
     console.log("Objeto seleccionado:", objeto); // Depuración
@@ -211,6 +235,14 @@ useEffect(() => {
   // Obtener el componente del modal correspondiente al objeto actual
   const ModalComponent = currentObjeto ? TramiteObjetos[`${currentObjeto}`] : null;
   console.log("ModalComponent:", ModalComponent); // Depuración
+
+    // Function to remove "T06:00:00.000Z" from dates
+    const formatDateString = (dateString) => {
+      if (dateString) {
+        return dateString.split('T')[0];
+      }
+      return dateString;
+    };
 
   return (
     <div className="container mt-4">
@@ -344,7 +376,51 @@ useEffect(() => {
                 setSelectedAlumnoProceso(alumnoproceso);
                 setidPersona(alumnoproceso.idPersona);
                 setIdAlumno(alumnoproceso.idAlumno);
+
                 setIdAlumnoPA(alumnoproceso.idAlumnoPA);
+                setIdAlumno(alumnoproceso.idAlumno);
+                setIdProgramaAcademico(alumnoproceso.idProgramaAcademico);
+                setCarrera(alumnoproceso.carrera);
+                setIdPeriodo(alumnoproceso.idPeriodo);
+                setMatricula(alumnoproceso.matricula);
+                setEstatusAlumnoPA(alumnoproceso.estatusAlumnoPA);
+                setDesde(formatDateString(alumnoproceso.desde));
+                setHasta(formatDateString(alumnoproceso.hasta));
+
+                console.log({
+                  idAlumnoPA: alumnoproceso.idAlumnoPA,
+                  idAlumno: alumnoproceso.idAlumno,
+                  idProgramaAcademico: alumnoproceso.idProgramaAcademico,
+                  carrera: alumnoproceso.carrera,
+                  idPeriodo: alumnoproceso.idPeriodo,
+                  matricula: alumnoproceso.matricula,
+                  estatusAlumnoPA: alumnoproceso.estatusAlumnoPA,
+                  desde: alumnoproceso.desde,
+                  hasta: alumnoproceso.hasta
+                });
+
+
+                setIdKardex(alumnoproceso.idKardex);
+                setIdAlumnoPA(alumnoproceso.idAlumnoPA);
+                setIdMapaCurricular(alumnoproceso.idMapaCurricular);
+                setIdGrupo(alumnoproceso.idGrupo);
+                setIdPeriodoKardex(alumnoproceso.idPeriodoKardex);
+                setCalificacionFinal(alumnoproceso.calificacionFinal);
+                setTipo(alumnoproceso.tipo);
+                setEstatusKardex(alumnoproceso.estatusKardex);
+
+                console.log({
+                  idKardex: alumnoproceso.idKardex,
+                  idAlumnoPA: alumnoproceso.idAlumnoPA,
+                  idMapaCurricular: alumnoproceso.idMapaCurricular,
+                  idGrupo: alumnoproceso.idGrupo,
+                  idPeriodoKardex: alumnoproceso.idPeriodoKardex,
+                  calificacionFinal: alumnoproceso.calificacionFinal,
+                  tipo: alumnoproceso.tipo,
+                  estatusKardex: alumnoproceso.estatusKardex
+                });
+
+              
               }}>
                 <i className="bi bi-card-checklist me-2"></i> Proceso
               </button>
@@ -396,6 +472,7 @@ useEffect(() => {
     desde={desde} setDesde={setDesde}
     hasta={hasta} setHasta={setHasta}
     handleAddPA={handleAddPA}
+    handleUpdatePA={handleUpdatePA}
     setSelectedAlumnopa={setSelectedAlumnopa}
 
     //MODAL KARDEX
@@ -407,6 +484,7 @@ useEffect(() => {
     tipo={tipo} setTipo={setTipo}
     estatusKardex={estatusKardex} setEstatusKardex={setEstatusKardex}
     handleKardex={handleKardex}
+    handleUpdateKardex={handleUpdateKardex}
     setSelectedKardex={setSelectedKardex}
 
   />

@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'; 
 
-import { createKardex, deleteKardex, getKardex, updateKardex } 
+import { createKardex, deleteKardex, getKardex, updateKardex, updateTransaccionKardex } 
 from '../../../api/Parametrizacion/kardex.api.js';
 
 
@@ -73,6 +73,28 @@ export const deleteKardexFunc = async (idKardex, setShowDeleteModal, getKardex) 
       icon: 'error',
       title: 'Error',
       text: 'Hubo un problema eliminando el registro de kardex.',
+    });
+  }
+};
+
+export const updateTransaccionKardexjs = async (idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus, setShowEdit2Modal, getKardex) => {
+  console.log("Datos que llegan a la transacción:", {idKardex, idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodo, calificacionFinal, tipo, estatus});
+     
+  try {
+    await updateTransaccionKardex(idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus);
+    getKardex();
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: 'Estado actualizado correctamente',
+    });
+    setShowEdit2Modal(false);
+  } catch (error) {
+    console.error('Error al actualizar el estado', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema actualizando el estado de kardex.',
     });
   }
 };
