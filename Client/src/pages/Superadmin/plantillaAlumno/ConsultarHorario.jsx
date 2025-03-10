@@ -24,8 +24,6 @@ const ConsultarHorario = ({ idGrupo }) => {
             const materiasData = await getCargaMaterias();
             const bloquesData = await getBloquees();
             const aulasData = await getAulas();
-            //console.log("Aula:", aulasData);
-            //console.log("Carga Materias:", materiasData);
             setCargaMaterias(materiasData.filter(m => m.idGrupo === idGrupo));
             setBloques(bloquesData);
             setAulas(aulasData);
@@ -63,22 +61,30 @@ const ConsultarHorario = ({ idGrupo }) => {
         if (turno === "matutino") {
             return hora >= 7 && hora < 13;
         } else if (turno === "vespertino") {
-            return hora >= 12 && hora < 19;
+            return hora >= 12 && hora < 22;
         }
         return false;
     };
 
-    const generarPDF = () => {
+    const generarPDF = async () => {
+        const materiasData = await getCargaMaterias();
+        const bloquesData = await getBloquees();
+        const aulasData = await getAulas();
+        setCargaMaterias(materiasData.filter(m => m.idGrupo === idGrupo));
+        setBloques(bloquesData);
+        setAulas(aulasData);
+
+        const horariosFiltrados = materiasData.filter(h => Number(h.idGrupo) === Number(idGrupo));
+        setHorarios(horariosFiltrados);
+
         const doc = new jsPDF("p", "mm", "a4"); // Cambiado a orientación vertical
-        //const doc = new jsPDF("l", "mm", "a4"); // Cambiado a orientación horizontal
-        // 📌 Título del documento
         doc.setFontSize(14); // Tamaño de fuente más grande
         doc.setFont("helvetica", "bold");
         doc.text(`Universidad Tecnologíca de Acapulco`, doc.internal.pageSize.getWidth() / 2, 15, { align: "center" });
         doc.setFontSize(12); // Tamaño de fuente más pequeño para el subtítulo
         doc.setFont("helvetica", "normal");
         doc.text(`${programaAcademico}\nCuatrimestre ${periodo}\nGrupo: ${grupoNombre}                      Aula: ${aulaNombre}`, doc.internal.pageSize.getWidth() / 2, 25, { align: "center" });
-        // 📌 Encabezado de la tabla
+
         const tableHead = [
             [{ content: "HORA", styles: { halign: "center", fontStyle: "bold" } }],
             ...diasSemana.map((dia) => [
@@ -86,7 +92,6 @@ const ConsultarHorario = ({ idGrupo }) => {
             ])
         ];
 
-        // 📌 Construir la tabla con los datos reales
         const tableBody = bloques.filter(bloque => esTurnoValido(bloque.horaInicio)).map((bloque) => {
             const row = [{ content: `${bloque.horaInicio} - ${bloque.horaFin}`, styles: { halign: "center", fontStyle: "bold" } }];
             if ((bloque.horaInicio === "09:30:00" && bloque.horaFin === "10:00:00") || 
@@ -104,7 +109,7 @@ const ConsultarHorario = ({ idGrupo }) => {
                 });
             } else {
                 diasSemana.forEach((dia) => {
-                    const materia = horarios.find(
+                    const materia = horariosFiltrados.find(
                         (m) => m.dia === dia && Number(m.idBloque) === Number(bloque.idBloque)
                     );
                     row.push({
@@ -122,7 +127,6 @@ const ConsultarHorario = ({ idGrupo }) => {
             return row;
         });
 
-        // 📌 Generar tabla en el PDF
         doc.autoTable({
             head: [tableHead.map((cell) => cell[0])],
             body: tableBody,
@@ -134,17 +138,14 @@ const ConsultarHorario = ({ idGrupo }) => {
             tableLineWidth: 0.1 // Ancho de las líneas de la tabla
         });
 
-        // 📌 Tabla para mostrar Tutor
         doc.autoTable({
             head: [["TUTOR(A). MTRO. " + tutorNombre]],
             startY: doc.autoTable.previous.finalY + 10,
             styles: { fontSize: 8, cellPadding: 1, halign: 'center', fillColor: [255, 255, 255] }, // Centrar el texto y fondo blanco
             headStyles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Texto negro y fondo blanco
-            //tableLineColor: [0, 0, 0], // Color de las líneas de la tabla
             tableLineWidth: 0.1 // Ancho de las líneas de la tabla
         });
 
-        // 📌 Tabla de horas semanales por profesor y materia
         const horasSemanalesHead = [
             { content: "Profesor", styles: { halign: "center", fontStyle: "bold" } },
             { content: "Materia", styles: { halign: "center", fontStyle: "bold" } },
@@ -166,11 +167,10 @@ const ConsultarHorario = ({ idGrupo }) => {
             tableLineColor: [0, 0, 0], // Color de las líneas de la tabla
             tableLineWidth: 0.1 // Ancho de las líneas de la tabla
         });
-        // 🖨️ Descargar PDF
+
         doc.save("Horario_Clases.pdf");
     };
 
-    // Agrupar horarios por profesor y materia para evitar duplicados
     const groupedHorarios = horarios.reduce((acc, horario) => {
         const key = `${horario.profesor}-${horario.materia}`;
         if (!acc[key]) {
@@ -178,82 +178,15 @@ const ConsultarHorario = ({ idGrupo }) => {
         }
         return acc;
     }, {});
+
     return (
         <div>
             <button className="btn btn-primary mt-3" onClick={generarPDF}>
                 Exportar a PDF
             </button>
-            {/* <div className="table-responsive mt-3">
-                <table className="table table-bordered">
-                    <thead className="text-center">
-                        <tr>
-                            <th>Hora</th>
-                            {diasSemana.map((dia) => (
-                                <th key={dia}>{dia}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {bloques.filter(bloque => esTurnoValido(bloque.horaInicio)).map((bloque) => (
-                            <tr key={bloque.idBloque}>
-                                <td>{`${bloque.horaInicio} - ${bloque.horaFin}`}</td>
-                                {(bloque.horaInicio === "09:30:00" && bloque.horaFin === "10:00:00") || 
-                                (bloque.horaInicio === "15:00:00" && bloque.horaFin === "15:10:00") ? (
-                                    <td colSpan={diasSemana.length} style={{ backgroundColor: "#0066cc", color: "#ffffff", textAlign: "center", fontWeight: "bold" }}>
-                                        RECESO
-                                    </td>
-                                ) : (
-                                    diasSemana.map((dia) => {
-                                        const materia = horarios.find(
-                                            (m) => m.dia === dia && Number(m.idBloque) === Number(bloque.idBloque)
-                                        );
-                                        const profesor = materia ? materia.profesor : null;
-                                        const aula = materia ? aulas.find(a => Number(a.idAula) === Number(materia.idAula)) : null;
-                                        return (
-                                            <td key={`${bloque.idBloque}-${dia}`}>
-                                                {materia ? (
-                                                    <div className="text-center">
-                                                        <strong>{materia.materia}</strong>
-                                                        <br />
-                                                        <span>{profesor}</span>
-                                                        <br />
-                                                        <span>{aula ? aula.nombre : ""}</span>
-                                                    </div>
-                                                ) : (
-                                                    ""
-                                                )}
-                                            </td>
-                                        );
-                                    })
-                                )}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <h5 className="text-center mt-4">TUTOR(A). MTRO. {tutorNombre}</h5>
-            <div className="table-responsive mt-3">
-                <table className="table table-bordered">
-                    <thead className="text-center">
-                        <tr>
-                            <th>Profesor</th>
-                            <th>Materia</th>
-                            <th>Horas Semanales</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.values(groupedHorarios).map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.profesor}</td>
-                                <td>{item.materia}</td>
-                                <td>{item.horasSemana}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div> */}
         </div>
     );
 };
 
 export default ConsultarHorario;
+
