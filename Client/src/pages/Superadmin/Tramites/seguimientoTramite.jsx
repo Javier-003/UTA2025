@@ -280,16 +280,41 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
                                     </span>
                                   </div>
                       </td>
-
-                        {/* Nueva columna de proceso con filtro por idalumnotramite */}
-                      <td className="text-center">
-                      <button className="btn btn-secondary"onClick={() => {
+                      <td>
+                      <button
+                        className={`btn btn-sm 
+                          ${alumnotramite.estatus === 'En proceso' ? 'btn-secondary text-white' : ''} 
+                          ${alumnotramite.estatus === 'Concluido' ? 'btn-success text-white' : ''} 
+                          ${alumnotramite.estatus === 'Cancelado' ? 'btn-danger text-white' : ''} 
+                          rounded-pill shadow-sm d-flex align-items-center justify-content-center px-3 py-2`}
+                        onClick={() => {
+                          if (alumnotramite.estatus === 'En proceso') {
                             navigate(`/procedimientoTramite?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
-                          }}
-                        >
-                          <i className="bi bi-person-gear text-white fs-5"></i> 
+                          } else if (alumnotramite.estatus === 'Concluido') {
+                            navigate(`/TramiteConcluido?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
+                          } else if (alumnotramite.estatus === 'Cancelado') {
+                            navigate(`/seguimientoTramite?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
+                          }
+                        }}
+                        style={{
+                          transition: 'all 0.3s ease',
+                          transform: 'scale(1)',
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                      >
+                        {alumnotramite.estatus === 'En proceso' && (
+                          <i className="bi bi-person-gear text-white fs-4"></i>
+                        )}
+                        {alumnotramite.estatus === 'Concluido' && (
+                          <i className="bi bi-person-check text-white fs-4"></i>
+                        )}
+                        {alumnotramite.estatus === 'Cancelado' && (
+                          <i className="bi bi-person-x text-white fs-4"></i>
+                        )}
                       </button>
                       </td>
+
                        {/* ---------------------------------------------------------- */}
 
                       <td>
