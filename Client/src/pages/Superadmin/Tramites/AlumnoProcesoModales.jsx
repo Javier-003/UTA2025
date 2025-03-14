@@ -186,7 +186,7 @@ export const AlumnoProcesoModales = ({
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowDeleteModal(false)}></button>
               </div>
               <div className="modal-body">
-                <p>¿Estás seguro de que deseas eliminar el trámite proceso: <strong>{setSelectedAlumnoProceso?.actividad}</strong>?</p>
+                <p>¿Estás seguro de que deseas eliminar el trámite proceso: <strong>{setSelectedAlumnoProceso?.NombreAlumno}</strong>?</p>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowDeleteModal(false)}>Cancelar</button>

@@ -6,7 +6,7 @@ export const getAlumnoTramitetodos = async (req, res) => {
       SELECT 
         Alt.idAlumnoTramite,
         Alt.idTramite,
-        Alt.idPersona,
+        Alt.idPersona AS idPersona, 
         Alt.idAlumnoPA,
         Alt.idPeriodo,
         Alt.fecha,  

@@ -44,8 +44,9 @@ export const updatealumnoPA = async (idAlumnoPA, idAlumno, idProgramaAcademico, 
 
 // TRANSACCIÓN
 export const transaccionUpdateAlumnopa = async (idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta) => {
+  console.log("Datos enviados UPDATE api:", {idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta});
   try {
-    await axios.put(`${BASE_URL}/alumnopa2/update/${idAlumnoPA}`, {idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta , userSession });
+    await axios.put(`${BASE_URL}/alumnopa/update/${idAlumnoPA}`, {idAlumno, idProgramaAcademico, idPeriodo, matricula, estatus, desde, hasta , userSession });
   } catch (error) {
     console.error("Error al actualizar el alumnopa:", error);
     throw new Error('Error al actualizar el alumnopa');
