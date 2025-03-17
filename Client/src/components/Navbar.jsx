@@ -84,7 +84,8 @@ function OffcanvasNavbar() {
                 </div>
                 <div className="column">
                   <Link to="/AdicionProfesor"><FaChalkboardTeacher /> Adición de Profesor</Link>
-                  <Link to="/Evaluacion"><FaClipboardCheck /> Evaluación</Link>
+                  <Link to="/ControlCapturaCalificaciones"><FaClipboardCheck /> Control de Captura de Calificaciones</Link>
+                  <Link to="/CorreccionCalificaciones"><FaClipboardCheck /> Corrección de Calificaciones</Link>
                 </div>
               </div>
             )}

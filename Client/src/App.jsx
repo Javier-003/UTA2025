@@ -46,7 +46,8 @@ import Evaluar from './pages/Profesor/Evaluar';
 // -------------------------- PARAMETRIZACIÓN --------------------------------
 import AsignarPA from './pages/Superadmin/Parametrizacion/AsignarPA';
 import MateriaUnidad from './pages/Superadmin/Parametrizacion/MateriaUnidad';
-import Evaluacion from './pages/Superadmin/Parametrizacion/Evaluacion';
+import ControlCapturaCalificaciones from './pages/Superadmin/Parametrizacion/ControlCapturaCalificaciones';
+import CorreccionCalificaciones from './pages/Superadmin/Parametrizacion/CorreccionCalificaciones';
 import Kardex from './pages/Superadmin/Parametrizacion/Kardex';
 import Actividad from './pages/Superadmin/Parametrizacion/Actividad';
 import Tramite from './pages/Superadmin/Parametrizacion/Tramite';
@@ -104,7 +105,8 @@ function App() {
         <Route path="/Edificio" element={<Edificio />} />
         <Route path="/Aula" element={<Aula />} />
         <Route path="/Historial" element={<Historial />} />
-        <Route path="/Evaluacion" element={<Evaluacion />} />
+        <Route path="/CorreccionCalificaciones" element={<CorreccionCalificaciones />} /> {/* Corrección de calificaciones */}
+        <Route path="/ControlCapturaCalificaciones" element={<ControlCapturaCalificaciones />} /> {/* Control de captura de calificaciones Vsta*/}
         <Route path="/Kardex" element={<Kardex />} />
         <Route path="/MateriaUnidad" element={<MateriaUnidad />} />
         <Route path="/Bloque" element={<Bloque />} />
