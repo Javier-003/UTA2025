@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { getAlumnoProceso, updateAlumnoProcesoFunc } from '../../../assets/js/Tramites/alumnoproceso.js';
+import {updateAlumnoProceso} from '../../../api/Tramites/alumnoproceso.api.js'
 //import { AlumnoProcesoModales } from './AlumnoProcesoModales.jsx';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaEdit, FaClipboardList, FaArrowLeft, FaUserGraduate } from 'react-icons/fa';
@@ -145,55 +146,60 @@ useEffect(() => {
        });
      }; 
 
-     const handleUpdatePA = () => {
+  
+
+    // -------------------------------- ACTUALIZA EL MÓDULO REACTIVAR  -------------------------------------
+    /* const handleUpdatePA = () => {
       const estatusAlumnoPA = "Activo";
       console.log("Datos enviados actualización PA:", {idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta});
       transaccionUpdateAlumnopaJS(idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta, setShowEdit2Modal, () => {
         getAlumnopatodos(setAlumnopaList)
         getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
+        
        });
-     }; 
-
-
-     /*
-     const handleAddPA = () => {
-      console.log("Datos enviados a PA:", { idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta });
-      addAlumnoPa(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta, setShowModal, async () => {
-        await getAlumnopatodos(setAlumnopaList);
-        await getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
+     };  */
     
-        // Verificar y cambiar el estatus de "En proceso" a "Concluido" para todos los registros relacionados
-        const updatedList = await Promise.all(
-          alumnoprocesoList.map(item => {
-            if (item.estatus === "En proceso") {
-              item.estatus = "Concluido";
-              return updateAlumnoProcesoFunc(
-                item.idAlumnoProceso,
-                idAlumnoTramite,
-                idTramiteProceso,
-                idActividad,
-                orden,
-                "Concluido",
-                observacion,
-                setShowEditModal,
-                () => getAlumnoProceso(setAlumnoProceso)
-              ).catch(error => {
-                console.error("Error al actualizar el proceso de alumno:", error);
-                return null; // Para evitar que la promesa se rechace y cause problemas
-              });
-            }
-            return Promise.resolve(item); // Devolver el item si no se actualiza
-          })
-        );
-        
-        // Filtrar los valores nulos (errores) y actualizar el estado
-        setAlumnoProceso(updatedList.filter(item => item !== null));
-        
-      });
-    }; */ 
+     // REACTIVAR CON "CONCLUIDO" DE ALUMNOPROCESO AUTOMÁTICO
+    const handleUpdatePA = async () => {
+      const estatusAlumnoPA = "Activo";
+      transaccionUpdateAlumnopaJS(
+        idAlumnoPA, idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta, setShowEdit2Modal,
+        async () => {
+          // Primero actualizas el PA
+          await getAlumnopatodos(setAlumnopaList);
+    
+          // SE ACTUALIZA EL PROCESO A "CONCLUIDO"
+          await Promise.all(
+            alumnoprocesoList.map(async (item) => {
+              if (item.estatus === "En proceso") {
+                try {
+                  await updateAlumnoProceso(
+                    item.idAlumnoProceso,
+                    idAlumnoTramite,
+                    idTramiteProceso,
+                    idActividad,
+                    orden,
+                    "Concluido",
+                    observacion,
+                    setShowEditModal,
+                    () => { }
+                  );
+                } catch (error) {
+                  console.error("Error al actualizar el proceso de alumno:", error);
+                }
+              }
+            })
+          );
+    
+          // Finalmente recargas los procesos desde el backend para asegurar que el estado es consistente
+          await getAlumnoProceso(setAlumnoProceso);
+        }
+      );
+    };
+    
     
 
-      //ASOCIAR GRUPO/KARDEX
+      // -------------------------------- ASOCIAR GRUPO/KARDEX --------------------------------------------
       const handleKardex = () => {  
         const tipo = "Ordinaria";
         const estatusKardex = "Activo";
@@ -205,7 +211,8 @@ useEffect(() => {
         });
       };
 
-      const handleUpdateKardex = () => {  
+      // --------------------------------------- BAJA TEMPORAL ---------------------------------------------
+     /*  const handleUpdateKardex = () => {  
        // const estatusKardex = "Baja temporal";
        const tipo = "Ordinaria";
        const estatusKardex = "Baja temporal";
@@ -215,6 +222,43 @@ useEffect(() => {
         getKardexTodos(setKardexList) 
         getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
         });
+      }; */
+
+      const handleUpdateKardex = async () => {
+       const tipo = "Ordinaria";
+       const estatusKardex = "Baja temporal";
+       updateTransaccionKardexjs(idKardex, idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal,  tipo, estatusKardex, setShowEdit2Modal,  
+       async () => {
+            // Primero actualizas el Kardex
+            await  getKardexTodos(setKardexList) 
+      
+            // SE ACTUALIZA EL PROCESO A "CONCLUIDO"
+            await Promise.all(
+              alumnoprocesoList.map(async (item) => {
+                if (item.estatus === "En proceso") {
+                  try {
+                    await updateAlumnoProceso(
+                      item.idAlumnoProceso,
+                      idAlumnoTramite,
+                      idTramiteProceso,
+                      idActividad,
+                      orden,
+                      "Concluido",
+                      observacion,
+                      setShowEditModal,
+                      () => { }
+                    );
+                  } catch (error) {
+                    console.error("Error al actualizar el proceso de alumno:", error);
+                  }
+                }
+              })
+            );
+      
+            // Finalmente recargas los procesos desde el backend para asegurar que el estado es consistente
+            await getAlumnoProceso(setAlumnoProceso);
+          }
+        );
       };
 
 

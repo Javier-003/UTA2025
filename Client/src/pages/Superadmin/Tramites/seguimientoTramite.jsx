@@ -38,6 +38,7 @@ function Seguimientodetramite() {
 
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showEditModal2, setShowEditModal2] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedAlumnoTramite, setSelectedAlumnoTramite] = useState(null);
@@ -114,6 +115,7 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
 
   const handleUpdate = () => {
     updateAlumnoTramiteFunc(selectedAlumnoTramite.idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, setShowEditModal, () => getAlumnoTramite(setAlumnoTramite));
+    setShowEditModal2(false);
   };
 
   const handleDelete = () => {
@@ -210,6 +212,7 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
                   <th>PROGRESO</th>
                   <th>PROCESO</th>
                   <th>Editar</th>
+                  <th>CANCELAR</th>
                   {/* <th>Eliminar</th> */}
                 </tr>
               </thead>
@@ -330,6 +333,22 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
                           setSelectedAlumnoTramite(alumnotramite);
                         }}>Editar</button>
                       </td>
+
+                      <td>
+                        <button className="btn btn-danger" onClick={() => {
+                          setIdTramite(alumnotramite.idTramite);
+                          setIdAlumnoPA(alumnotramite.idAlumnoPA);
+                          setIdPersona(alumnotramite.idPersona);
+                          setIdPeriodo(alumnotramite.idPeriodo);
+                          setFecha(alumnotramite.fecha);
+                          setFecha(formatDateString(alumnotramite.fecha))
+                          setEstatus("Cancelado");
+                          setShowEditModal2(true);
+                          setSelectedAlumnoTramite(alumnotramite);
+                        }}> <i class="bi bi-file-earmark-excel"></i> </button>
+                      </td>
+
+    
                      {/*  <td>
                         <button className="btn btn-danger" onClick={() => {
                           setShowDeleteModal(true);
@@ -363,7 +382,8 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
 
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
-        showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
+        showEditModal2={showEditModal2} setShowEditModal2={setShowEditModal2}
+       // showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
