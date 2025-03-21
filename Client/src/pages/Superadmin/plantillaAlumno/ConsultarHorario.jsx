@@ -14,9 +14,9 @@ const ConsultarHorario = ({ idGrupo }) => {
     const [programaAcademico, setProgramaAcademico] = useState("");
     const [periodo, setPeriodo] = useState("");
     const [grupoNombre, setGrupoNombre] = useState("");
-    const [turno, setTurno] = useState(""); // Estado para el turno
-    const [aulaNombre, setAulaNombre] = useState(""); // Estado para el nombre del aula
-    const [tutorNombre, setTutorNombre] = useState(""); // Estado para el nombre del tutor
+    const [turno, setTurno] = useState("");
+    const [aulaNombre, setAulaNombre] = useState("");
+    const [tutorNombre, setTutorNombre] = useState("");
     const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
 
     useEffect(() => {
@@ -45,8 +45,8 @@ const ConsultarHorario = ({ idGrupo }) => {
                 setProgramaAcademico(grupo.programa_academico);
                 setPeriodo(grupo.periodo);
                 setGrupoNombre(grupo.nombre);
-                setTurno(grupo.cuatrimestre <= 5 ? "matutino" : "vespertino"); // Determinar el turno
-                setTutorNombre(grupo.tutor); // Obtener el nombre del tutor
+                setTurno(grupo.cuatrimestre <= 5 ? "matutino" : "vespertino");
+                setTutorNombre(grupo.tutor);
                 const aula = horariosFiltrados.length > 0 ? aulas.find(a => Number(a.idAula) === Number(horariosFiltrados[0].idAula)) : null;
                 if (aula) {
                     setAulaNombre(aula.nombre);
@@ -77,11 +77,11 @@ const ConsultarHorario = ({ idGrupo }) => {
         const horariosFiltrados = materiasData.filter(h => Number(h.idGrupo) === Number(idGrupo));
         setHorarios(horariosFiltrados);
 
-        const doc = new jsPDF("p", "mm", "a4"); // Cambiado a orientación vertical
-        doc.setFontSize(14); // Tamaño de fuente más grande
+        const doc = new jsPDF("p", "mm", "a4");
+        doc.setFontSize(14);
         doc.setFont("helvetica", "bold");
-        doc.text(`Universidad Tecnologíca de Acapulco`, doc.internal.pageSize.getWidth() / 2, 15, { align: "center" });
-        doc.setFontSize(12); // Tamaño de fuente más pequeño para el subtítulo
+        doc.text(`Universidad Tecnológica de Acapulco`, doc.internal.pageSize.getWidth() / 2, 15, { align: "center" });
+        doc.setFontSize(12);
         doc.setFont("helvetica", "normal");
         doc.text(`${programaAcademico}\nCuatrimestre ${periodo}\nGrupo: ${grupoNombre}                      Aula: ${aulaNombre}`, doc.internal.pageSize.getWidth() / 2, 25, { align: "center" });
 
@@ -94,36 +94,15 @@ const ConsultarHorario = ({ idGrupo }) => {
 
         const tableBody = bloques.filter(bloque => esTurnoValido(bloque.horaInicio)).map((bloque) => {
             const row = [{ content: `${bloque.horaInicio} - ${bloque.horaFin}`, styles: { halign: "center", fontStyle: "bold" } }];
-            if ((bloque.horaInicio === "09:30:00" && bloque.horaFin === "10:00:00") || 
-                (bloque.horaInicio === "15:00:00" && bloque.horaFin === "15:10:00")) {
+            diasSemana.forEach((dia) => {
+                const materia = horariosFiltrados.find(
+                    (m) => m.dia === dia && Number(m.idBloque) === Number(bloque.idBloque)
+                );
                 row.push({
-                    content: "R            E            C            E            S            O",
-                    colSpan: diasSemana.length,
-                    styles: {
-                        halign: "center",
-                        fontStyle: "bold",
-                        fillColor: [0, 102, 204], // Azul para receso
-                        textColor: [255, 255, 255],
-                        cellPadding: 1 // Reducir el tamaño del borde
-                    }
+                    content: materia ? `${materia.materia}` : "",
+                    styles: { halign: "center" }
                 });
-            } else {
-                diasSemana.forEach((dia) => {
-                    const materia = horariosFiltrados.find(
-                        (m) => m.dia === dia && Number(m.idBloque) === Number(bloque.idBloque)
-                    );
-                    row.push({
-                        content: materia ? `${materia.materia}` : "",
-                        styles: {
-                            halign: "center",
-                            fontStyle: materia?.materia?.toLowerCase().includes("tutoría") ? "bold" : "normal",
-                            fillColor: bloque.nombre.includes("RECESO") ? [0, 102, 204] : null, // Azul para receso
-                            textColor: bloque.nombre.includes("RECESO") ? [255, 255, 255] : null,
-                            cellPadding: 1 // Reducir el tamaño del borde
-                        }
-                    });
-                });
-            }
+            });
             return row;
         });
 
@@ -131,30 +110,37 @@ const ConsultarHorario = ({ idGrupo }) => {
             head: [tableHead.map((cell) => cell[0])],
             body: tableBody,
             startY: 40,
-            styles: { fontSize: 8, cellPadding: 1 }, // Reducir el tamaño de la fuente y el padding de las celdas
+            styles: { fontSize: 8, cellPadding: 1 },
             headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
             alternateRowStyles: { fillColor: [240, 240, 240] },
-            tableLineColor: [0, 0, 0], // Color de las líneas de la tabla
-            tableLineWidth: 0.1 // Ancho de las líneas de la tabla
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.1
         });
 
-        doc.autoTable({
-            head: [["TUTOR(A). MTRO. " + tutorNombre]],
-            startY: doc.autoTable.previous.finalY + 10,
-            styles: { fontSize: 8, cellPadding: 1, halign: 'center', fillColor: [255, 255, 255] }, // Centrar el texto y fondo blanco
-            headStyles: { textColor: [0, 0, 0], fillColor: [255, 255, 255] }, // Texto negro y fondo blanco
-            tableLineWidth: 0.1 // Ancho de las líneas de la tabla
-        });
+        // Agrupar horarios por materia y calcular horas semanales basadas en módulos
+        const groupedHorarios = horarios.reduce((acc, horario) => {
+            const key = `${horario.profesor}-${horario.materia}`;
+
+            if (!acc[key]) {
+                acc[key] = { profesor: horario.profesor, materia: horario.materia, horasSemana: 0 };
+            }
+
+            // Cada módulo (bloque) cuenta como 1 hora
+            acc[key].horasSemana += 1;
+
+            return acc;
+        }, {});
 
         const horasSemanalesHead = [
             { content: "Profesor", styles: { halign: "center", fontStyle: "bold" } },
             { content: "Materia", styles: { halign: "center", fontStyle: "bold" } },
             { content: "Horas Semanales", styles: { halign: "center", fontStyle: "bold" } }
         ];
+
         const horasSemanalesBody = Object.values(groupedHorarios).map((item) => [
             { content: item.profesor, styles: { halign: "center" } },
             { content: item.materia, styles: { halign: "center" } },
-            { content: item.horasSemana, styles: { halign: "center" } }
+            { content: item.horasSemana.toString(), styles: { halign: "center" } } // Mostrar como número entero
         ]);
 
         doc.autoTable({
@@ -164,20 +150,12 @@ const ConsultarHorario = ({ idGrupo }) => {
             styles: { fontSize: 8, cellPadding: 1 },
             headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
             alternateRowStyles: { fillColor: [240, 240, 240] },
-            tableLineColor: [0, 0, 0], // Color de las líneas de la tabla
-            tableLineWidth: 0.1 // Ancho de las líneas de la tabla
+            tableLineColor: [0, 0, 0],
+            tableLineWidth: 0.1
         });
 
         doc.save("Horario_Clases.pdf");
     };
-
-    const groupedHorarios = horarios.reduce((acc, horario) => {
-        const key = `${horario.profesor}-${horario.materia}`;
-        if (!acc[key]) {
-            acc[key] = { profesor: horario.profesor, materia: horario.materia, horasSemana: horario.horasSemana };
-        }
-        return acc;
-    }, {});
 
     return (
         <div>

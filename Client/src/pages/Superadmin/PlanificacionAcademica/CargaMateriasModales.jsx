@@ -28,6 +28,7 @@ export const CargaMateriaModales = ({
     const [bloques, setBloques] = useState([]);
     const [nuevoHorario, setNuevoHorario] = useState({ dia: "", idBloque: "" });
     const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
+    const [programaAcademicoDelGrupo, setProgramaAcademicoDelGrupo] = useState(""); // Nuevo estado para el programa académico del grupo
 
     useEffect(() => {
         const fetchData = async () => {
@@ -85,6 +86,16 @@ export const CargaMateriaModales = ({
         // console.log("Bloques disponibles:", bloques);
     }, [horarios, bloques]);
     
+    useEffect(() => {
+        // Actualizar el programa académico del grupo seleccionado
+        const grupoSeleccionado = grupos.find(grupo => grupo.idGrupo === parseInt(idGrupo));
+        if (grupoSeleccionado) {
+            setProgramaAcademicoDelGrupo(grupoSeleccionado.idProgramaAcademico);
+        } else {
+            setProgramaAcademicoDelGrupo("");
+        }
+    }, [idGrupo, grupos]);
+    
     const formatDateString = (dateString) => dateString ? dateString.split("T")[0] : "";
 
     const agregarHorario = () => {
@@ -123,8 +134,9 @@ export const CargaMateriaModales = ({
         setHorarios([]); // Limpiar los horarios al cerrar el modal
     };
 
-    // Filtrar materias según el término de búsqueda
+    // Filtrar materias según el programa académico del grupo seleccionado y el término de búsqueda
     const filteredMapaCurriculares = mapaCurriculares.filter(mapa =>
+        (!programaAcademicoDelGrupo || mapa.idProgramaAcademico === programaAcademicoDelGrupo) &&
         mapa.materia.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
