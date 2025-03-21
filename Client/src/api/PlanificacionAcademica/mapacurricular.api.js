@@ -17,10 +17,11 @@ export const getMapaCurriculares = async () => {
 
 // Crear un nuevo mapa curricular
 export const createMapaCurricular = async (idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad) => {
+  // console.log("Datos enviados al backend para crear:", { idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, userSession });
   try {
     await axios.post(`${BASE_URL}/mapacurricular/create`, { 
       idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas,
-       horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, userSession
+      horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, userSession
     });
   } catch (error) {
     console.error("Error al registrar el mapa curricular:", error);
@@ -30,10 +31,11 @@ export const createMapaCurricular = async (idProgramaAcademico, ciclo, cuatrimes
 
 // Actualizar un mapa curricular existente
 export const updateMapaCurricular = async (idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad) => {
+  // console.log("Datos enviados al backend para actualizar:", { idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, userSession });
   try {
     await axios.put(`${BASE_URL}/mapacurricular/update/${idMapaCurricular}`, {
       idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, 
-      horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad,userSession
+      horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, userSession
     });
   } catch (error) {
     console.error("Error al actualizar el mapa curricular:", error);

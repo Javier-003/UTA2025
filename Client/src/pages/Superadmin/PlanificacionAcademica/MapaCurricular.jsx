@@ -34,13 +34,29 @@ const MapaCurricular = () => {
 
   useEffect(() => { fetchMapaCurricular(); }, [fetchMapaCurricular]);
 
+  const validateFields = () => {
+    if (!idProgramaAcademico || !ciclo || !cuatrimestre || !materia || !clave || !horasSemana || !horasTeoricas || !horasPracticas || !horasTotal || !creditos || !modalidad || !espacio || !noUnidad) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Todos los campos son obligatorios. Por favor, completa todos los campos.',
+      });
+      return false;
+    }
+    return true;
+  };
+
   const handleAdd = () => {
-    addMapaCurricular(idProgramaAcademico,carrera,ciclo,cuatrimestre,materia,clave,horasSemana,horasTeoricas,horasPracticas,horasTotal,creditos,modalidad,espacio,noUnidad,setShowModal,() => fetchMapaCurricular());
+    if (!validateFields()) return;
+    // console.log("Datos enviados desde el modal de agregar:", { idProgramaAcademico, carrera, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad });
+    addMapaCurricular(idProgramaAcademico,ciclo,cuatrimestre,materia,clave,horasSemana,horasTeoricas,horasPracticas,horasTotal,creditos,modalidad,espacio,noUnidad,setShowModal,() => fetchMapaCurricular());
   };
 
   const handleUpdate = () => {
+    if (!validateFields()) return;
+    // console.log("Datos enviados desde el modal de editar:", { idProgramaAcademico, carrera, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad });
     editMapaCurricular(selectedMapa.idMapaCurricular,
-      idProgramaAcademico,carrera,ciclo,cuatrimestre,materia,clave,horasSemana,horasTeoricas,horasPracticas,horasTotal,creditos,modalidad,espacio,noUnidad,setShowEditModal,() => fetchMapaCurricular());
+      idProgramaAcademico,ciclo,cuatrimestre,materia,clave,horasSemana,horasTeoricas,horasPracticas,horasTotal,creditos,modalidad,espacio,noUnidad,setShowEditModal,() => fetchMapaCurricular());
   };
 
   const handleDelete = () => {

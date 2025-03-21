@@ -13,6 +13,16 @@ export const getMapaCurricular = async (setMapaCurricular) => {
 };
 
 export const addMapaCurricular = async (idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowModal, getMapaCurricular) => {
+  if (!idProgramaAcademico || !ciclo || !cuatrimestre || !materia || !clave || !horasSemana || !horasTeoricas || !horasPracticas || !horasTotal || !creditos || !modalidad || !espacio || !noUnidad) {
+    console.error("Error: Campos obligatorios faltantes.");
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Todos los campos son obligatorios. Por favor, completa todos los campos.',
+    });
+    return;
+  }
+  // console.log("Datos enviados para registrar:", { idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad });
   try {
     await createMapaCurricular(idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad);
     getMapaCurricular();
@@ -33,6 +43,7 @@ export const addMapaCurricular = async (idProgramaAcademico, ciclo, cuatrimestre
 };
 
 export const editMapaCurricular = async (idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowEditModal, getMapaCurricular) => {
+  // console.log("Datos enviados para actualizar:", { idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad });
   try {
     await updateMapaCurricular(idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad);
     getMapaCurricular();
