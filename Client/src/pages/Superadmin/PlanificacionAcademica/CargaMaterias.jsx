@@ -212,8 +212,8 @@ function CargaMaterias() {
                                                         setIdAula(cargaMateria.idAula);
                                                         setTipo(cargaMateria.tipo);
                                                         setFecha(formatDateString(cargaMateria.fecha));
-                                                        //setHorarios(cargaMateria.horarios && Array.isArray(cargaMateria.horarios) ? cargaMateria.horarios : []);
-                                                        //console.log("Estado de horarios después de actualizar:", cargaMateria.horarios);
+                                                        // setHorarios(cargaMateria.horarios);
+                                                        // console.log("Estado de horarios antes de actualizar:", cargaMateria.horarios);
                                                         setSelectedCargaMaterias(cargaMateria);
                                                         setShowEditModal(true);
                                                     }}>
