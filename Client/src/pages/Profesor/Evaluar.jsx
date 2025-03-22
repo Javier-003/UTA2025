@@ -84,12 +84,13 @@ function Evaluar() {
             Object.keys(calificaciones[idKadex]).forEach(idMateriaUnidad => {
                 const evaluacion = evaluaciones.find(e => e.idKadex === parseInt(idKadex) && e.idMateriaUnidad === parseInt(idMateriaUnidad));
                 if (evaluacion) {
+                    const calificacion = calificaciones[idKadex][idMateriaUnidad];
                     handleUpdateCalificacion(
                         evaluacion.idEvaluacion,
                         evaluacion.idKadex,
                         evaluacion.idMapaCurricular,
                         evaluacion.idMateriaUnidad,
-                        calificaciones[idKadex][idMateriaUnidad],
+                        calificacion === '' ? null : calificacion, // Enviar NULL si está vacío
                         evaluacion.faltas,
                         evaluacion.nombreUnidad,
                         evaluacion.estatus
@@ -137,7 +138,7 @@ function Evaluar() {
                     </thead>
                     <tbody>
                         {alumnos.length > 0 ? (
-                            alumnos.map((alumno, index) => {
+                            [...alumnos].sort((a, b) => a.matricula.localeCompare(b.matricula)).map((alumno, index) => { // Ordenar por matrícula
                                 const evalAlumno = evaluaciones.filter(e => e.idKadex === alumno.idKardex);
                                 return (
                                     <tr key={index}>

@@ -17,7 +17,7 @@ export const getEvaluacionTodos = async (idGrupoMateria) => {
 // Crear un nuevo registro de Evaluacion
 export const addEvaluacion = async (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) => {
   try {
-    console.log("Datos enviados a createEvaluacion:", { idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus });
+    // console.log("Datos enviados a createEvaluacion:", { idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus });
     await createEvaluacion(idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
     Swal.fire({
       icon: 'success',
@@ -37,7 +37,7 @@ export const addEvaluacion = async (idKadex, idMapaCurricular, idMateriaUnidad, 
 // Actualizar un registro de Evaluacion existente
 export const updateEvaluacionFunc = async (idEvaluacion, idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) => {
   try {
-    console.log("Datos recibidos en updateEvaluacion:", { idEvaluacion, idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus });
+    // console.log("Datos recibidos en updateEvaluacion:", { idEvaluacion, idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus });
     await updateEvaluacion(idEvaluacion, idKardex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus);
     Swal.fire({
       icon: 'success',

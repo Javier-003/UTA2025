@@ -8,7 +8,7 @@ const userSession = localStorage.getItem('Username')
 export const getGrupos = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/grupo`);
-    console.log("🔍 Respuesta completa de la API:", response);
+    // console.log("🔍 Respuesta completa de la API:", response);
     // Verifica qué datos estás recibiendo antes de retornarlos
     if (!response.data || typeof response.data !== "object") {
       console.error("⚠️ La API no devolvió datos válidos:", response.data);

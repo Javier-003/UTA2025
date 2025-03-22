@@ -82,7 +82,9 @@ function Evaluacion() {
 
   const handleSubmitCalificaciones = () => {
     const isValid = Object.values(calificaciones).every(kadex =>
-      Object.values(kadex).every(calificacion => calificacion >= 0 && calificacion <= 100)
+      Object.values(kadex).every(calificacion => 
+        calificacion !== "" && !isNaN(calificacion) && calificacion >= 0 && calificacion <= 100
+      )
     );
     if (!isValid) {
       Swal.fire({
@@ -109,17 +111,19 @@ function Evaluacion() {
     });
   };
 
-  const filteredAlumnos = kardex.filter(alumno =>
-    alumno.estatus === "Activo" &&
-    (!periodo || alumno.periodo === periodo) &&
-    (searchText === "" ||
-      alumno.matricula.toLowerCase().includes(searchText.toLowerCase()) ||
-      evaluaciones.some(evaluacion => 
-        evaluacion.idKadex === alumno.idKardex && 
-        evaluacion.materia.toLowerCase().includes(searchText.toLowerCase())
+  const filteredAlumnos = [...kardex]
+    .filter(alumno =>
+      alumno.estatus === "Activo" &&
+      (!periodo || alumno.periodo === periodo) &&
+      (searchText === "" ||
+        alumno.matricula.toLowerCase().includes(searchText.toLowerCase()) ||
+        evaluaciones.some(evaluacion => 
+          evaluacion.idKadex === alumno.idKardex && 
+          evaluacion.materia.toLowerCase().includes(searchText.toLowerCase())
+        )
       )
     )
-  );
+    .sort((a, b) => a.matricula.localeCompare(b.matricula)); // Ordenar por matrícula
 
   if (loading) {
     return <div>Loading...</div>;
@@ -178,6 +182,7 @@ function Evaluacion() {
                                 Unidad {idx + 1}:{" "}
                                 <input
                                   type="number"
+                                  aria-label={`Calificación para la unidad ${idx + 1}`}
                                   value={calificaciones[alumno.idKardex]?.[unidad] || evalUnidad.calificacion || ""}
                                   onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
                                   disabled={evalUnidad.estatus === 'Cerrado'}
@@ -188,7 +193,7 @@ function Evaluacion() {
                         ) : 'N/A'}
                       </td>
                       <td>
-                        <button className="btn btn-primary" onClick={() => handleSubmitCalificaciones()}>
+                        <button className="btn btn-primary" onClick={() => handleSubmitCalificaciones()} disabled={Object.keys(calificaciones).length === 0}>
                           <FontAwesomeIcon icon={faUpload} />
                         </button>
                       </td>
