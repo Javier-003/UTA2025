@@ -137,6 +137,16 @@ export const tramiteValidaAdeudos = (props) => (
   <TramiteModal title="Valdación de Adeudos" {...props} />
 );
 
+// ---------------- BAJA DEFINITIVA -------------------
+export const tramiteSolicitudBajaDefinitiva = (props) => (
+  <TramiteModal title="Proceso de Solicitud de Baja Definitiva" {...props} />
+);
+
+export const tramiteValidaPagoBajaDefinitiva = (props) => (
+  <TramiteModal title="Valdación de Pago Baja Definitiva" {...props} />
+);
+
+
 
 // ------------------------------------------ REGISTRAR ALUMNO -------------------------------------------------------
 const TramiteModalRegistro = ({
@@ -1274,7 +1284,7 @@ const TramiteModalBajaTemporal = ({
 };
 
 export const tramiteBajaTemporal = (props) => (
-  <TramiteModalBajaTemporal title="Baja Programa Académico" {...props} />
+  <TramiteModalBajaTemporal title="Confirmación de Baja Temporal" {...props} />
 );
 //------------------------- REACTIVA ALUMNO ------------------------------
 
@@ -1481,3 +1491,194 @@ export const tramiteReactivaAlumno = (props) => (
 );
 
 
+//------------------------- CAMBIO DE ESTATUS BAJA TEMPORAL (UPDATE KARDEX) ------------------------------
+
+const TramiteModalBajaDefinitiva = ({
+  title,
+  idAlumnoTramite,
+  estatus, setEstatus,
+  observacion, setObservacion,
+  handleUpdate, handleClose,
+  show,
+  idAlumnoPA,
+  idMapaCurricular, setIdMapaCurricular,
+  idGrupo, setIdGrupo,
+  idPeriodoKardex, setIdPeriodoKardex,
+  calificacionFinal, setCalificacionFinal,
+  tipo, setTipo, estatusKardex, setEstatusKardex,
+  handleUpdateKardexBDef
+}) => {
+
+  const [alumnoList, setAlumnoList] = useState([]);
+  const [mapaList, setMapaList] = useState([]);
+  const [grupoList, setGrupoList] = useState([]);
+  const [periodoList, setPeriodoList] = useState([]);
+  const [activeTab, setActiveTab] = useState('tramite');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  useEffect(() => {
+    getAlumnoPA().then(setAlumnoList);
+    getMapaCurriculares().then(setMapaList);
+    getGrupos().then(setGrupoList);
+    getPeriodos().then(setPeriodoList);
+  }, []);
+
+  const alumnoData = alumnoList.find(a => a.idAlumnoPA === idAlumnoPA);
+  const nombreCompleto = alumnoData
+    ? `${alumnoData.nombre} ${alumnoData.paterno} ${alumnoData.materno}`
+    : 'Desconocido';
+
+  const mapa = mapaList.find(m => m.idMapaCurricular === idMapaCurricular)?.materia || 'Desconocido';
+  const grupo = grupoList.find(g => g.idGrupo === idGrupo)?.nombre || 'Desconocido';
+  const periodo = periodoList.find(p => p.idPeriodo === idPeriodoKardex)?.periodo || 'Desconocido';
+
+  const handleConfirm = () => setShowConfirmModal(true);
+  const handleCancelConfirm = () => setShowConfirmModal(false);
+
+  const handleAcceptConfirm = () => {
+    handleUpdateKardexBDef();
+    setShowConfirmModal(false);
+    handleClose();
+  };
+
+  return (
+    <>
+      <Modal show={show} onHide={handleClose} centered size="lg">
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title className="fw-bold text-uppercase">{title}</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="bg-light">
+          <Tabs
+            activeKey={activeTab}
+            onSelect={(key) => setActiveTab(key)}
+            className="mb-4 nav-pills justify-content-center"
+          >
+            {/* Tab Trámite */}
+            <Tab eventKey="tramite" title="Información Trámite">
+              <Row className="mb-3">
+                <Col>
+                  <Alert variant="secondary" className="text-center fw-semibold fs-5 mb-4 shadow-sm">
+                    Alumno: <span className="text-primary">{nombreCompleto}</span>
+                  </Alert>
+                </Col>
+              </Row>
+
+              <div className="mb-4">
+                <label className="fw-semibold mb-2">Observaciones</label>
+                <textarea
+                  className="form-control"
+                  rows={3}
+                  value={observacion}
+                  onChange={(e) => setObservacion(e.target.value)}
+                  placeholder="Escribe aquí cualquier observación (opcional)"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="fw-semibold mb-2">Estado del Trámite</label>
+                <select
+                  className="form-select"
+                  value={estatus}
+                  onChange={(e) => setEstatus(e.target.value)}
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="En proceso">En proceso</option>
+                  <option value="Concluido">Concluido</option>
+                </select>
+              </div>
+            </Tab>
+
+            {/* Tab Baja Temporal */}
+            <Tab eventKey="registro" title="Baja Definitiva">
+              <Alert variant="light" className="border border-danger p-3 text-center shadow-sm">
+                <h5 className="text-danger mb-3 fw-bold text-uppercase">Baja Definitiva del Alumno</h5>
+                <p className="text-muted mb-0">
+                  La baja definitiva implica <strong className="text-danger">cancelar todos los procesos</strong> del alumno.
+                </p>
+              </Alert>
+
+              <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Alumno:</label>
+                  <div className="form-control bg-white">{nombreCompleto}</div>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col>
+                  <label className="fw-semibold">Grupo:</label>
+                  <div className="form-control bg-white">{grupo}</div>
+                </Col>
+              </Row>
+
+              <input
+                type="hidden"
+                value="Baja Temporal"
+                name="estatusKardex"
+              />
+
+              <div className="mb-3">
+                <label className="fw-semibold">Nuevo Estatus:</label>
+                <select
+                  className="form-select border-danger text-danger"
+                  value="Baja Temporal"
+                  disabled
+                >
+                  <option>Baja Definitiva</option>
+                </select>
+              </div>
+
+              <Alert variant="warning" className="p-3 mt-4 shadow-sm">
+                <p className="fw-semibold mb-0 text-center">
+                  ⚠️ Al cambiar el estatus a <strong>Baja Definitiva</strong>, el alumno <u>no tendrá derecho a reinscripción</u> en este programa académico.
+                </p>
+              </Alert>
+            </Tab>
+          </Tabs>
+        </Modal.Body>
+
+        <Modal.Footer className="justify-content-between">
+          <Button variant="outline-secondary" onClick={handleClose}>Cerrar</Button>
+
+          {activeTab === 'tramite' ? (
+            <Button variant="primary" onClick={() => { handleUpdate(); handleClose(); }}>
+              Guardar Cambios
+            </Button>
+          ) : (
+            <Button variant="danger" onClick={handleConfirm} className="fw-bold">
+              Confirmar Baja Definitiva
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal Confirmación Baja */}
+      <Modal show={showConfirmModal} onHide={handleCancelConfirm} centered>
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="fw-bold text-danger">Confirmar Baja Definitiva</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="text-center">
+          <h4 className="text-danger fw-bold mb-3">¡Atención!</h4>
+          <p className="fs-5 text-muted mb-3">
+            ¿Estás seguro que deseas cambiar el estatus del alumno a <strong className="text-danger">Baja Definitiva</strong>?
+          </p>
+          <p className="text-danger fw-semibold">
+            Esta acción impactará el kardex. <br />
+            El alumno <u>no tendrá derecho a reinscripción</u>.
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer className="justify-content-center border-0">
+          <Button variant="outline-secondary" onClick={handleCancelConfirm} className="px-4 py-2">Cancelar</Button>
+          <Button variant="danger" onClick={handleAcceptConfirm} className="px-4 py-2 fw-bold">Confirmar</Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
+export const tramiteBajaDefinitiva = (props) => (
+  <TramiteModalBajaDefinitiva title="Confirmación de Baja Definitiva" {...props} />
+);

@@ -197,19 +197,23 @@ export const updateTransaccionKardex = async (req, res) => {
       return res.status(400).json({ message: "No se pudo actualizar el kardex" });
     }
 
-    // Si el estatus es 'Baja temporal', realizar actualizaciones en cascada
-    if (estatus === 'Baja temporal') {
+    // Validar el tipo de dato en el estatus y actualizar en cascada
+    if (typeof estatus === 'string') {
       // Actualizar todos los kardex con el mismo idAlumnoPA e idGrupo
       await connection.query(
         "UPDATE kardex SET estatus = ? WHERE idAlumnoPA = ? AND idGrupo = ?",
-        ['Baja temporal', idAlumnoPA, idGrupo]
+        [estatus, idAlumnoPA, idGrupo]
       );
 
       // Actualizar el estatus en la tabla alumnopa
       await connection.query(
         "UPDATE alumnopa SET estatus = ? WHERE idAlumnoPA = ?",
-        ['Baja temporal', idAlumnoPA]
+        [estatus, idAlumnoPA]
       );
+    } else {
+      await connection.rollback(); // Revertir transacción
+      connection.release(); // Liberar la conexión
+      return res.status(400).json({ message: "El estatus debe ser una cadena de texto" });
     }
 
     // Confirmar transacción

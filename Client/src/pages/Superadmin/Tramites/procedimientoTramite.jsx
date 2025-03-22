@@ -128,24 +128,97 @@ useEffect(() => {
       );
     };
 
-    //ALUMNO
-    const handleAdd = () => {
+    // ------------------------------------- ALUMNO ------------------------------------------------------
+    /* const handleAdd = () => {
       console.log("Datos enviados:", {idPersona, email, nss, fecha, });
       addAlumno(idPersona, email, nss, fecha, setShowModal, () => {
         getAlumno(setAlumno); // Actualiza los alumnos
         getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
       });
+    }; */
+
+    //ALUMNO CON PROCESO CONCLUIDO AUTOMATICO
+    const handleAdd = async () => {
+      addAlumno(
+        idPersona, email, nss, fecha, setShowModal,
+        async () => {
+          // Primero AGREGAS el ALUMNO
+          await getAlumno(setAlumno); // Actualiza los alumnos
+    
+          // SE ACTUALIZA EL PROCESO A "CONCLUIDO"
+          await Promise.all(
+            alumnoprocesoList.map(async (item) => {
+              if (item.estatus === "En proceso") {
+                try {
+                  await updateAlumnoProceso(
+                    item.idAlumnoProceso,
+                    idAlumnoTramite,
+                    idTramiteProceso,
+                    idActividad,
+                    orden,
+                    "Concluido",
+                    observacion,
+                    setShowEditModal,
+                    () => { }
+                  );
+                } catch (error) {
+                  console.error("Error al actualizar el proceso de alumno:", error);
+                }
+              }
+            })
+          );
+    
+          // Finalmente recargas los procesos desde el backend para asegurar que el estado es consistente
+          await getAlumnoProceso(setAlumnoProceso);
+        }
+      );
     };
 
-      //ALUMNO PA
-     const handleAddPA = () => {
+      // ----------------------------------- ALUMNO PA -------------------------------------------------------
+     /* const handleAddPA = () => {
       console.log("Datos enviados a PA:", {idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta});
         addAlumnoPa(idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta, setShowModal, () => {
         getAlumnopatodos(setAlumnopaList)
         getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
        });
      }; 
-
+ */
+     //ALUMNO CON PROCESO CONCLUIDO AUTOMATICO
+    const handleAddPA = async () => {
+      addAlumnoPa(
+        idAlumno, idProgramaAcademico, idPeriodo, matricula, estatusAlumnoPA, desde, hasta, setShowModal, 
+        async () => {
+          // Primero AGREGAS el ALUMNO
+          getAlumnopatodos(setAlumnopaList) // Actualiza los alumnos PA
+    
+          // SE ACTUALIZA EL PROCESO A "CONCLUIDO"
+          await Promise.all(
+            alumnoprocesoList.map(async (item) => {
+              if (item.estatus === "En proceso") {
+                try {
+                  await updateAlumnoProceso(
+                    item.idAlumnoProceso,
+                    idAlumnoTramite,
+                    idTramiteProceso,
+                    idActividad,
+                    orden,
+                    "Concluido",
+                    observacion,
+                    setShowEditModal,
+                    () => { }
+                  );
+                } catch (error) {
+                  console.error("Error al actualizar el proceso de alumno:", error);
+                }
+              }
+            })
+          );
+    
+          // Finalmente recargas los procesos desde el backend para asegurar que el estado es consistente
+          await getAlumnoProceso(setAlumnoProceso);
+        }
+      );
+    };
   
 
     // -------------------------------- ACTUALIZA EL MÓDULO REACTIVAR  -------------------------------------
@@ -200,7 +273,7 @@ useEffect(() => {
     
 
       // -------------------------------- ASOCIAR GRUPO/KARDEX --------------------------------------------
-      const handleKardex = () => {  
+      /* const handleKardex = () => {  
         const tipo = "Ordinaria";
         const estatusKardex = "Activo";
         console.log("Datos enviados a KARDEX:", {idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal, tipo, estatusKardex});
@@ -209,7 +282,47 @@ useEffect(() => {
         getKardexTodos(setKardexList) 
         getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
         });
+      }; */
+
+      // CONCLUIDO AUTOMÁTICO
+      const handleKardex = async () => {
+        const tipo = "Ordinaria";
+        const estatusKardex = "Activo";
+        addKardexFun(
+          idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal,  tipo, estatusKardex, setShowModal,
+          async () => {
+            // Primero AGREGAS el KARDEX
+            await getAlumnopatodos(setAlumnopaList);
+      
+            // SE ACTUALIZA EL PROCESO A "CONCLUIDO"
+            await Promise.all(
+              alumnoprocesoList.map(async (item) => {
+                if (item.estatus === "En proceso") {
+                  try {
+                    await updateAlumnoProceso(
+                      item.idAlumnoProceso,
+                      idAlumnoTramite,
+                      idTramiteProceso,
+                      idActividad,
+                      orden,
+                      "Concluido",
+                      observacion,
+                      setShowEditModal,
+                      () => { }
+                    );
+                  } catch (error) {
+                    console.error("Error al actualizar el proceso de alumno:", error);
+                  }
+                }
+              })
+            );
+      
+            // Finalmente recargas los procesos desde el backend para asegurar que el estado es consistente
+            await getAlumnoProceso(setAlumnoProceso);
+          }
+        );
       };
+
 
       // --------------------------------------- BAJA TEMPORAL ---------------------------------------------
      /*  const handleUpdateKardex = () => {  
@@ -224,6 +337,7 @@ useEffect(() => {
         });
       }; */
 
+      //CONCLUIDO AUTOMATICO
       const handleUpdateKardex = async () => {
        const tipo = "Ordinaria";
        const estatusKardex = "Baja temporal";
@@ -260,6 +374,47 @@ useEffect(() => {
           }
         );
       };
+
+        // --------------------------------------- BAJA DEFINITIVA ---------------------------------------------
+
+      //CONCLUIDO AUTOMATICO
+      const handleUpdateKardexBDef = async () => {
+        const tipo = "Ordinaria";
+        const estatusKardex = "Baja Definitiva";
+        updateTransaccionKardexjs(idKardex, idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodoKardex, calificacionFinal,  tipo, estatusKardex, setShowEdit2Modal,  
+        async () => {
+             // Primero actualizas el Kardex
+             await  getKardexTodos(setKardexList) 
+       
+             // SE ACTUALIZA EL PROCESO A "CONCLUIDO"
+             await Promise.all(
+               alumnoprocesoList.map(async (item) => {
+                 if (item.estatus === "En proceso") {
+                   try {
+                     await updateAlumnoProceso(
+                       item.idAlumnoProceso,
+                       idAlumnoTramite,
+                       idTramiteProceso,
+                       idActividad,
+                       orden,
+                       "Concluido",
+                       observacion,
+                       setShowEditModal,
+                       () => { }
+                     );
+                   } catch (error) {
+                     console.error("Error al actualizar el proceso de alumno:", error);
+                   }
+                 }
+               })
+             );
+       
+             // Finalmente recargas los procesos desde el backend para asegurar que el estado es consistente
+             await getAlumnoProceso(setAlumnoProceso);
+           }
+         );
+       };
+
 
 
   // Función para manejar el clic en el botón "objeto"
@@ -529,6 +684,7 @@ useEffect(() => {
     estatusKardex={estatusKardex} setEstatusKardex={setEstatusKardex}
     handleKardex={handleKardex}
     handleUpdateKardex={handleUpdateKardex}
+    handleUpdateKardexBDef={handleUpdateKardexBDef}
     setSelectedKardex={setSelectedKardex}
 
   />
