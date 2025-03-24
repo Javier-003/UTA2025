@@ -105,7 +105,8 @@ export const AsignarPAModales = ({
                 <select className="form-select" value={estatus} onChange={(e) => setEstatus(e.target.value)}>
                   <option value="">Selecciona un estatus</option>
                   <option value="Activo">Activo</option>
-                  <option value="Baja">Baja</option>
+                  <option value="Baja Temporal">Baja Temporal</option>
+                  <option value="Baja Definitiva">Baja Definitiva</option>
                   <option value="Egresado">Egresado</option>
                 </select>
               </div>
@@ -173,7 +174,8 @@ export const AsignarPAModales = ({
                 <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
                   <option value="">Selecciona un estatus</option>
                   <option value="Activo">Activo</option>
-                  <option value="Baja">Baja</option>
+                  <option value="Baja Temporal">Baja Temporal</option>
+                  <option value="Baja Definitiva">Baja Definitiva</option>
                   <option value="Egresado">Egresado</option>
                 </select>
               </div>

@@ -28,7 +28,9 @@ export const getCargaMaterias = async (req, res) => {
           b.nombre AS bloque,
           b.horaInicio,
           b.horaFin,
-          b.duracion
+          b.duracion,
+          pa.idProgramaAcademico,
+          pa.nombreOficial AS nombreOficial
       FROM grupomateria AS gm
       INNER JOIN grupo AS g ON g.idGrupo = gm.idGrupo
       INNER JOIN periodo AS pe ON pe.idPeriodo = g.idPeriodo
@@ -36,6 +38,7 @@ export const getCargaMaterias = async (req, res) => {
       INNER JOIN profesor AS pr ON pr.idProfesor = gm.idProfesor
       INNER JOIN persona AS p ON p.idPersona = pr.idProfesor
       INNER JOIN aula AS a ON a.idAula = gm.idAula
+      INNER JOIN programaacademico AS pa ON pa.idProgramaAcademico = m.idProgramaAcademico
       LEFT JOIN horario AS h ON h.idGrupoMateria = gm.idGrupoMateria
       LEFT JOIN bloque AS b ON b.idBloque = h.idBloque
       ORDER BY g.nombre, m.materia, h.dia, b.horaInicio;

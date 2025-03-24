@@ -3,25 +3,40 @@ import { db } from "../../db/conexion.js";
 export const getKardex = async (req, res) => {
   try {
     const query = `SELECT k.*, 
-    ap.matricula, 
-    pe.periodo, 
-    pa.nombreOficial, 
-    g.nombre AS grupo, 
-    mp.materia AS mapa, 
-    mp.clave, 
-    mp.cuatrimestre, 
-    p.nombre, 
-    p.paterno AS paterno, 
-    p.materno AS materno
+      ap.matricula, 
+      pe.periodo, 
+      pa.nombreOficial, 
+      g.nombre AS grupo, 
+      mp.materia AS mapa, 
+      mp.clave, 
+      mp.cuatrimestre, 
+      p.nombre, 
+      p.paterno AS paterno, 
+      p.materno AS materno,
+      (SELECT mu.idMateriaUnidad 
+       FROM materiaunidad AS mu 
+       WHERE mu.idMapaCurricular = mp.idMapaCurricular 
+       LIMIT 1) AS idMateriaUnidad,
+      (SELECT mu.unidad 
+       FROM materiaunidad AS mu 
+       WHERE mu.idMapaCurricular = mp.idMapaCurricular 
+       LIMIT 1) AS unidad,
+      (SELECT ROUND(AVG(e.calificacion),1) 
+       FROM evaluacion AS e 
+       WHERE e.idKadex = k.idKardex) AS calificacionFinal
     FROM kardex AS k
     INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
     INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
     INNER JOIN persona AS p ON p.idPersona = a.idAlumno
-    INNER JOIN mapacurricular AS mp ON mp.idMapaCurricular = k.idmapacurricular
+    INNER JOIN mapacurricular AS mp ON mp.idMapaCurricular = k.idMapaCurricular
     INNER JOIN grupo AS g ON g.idGrupo = k.idGrupo
     INNER JOIN periodo AS pe ON pe.idPeriodo = k.idPeriodo
-    INNER JOIN programaacademico AS pa ON pa.idProgramaAcademico = ap.idProgramaAcademico;`;
+    INNER JOIN programaacademico AS pa ON pa.idProgramaAcademico = ap.idProgramaAcademico
+    WHERE ap.estatus NOT IN ('Baja Temporal', 'Baja Definitiva')
+    ORDER BY mp.cuatrimestre ASC;`;
+
     const [rows] = await db.query(query);
+    
     if (rows.length > 0) {
       res.json({ message: "Kardex obtenido correctamente", data: rows });
     } else {
@@ -32,8 +47,6 @@ export const getKardex = async (req, res) => {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
-
-
 
 export const createKardex = async (req, res) => {
   const { idAlumnoPA, idGrupo, tipo, estatus } = req.body; // 👈 Recibimos solo estos campos
@@ -129,26 +142,41 @@ export const updateKardex = async (req, res) => {
   try {
     const { idKardex } = req.params;
     const { idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus } = req.body;
-    const [exists] = await db.query("SELECT 1 FROM kardex WHERE idKardex = ?", [idKardex]);
+
+    // Verificar si el kardex existe
+    const [exists] = await db.query("SELECT estatus FROM kardex WHERE idKardex = ?", [idKardex]);
     if (!exists.length) {
       return res.status(404).json({ message: "El kardex no existe" });
     }
+
+    // Obtener el estatus actual si no se envió en la petición
+    const currentEstatus = exists[0].estatus;
+    const newEstatus = estatus !== undefined ? estatus : currentEstatus;
+
+    // Actualizar el registro sin modificar el estatus si no se envió
     const [result] = await db.query(
-      "UPDATE kardex SET idAlumnoPA = ?, idMapaCurricular = ?, idGrupo = ?, idPeriodo = ?, calificacionFinal = ?, tipo = ?, estatus = ?  WHERE idKardex = ?",
-      [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus, idKardex]
+      `UPDATE kardex 
+       SET idAlumnoPA = ?, idMapaCurricular = ?, idGrupo = ?, idPeriodo = ?, 
+           calificacionFinal = ?, tipo = ?, estatus = ?
+       WHERE idKardex = ?`,
+      [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, newEstatus, idKardex]
     );
+
     if (result.affectedRows === 0) {
       return res.status(400).json({ message: "No se pudo actualizar el kardex" });
     }
+
     res.status(200).json({
       message: "Kardex actualizado correctamente",
-      idKardex,idAlumnoPA,idMapaCurricular,idGrupo,idPeriodo,calificacionFinal, tipo, estatus
+      idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus: newEstatus
     });
+
   } catch (error) {
     console.error("Error al actualizar el kardex:", error);
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+
 
 export const deleteKardex = async (req, res) => {
   try {

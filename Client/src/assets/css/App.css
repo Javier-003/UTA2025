@@ -33,3 +33,18 @@
   padding: 0 150px; /* Ajusta el espacio a 20px */
 }
 
+.menu-option {
+  color: white;
+}
+
+.white {
+  color: white;
+}
+
+.navbar-brand.white {
+  color: white;
+}
+
+.navbar-brand.white:hover {
+  color: white; /* Mantener el color blanco al pasar el mouse */
+}

@@ -58,6 +58,10 @@ import OfertaAcademica from './pages/Superadmin/PlanificacionAcademica/OfertaAca
 import Consultadekadex from './pages/Superadmin/plantillaAlumno/ConsultaKardex ';
 import Constancia from './pages/Superadmin/Servicio/Constancia';
 import Acercade from './pages/Login/Acercade';
+import TramiteTitulacion from './pages/Superadmin/Servicio/TramiteTitulacion';
+import HorarioProfesor from './pages/Superadmin/PlanificacionAcademica/HorarioProfesor';
+import ConclusiondeCarrera from './pages/Superadmin/Servicio/Conclusion';
+
 const userSession = localStorage.getItem('Username')
 
 // Layout para páginas con Navbar
@@ -105,8 +109,8 @@ function App() {
         <Route path="/Edificio" element={<Edificio />} />
         <Route path="/Aula" element={<Aula />} />
         <Route path="/Historial" element={<Historial />} />
-        <Route path="/CorreccionCalificaciones" element={<CorreccionCalificaciones />} /> {/* Corrección de calificaciones */}
-        <Route path="/ControlCapturaCalificaciones" element={<ControlCapturaCalificaciones />} /> {/* Control de captura de calificaciones Vsta*/}
+        <Route path="/CorreccionCalificaciones" element={<CorreccionCalificaciones />} /> 
+        <Route path="/ControlCapturaCalificaciones" element={<ControlCapturaCalificaciones />} /> 
         <Route path="/Kardex" element={<Kardex />} />
         <Route path="/MateriaUnidad" element={<MateriaUnidad />} />
         <Route path="/Bloque" element={<Bloque />} />
@@ -118,6 +122,9 @@ function App() {
         <Route path="/procedimientoTramite" element={<ProcedimientoTramite />} />
         <Route path="/Constancia" element={<Constancia />} />
         <Route path="/TramiteConcluido" element={<TramiteConcluido />} />
+        <Route path="/HorarioProfesor" element={<HorarioProfesor />} />
+        <Route path="/TramiteTitulacion" element={<TramiteTitulacion />} />
+        <Route path="/ConclusiondeCarrera" element={<ConclusiondeCarrera />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

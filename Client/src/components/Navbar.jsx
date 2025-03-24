@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
+import '../assets/css/App.css';
 import { 
   FaSignOutAlt, FaUser, FaBuilding, FaUserTie, FaGraduationCap, FaCalendarAlt,FaUpload,
   FaChalkboardTeacher, FaBriefcase, FaDoorOpen, FaUniversity, FaClipboardList, 
@@ -23,7 +24,7 @@ function OffcanvasNavbar() {
   return (
     <div style={{ marginTop: "150px" }}>
       <nav className="navbar">
-        <div className="navbar-brand">{username}</div>
+        <div className="navbar-brand white"  >{username}</div>
 
         {/* Menú principal */}
         <div className="nav-links">
@@ -31,7 +32,7 @@ function OffcanvasNavbar() {
           <div className="dropdown"
             onMouseEnter={() => setActiveMenu("ajustes")}
             onMouseLeave={() => setActiveMenu(null)}>
-            <span><FaUser /> Ajustes</span>
+            <span className="menu-option"><FaUser /> Ajustes</span>
             {activeMenu === "ajustes" && (
               <div className="dropdown-content">
                 <div className="column">
@@ -44,6 +45,7 @@ function OffcanvasNavbar() {
                   <Link to="/Administrativo"><FaUserTie /> Administrativo</Link>
                 </div>
                 <div className="column">
+                  <h3></h3>
                   <Link to="/Departamento"><FaBriefcase /> Departamento</Link>
                   <Link to="/Puesto"><FaUserTie /> Puesto</Link>
                   <Link to="/Edificio"><FaBuilding /> Edificio</Link>
@@ -58,6 +60,7 @@ function OffcanvasNavbar() {
                   <Link to="/TramiteProceso"><FaClipboardList /> Trámite Proceso</Link>
                 </div>
                 <div className="column">
+                  <h3></h3>
                   <Link to="/NivelEstudio"><FaUniversity /> Nivel de Estudio</Link>
                   <Link to="/OfertaAcademica"><FaBook /> Oferta Académica</Link>
                   <Link to="/ProgramaAcademico"><FaLayerGroup /> Programa Académico</Link>
@@ -73,17 +76,19 @@ function OffcanvasNavbar() {
           <div className="dropdown"
             onMouseEnter={() => setActiveMenu("planificacion")}
             onMouseLeave={() => setActiveMenu(null)}>
-            <span><FaBook /> Planificación Académica</span>
+            <span className="menu-option"> <FaBook /> Planeación Académica</span>
             {activeMenu === "planificacion" && (
               <div className="dropdown-content">
                 <div className="column">
-                  <h3>Planificación</h3>
+                  <h3>Planeación Académica</h3>
                   <Link to="/Periodo"><FaCalendarAlt /> Periodo</Link>
                   <Link to="/Grupo"><FaLayerGroup /> Grupo</Link>
                   <Link to="/Materias"><FaBook /> Carga de Materias</Link>
                 </div>
                 <div className="column">
+                  <h3>Profesor</h3>
                   <Link to="/AdicionProfesor"><FaChalkboardTeacher /> Adición de Profesor</Link>
+                  <Link to="/HorarioProfesor"><FaChalkboardTeacher /> HorarioProfesor</Link>
                   <Link to="/ControlCapturaCalificaciones"><FaClipboardCheck /> Control de Captura de Calificaciones</Link>
                   <Link to="/CorreccionCalificaciones"><FaClipboardCheck /> Corrección de Calificaciones</Link>
                 </div>
@@ -95,7 +100,7 @@ function OffcanvasNavbar() {
           <div className="dropdown"
             onMouseEnter={() => setActiveMenu("tramites")}
             onMouseLeave={() => setActiveMenu(null)}>
-            <span><FaClipboardList /> Trámites</span>
+            <span className="menu-option"><FaClipboardList /> Trámites</span>
             {activeMenu === "tramites" && (
               <div className="dropdown-content">
                 <div className="column">
@@ -104,10 +109,7 @@ function OffcanvasNavbar() {
                   <Link to="/AlumnoTramite"><FaClipboardList /> Alumno Trámite</Link>
                   <Link to="/SeguimientoTramite"><FaClipboardCheck /> Seguimiento Trámite</Link>
                 </div>
-                <div className="column">
-                  <Link to="/SubirCalificacion"><FaUpload /> Subir Calificación</Link>
-                  <Link to="/Kardex"><FaHistory /> Kardex</Link>
-                </div>
+              
               </div>
             )}
           </div>
@@ -116,13 +118,20 @@ function OffcanvasNavbar() {
           <div className="dropdown"
             onMouseEnter={() => setActiveMenu("tramites")}
             onMouseLeave={() => setActiveMenu(null)}>
-            <span><FaClipboardList />Servicio</span>
+            <span className="menu-option"><FaClipboardList />Servicio</span>
             {activeMenu === "tramites" && (
               <div className="dropdown-content">
                 <div className="column">
                   <h3>Servicio</h3>
                   <Link to="/Constancia"><FaTasks />Constancia</Link>
+                  <Link to="/TramiteTitulacion">Tramite Titulación</Link>
+                  <Link to="/ConclusiondeCarrera">Conclusión de Carerra</Link>
+                </div>  
+                <div className="column">
+                  <h3>Calificaciones</h3>
+                  <Link to="/SubirCalificacion"><FaUpload /> Subir Calificación</Link>
                   <Link to="/Consultadekadex"><FaBook />Consulta de Kardex</Link>
+                  <Link to="/Kardex"><FaHistory /> Kardex</Link>
                 </div>
               </div>
             )}

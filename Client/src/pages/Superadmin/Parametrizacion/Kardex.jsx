@@ -6,23 +6,18 @@ import { KardexModales } from '../Parametrizacion/KardexModales.jsx';
 
 function Kardex() {
   const [kardexList, setKardexList] = useState([]);
-
   const [idAlumnoPA, setIdAlumnoPA] = useState("");
   const [nombre, setNombre] = useState("");
   const [paterno, setPaterno] = useState("");
   const [materno, setMaterno] = useState("");
-
   const [idMapaCurricular, setIdMapaCurricular] = useState("");
   const [idGrupo, setIdGrupo] = useState("");
   const [idPeriodo, setIdPeriodo] = useState("");
   const [calificacionFinal, setCalificacionFinal] = useState("");
   const [tipo, setTipo] = useState("");
-
   const [mapa, setMapa] = useState("");
   const [grupo, setGrupo] = useState("");
   const [periodo, setPeriodo] = useState("");
-
-  // Alertas (vienen de los archivos js)
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
