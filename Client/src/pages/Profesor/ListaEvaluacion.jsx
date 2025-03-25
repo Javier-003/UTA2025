@@ -57,11 +57,17 @@ function ListaEvaluacion({ cargaMateria, programaAcademico }) {
         // Ordenar alumnos por matrícula
         const alumnosOrdenados = [...alumnos].sort((a, b) => a.matricula.localeCompare(b.matricula));
 
+        // Filtrar unidades con calificaciones
+        const unidadesConCalificaciones = [...new Set(
+            evaluaciones
+                .filter(evaluacion => evaluacion.calificacion !== null && evaluacion.calificacion !== undefined)
+                .map(evaluacion => evaluacion.idMateriaUnidad)
+        )].sort();
+
         // Datos de la tabla
-        const unidades = [...new Set(evaluaciones.map(e => e.idMateriaUnidad))].sort();
         const datosTabla = alumnosOrdenados.map((alumno, index) => {
             const evalAlumno = evaluaciones.filter(e => e.idKadex === alumno.idKardex);
-            const calificaciones = unidades.map(unidad => {
+            const calificaciones = unidadesConCalificaciones.map(unidad => {
                 const evalUnidad = evalAlumno.find(e => e.idMateriaUnidad === unidad);
                 return evalUnidad ? evalUnidad.calificacion : "N/A";
             });
@@ -70,7 +76,7 @@ function ListaEvaluacion({ cargaMateria, programaAcademico }) {
 
         // Generar tabla
         doc.autoTable({
-            head: [["No", "Matrícula", "Nombre", ...unidades.map((_, i) => `Parcial ${i + 1}`), "Firma"]],
+            head: [["No", "Matrícula", "Nombre", ...unidadesConCalificaciones.map((_, i) => `Parcial ${i + 1}`), "Firma"]],
             body: datosTabla,
             startY: headerHeight + 10, // Ajustar la posición inicial según las líneas del encabezado
             theme: 'striped',
@@ -84,7 +90,7 @@ function ListaEvaluacion({ cargaMateria, programaAcademico }) {
     };
 
     return (
-        <button className="btn btn-danger" onClick={generarPDF}>Descargar PDF</button>
+        <button className="btn btn-danger" onClick={generarPDF}>Descargar Evaluación</button>
     );
 }
 
