@@ -85,12 +85,17 @@ function ListaEvaluacion({ cargaMateria, programaAcademico }) {
             alternateRowStyles: { fillColor: [245, 245, 245] }
         });
 
+        // Agregar apartado para la firma del profesor
+        const finalY = doc.autoTable.previous.finalY + 20; // Espacio debajo de la tabla
+        doc.line(doc.internal.pageSize.getWidth() / 2 - 30, finalY, doc.internal.pageSize.getWidth() / 2 + 30, finalY); // Línea para la firma
+        doc.text("Firma del profesor (a)", doc.internal.pageSize.getWidth() / 2, finalY + 5, { align: 'center' });
+
         // Guardar PDF
-        doc.save(`Lista_Evaluacion_${cargaMateria.materia}.pdf`);
+        doc.save(`ListaDeEvaluacion_${cargaMateria.materia}.pdf`);
     };
 
     return (
-        <button className="btn btn-danger" onClick={generarPDF}>Descargar Evaluación</button>
+        <button className="btn btn-danger" onClick={generarPDF}>Lista de Evaluación</button>
     );
 }
 

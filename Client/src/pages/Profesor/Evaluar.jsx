@@ -6,6 +6,7 @@ import { getKardex } from '../../api/Parametrizacion/kardex.api.js';
 import { getEvaluacionTodos, updateEvaluacionFunc } from '../../assets/js/Parametrizacion/evaluacion.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ListaEvaluacion from "./ListaEvaluacion.jsx";
+import ListaAsistencia from './ListaAsistencia.jsx';
 import { EvaluacionModales } from './EvaluacionModales.jsx';
 
 function Evaluar() {
@@ -116,9 +117,14 @@ function Evaluar() {
                         <p><strong>Profesor:</strong> {cargaMateria.profesor}</p>
                         <p><strong>Periodo:</strong> {cargaMateria.periodo}</p>
                         {/* <p><strong>Programa Académico:</strong> {cargaMateria.programaAcademico}</p> */}
-                        <div className="d-flex justify-content-between">
-                            <button className="btn btn-primary mb-2" onClick={handleSubmitCalificaciones}>Subir Calificaciones</button>
-                            <ListaEvaluacion cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
+                        <div className="d-flex justify-content-between align-items-center">
+                        <button className="btn btn-primary mb-2" onClick={handleSubmitCalificaciones}>Subir Calificaciones</button>
+                            <div className="d-flex">
+                                <div className="me-2">
+                                    <ListaEvaluacion cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
+                                </div>
+                                <ListaAsistencia cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
+                            </div>
                         </div>
                     </div>
                 </div>

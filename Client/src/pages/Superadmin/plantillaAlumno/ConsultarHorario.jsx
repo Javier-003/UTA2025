@@ -117,6 +117,11 @@ const ConsultarHorario = ({ idGrupo }) => {
             tableLineWidth: 0.1
         });
 
+        // Mostrar el texto del tutor y grupo centrado debajo de la tabla
+        const tutorText = `TUTOR(A): ${tutorNombre || "No asignado"}     GRUPO: ${grupoNombre || "No asignado"}`;
+        doc.setFontSize(10);
+        doc.text(tutorText, doc.internal.pageSize.getWidth() / 2, doc.autoTable.previous.finalY + 15, { align: "center" });
+
         // Agrupar horarios por materia y calcular horas semanales basadas en módulos
         const groupedHorarios = horarios.reduce((acc, horario) => {
             const key = `${horario.profesor}-${horario.materia}`;
@@ -146,7 +151,7 @@ const ConsultarHorario = ({ idGrupo }) => {
         doc.autoTable({
             head: [horasSemanalesHead],
             body: horasSemanalesBody,
-            startY: doc.autoTable.previous.finalY + 10,
+            startY: doc.autoTable.previous.finalY + 20, // Incrementar el espacio entre tablas
             styles: { fontSize: 8, cellPadding: 1 },
             headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
             alternateRowStyles: { fillColor: [240, 240, 240] },
@@ -154,13 +159,13 @@ const ConsultarHorario = ({ idGrupo }) => {
             tableLineWidth: 0.1
         });
 
-        doc.save("Horario_Clases.pdf");
+        doc.save(`HorarioDelGrupo${grupoNombre}.pdf`);
     };
 
     return (
         <div>
             <button className="btn btn-primary mt-3" onClick={generarPDF}>
-                Exportar a PDF
+                Descargar Horario
             </button>
         </div>
     );
