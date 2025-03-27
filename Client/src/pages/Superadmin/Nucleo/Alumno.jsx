@@ -81,12 +81,9 @@ function Alumno() {
   ];
   
 
-  const filteredData = alumnoList.filter(item =>
+  const dataToDisplay = alumnoList.filter(item =>
     item.email.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  
-  const dataToDisplay = searchText ? filteredData : alumnoList.slice(-50);
 
   return (
     <div className="container mt-4">
@@ -114,8 +111,6 @@ function Alumno() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -146,6 +141,7 @@ function Alumno() {
       handleUpdate={handleUpdate}
       handleDelete={handleDelete}
       selectedAlumno={selectedAlumno}/>
+      <br></br><br></br>
     </div>
   );
 }

@@ -28,7 +28,7 @@ function Acercade() {
             { name: "Juan Eduardo Cruz Piza", role: "Desarrollador Full  Stack", photo: "path/to/photo.jpg" },
             { name: "Angel Jared Vazquez Roman", role: "Desarrollador Full  Stack", photo: "path/to/photo.jpg" },
         ],
-        "Servidor": [
+        "Usuario Experto": [
             { name: "Ing. Carlos", role: "Servidor", photo: "path/to/photo4.jpg" },
         ],
     };

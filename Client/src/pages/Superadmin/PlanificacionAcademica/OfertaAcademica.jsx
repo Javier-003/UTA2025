@@ -15,14 +15,6 @@ const formatDateString = (dateString) => {
   return dateString;
 };
 
-// Function to remove ".000Z" from dates and keep date and time
-const formatDateStringHora = (isoDateString) => {
-  if (isoDateString) {
-    return isoDateString.replace('T', ' ').replace('.000Z', '');
-  }
-  return isoDateString;
-};
-
 function OfertaAcademica() {
   const [ofertaAcademicaList, setOfertaAcademica] = useState([]);
   const [nombre, setNombre] = useState("");
@@ -86,11 +78,9 @@ function OfertaAcademica() {
     }
   ];
 
-  const filteredData = ofertaAcademicaList.filter(item =>
+  const dataToDisplay = ofertaAcademicaList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const dataToDisplay = searchText ? filteredData : ofertaAcademicaList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -114,8 +104,6 @@ function OfertaAcademica() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -152,7 +140,7 @@ function OfertaAcademica() {
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
         selectedOfertaAcademica={selectedOfertaAcademica}
-      />
+      /><br></br><br></br>
     </div>
   );
 }

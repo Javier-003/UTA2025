@@ -67,11 +67,9 @@ function Tramite() {
     }
   ];
 
-  const filteredData = tramiteList.filter(item =>
+  const dataToDisplay = tramiteList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const dataToDisplay = searchText ? filteredData : tramiteList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -95,8 +93,6 @@ function Tramite() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -123,7 +119,7 @@ function Tramite() {
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
         selectedTramite={selectedTramite}
-      />
+      /><br></br><br></br>
     </div>
   );
 }

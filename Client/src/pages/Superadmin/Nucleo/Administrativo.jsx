@@ -84,10 +84,10 @@ function Administrativo() {
     }
   ];
 
-  const filteredData = administrativoList.filter(item =>
+  const dataToDisplay = administrativoList.filter(item =>
     item.clave.toLowerCase().includes(searchText.toLowerCase())
   );
-  const dataToDisplay = searchText ? filteredData : administrativoList.slice(-10);
+
   return (
     <div className="container mt-4">
       <DataTable
@@ -118,8 +118,6 @@ function Administrativo() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -155,6 +153,7 @@ function Administrativo() {
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
         selectedAdministrativo={selectedAdministrativo}/>
+        <br></br><br></br>
     </div>
   );
 }

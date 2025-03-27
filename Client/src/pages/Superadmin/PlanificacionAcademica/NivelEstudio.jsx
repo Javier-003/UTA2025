@@ -60,13 +60,11 @@ function NivelEstudio() {
     }
   ];
 
-  const filteredData = nivelEstudioList.filter(item =>
+  const dataToDisplay = nivelEstudioList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
     item.descripcion.toLowerCase().includes(searchText.toLowerCase()) ||
     item.sigla.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const dataToDisplay = searchText ? filteredData : nivelEstudioList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -90,8 +88,6 @@ function NivelEstudio() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',

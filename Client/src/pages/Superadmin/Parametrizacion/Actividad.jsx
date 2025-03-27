@@ -52,11 +52,9 @@ function Actividad() {
     }
   ];
 
-  const filteredData = actividadList.filter(item =>
+  const dataToDisplay = actividadList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const dataToDisplay = searchText ? filteredData : actividadList.slice(-40);
 
   return (
     <div className="container mt-4">
@@ -78,8 +76,6 @@ function Actividad() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -104,7 +100,7 @@ function Actividad() {
         handleUpdate={handleUpdate} 
         handleDelete={handleDelete}
         selectedActividad={selectedActividad}
-      />
+      /><br></br><br></br>
     </div>
   );
 }

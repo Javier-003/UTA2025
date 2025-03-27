@@ -19,7 +19,7 @@ function Bitacora() {
     return fechaLocal.toISOString().split('T')[0]; // Retorna solo YYYY-MM-DD
   };
 
-  const filteredData = bitacoraList.filter(item =>
+  const dataToDisplay = bitacoraList.filter(item =>
     item.nombreUsuario.toLowerCase().includes(searchText.toLowerCase()) ||
     item.movimiento.toLowerCase().includes(searchText.toLowerCase()) ||
     item.accion.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -35,8 +35,6 @@ function Bitacora() {
     { name: 'IP', selector: row => row.ip, sortable: true }
   ];
 
-  // Muestra los últimos 10 registros de la Base de Datos
-  const dataToDisplay = searchText ? filteredData : bitacoraList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -56,15 +54,13 @@ function Bitacora() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{ rowsPerPageText: 'Filas por página', rangeSeparatorText: 'de', noRowsPerPage: true }}
         highlightOnHover
         customStyles={{
           headCells: { style: { backgroundColor: '#f8f9fa' } },
           cells: { style: { border: '1px solid #ddd' } }
         }}
-      />
+      /> <br></br><br></br>
     </div>
   );
 }

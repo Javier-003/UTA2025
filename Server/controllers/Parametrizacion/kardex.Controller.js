@@ -21,9 +21,22 @@ export const getKardex = async (req, res) => {
        FROM materiaunidad AS mu 
        WHERE mu.idMapaCurricular = mp.idMapaCurricular 
        LIMIT 1) AS unidad,
-      (SELECT ROUND(AVG(e.calificacion),1) 
+      (SELECT 
+        CASE 
+          WHEN COUNT(e.idEvaluacion) = SUM(CASE WHEN e.calificacion IS NOT NULL THEN 1 ELSE 0 END) 
+          THEN ROUND(AVG(e.calificacion),1) 
+          ELSE 0 
+        END 
        FROM evaluacion AS e 
-       WHERE e.idKadex = k.idKardex) AS calificacionFinal
+       WHERE e.idKadex = k.idKardex) AS calificacionFinal,
+      (SELECT 
+        CASE 
+          WHEN COUNT(e.idEvaluacion) > SUM(CASE WHEN e.calificacion IS NOT NULL THEN 1 ELSE 0 END) 
+          THEN 'Extraordinaria' 
+          ELSE 'Ordinaria' 
+        END 
+       FROM evaluacion AS e 
+       WHERE e.idKadex = k.idKardex) AS tipoEvaluacion
     FROM kardex AS k
     INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
     INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
@@ -38,12 +51,24 @@ export const getKardex = async (req, res) => {
     const [rows] = await db.query(query);
     
     if (rows.length > 0) {
-      res.json({ message: "Kardex obtenido correctamente", data: rows });
+      for (const row of rows) {
+        // Si la calificación final no existe, se pone en 0
+        const finalScore = row.calificacionFinal !== null ? row.calificacionFinal : 0;
+
+        const updateQuery = `
+          UPDATE kardex 
+          SET calificacionFinal = ?, tipo = ? 
+          WHERE idKardex = ?;
+        `;
+        await db.query(updateQuery, [finalScore, row.tipoEvaluacion, row.idKardex]);
+      }
+
+      res.json({ message: "Kardex obtenido y validado correctamente", data: rows });
     } else {
       res.status(404).json({ message: "No se encontraron datos" });
     }
   } catch (error) {
-    console.error("Error al obtener los kardexs:", error);
+    console.error("Error al obtener y validar los kardex:", error);
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };

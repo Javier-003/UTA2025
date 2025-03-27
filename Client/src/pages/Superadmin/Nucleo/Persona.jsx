@@ -80,12 +80,10 @@ function Persona() {
         return new Date(fecha).toISOString().split('T')[0];
     }
     //Buscador de todos los campos 
-    const filteredData = listaPersonas.filter(item => {
+    const dataToDisplay = listaPersonas.filter(item => {
         const combinedFields = `${item.nombre} ${item.paterno} ${item.materno} ${new Date(item.nacimiento).toLocaleDateString()} ${item.curp} ${item.genero} ${item.direccion} ${item.telefono}`.toLowerCase();
         return combinedFields.includes(searchText.toLowerCase());
     });
-    //Muestra lso ultimos 5 registros de la Base de Datos 
-    const dataToDisplay = searchText ? filteredData : listaPersonas.slice(-10);
 
     return (
         <div className="container mt-4">
@@ -113,8 +111,6 @@ function Persona() {
                 columns={columns}
                 data={dataToDisplay}
                 noDataComponent="No hay registros para mostrar"
-                pagination
-                paginationPerPage={10}
                 paginationComponentOptions={{ rowsPerPageText: 'Filas por página', rangeSeparatorText: 'de', noRowsPerPage: true }}
                 highlightOnHover
                 customStyles={{
@@ -136,7 +132,7 @@ function Persona() {
                 showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
                 handleAdd={handleAdd} handleUpdate={handleUpdate} handleDelete={handleDelete}
                 selectedPersona={selectedPersona}
-            />
+            /> <br></br><br></br>
         </div>
     );
 }

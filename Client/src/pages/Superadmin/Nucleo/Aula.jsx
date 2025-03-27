@@ -65,11 +65,9 @@ function Aula() {
     }
   ];
 
-  const filteredData = aulaList.filter(item =>
+  const dataToDisplay = aulaList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const dataToDisplay = searchText ? filteredData : aulaList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -95,8 +93,6 @@ function Aula() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -126,6 +122,7 @@ function Aula() {
         handleDelete={handleDelete}
         selectedAula={selectedAula}
       />
+      <br></br><br></br>
     </div>
   );
 }

@@ -57,11 +57,10 @@ function Departamento() {
     }
   ];
 
-  const filteredData = departamentoList.filter(item =>
+  const dataToDisplay = departamentoList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const dataToDisplay = searchText ? filteredData : departamentoList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -84,8 +83,6 @@ function Departamento() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -111,7 +108,7 @@ function Departamento() {
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
         selectedDepartamento={selectedDepartamento}
-      />
+      /><br></br><br></br>
     </div>
   );
 }

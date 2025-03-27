@@ -57,11 +57,9 @@ function Edificio() {
     }
   ];
 
-  const filteredData = edificioList.filter(item =>
+  const dataToDisplay = edificioList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const dataToDisplay = searchText ? filteredData : edificioList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -84,8 +82,6 @@ function Edificio() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -111,7 +107,7 @@ function Edificio() {
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
         selectedEdificio={selectedEdificio}
-      />
+      /> <br></br><br></br>
     </div>
   );
 }

@@ -94,12 +94,10 @@ function Profesor() {
     }
   ];
 
-  const filteredData = profesorList.filter(item =>
+  const dataToDisplay = profesorList.filter(item =>
     item.clave.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  
-  const dataToDisplay = searchText ? filteredData : profesorList.slice(-10);
 
   return (
     <div className="container mt-4">
@@ -134,8 +132,6 @@ function Profesor() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -174,7 +170,7 @@ function Profesor() {
       handleUpdate={handleUpdate} 
       handleDelete={handleDelete}
       selectedProfesor={selectedProfesor}/>
-
+      <br></br><br></br>
     </div>
   );
 }

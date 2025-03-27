@@ -63,11 +63,10 @@ function Bloque() {
     }
   ];
 
-  const filteredData = bloqueList.filter(item =>
+  const dataToDisplay = bloqueList.filter(item =>
     item.nombre.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const dataToDisplay = searchText ? filteredData : bloqueList.slice(-20);
 
   return (
     <div className="container mt-4">
@@ -92,8 +91,6 @@ function Bloque() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -121,7 +118,7 @@ function Bloque() {
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}
         selectedBloque={selectedBloque}
-      />
+      /><br></br><br></br>
     </div>
   );
 }

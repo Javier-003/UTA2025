@@ -106,10 +106,9 @@ function Usuario() {
     }
   ];
 
-  const filteredData = usuarioList.filter(item =>
+  const dataToDisplay = usuarioList.filter(item =>
     item.usuario.toLowerCase().includes(searchText.toLowerCase())
   );
-  const dataToDisplay = searchText ? filteredData : usuarioList.slice(-10);
   
   return (
     <div className="container mt-4">
@@ -138,8 +137,6 @@ function Usuario() {
         columns={columns}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
-        pagination
-        paginationPerPage={10}
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',
           rangeSeparatorText: 'de',
@@ -177,7 +174,7 @@ function Usuario() {
         handleDeleteRole={handleDeleteRole}
         selectedUsuario={selectedUsuario}
         selectedRole={selectedRole} setSelectedRole={setSelectedRole}
-      />
+      /><br></br><br></br>
     </div>
   );
 }
