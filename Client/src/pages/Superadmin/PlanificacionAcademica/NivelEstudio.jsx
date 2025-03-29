@@ -61,9 +61,9 @@ function NivelEstudio() {
   ];
 
   const dataToDisplay = nivelEstudioList.filter(item =>
-    item.nombre.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.descripcion.toLowerCase().includes(searchText.toLowerCase()) ||
-    item.sigla.toLowerCase().includes(searchText.toLowerCase())
+    (item.nombre?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
+    (item.descripcion?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
+    (item.sigla?.toLowerCase() || "").includes(searchText.toLowerCase())
   );
 
   return (
