@@ -23,6 +23,7 @@ import bitacoraRoutes from "./routes/Nucleo/bitacora.Routes.js";
 //-------------------------- TRÁMITES -----------------------------------------
 import alumnotramiteRoutes from "./routes/Tramites/alumnotramite.Routes.js";
 import alumnoprocesoRoutes from "./routes/Tramites/alumnoproceso.Routes.js";
+import alumnoperiodoRoutes from "./routes/Tramites/alumnoperiodo.Routes.js";
 
 
 // -------------------------- PLANIFICACIÓN ACADEMICA -------------------------
@@ -76,6 +77,7 @@ app.use("/tramite",tramiteRoutes);
 app.use("/alumnotramite",alumnotramiteRoutes);
 app.use("/tramiteproceso",tramiteprocesoRoutes);
 app.use("/alumnoproceso",alumnoprocesoRoutes);
+app.use("/alumnoperiodo",alumnoperiodoRoutes);
 //Oferta Academica
 app.use("/alumnopa",alumnopaRoutes);
 app.use("/programaacademico",programaacademicoRoutes);

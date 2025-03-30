@@ -25,11 +25,13 @@ import Historial from './pages/Superadmin/Nucleo/Historial';
 //-------------------------- TRÁMITES -----------------------------------------
 import AlumnoTramite from './pages/Superadmin/Tramites/AlumnoTramite';
 import AlumnoProceso from './pages/Superadmin/Tramites/AlumnoProceso';
+import AlumnoPeriodo from './pages/Superadmin/Tramites/AlumnoPeriodo';
 
 import RegistrarST from './pages/Superadmin/Tramites/registrarST'
 import Seguimientodetramite from './pages/Superadmin/Tramites/seguimientoTramite';
 import ProcedimientoTramite from './pages/Superadmin/Tramites/procedimientoTramite';
 import TramiteConcluido from './pages/Superadmin/Tramites/tramiteConcluido';
+
 
 // -------------------------- PLANIFICACIÓN ACADEMICA -------------------------
 import NivelEstudio from "./pages/Superadmin/PlanificacionAcademica/NivelEstudio";
@@ -120,6 +122,7 @@ function App() {
         <Route path="/Consultadekadex" element={<Consultadekadex />} />
         <Route path="/nuevoTramiteAlumno" element={<RegistrarST/>} />
         <Route path="/procedimientoTramite" element={<ProcedimientoTramite />} />
+        <Route path="/AlumnoPeriodo" element={<AlumnoPeriodo/>} />
         <Route path="/Constancia" element={<Constancia />} />
         <Route path="/TramiteConcluido" element={<TramiteConcluido />} />
         <Route path="/HorarioProfesor" element={<HorarioProfesor />} />

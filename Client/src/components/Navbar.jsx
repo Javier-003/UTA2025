@@ -108,6 +108,7 @@ function OffcanvasNavbar() {
                   <Link to="/AlumnoProceso"><FaTasks /> Alumno Proceso</Link>
                   <Link to="/AlumnoTramite"><FaClipboardList /> Alumno Trámite</Link>
                   <Link to="/SeguimientoTramite"><FaClipboardCheck /> Seguimiento Trámite</Link>
+                  <Link to="/AlumnoPeriodo"><FaClipboardList /> Periodos de alumnos</Link>
                 </div>
               
               </div>
