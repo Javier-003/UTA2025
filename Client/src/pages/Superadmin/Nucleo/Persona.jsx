@@ -113,6 +113,7 @@ function Persona() {
                 noDataComponent="No hay registros para mostrar"
                 paginationComponentOptions={{ rowsPerPageText: 'Filas por página', rangeSeparatorText: 'de', noRowsPerPage: true }}
                 highlightOnHover
+                pagination
                 customStyles={{
                     headCells: { style: { backgroundColor: '#f8f9fa' } },
                     cells: { style: { border: '1px solid #ddd' } }
