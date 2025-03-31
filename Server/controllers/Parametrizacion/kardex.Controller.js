@@ -28,15 +28,7 @@ export const getKardex = async (req, res) => {
           ELSE 0 
         END 
        FROM evaluacion AS e 
-       WHERE e.idKadex = k.idKardex) AS calificacionFinal,
-      (SELECT 
-        CASE 
-          WHEN COUNT(e.idEvaluacion) > SUM(CASE WHEN e.calificacion IS NOT NULL THEN 1 ELSE 0 END) 
-          THEN 'Extraordinaria' 
-          ELSE 'Ordinaria' 
-        END 
-       FROM evaluacion AS e 
-       WHERE e.idKadex = k.idKardex) AS tipoEvaluacion
+       WHERE e.idKadex = k.idKardex) AS calificacionFinal
     FROM kardex AS k
     INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
     INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
@@ -53,14 +45,17 @@ export const getKardex = async (req, res) => {
     if (rows.length > 0) {
       for (const row of rows) {
         // Si la calificación final no existe, se pone en 0
-        const finalScore = row.calificacionFinal !== null ? row.calificacionFinal : 0;
+        const final = row.calificacionFinal !== null ? row.calificacionFinal : 0;
+
+        // Determinar 'Evaluacion' basado en la calificación final
+        const evaluacion = final >= 7 ? 'Ordinaria' : 'Extraordinaria';
 
         const updateQuery = `
           UPDATE kardex 
           SET calificacionFinal = ?, tipo = ? 
           WHERE idKardex = ?;
         `;
-        await db.query(updateQuery, [finalScore, row.tipoEvaluacion, row.idKardex]);
+        await db.query(updateQuery, [final, evaluacion, row.idKardex]);
       }
 
       res.json({ message: "Kardex obtenido y validado correctamente", data: rows });
