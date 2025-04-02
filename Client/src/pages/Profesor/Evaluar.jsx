@@ -19,6 +19,7 @@ function Evaluar() {
     const [showModal, setShowModal] = useState(false);
     const [selectedEvaluacion, setSelectedEvaluacion] = useState(null);
     const [calificaciones, setCalificaciones] = useState({});
+    const [actualizarEvaluaciones, setActualizarEvaluaciones] = useState(false);
     const programaAcademico = cargaMateria?.programaAcademico || "No disponible"; // Programa académico por defecto
 
     useEffect(() => {
@@ -66,6 +67,7 @@ function Evaluar() {
                     );
                     setEvaluaciones(evaluacionesFiltradas);
                     setShowModal(false);
+                    setActualizarEvaluaciones((prev) => !prev); // Notificar actualización
                 });
             }).catch(error => console.error("❌ Error al actualizar la calificación:", error));
     };
@@ -121,7 +123,8 @@ function Evaluar() {
                         <button className="btn btn-primary mb-2" onClick={handleSubmitCalificaciones}>Subir Calificaciones</button>
                             <div className="d-flex">
                                 <div className="me-2">
-                                    <ListaEvaluacion cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
+                                    <ListaEvaluacion cargaMateria={cargaMateria} programaAcademico={programaAcademico} 
+                                        actualizarEvaluaciones={actualizarEvaluaciones} />
                                 </div>
                                 <ListaAsistencia cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
                             </div>

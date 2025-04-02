@@ -4,11 +4,11 @@ import "jspdf-autotable";
 import { getEvaluacionTodos } from "../../assets/js/Parametrizacion/evaluacion.js";
 import { getKardex } from "../../api/Parametrizacion/kardex.api.js";
 
-function ListaEvaluacion({ cargaMateria, programaAcademico }) {
+function ListaEvaluacion({ cargaMateria, programaAcademico, actualizarEvaluaciones }) {
     const [evaluaciones, setEvaluaciones] = useState([]);
     const [alumnos, setAlumnos] = useState([]);
 
-    useEffect(() => {
+    const cargarDatos = () => {
         if (cargaMateria) {
             getKardex(cargaMateria.idGrupoMateria).then(data => {
                 setAlumnos(data.filter(alumno =>
@@ -25,7 +25,11 @@ function ListaEvaluacion({ cargaMateria, programaAcademico }) {
                 ));
             }).catch(error => console.error("❌ Error al obtener evaluaciones:", error));
         }
-    }, [cargaMateria]);
+    };
+
+    useEffect(() => {
+        cargarDatos();
+    }, [cargaMateria, actualizarEvaluaciones]); // Recargar datos cuando `actualizarEvaluaciones` cambie
 
     const generarPDF = () => {
         if (!evaluaciones.length || !alumnos.length) {
