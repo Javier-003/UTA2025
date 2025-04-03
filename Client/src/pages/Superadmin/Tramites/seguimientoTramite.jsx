@@ -211,7 +211,7 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
                   <th>ESTATUS</th>
                   <th>PROGRESO</th>
                   <th>PROCESO</th>
-                  <th>Editar</th>
+                  {/*<th>Editar</th> */}
                   <th>CANCELAR</th>
                   {/* <th>Eliminar</th> */}
                 </tr>
@@ -320,7 +320,7 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
 
                        {/* ---------------------------------------------------------- */}
 
-                      <td>
+                     {/*  <td>
                         <button className="btn btn-warning" onClick={() => {
                           setIdTramite(alumnotramite.idTramite);
                           setIdAlumnoPA(alumnotramite.idAlumnoPA);
@@ -332,7 +332,7 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
                           setShowEditModal(true);
                           setSelectedAlumnoTramite(alumnotramite);
                         }}>Editar</button>
-                      </td>
+                      </td> */}
 
                       <td>
                         <button className="btn btn-danger" onClick={() => {

@@ -59,7 +59,7 @@ function NuevoTramite() {
   }, []);
 
   const filteredAlumnoData = alumnoProgramaList.filter(item =>
-    item.nombre.toLowerCase().includes(searchText.toLowerCase()) &&
+    `${item.nombre} ${item.paterno} ${item.materno} ${item.matricula}`.toLowerCase().includes(searchText.toLowerCase()) &&
     (selectedEstatus === "" || item.estatus === selectedEstatus)
   );
 
@@ -117,10 +117,10 @@ function NuevoTramite() {
 
       <div className="d-flex justify-content-start mb-3">
       <button className={`btn ${view === "persona" ? "btn-primary" : "btn-outline-primary"} me-2`} onClick={() => setView("persona")}>
-        Persona
+        Trámite de inscripción
       </button>
       <button className={`btn ${view === "alumno" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setView("alumno")}>
-        Alumno Programa
+        Trámites de alumnos
       </button>
     </div>
 
@@ -143,7 +143,7 @@ function NuevoTramite() {
               className="form-control mb-3"  
               value={searchText} 
               onChange={(e) => setSearchText(e.target.value)}  
-              placeholder="🔍 Buscar por nombre..." 
+              placeholder="🔍 Buscar..." 
             />
 
             {view === "alumno" && (

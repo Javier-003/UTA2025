@@ -76,11 +76,8 @@ function TramiteProceso() {
           <table className="table table-bordered">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>ID T</th>
-                <th>Nombre Trámite</th>
-                <th>ID A</th>
-                <th>Nombre Actividad</th>
+                <th>Trámite</th>
+                <th>Actividad</th>
                 <th>Objeto</th>
                 <th>Orden</th>
                 <th>Editar</th>
@@ -91,10 +88,10 @@ function TramiteProceso() {
               {filteredData.length > 0 ? (
                 filteredData.map((tramiteproceso) => (
                   <tr key={tramiteproceso.idTramiteProceso}>
-                    <td>{tramiteproceso.idTramiteProceso}</td>
-                    <td>{tramiteproceso.idTramite}</td>
+                    {/* <td>{tramiteproceso.idTramiteProceso}</td>
+                    <td>{tramiteproceso.idTramite}</td> */}
                     <td>{tramiteproceso.NombreTramite}</td>
-                    <td>{tramiteproceso.idActividad}</td>
+                    {/* <td>{tramiteproceso.idActividad}</td> */}
                     <td>{tramiteproceso.NombreActividad}</td>
                     <td>
                       <button className='btn btn-primary' onClick={() => {
