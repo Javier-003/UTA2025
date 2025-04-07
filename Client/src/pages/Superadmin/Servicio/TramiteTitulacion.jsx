@@ -5,6 +5,7 @@ import { getAlumnopatodos } from '../../../assets/js/Parametrizacion/alumnopa.js
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import Select from 'react-select';
+import logo from '../../../assets/img/LOGO UTA.png';
 
 function TramiteTitulacion() {
     const [alumnopaList, setAlumnopaList] = useState([]);
@@ -60,6 +61,12 @@ function TramiteTitulacion() {
         };
     
         const fecha = formatFecha();
+
+        const marginRight = 15;    
+        const imageWidth = 30; 
+        const imageHeight = 30; 
+        const imageX = pageWidth - marginRight - imageWidth;
+        doc.addImage(logo, 'PNG', imageX, y, imageWidth, imageHeight);
     
         // Encabezado
         doc.setFont("helvetica", "bold"); // Negrita
@@ -70,12 +77,6 @@ function TramiteTitulacion() {
         doc.text("Organismo Público Descentralizado del Gobierno del Estado", centerX, y, { align: "center" });
         y += 10;
         doc.setFontSize(12);
-        
-        doc.setFontSize(12);
-        doc.text("2025, Año de la Mujer Indígena", centerX, y, { align: "center" });
-        y += 10;
-        doc.setFontSize(18);
-        
        
         // Título
         doc.setFontSize(12);

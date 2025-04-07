@@ -47,15 +47,12 @@ export const getKardex = async (req, res) => {
         // Si la calificación final no existe, se pone en 0
         const final = row.calificacionFinal !== null ? row.calificacionFinal : 0;
 
-        // Determinar 'Evaluacion' basado en la calificación final
-        const evaluacion = final >= 7 ? 'Ordinaria' : 'Extraordinaria';
-
         const updateQuery = `
           UPDATE kardex 
-          SET calificacionFinal = ?, tipo = ? 
+          SET calificacionFinal = ? 
           WHERE idKardex = ?;
         `;
-        await db.query(updateQuery, [final, evaluacion, row.idKardex]);
+        await db.query(updateQuery, [final, row.idKardex]);
       }
 
       res.json({ message: "Kardex obtenido y validado correctamente", data: rows });
@@ -67,6 +64,7 @@ export const getKardex = async (req, res) => {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+
 
 export const createKardex = async (req, res) => {
   const { idAlumnoPA, idGrupo, tipo, estatus } = req.body; // 👈 Recibimos solo estos campos

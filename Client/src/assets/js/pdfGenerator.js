@@ -1,5 +1,6 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import logo from '../img/LOGO UTA.png';
 
 export const generatePDF = (selectedAlumno, kardexList, cuatrimestresRegistrados, promedioGeneral) => {
     if (!selectedAlumno) return;
@@ -17,22 +18,29 @@ export const generatePDF = (selectedAlumno, kardexList, cuatrimestresRegistrados
     const nombreOficial = alumnoData ? alumnoData.nombreOficial : "N/A";
     const nombreAlumno = alumnoData ? `${alumnoData.nombre} ${alumnoData.paterno} ${alumnoData.materno}` : "N/A";
 
-    // Encabezado
+    // Imagen en el encabezado
+    const imageWidth = 15;
+    const imageHeight = 15;
+    const imageX = pageWidth - marginRight - imageWidth;
+    doc.addImage(logo, 'PNG', imageX, y, imageWidth, imageHeight); // Derecha
+
+
+    let textY = y + 4;
+
     doc.setFont('arial', 'bold');
     doc.setFontSize(10);
-    doc.text("Universidad Tecnológica de Acapulco", centerX, y, { align: "center" });
-    y += 4;
+    doc.text("Universidad Tecnológica de Acapulco", centerX, textY, { align: "center" });
+    textY += 4;
     doc.setFontSize(8);
-    doc.text("Organismo Público Descentralizado del Gobierno del Estado", centerX, y, { align: "center" });
-    y += 4;
+    doc.text("Organismo Público Descentralizado del Gobierno del Estado", centerX, textY, { align: "center" });
+    textY += 4;
     doc.setFontSize(10);
-    doc.text("HISTORIAL ACADÉMICO", centerX, y, { align: "center" });
-    y += 4;
+    doc.text("HISTORIAL ACADÉMICO", centerX, textY, { align: "center" });
 
-    // Línea azul debajo del título
+    textY += 4;
     doc.setDrawColor(0, 0, 255);
-    doc.line(marginLeft, y, pageWidth - marginRight, y);
-    y += 10;
+    doc.line(marginLeft, textY, pageWidth - marginRight, textY);
+    y = textY + 10;
 
     // Información del alumno
     doc.setFont('arial', 'normal');
@@ -54,7 +62,7 @@ export const generatePDF = (selectedAlumno, kardexList, cuatrimestresRegistrados
     doc.text("CON LAS CALIFICACIONES SIGUIENTES:", marginLeft, y);
     y += 8;
 
-    // Generar contenido para cada cuatrimestre
+    // Cuatrimestres
     if (!cuatrimestresRegistrados || cuatrimestresRegistrados.length === 0) {
         doc.text("No hay datos disponibles para mostrar.", marginLeft, y);
         doc.save(`${selectedAlumno}.pdf`);
@@ -62,16 +70,14 @@ export const generatePDF = (selectedAlumno, kardexList, cuatrimestresRegistrados
     }
 
     cuatrimestresRegistrados.forEach(({ cuatrimestre, periodo, materias, promedioCuatrimestre }) => {
-        // Encabezado del cuatrimestre
         doc.setFont('arial', 'bold');
         doc.setFontSize(9);
-        doc.setDrawColor(0); // Negro
-        doc.setFillColor(211, 211, 211); // Gris claro
+        doc.setDrawColor(0); 
+        doc.setFillColor(211, 211, 211); 
         doc.rect(marginLeft, y, pageWidth - marginLeft - marginRight, 7, 'F');
         doc.text(`Cuatrimestre: ${cuatrimestre} | Periodo: ${periodo}`, centerX, y + 5, { align: "center" });
         y += 10;
 
-        // Agregar materias del cuatrimestre
         const headers = [["Clave", "Materia", "Calificación", "Tipo"]];
         const data = materias.map((item) => [
             item.clave,
@@ -92,12 +98,12 @@ export const generatePDF = (selectedAlumno, kardexList, cuatrimestresRegistrados
                 lineColor: [0, 0, 0],
             },
             didParseCell: function (data) {
-                if (data.section === 'body' && data.column.index === 2) { // Calificación Final
+                if (data.section === 'body' && data.column.index === 2) {
                     const calificacion = parseFloat(data.row.cells[2].raw);
                     if (calificacion <= 7.9) {
-                        data.cell.styles.textColor = [255, 0, 0]; // Rojo si reprobó
+                        data.cell.styles.textColor = [255, 0, 0];
                     } else {
-                        data.cell.styles.textColor = [0, 128, 0]; // Verde si aprobó
+                        data.cell.styles.textColor = [0, 128, 0];
                     }
                 }
             },
@@ -105,21 +111,18 @@ export const generatePDF = (selectedAlumno, kardexList, cuatrimestresRegistrados
 
         y = doc.autoTable.previous.finalY + 5;
 
-        // Promedio del cuatrimestre en negritas
         doc.setFont('arial', 'bold');
         doc.setFontSize(8);
         doc.text(`Promedio del Cuatrimestre: ${promedioCuatrimestre}`, pageWidth - marginRight - 50, y);
         y += 10;
     });
 
-    // Agregar promedio general al final en negritas
     doc.setFont('arial', 'bold');
     doc.setFontSize(8);
     doc.text(`Promedio General: ${promedioGeneral}`, pageWidth - marginRight - 50, y + 10);
 
-    y += 90; // Espacio para la nota
+    y += 90;
 
-    // Nota al final del documento
     doc.setFont('arial', 'normal');
     doc.setFontSize(10);
     doc.text("ORD. EVALUACIÓN ORDINARIA        DEPARTAMENTO DE SERVICIOS ESCOLARES", marginLeft, y);
@@ -130,6 +133,5 @@ export const generatePDF = (selectedAlumno, kardexList, cuatrimestresRegistrados
     y += 5;
     doc.text("ESTE DOCUMENTO NO ES VÁLIDO SI PRESENTA ENMENDADURAS O RASPADURAS", marginLeft, y);
 
-    // Guardar PDF
     doc.save(`${selectedAlumno}.pdf`);
 };

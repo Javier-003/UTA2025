@@ -5,6 +5,7 @@ import { getKardexTodos } from '../../../assets/js/Parametrizacion/kardex.js';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import Select from 'react-select';
+import logo from '../../../assets/img/LOGO UTA.png';
 
 function TramiteConclusion() {
     const [kardexList, setKardexList] = useState([]);
@@ -69,17 +70,23 @@ function TramiteConclusion() {
         const nombreAlumno = alumnoData ? `${alumnoData.nombre} ${alumnoData.paterno} ${alumnoData.materno}` : "N/A";
         const periodo = alumnoData ? alumnoData.periodo : "N/A";
         const promedio = promedioGeneral !== "N/A" ? promedioGeneral : "N/A";
-
-        doc.setFont('arial', 'bold');
-        doc.setFontSize(20);
+        
+        const marginRight = 15;    
+        const imageWidth = 30;
+        const imageHeight = 30; 
+        const imageX = pageWidth - marginRight - imageWidth;
+        doc.addImage(logo, 'PNG', imageX, y, imageWidth, imageHeight);
+        
+        // Encabezado
+        doc.setFont("helvetica", "bold"); // Negrita
+        doc.setFontSize(15);
         doc.text("Universidad Tecnológica de Acapulco", centerX, y, { align: "center" });
-        y += 10;
-        doc.setFontSize(20);
+        y += 5;
+        doc.setFontSize(12);
         doc.text("Organismo Público Descentralizado del Gobierno del Estado", centerX, y, { align: "center" });
         y += 10;
-        doc.setFontSize(15);
-        doc.text("“2025, Año de la Mujer Indígena”", centerX, y, { align: "center" });
-        y += 10;
+        doc.setFontSize(12);
+
         doc.setFontSize(14);
         doc.text("CONSTANCIA DE CONCLUSIÓN DE CARRERA", centerX, y, { align: "center" });
         y += 10;

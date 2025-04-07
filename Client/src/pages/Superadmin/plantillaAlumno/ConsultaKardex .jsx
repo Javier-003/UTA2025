@@ -10,35 +10,37 @@ import { FaDownload } from 'react-icons/fa';
 function PlantillaKardex() {
     const [kardexList, setKardexList] = useState([]);
     const [selectedAlumno, setSelectedAlumno] = useState(null);
-    const [selectedPeriodo, setSelectedPeriodo] = useState(null);
+    const [selectedCuatrimestre, setSelectedCuatrimestre] = useState(null);
 
     useEffect(() => {
         getKardexTodos(setKardexList);
     }, []);
 
+    // Opciones para el select de alumnos
     const alumnoOptions = Array.from(
         new Set(
             kardexList.map((item) => `${item.nombre} ${item.paterno} ${item.materno}`)
         )
     ).map((alumno) => ({ value: alumno, label: alumno }));
 
-    const periodoOptions = Array.from(
-        new Set(kardexList.map((item) => item.periodo))
-    ).map((periodo) => ({ value: periodo, label: periodo }));
+    // Opciones para el select de cuatrimestres
+    const cuatrimestreOptions = Array.from(
+        new Set(kardexList.map((item) => item.cuatrimestre))
+    ).map((cuatrimestre) => ({ value: cuatrimestre, label: `Cuatrimestre ${cuatrimestre}` }));
 
-    const filteredData = kardexList
-        .filter(item => 
-            (!selectedAlumno || `${item.nombre} ${item.paterno} ${item.materno}` === selectedAlumno.value) &&
-            (!selectedPeriodo || item.periodo === selectedPeriodo.value)
-        );
- 
+    // Filtrar los datos según el alumno y los cuatrimestres seleccionados
+    const filteredData = kardexList.filter(item => 
+        (!selectedAlumno || `${item.nombre} ${item.paterno} ${item.materno}` === selectedAlumno.value)
+    );
+
+    // Obtener los cuatrimestres que van desde el primero hasta el cuatrimestre seleccionado
     const cuatrimestresRegistrados = Array.from({ length: 9 }, (_, index) => index + 1)
         .map((cuatrimestre) => {
             const dataForCuatrimestre = filteredData.filter((item) => item.cuatrimestre === cuatrimestre);
             if (dataForCuatrimestre.length === 0) return null;
             const periodo = dataForCuatrimestre[0].periodo;
             const promedioCuatrimestre = (
-                dataForCuatrimestre.reduce((acc, item) => acc + (parseFloat(item.calificacionFinal) || 0), 0) /
+                dataForCuatrimestre.reduce((acc, item) => acc + (parseFloat(item.calificacionFinal) || 0), 0) / 
                 dataForCuatrimestre.length
             ).toFixed(2);
 
@@ -46,24 +48,30 @@ function PlantillaKardex() {
         })
         .filter((cuatrimestreData) => cuatrimestreData !== null);
 
-    const promedioGeneral = cuatrimestresRegistrados.length
+    // Si un cuatrimestre es seleccionado, solo se mostrarán los cuatrimestres hasta ese número
+    const cuatrimestresHastaSeleccionado = cuatrimestresRegistrados.filter(
+        (cuatrimestreData) => cuatrimestreData.cuatrimestre <= (selectedCuatrimestre ? selectedCuatrimestre.value : 9)
+    );
+
+    // Promedio general
+    const promedioGeneral = cuatrimestresHastaSeleccionado.length
         ? (
-            cuatrimestresRegistrados.reduce((acc, { promedioCuatrimestre }) => acc + parseFloat(promedioCuatrimestre), 0) /
-            cuatrimestresRegistrados.length
+            cuatrimestresHastaSeleccionado.reduce((acc, { promedioCuatrimestre }) => acc + parseFloat(promedioCuatrimestre), 0) / 
+            cuatrimestresHastaSeleccionado.length
         ).toFixed(2)
         : "N/A";
 
+    // Manejar la descarga del PDF
     const handleDownloadPDF = () => {
-        if (!selectedAlumno || !selectedPeriodo) {
-            alert("Por favor selecciona un alumno y un periodo.");
+        if (!selectedAlumno || !selectedCuatrimestre) {
+            alert("Por favor selecciona un alumno y un cuatrimestre.");
             return;
         }
-        generatePDF(selectedAlumno.value, kardexList, cuatrimestresRegistrados, promedioGeneral);
+        generatePDF(selectedAlumno.value, kardexList, cuatrimestresHastaSeleccionado, promedioGeneral, selectedCuatrimestre.value);
     };
 
     return (
         <div className="container">
-            
             <h5 className="text-center mb-4">CONSULTA KARDEX</h5>
 
             <div className="d-flex justify-content-between mb-3">
@@ -76,16 +84,16 @@ function PlantillaKardex() {
                     className="me-2 w-50"
                 />
                 <Select
-                    options={periodoOptions}
-                    value={selectedPeriodo}
-                    onChange={setSelectedPeriodo}
-                    placeholder="Selecciona un periodo..."
+                    options={cuatrimestreOptions}
+                    value={selectedCuatrimestre}
+                    onChange={setSelectedCuatrimestre}
+                    placeholder="Selecciona un cuatrimestre..."
                     isClearable
                     className="ms-2 w-50"
                 />
             </div>
 
-            {selectedAlumno && selectedPeriodo && (
+            {selectedAlumno && selectedCuatrimestre && (
                 <>
                     <button 
                         className="btn btn-primary mb-3" 
@@ -105,7 +113,7 @@ function PlantillaKardex() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {cuatrimestresRegistrados.map(({ cuatrimestre, periodo, materias, promedioCuatrimestre }) => (
+                                {cuatrimestresHastaSeleccionado.map(({ cuatrimestre, periodo, materias, promedioCuatrimestre }) => (
                                     <React.Fragment key={`cuatrimestre-${cuatrimestre}`}>
                                         <tr>
                                             <td colSpan="5" style={{ backgroundColor: '#D3D3D3', textAlign: 'center' }}>
@@ -133,7 +141,7 @@ function PlantillaKardex() {
                         <div style={{ textAlign: 'right', marginTop: '10px' }}>
                             <strong>Promedio General: {promedioGeneral}</strong>
                         </div>
-                    </div>
+                    </div><br></br><br></br>
                 </>
             )}
         </div>

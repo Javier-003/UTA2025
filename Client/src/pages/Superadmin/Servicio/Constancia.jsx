@@ -5,6 +5,7 @@ import { getAlumnopatodos } from '../../../assets/js/Parametrizacion/alumnopa.js
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import Select from 'react-select';
+import logo from '../../../assets/img/LOGO UTA.png';
 
 function Constancia() {
     const [alumnopaList, setAlumnopaList] = useState([]);
@@ -39,12 +40,22 @@ function Constancia() {
         const desde = formatDateString(alumnoData?.desde);
         const hasta = formatDateString(alumnoData?.hasta);
 
+        const marginRight = 15;    
+        const imageWidth = 30; 
+        const imageHeight = 30; 
+        const imageX = pageWidth - marginRight - imageWidth;
+        doc.addImage(logo, 'PNG', imageX, y, imageWidth, imageHeight);
+        
+
+        // Encabezado
+        doc.setFont("helvetica", "bold"); // Negrita
         doc.setFontSize(15);
         doc.text("Universidad Tecnológica de Acapulco", centerX, y, { align: "center" });
         y += 5;
         doc.setFontSize(12);
         doc.text("Organismo Público Descentralizado del Gobierno del Estado", centerX, y, { align: "center" });
-        y += 5;
+        y += 10;
+        doc.setFontSize(12);
 
         doc.setFontSize(12);
         y += 50;

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { getKardex } from "../../api/Parametrizacion/kardex.api.js";
+import logo from '../../assets/img/LOGO UTA.png';
 
 function ListaAsistencia({ cargaMateria }) {
     const [alumnos, setAlumnos] = useState([]);
@@ -19,6 +20,7 @@ function ListaAsistencia({ cargaMateria }) {
     }, [cargaMateria]);
 
     const generarPDF = () => {
+        
         if (!alumnos.length) {
             alert("No hay datos disponibles para generar el PDF.");
             return;
@@ -26,7 +28,13 @@ function ListaAsistencia({ cargaMateria }) {
     
         const doc = new jsPDF({ orientation: "landscape" });
         const fechaEmision = new Date().toLocaleDateString();
-    
+
+        const imgWidth = 30; 
+        const imgHeight = 30;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        
+        // Agregar el logo a la derecha
+        doc.addImage(logo, "PNG", pageWidth - imgWidth - 10, 15, imgWidth, imgHeight);
         // Encabezado
         doc.setFontSize(18);
         doc.text("Universidad Tecnológica de Acapulco", doc.internal.pageSize.getWidth() / 2, 25, { align: 'center' });
@@ -88,13 +96,6 @@ function ListaAsistencia({ cargaMateria }) {
                 15: { cellWidth: 15 }  // Semana 4 (Parcial 3)
             }
         });
-    
-        // Nota final
-        doc.setFontSize(10);
-        const nota = "Nota: Si tienes 3 faltas sin justificar, no tendrás derecho a examen.";
-        const notaLines = doc.splitTextToSize(nota, doc.internal.pageSize.getWidth() - 20);
-        const finalY = doc.lastAutoTable.finalY + 10; // Posición debajo de la tabla
-        doc.text(notaLines, 10, finalY);
     
         // Guardar PDF
         doc.save(`ListaDeAsistencia${cargaMateria.materia}.pdf`);

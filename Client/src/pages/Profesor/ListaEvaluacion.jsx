@@ -3,6 +3,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { getEvaluacionTodos } from "../../assets/js/Parametrizacion/evaluacion.js";
 import { getKardex } from "../../api/Parametrizacion/kardex.api.js";
+import logo from '../../assets/img/LOGO UTA.png';
 
 function ListaEvaluacion({ cargaMateria, programaAcademico, actualizarEvaluaciones }) {
     const [evaluaciones, setEvaluaciones] = useState([]);
@@ -40,8 +41,15 @@ function ListaEvaluacion({ cargaMateria, programaAcademico, actualizarEvaluacion
         const doc = new jsPDF();
         const fechaEmision = new Date().toLocaleDateString();
 
+        const imgWidth = 20; 
+        const imgHeight = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+                
+        // Agregar el logo a la derecha
+        doc.addImage(logo, "PNG", pageWidth - imgWidth - 10, 15, imgWidth, imgHeight);
+
         // Encabezado
-        doc.setFontSize(18);
+        doc.setFontSize(18);        
         doc.text("Universidad Tecnológica de Acapulco", doc.internal.pageSize.getWidth() / 2, 25, { align: 'center' });
 
         doc.setFontSize(14);

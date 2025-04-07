@@ -1,9 +1,19 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import logo from '../../img/LOGO UTA.png';
 
 export const generarPDF = (idProfesor, profesorList, filteredData, programaAcademicoList, idPeriodo, periodoList, calculateHours) => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
+    
+    const marginRight = 14;
+    let y = 10;
+
+    // Imagen en el encabezado
+    const imageWidth = 15;
+    const imageHeight = 15;
+    const imageX = pageWidth - marginRight - imageWidth;
+    doc.addImage(logo, 'PNG', imageX, y, imageWidth, imageHeight); // Derecha
 
     // Encabezado centrado
     doc.setFont("helvetica", "bold");

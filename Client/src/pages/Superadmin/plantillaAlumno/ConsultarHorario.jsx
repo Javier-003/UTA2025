@@ -5,6 +5,7 @@ import { getCargaMaterias } from "../../../api/PlanificacionAcademica/cargamater
 import { getBloquees } from "../../../api/PlanificacionAcademica/bloque.api.js";
 import { getAulas } from "../../../api/Nucleo/aula.api.js";
 import { getGrupos } from "../../../api/PlanificacionAcademica/grupo.api.js";
+import logo from '../../../assets/img/LOGO UTA.png';
 
 const ConsultarHorario = ({ idGrupo }) => {
     const [cargaMaterias, setCargaMaterias] = useState([]);
@@ -78,10 +79,21 @@ const ConsultarHorario = ({ idGrupo }) => {
         setHorarios(horariosFiltrados);
 
         const doc = new jsPDF("p", "mm", "a4");
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text(`Universidad Tecnológica de Acapulco`, doc.internal.pageSize.getWidth() / 2, 15, { align: "center" });
+        const imgWidth = 20;
+        const imgHeight = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+
+        // Agregar logo a la derecha
+        doc.addImage(logo, "PNG", pageWidth - imgWidth - 15, 5, imgWidth, imgHeight);
+        // Agregar título centrado
         doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text("Universidad Tecnológica de Acapulco", pageWidth / 2, 10, { align: "center" });
+        // Agregar título centrado
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        doc.text("Organismo Público Descentralizado del Gobierno del Estado", pageWidth / 2,15, { align: "center" });
+
         doc.setFont("helvetica", "normal");
         doc.text(`${programaAcademico}\nCuatrimestre ${periodo}\nGrupo: ${grupoNombre}                      Aula: ${aulaNombre}`, doc.internal.pageSize.getWidth() / 2, 25, { align: "center" });
 
