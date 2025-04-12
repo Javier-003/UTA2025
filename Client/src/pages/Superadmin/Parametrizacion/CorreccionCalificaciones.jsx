@@ -40,13 +40,16 @@ function Evaluacion() {
   }, []);
 
   const handleCalificacionChange = (idKadex, idMateriaUnidad, value) => {
-    setCalificaciones(prevCalificaciones => ({
-      ...prevCalificaciones,
-      [idKadex]: {
-        ...prevCalificaciones[idKadex],
-        [idMateriaUnidad]: value
-      }
-    }));
+    // Permitir valores vacíos para que el usuario pueda borrar el contenido
+    if (value === "" || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 10 && /^\d{1,2}(\.\d{1,2})?$/.test(value))) {
+      setCalificaciones(prevCalificaciones => ({
+        ...prevCalificaciones,
+        [idKadex]: {
+          ...prevCalificaciones[idKadex],
+          [idMateriaUnidad]: value // Permitir que el valor vacío se guarde
+        }
+      }));
+    }
   };
 
   const handleUpdateCalificacion = (updatedEvaluacion) => {
@@ -83,14 +86,14 @@ function Evaluacion() {
   const handleSubmitCalificaciones = () => {
     const isValid = Object.values(calificaciones).every(kadex =>
       Object.values(kadex).every(calificacion => 
-        calificacion !== "" && !isNaN(calificacion) && calificacion >= 0 && calificacion <= 100
+        calificacion !== "" && !isNaN(calificacion) && calificacion >= 0 && calificacion <= 10
       )
     );
     if (!isValid) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Las calificaciones deben estar entre 0 y 100',
+        text: 'Las calificaciones deben estar entre 0 y 10',
       });
       return;
     }
@@ -182,6 +185,7 @@ function Evaluacion() {
                                 Unidad {idx + 1}:{" "}
                                 <input
                                   type="number"
+                                  step="0.01"
                                   aria-label={`Calificación para la unidad ${idx + 1}`}
                                   value={calificaciones[alumno.idKardex]?.[unidad] || evalUnidad.calificacion || ""}
                                   onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}

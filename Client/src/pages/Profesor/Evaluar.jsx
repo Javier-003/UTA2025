@@ -73,13 +73,15 @@ function Evaluar() {
     };
 
     const handleCalificacionChange = (idKadex, idMateriaUnidad, value) => {
-        setCalificaciones(prevCalificaciones => ({
-            ...prevCalificaciones,
-            [idKadex]: {
-                ...prevCalificaciones[idKadex],
-                [idMateriaUnidad]: value
-            }
-        }));
+        if (value === "" || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 10 && /^\d{1,2}(\.\d{1,2})?$/.test(value))) {
+            setCalificaciones(prevCalificaciones => ({
+                ...prevCalificaciones,
+                [idKadex]: {
+                    ...prevCalificaciones[idKadex],
+                    [idMateriaUnidad]: value
+                }
+            }));
+        }
     };
 
     const handleSubmitCalificaciones = () => {
@@ -127,13 +129,17 @@ function Evaluar() {
                                         actualizarEvaluaciones={actualizarEvaluaciones} />
                                 </div>
                                 <ListaAsistencia cargaMateria={cargaMateria} programaAcademico={programaAcademico} />
+                                <a href='../../../public/assets/excel/ACTADECALIFICACIONESEXTEMPORANEA.xlsx' 
+                                download className="btn btn-danger ms-2">
+                                    Acta de Calificaciones Extemporanea
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
-            <div className="table-responsive">
-                <table className="table table-bordered">
+            <div className="table-responsive" style={{ maxHeight: "500px", overflowY: "auto", overflowX: "auto" }}>
+                <table className="table table-bordered table-striped">
                     <thead className="text-center">
                         <tr>
                             <th>N°</th>
@@ -160,12 +166,14 @@ function Evaluar() {
                                             return (
                                             <td key={idx}>
                                                 <input
-                                                    type="text"
+                                                    type="number"
+                                                    step="0.01"
                                                     className="form-control"
                                                     value={calificacion}
                                                     placeholder="N/A" // Mostrar "N/A" cuando el campo está vacío
                                                     onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
-                                                    disabled={evalUnidad?.estatus === 'Cerrado'}
+                                                    // disabled={evalUnidad?.estatus === 'Cerrado'} // Deshabilitar si el estatus está cerrado
+                                                    disabled={evalUnidad?.estatus === 'Cerrado' || evalUnidad?.calificacion !== null} // Deshabilitar si el estatus está cerrado o ya tiene calificación asignada
                                                 />
                                             </td>
                                             );
