@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import { getGrupos } from "../../../api/PlanificacionAcademica/grupo.api.js";
 import { getProfesores } from "../../../api/Nucleo/profesor.api.js";
 import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacurricular.api.js";
@@ -95,12 +96,24 @@ export const CargaMateriaModales = ({
             setProgramaAcademicoDelGrupo("");
         }
     }, [idGrupo, grupos]);
+
+    useEffect(() => {
+        if (!fecha) {
+            // Establecer la fecha actual como predeterminada si no está definida
+            const today = new Date();
+            setFecha(today.toISOString().split("T")[0]); // Formato YYYY-MM-DD
+        }
+    }, [fecha, setFecha]);
     
     const formatDateString = (dateString) => dateString ? dateString.split("T")[0] : "";
 
     const agregarHorario = () => {
         if (!nuevoHorario.dia || !nuevoHorario.idBloque) {
-            alert("Selecciona un día y un bloque válido.");
+            Swal.fire({
+                title: "Error",
+                text: "Selecciona un día y un bloque válido.",
+                icon: "error",
+            });
             return;
         }
     
@@ -206,6 +219,7 @@ export const CargaMateriaModales = ({
                                             <option value="">Selecciona un tipo</option>
                                             <option value="Ordinaria">Ordinaria</option>
                                             <option value="Extraordinaria">Extraordinaria</option>
+                                            <option value="Recuperación">Recuperación</option>
                                         </select>
                                     </div>
                                 </div>  
@@ -356,6 +370,7 @@ export const CargaMateriaModales = ({
                                             <option value="">Selecciona un tipo</option>
                                             <option value="Ordinaria">Ordinaria</option>
                                             <option value="Extraordinaria">Extraordinaria</option>
+                                            <option value="Recuperación">Recuperación</option>
                                         </select>
                                     </div>
                                 </div>  

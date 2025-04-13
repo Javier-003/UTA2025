@@ -31,7 +31,11 @@ function CargaMaterias() {
     const [idMapaCurricular, setIdMapaCurricular] = useState("");
     const [idAula, setIdAula] = useState("");
     const [tipo, setTipo] = useState("");
-    const [fecha, setFecha] = useState("");
+    const [fecha, setFecha] = useState(() => {
+        // Establecer la fecha actual como predeterminada
+        const today = new Date();
+        return today.toISOString().split("T")[0]; // Formato YYYY-MM-DD
+    });
 
     useEffect(() => {
         getCargaMaterias().then(data => setCargaMaterias(data));

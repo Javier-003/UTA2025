@@ -53,57 +53,57 @@ export const getCargaMaterias = async (req, res) => {
 // Crear una nueva carga de materia y asignar horarios
 export const createCargaMaterias = async (req, res) => {
   try {
-    console.log("Datos recibidos en el backend:", JSON.stringify(req.body, null, 2));
-    let data = req.body;
-    const { idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios } = data.idGrupo && typeof data.idGrupo === "object" ? data.idGrupo : data;
-    console.log("Valores extraídos:", { idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios });
+    const { idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios } = req.body;
 
-    // Verificar si algún horario ya está asignado
-    if (horarios && horarios.length) {
-      for (const horario of horarios) {
-        const [existeHorario] = await db.query(
-          `SELECT h.idGrupoMateria, g.nombre AS grupo, m.materia, b.nombre AS nombreBloque 
-           FROM horario h
-           INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
-           INNER JOIN grupo g ON g.idGrupo = gm.idGrupo
-           INNER JOIN mapacurricular m ON m.idMapaCurricular = gm.idMapaCurricular
-           INNER JOIN bloque b ON b.idBloque = h.idBloque
-           WHERE g.idGrupo = ? AND h.dia = ? AND h.idBloque = ?`,
-          [idGrupo, horario.dia, horario.idBloque]
-        );
+    // Validar conflictos de horarios y aulas solo para materias "Ordinaria"
+    if (tipo === "Ordinaria") {
+      // Validar conflictos de horarios
+      if (horarios && horarios.length) {
+        for (const horario of horarios) {
+          const [existeHorario] = await db.query(
+            `SELECT h.idGrupoMateria, g.nombre AS grupo, m.materia, b.nombre AS nombreBloque 
+             FROM horario h
+             INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
+             INNER JOIN grupo g ON g.idGrupo = gm.idGrupo
+             INNER JOIN mapacurricular m ON m.idMapaCurricular = gm.idMapaCurricular
+             INNER JOIN bloque b ON b.idBloque = h.idBloque
+             WHERE g.idGrupo = ? AND h.dia = ? AND h.idBloque = ?`,
+            [idGrupo, horario.dia, horario.idBloque]
+          );
 
-        if (existeHorario.length > 0) {
-          return res.status(400).json({ 
-            error: `⚠️ El horario ${horario.dia}, bloque ${existeHorario[0].nombreBloque} ya está ocupado por la materia ${existeHorario[0].materia} en el grupo ${existeHorario[0].grupo}.` 
-          });
-        }
+          if (existeHorario.length > 0) {
+            return res.status(400).json({
+              error: `⚠️ El horario ${horario.dia}, bloque ${existeHorario[0].nombreBloque} ya está ocupado por la materia ${existeHorario[0].materia} en el grupo ${existeHorario[0].grupo}.`
+            });
+          }
 
-        // Verificar si el aula ya está asignada a otro bloque en el mismo horario
-        const [existeAula] = await db.query(
-          `SELECT h.idGrupoMateria, a.nombre AS aula, b.nombre AS nombreBloque 
-           FROM horario h
-           INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
-           INNER JOIN aula a ON a.idAula = gm.idAula
-           INNER JOIN bloque b ON b.idBloque = h.idBloque
-           WHERE gm.idAula = ? AND h.dia = ? AND h.idBloque = ?`,
-          [idAula, horario.dia, horario.idBloque]
-        );
+          // Validar conflictos de aulas
+          const [existeAula] = await db.query(
+            `SELECT h.idGrupoMateria, a.nombre AS aula, b.nombre AS nombreBloque 
+             FROM horario h
+             INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
+             INNER JOIN aula a ON a.idAula = gm.idAula
+             INNER JOIN bloque b ON b.idBloque = h.idBloque
+             WHERE gm.idAula = ? AND h.dia = ? AND h.idBloque = ?`,
+            [idAula, horario.dia, horario.idBloque]
+          );
 
-        if (existeAula.length > 0) {
-          return res.status(400).json({ 
-            error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.` 
-          });
+          if (existeAula.length > 0) {
+            return res.status(400).json({
+              error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.`
+            });
+          }
         }
       }
     }
 
-    // Verificar si hay horarios duplicados en la solicitud
+    // Validar horarios duplicados en la solicitud
     const uniqueHorarios = new Set(horarios.map(h => `${h.dia}-${h.idBloque}`));
     if (uniqueHorarios.size !== horarios.length) {
       return res.status(400).json({ error: "⚠️ No se pueden asignar horarios duplicados con el mismo bloque." });
     }
 
-    // Verificar si la materia ya está asignada en el mismo grupo con otro profesor
+    // Validar conflictos de materias en el mismo grupo
     const [existeMateria] = await db.query(
       `SELECT gm.idGrupoMateria, g.nombre AS grupo, m.materia, CONCAT(p.nombre, ' ', p.paterno, ' ', p.materno) AS profesor
        FROM grupomateria gm
@@ -122,28 +122,26 @@ export const createCargaMaterias = async (req, res) => {
     }
 
     // Insertar en `grupomateria`
-    const [result] = await db.query(`
-      INSERT INTO grupomateria (idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha)
-      VALUES (?, ?, ?, ?, ?, ?);
-    `, [idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha]);
+    const [result] = await db.query(
+      `INSERT INTO grupomateria (idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha)
+       VALUES (?, ?, ?, ?, ?, ?);`,
+      [idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha]
+    );
 
     const idGrupoMateria = result.insertId;
 
-    // Insertar en `horario` solo si no hubo conflictos
+    // Insertar en `horario` si hay horarios
     if (horarios && horarios.length) {
       const values = horarios.map(horario => [idGrupoMateria, horario.idBloque, horario.dia]);
-      console.log("Valores de horarios:", values);
-
       const placeholders = values.map(() => "(?, ?, ?)").join(", ");
       const flattenedValues = values.flat();
-      await db.query(`
-          INSERT INTO horario (idGrupoMateria, idBloque, dia)
-          VALUES ${placeholders};
-      `, flattenedValues);
+      await db.query(
+        `INSERT INTO horario (idGrupoMateria, idBloque, dia) VALUES ${placeholders};`,
+        flattenedValues
+      );
     }
 
     res.json({ message: "✅ Carga de materias creada exitosamente", idGrupoMateria });
-
   } catch (error) {
     console.error("❌ Error al crear la carga de materias:", error);
     res.status(500).json({ error: "Error al crear la carga de materias" });
