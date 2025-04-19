@@ -28,7 +28,6 @@ export const CargaMateriaModales = ({
     const [aulas, setAulas] = useState([]);
     const [bloques, setBloques] = useState([]);
     const [nuevoHorario, setNuevoHorario] = useState({ dia: "", idBloque: "" });
-    const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
     const [programaAcademicoDelGrupo, setProgramaAcademicoDelGrupo] = useState(""); // Nuevo estado para el programa académico del grupo
 
     useEffect(() => {
@@ -147,10 +146,9 @@ export const CargaMateriaModales = ({
         setHorarios([]); // Limpiar los horarios al cerrar el modal
     };
 
-    // Filtrar materias según el programa académico del grupo seleccionado y el término de búsqueda
+    // Filtrar materias según el programa académico del grupo seleccionado
     const filteredMapaCurriculares = mapaCurriculares.filter(mapa =>
-        (!programaAcademicoDelGrupo || mapa.idProgramaAcademico === programaAcademicoDelGrupo) &&
-        mapa.materia.toLowerCase().includes(searchTerm.toLowerCase())
+        !programaAcademicoDelGrupo || mapa.idProgramaAcademico === programaAcademicoDelGrupo
     );
 
     return (
@@ -192,7 +190,6 @@ export const CargaMateriaModales = ({
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <label>Mapa curricular</label>
-                                        <input type="text"className="form-control mb-2" placeholder="Buscar materia" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
                                         <select className="form-control" value={idMapaCurricular} onChange={(e) => setIdMapaCurricular(e.target.value)}>
                                             <option value="">Selecciona una materia</option>
                                             {filteredMapaCurriculares.map(mapa => (
@@ -337,13 +334,6 @@ export const CargaMateriaModales = ({
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <label>Mapa curricular</label>
-                                        <input
-                                            type="text"
-                                            className="form-control mb-2"
-                                            placeholder="Buscar materia"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
                                         <select className="form-control" value={idMapaCurricular} onChange={(e) => setIdMapaCurricular(e.target.value)}>
                                             <option value="">Selecciona una materia</option>
                                             {filteredMapaCurriculares.map(mapa => (
