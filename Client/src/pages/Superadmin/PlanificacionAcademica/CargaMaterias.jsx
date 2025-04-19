@@ -125,6 +125,15 @@ function CargaMaterias() {
         return acc;
     }, []);
 
+    // Obtener el grupo seleccionado y su programa académico
+    const grupoSeleccionado = grupoList.find(grupo => grupo.idGrupo === parseInt(idGrupo));
+    const programaAcademicoSeleccionado = programaAcademicoList.find(programa => programa.idProgramaAcademico === grupoSeleccionado?.idProgramaAcademico);
+
+    // Crear una variable para mostrar el nombre del grupo y el programa académico
+    const nombreGrupoYPrograma = grupoSeleccionado && programaAcademicoSeleccionado
+        ? `${grupoSeleccionado.nombre} - ${programaAcademicoSeleccionado.nombre}`
+        : "";
+
     return (
         <div className="container">
             <h2>Carga de Materias</h2>
@@ -174,6 +183,12 @@ function CargaMaterias() {
                                 setFecha(""); setHorarios([]); setShowModal(true);
                                 }}>Agregar Materia
                             </button>
+                            {/* Mostrar el nombre del grupo y programa académico */}
+                            {nombreGrupoYPrograma && (
+                                <div className="alert alert-info">
+                                    <strong>Grupo:</strong> {nombreGrupoYPrograma}
+                                </div>
+                            )}
                             <h6>Materias asignadas</h6>
                             <table className="table table-bordered table-hover">
                                 <thead>
