@@ -4,6 +4,12 @@ export const getAlumnoProcesotodos = async (req, res) => {
   try {
     const query = `
       SELECT 
+      atr.idTramite AS idTramite,
+      atr.idPeriodo AS idPeriodoTramite,
+      atr.idPersona AS idPersonaTramite,
+      atr.fecha AS fechaTramite,
+      atr.estatus AS estatusTramite,
+      atr.idBajaCausa AS idBajaCausa,  
   ap.idAlumnoProceso,
   ap.idAlumnoTramite,
   ap.idTramiteProceso,

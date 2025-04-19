@@ -19,6 +19,10 @@ from '../../../assets/js/Parametrizacion/alumnopa.js';
 import {getKardexTodos, addKardexFun, updateTransaccionKardexjs} 
 from '../../../assets/js/Parametrizacion/kardex.js';
 
+// AlumnoTrámite
+import{getAlumnoTramite, updateAlumnoTramiteFunc} 
+from '../../../assets/js/Tramites/seguimientoTramite.js';
+
 //------------ EXPORTAMOS DATOS DEL PORCENTAJE --------------------
 export const calcularPorcentajeConcluido = (filteredData) => {
   if (filteredData.length === 0) return 0;
@@ -76,6 +80,16 @@ function ProcedimientoTramite() {
   const [tipo, setTipo] = useState("");
   const [estatusKardex, setEstatusKardex] = useState("");
   const [selectedKardex, setSelectedKardex] = useState(null);
+
+  //ALUMNO TRÁMITE
+  const [alumnotramiteList, setAlumnoTramite] = useState([]);
+  const [idBajaCausa, setIdBajaCausa] = useState("");
+  const [idTramite, setIdTramite] = useState("");
+  const [idPersonaTramite, setIdPersonaTramite] = useState(""); 
+  const [idPeriodoTramite, setIdPeriodoTramite] = useState("");
+  const [fechaTramite, setFechaTramite] = useState("");
+  const [estatusTramite, setEstatusTramite] = useState("");
+  const [selectedTramite, setSelectedTramite] = useState('');//New
 
   const [currentObjeto, setCurrentObjeto] = useState(null); // Estado para el objeto actual
   const [showObjetoModal, setShowObjetoModal] = useState(false); // Modal del objeto
@@ -416,6 +430,49 @@ useEffect(() => {
        };
 
 
+         // ----------------------------------- CAUSAS BAJA -------------------------------------------------------
+     /*   const handleUpdateBajas = () => {
+        console.log("Datos enviados a TRA:", {idAlumnoTramite, idTramite, idPersonaTramite, idAlumnoPA, idPeriodoTramite, fechaTramite, estatusTramite, idBajaCausa});
+         updateAlumnoTramiteFunc(idAlumnoTramite, idTramite, idPersonaTramite, idAlumnoPA, idPeriodoTramite, fechaTramite, estatusTramite, idBajaCausa, setShowEditModal, () => {
+          getAlumnoTramite(setAlumnoTramite)
+          getAlumnoProceso(setAlumnoProceso); // También actualiza el proceso
+        });
+       }; */
+
+       const handleUpdateBaja = async () => {
+        updateAlumnoTramiteFunc(idAlumnoTramite, idTramite, idPersonaTramite, idAlumnoPA, idPeriodoTramite, fechaTramite, estatusTramite, idBajaCausa, setShowEditModal,  
+        async () => {
+             // Primero actualizas el AlumnoTrámite
+             await   getAlumnoTramite(setAlumnoTramite)
+       
+             // SE ACTUALIZA EL PROCESO A "CONCLUIDO"
+             await Promise.all(
+               alumnoprocesoList.map(async (item) => {
+                 if (item.estatus === "En proceso") {
+                   try {
+                     await updateAlumnoProceso(
+                       item.idAlumnoProceso,
+                       idAlumnoTramite,
+                       idTramiteProceso,
+                       idActividad,
+                       orden,
+                       "Concluido",
+                       observacion,
+                       setShowEditModal,
+                       () => { }
+                     );
+                   } catch (error) {
+                     console.error("Error al actualizar el proceso de alumno:", error);
+                   }
+                 }
+               })
+             );
+       
+             // Finalmente recargas los procesos desde el backend para asegurar que el estado es consistente
+             await getAlumnoProceso(setAlumnoProceso);
+           }
+         );
+       };
 
   // Función para manejar el clic en el botón "objeto"
   const handleObjetoClick = (objeto) => {
@@ -619,7 +676,23 @@ useEffect(() => {
                   estatusKardex: alumnoproceso.estatusKardex
                 });
 
-              
+                setIdTramite(alumnoproceso.idTramite);
+                setIdPersonaTramite(alumnoproceso.idPersonaTramite);
+                setIdPeriodoTramite(alumnoproceso.idPeriodoTramite);
+                setFechaTramite(formatDateString(alumnoproceso.fechaTramite))
+                setEstatusTramite(alumnoproceso.estatusTramite);
+                setIdBajaCausa(alumnoproceso.idBajaCausa);
+
+                console.log('Valores del trámite:', {
+                  idTramite: alumnoproceso.idTramite,
+                  idPersonaTramite: alumnoproceso.idPersonaTramite,
+                  idPeriodoTramite: alumnoproceso.idPeriodoTramite,
+                  fechaTramite: formatDateString(alumnoproceso.fechaTramite),
+                  estatusTramite: alumnoproceso.estatusTramite,
+                  idBajaCausa: alumnoproceso.idBajaCausa
+                });
+                
+
               }}>
                 <i className="bi bi-card-checklist me-2"></i> Proceso
               </button>
@@ -686,6 +759,16 @@ useEffect(() => {
     handleUpdateKardex={handleUpdateKardex}
     handleUpdateKardexBDef={handleUpdateKardexBDef}
     setSelectedKardex={setSelectedKardex}
+
+    //MODAL ALUMNO TRAMITE
+    idTramite={idTramite} setIdTramite={setIdTramite}
+    idPersonaTramite={idPersonaTramite} setIdPersonaTramite={setIdPersonaTramite}
+    idPeriodoTramite={idPeriodoTramite} setIdPeriodoTramite={setIdPeriodoTramite}
+    fechaTramite={fechaTramite} setFechaTramite={setFechaTramite}
+    estatusTramite={estatusTramite} setEstatusTramite={setEstatusTramite}
+    idBajaCausa={idBajaCausa} setIdBajaCausa={setIdBajaCausa}
+    handleUpdateBaja={handleUpdateBaja}
+    setSelectedTramite={setSelectedTramite} // New prop for selectedTramite
 
   />
 )}

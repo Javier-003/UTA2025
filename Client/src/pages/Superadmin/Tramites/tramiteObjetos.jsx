@@ -17,6 +17,10 @@ import { getGrupos } from "../../../api/PlanificacionAcademica/grupo.api.js";
 import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacurricular.api.js";
 import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";
 
+//ALUMNO TRÁMITE
+import { getCausasBaja } from "../../../api/Tramites/causabaja.api.js";
+import {getTramites} from "../../../api/Parametrizacion/tramite.api.js";
+
 const TramiteModal = ({
   title,
   idAlumnoTramite,
@@ -1289,6 +1293,67 @@ const TramiteModalBajaTemporal = ({
 export const tramiteBajaTemporal = (props) => (
   <TramiteModalBajaTemporal title="Confirmación de Baja Temporal" {...props} />
 );
+
+
+//------------------------- CAUSAS DE BAJA (UPDATE ALUMNOTRAMITE) ------------------------------
+
+const TramiteModalCausaBaja = ({
+  title, handleUpdateBaja, handleClose, show,
+  idAlumnoPA, idBajaCausa, setIdBajaCausa, alumnoNombre
+}) => {
+  const [causabaja, setCausaBaja] = useState([]);
+  const [alumnoList, setAlumnoList] = useState([]);
+
+  useEffect(() => {
+    getCausasBaja().then(setCausaBaja).catch(console.error);
+    getAlumnoPA().then(data => setAlumnoList(data || [])).catch(console.error);
+  }, []);
+
+  const getNombreAlumno = () => {
+    if (!idAlumnoPA) return "No seleccionado";
+    const alumno = alumnoList.find(a => a.idAlumnoPA == idAlumnoPA);
+    return alumno ? `${alumno.nombre} ${alumno.paterno} ${alumno.materno}` : "No encontrado";
+  };
+
+  return (
+    <Modal show={show} onHide={handleClose} centered size="lg">
+      <Modal.Header closeButton className="bg-primary text-white">
+        <Modal.Title className="fw-bold">{title}</Modal.Title>
+      </Modal.Header>
+
+      <Modal.Body>
+        <Form>
+          <Form.Group className="mb-4">
+            <Form.Label className="fw-bold">Alumno:</Form.Label>
+            <div className="p-3 bg-light rounded">
+              <h5 className="mb-0 text-primary">{alumnoNombre || getNombreAlumno()}</h5>
+            </div>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label className="fw-semibold">Causa de baja</Form.Label>
+            <Form.Select value={idBajaCausa} onChange={(e) => setIdBajaCausa(e.target.value)}>
+              <option value="">Seleccionar causa</option>
+              {causabaja.map(causa => (
+                <option key={causa.idBajaCausa} value={causa.idBajaCausa}>{causa.nombre}</option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>Cerrar</Button>
+        <Button variant="primary" onClick={() => { handleUpdateBaja(); handleClose(); }}>
+          Guardar
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
+export const tramiteCausaBaja = (props) => <TramiteModalCausaBaja title="Causas de Baja" {...props} />;
+
 //------------------------- REACTIVA ALUMNO ------------------------------
 
 const TramiteModalReactivar = ({

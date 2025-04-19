@@ -11,6 +11,7 @@ export const getAlumnoTramitetodos = async (req, res) => {
         Alt.idPeriodo,
         Alt.fecha,  
         Alt.estatus,
+        Alt.idBajaCausa,
         COALESCE(Alt.idAlumnoPA, apa.idAlumnoPA) AS idAlumnoPA, 
         apa.matricula AS matricula,
         prog.nombreOficial AS programa,
@@ -19,6 +20,7 @@ export const getAlumnoTramitetodos = async (req, res) => {
         periodo.periodo AS periodo,
         CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS alumno
       FROM alumnotramite Alt
+      LEFT JOIN bajacausa ON Alt.idBajaCausa = bajacausa.idBajaCausa
       LEFT JOIN periodo ON Alt.idPeriodo = periodo.idPeriodo
       LEFT JOIN tramite ON Alt.idTramite = tramite.idTramite
       LEFT JOIN persona ON Alt.idPersona = persona.idPersona
@@ -111,29 +113,30 @@ export const createAlumnoTramite = async (req, res) => {
 export const updateAlumnoTramite = async (req, res) => {
   try {
     const { idAlumnoTramite } = req.params;
-    const { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus } = req.body;
+    const { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, idBajaCausa } = req.body;
 
-
-     // Mostrar en consola los datos recibidos
-     console.log('Datos recibidos para actualización:', {
+    // Mostrar en consola los datos recibidos
+    console.log('Datos recibidos para actualización:', {
       idAlumnoTramite,
       idTramite,
       idPersona,
       idAlumnoPA,
       idPeriodo,
       fecha,
-      estatus
-    }); 
+      estatus,
+      idBajaCausa
+    });
 
-  
     // Verificar si el trámite existe
     const [exists] = await db.query("SELECT 1 FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
     if (!exists.length) return res.status(404).json({ message: "Alumno Trámite no encontrado" });
 
     // Actualizar el trámite (idAlumnoPA puede ser NULL)
     const [result] = await db.query(
-      "UPDATE alumnotramite SET idTramite = ?, idPersona = ?, idAlumnoPA = ?, idPeriodo = ?, fecha = ?, estatus = ? WHERE idAlumnoTramite = ?",
-      [idTramite, idPersona, idAlumnoPA || null, idPeriodo, fecha, estatus, idAlumnoTramite]
+      `UPDATE alumnotramite 
+       SET idTramite = ?, idPersona = ?, idAlumnoPA = ?, idPeriodo = ?, fecha = ?, estatus = ?, idBajaCausa = ?
+       WHERE idAlumnoTramite = ?`,
+      [idTramite, idPersona, idAlumnoPA || null, idPeriodo, fecha, estatus, idBajaCausa || null, idAlumnoTramite]
     );
 
     if (!result.affectedRows) return res.status(404).json({ message: "Alumno Trámite no encontrado" });
@@ -145,6 +148,7 @@ export const updateAlumnoTramite = async (req, res) => {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+
 
 // 🔹 ELIMINAR UN TRÁMITE
 export const deleteAlumnoTramite = async (req, res) => {

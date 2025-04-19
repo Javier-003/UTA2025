@@ -27,11 +27,36 @@ export const createAlumnoTramite = async (idTramite, idPersona, idAlumnoPA, idPe
 };
 
 // Actualizar un trámite de alumno existente
-export const updateAlumnoTramite = async (idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus) => {
-  console.log("llegando a api update", {idAlumnoTramite, idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus });
+export const updateAlumnoTramite = async (
+  idAlumnoTramite, 
+  idTramite, 
+  idPersona, 
+  idAlumnoPA, 
+  idPeriodo, 
+  fecha, 
+  estatus, 
+  idBajaCausa
+) => {
+  console.log("llegando a api update", {
+    idAlumnoTramite,
+    idTramite,
+    idPersona,
+    idAlumnoPA,
+    idPeriodo,
+    fecha,
+    estatus,
+    idBajaCausa
+  });
+
   try {
     await axios.put(`${BASE_URL}/alumnotramite/update/${idAlumnoTramite}`, {
-      idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, userSession 
+      idTramite,
+      idPersona,
+      idAlumnoPA,
+      idPeriodo,
+      fecha,
+      estatus,
+      idBajaCausa
     });
   } catch (error) {
     console.error("Error al actualizar el trámite de alumno:", error);

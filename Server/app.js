@@ -49,6 +49,7 @@ import materiaunidadRoutes from "./routes/Parametrizacion/materiaunidad.Routes.j
 import actividadRoutes from "./routes/Parametrizacion/actividad.Routes.js";
 import tramiteRoutes from "./routes/Parametrizacion/tramite.Routes.js";
 import tramiteprocesoRoutes from "./routes/Parametrizacion/tramiteproceso.Routes.js";
+import causabajaRoutes from "./routes/Tramites/causabaja.Routes.js";
 
 
 
@@ -78,6 +79,7 @@ app.use("/alumnotramite",alumnotramiteRoutes);
 app.use("/tramiteproceso",tramiteprocesoRoutes);
 app.use("/alumnoproceso",alumnoprocesoRoutes);
 app.use("/alumnoperiodo",alumnoperiodoRoutes);
+app.use("/causabaja",causabajaRoutes);
 //Oferta Academica
 app.use("/alumnopa",alumnopaRoutes);
 app.use("/programaacademico",programaacademicoRoutes);
