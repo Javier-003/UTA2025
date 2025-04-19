@@ -146,7 +146,10 @@ export const tramiteValidaPagoBajaDefinitiva = (props) => (
   <TramiteModal title="Valdación de Pago Baja Definitiva" {...props} />
 );
 
-
+// ---------------- EXTRAORDINARIO -------------------
+export const tramiteValidaPagoExtraordinario = (props) => (
+  <TramiteModal title="Valdación de Pago Recuperación de Saberes" {...props} />
+);
 
 // ------------------------------------------ REGISTRAR ALUMNO -------------------------------------------------------
 const TramiteModalRegistro = ({
@@ -1682,3 +1685,152 @@ const TramiteModalBajaDefinitiva = ({
 export const tramiteBajaDefinitiva = (props) => (
   <TramiteModalBajaDefinitiva title="Confirmación de Baja Definitiva" {...props} />
 );
+
+// ------------------------------------------ CARGAR DATOS (KARDEX, EVALUACIÓN) PARA EXTRAORDINARIO -------------------------------------------------------
+
+export const tramiteRegistraGrupoExtraordinario = ({ 
+  idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex, 
+  handleKardex, handleClose, show,
+}) => {
+  
+  const [grupoList, setGrupoList] = useState([]);
+  const [alumnoList, setAlumnoList] = useState([]);
+  const [datosTemporalmente, setDatosTemporalmente] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const tipo = "Ordinaria";
+  const estatusKardex = "Activo";
+
+  useEffect(() => {
+    getAlumnoPA()
+      .then(data => setAlumnoList(data))
+      .catch(error => console.error("Error al obtener los alumnos:", error));
+    
+    getGrupos()
+      .then(data => setGrupoList(data))
+      .catch(error => console.error("Error al obtener los grupos:", error));
+  }, []);
+
+  // Función para guardar los datos temporalmente y abrir el modal de confirmación
+  const handleGuardarTemporal = () => {
+    const alumnoSeleccionado = alumnoList.find(alumno => alumno.idAlumnoPA === idAlumnoPA);
+    const grupoSeleccionado = grupoList.find(grupo => String(grupo.idGrupo) === String(idGrupo)); // Asegurar comparación correcta
+
+    console.log("Alumno seleccionado:", alumnoSeleccionado); // Debug
+    console.log("Grupo seleccionado:", grupoSeleccionado); // Debug
+
+    const datos = {
+      idAlumnoPA,
+      nombreAlumno: alumnoSeleccionado 
+        ? `${alumnoSeleccionado.nombre} ${alumnoSeleccionado.paterno} ${alumnoSeleccionado.materno}`
+        : "Desconocido",
+      idGrupo,
+      nombreGrupo: grupoSeleccionado ? grupoSeleccionado.nombre : "Desconocido",
+      tipo,
+      estatusKardex,
+      idPeriodoKardex,
+    };
+
+    setDatosTemporalmente(datos);
+    setShowConfirmModal(true);
+  };
+
+  return (
+    <>
+      {/* Modal principal */}
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title className="fw-bold">Asignar Grupo a Alumno</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          {/* Alumno */}
+          <div className="input-group mb-3">
+            <span className="input-group-text">Alumno:</span>
+            <select className="form-select" value={idAlumnoPA} disabled>
+              <option value="">Selecciona un alumno</option>
+              {alumnoList.map((alumnopa) => (
+                <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
+                  {alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Grupo */}
+          <div className="input-group mb-3">
+            <span className="input-group-text">Grupo:</span>
+            <select 
+              className="form-select" 
+              value={idGrupo} 
+              onChange={(event) => setIdGrupo(event.target.value)}
+            >
+              <option value="">Selecciona un grupo</option>
+              {grupoList.map((grupo) => (
+                <option key={grupo.idGrupo} value={grupo.idGrupo}>
+                  {grupo.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Campo oculto */}
+          <input type="hidden" value={tipo} name="tipo" />
+          <input type="hidden" value={estatusKardex} name="estatusKardex" />
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cerrar
+          </Button>
+          <Button variant="primary" onClick={handleGuardarTemporal}>
+            Guardar Cambios
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal de confirmación */}
+      <TramiteConfirmacionGrupo
+        show={showConfirmModal}
+        handleClose={() => setShowConfirmModal(false)}
+        datos={datosTemporalmente}
+        handleConfirm={() => {
+          handleKardex(datosTemporalmente);
+          setShowConfirmModal(false);
+          handleClose();
+        }}
+      />
+    </>
+  );
+};
+
+// Modal de confirmación
+export const TramiteConfirmacionGrupo = ({ show, handleClose, datos, handleConfirm }) => {
+  return (
+    <Modal show={show} onHide={handleClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Confirmar Registro e Impactar Historial</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {datos ? (
+          <>
+            <p><strong>Alumno:</strong> {datos.nombreAlumno} </p>
+            <p><strong>Grupo:</strong> {datos.nombreGrupo} ({datos.idGrupo})</p>
+            <p><strong>Tipo:</strong> {datos.tipo}</p>
+            <p><strong>Estatus:</strong> {datos.estatusKardex}</p>
+          </>
+        ) : (
+          <p>No hay datos seleccionados.</p>
+        )}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Cancelar
+        </Button>
+        <Button variant="primary" onClick={handleConfirm}>
+          Confirmar y Registrar
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+};
