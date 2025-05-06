@@ -280,3 +280,77 @@ export const updateTransaccionKardex = async (req, res) => {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+
+
+
+
+// ---------------------------------- EXTRAORDINARIO ---------------------------------- //
+// Obtener materias de un grupo (para el modal)
+export const getMateriasByGrupo = async (req, res) => {
+  const { idGrupo } = req.params;
+  try {
+    const [materias] = await db.query(`
+      SELECT gm.idMapaCurricular, mp.materia AS nombreMateria, mp.clave
+      FROM grupomateria gm
+      INNER JOIN mapacurricular mp ON gm.idMapaCurricular = mp.idMapaCurricular
+      WHERE gm.idGrupo = ?
+    `, [idGrupo]);
+
+    res.json({ 
+      success: true,
+      data: materias 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false,
+      message: "Error al obtener materias" 
+    });
+  }
+};
+
+// Crear kardex extraordinario
+export const createKardexExtraordinario = async (req, res) => {
+  const { idAlumnoPA, idGrupo, materiasSeleccionadas } = req.body;
+  let connection;
+
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    // Validar grupo y obtener periodo
+    const [grupo] = await connection.query(
+      "SELECT idPeriodo FROM grupo WHERE idGrupo = ?", 
+      [idGrupo]
+    );
+    if (!grupo.length) throw new Error("Grupo no válido");
+
+    // Insertar kardex
+    await connection.query(
+      `INSERT INTO kardex 
+       (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, tipo, estatus) 
+       VALUES ?`,
+      [materiasSeleccionadas.map(id => [
+        idAlumnoPA, 
+        id, 
+        idGrupo, 
+        grupo[0].idPeriodo, 
+        "Extraordinaria", 
+        "Activo"
+      ])]
+    );
+
+    await connection.commit();
+    res.json({ 
+      success: true,
+      message: `${materiasSeleccionadas.length} materia(s) registradas` 
+    });
+  } catch (error) {
+    if (connection) await connection.rollback();
+    res.status(500).json({ 
+      success: false,
+      message: error.message 
+    });
+  } finally {
+    if (connection) connection.release();
+  }
+};

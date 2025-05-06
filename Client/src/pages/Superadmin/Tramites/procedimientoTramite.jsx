@@ -16,8 +16,11 @@ import { getAlumnopatodos, addAlumnoPa, transaccionUpdateAlumnopaJS}
 from '../../../assets/js/Parametrizacion/alumnopa.js';
 
 //Kardex/Grupo
-import {getKardexTodos, addKardexFun, updateTransaccionKardexjs} 
+import {getKardexTodos, addKardexFun, updateTransaccionKardexjs, addKardexExtra} 
 from '../../../assets/js/Parametrizacion/kardex.js';
+
+//Kardex (EXTRAORDINARIOS)
+import { getMateriasByGrupo} from '../../../api/Parametrizacion/kardex.api.js';
 
 // AlumnoTrámite
 import{getAlumnoTramite, updateAlumnoTramiteFunc} 
@@ -80,6 +83,8 @@ function ProcedimientoTramite() {
   const [tipo, setTipo] = useState("");
   const [estatusKardex, setEstatusKardex] = useState("");
   const [selectedKardex, setSelectedKardex] = useState(null);
+  const [showModalExtra, setShowModalExtra] = useState(false); // Modal de Kardex
+  const [materiasSeleccionadas, setMateriasSeleccionadas] = useState([]); // Estado para las materias seleccionadas
 
   //ALUMNO TRÁMITE
   const [alumnotramiteList, setAlumnoTramite] = useState([]);
@@ -474,6 +479,59 @@ useEffect(() => {
          );
        };
 
+
+       const handleAddKardexExtra = async ({ idAlumnoPA, idGrupo, materiasSeleccionadas }) => {
+        console.log("Datos enviados a KARDEX EXTRAS EMAC:", {
+          idAlumnoPA,
+          idGrupo,
+          materiasSeleccionadas,
+        });
+      
+        if (!materiasSeleccionadas || materiasSeleccionadas.length === 0) {
+          console.warn("No se seleccionaron materias.");
+          return;
+        }
+      
+        try {
+          await addKardexExtra(
+            idAlumnoPA,
+            idGrupo,
+            materiasSeleccionadas,
+            setShowModalExtra,
+            async () => {
+              await getKardexTodos(setKardexList);
+              await Promise.all(
+                alumnoprocesoList.map(async (item) => {
+                  if (item.estatus === "En proceso") {
+                    try {
+                      await updateAlumnoProceso(
+                        item.idAlumnoProceso,
+                        idAlumnoTramite,
+                        idTramiteProceso,
+                        idActividad,
+                        orden,
+                        "Concluido",
+                        observacion,
+                        setShowEditModal,
+                        () => {}
+                      );
+                    } catch (error) {
+                      console.error("Error al actualizar el proceso de alumno:", error);
+                    }
+                  }
+                })
+              );
+              await getAlumnoProceso(setAlumnoProceso);
+            }
+          );
+        } catch (error) {
+          console.error("Error en la llamada addKardexExtra:", error);
+        }
+      };
+      
+      
+
+
   // Función para manejar el clic en el botón "objeto"
   const handleObjetoClick = (objeto) => {
     console.log("Objeto seleccionado:", objeto); // Depuración
@@ -758,7 +816,10 @@ useEffect(() => {
     handleKardex={handleKardex}
     handleUpdateKardex={handleUpdateKardex}
     handleUpdateKardexBDef={handleUpdateKardexBDef}
+    handleAddKardexExtra={handleAddKardexExtra}
     setSelectedKardex={setSelectedKardex}
+    setShowModalExtra={setShowModalExtra}
+    materiasSeleccionadas={materiasSeleccionadas} setMateriasSeleccionadas={setMateriasSeleccionadas} // Nueva prop para materias seleccionadas
 
     //MODAL ALUMNO TRAMITE
     idTramite={idTramite} setIdTramite={setIdTramite}

@@ -79,3 +79,37 @@ export const updateTransaccionKardex = async (idKardex, idAlumnoPA, idMapaCurric
     throw new Error('Error al actualizar el kardex');
   }
 };
+
+// ----------------------- EXTRAORDINARIOS ---------------------------------------------
+// Obtener materias por grupo
+export const getMateriasByGrupo = async (idGrupo) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/kardex/materias/${idGrupo}`);
+    return response.data.data || []; 
+  } catch (error) {
+    console.error("Error al obtener las materias por grupo:", error);
+    throw new Error('Error al obtener las materias por grupo');
+  }
+};
+
+// Crear un nuevo registro de kardex extraordinario
+export const createKardexExtraordinario = async (idAlumnoPA, idGrupo, materiasSeleccionadas) => {
+  console.log("Kardex creado correctamente:", idAlumnoPA, idGrupo, materiasSeleccionadas);
+  try {
+    const response = await axios.post(`${BASE_URL}/kardex/createExtraordinario`, {
+      idAlumnoPA,
+      idGrupo,
+      materiasSeleccionadas
+    });
+
+    console.log("Respuesta del servidor:", response.data);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error("Error en la respuesta del servidor:", error.response.data);
+    } else {
+      console.error("Error al guardar:", error.message);
+    }
+    throw new Error('Error al registrar el extraordinario');
+  }
+};

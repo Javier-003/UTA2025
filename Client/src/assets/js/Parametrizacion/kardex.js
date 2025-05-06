@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'; 
 
-import { createKardex, deleteKardex, getKardex, updateKardex, updateTransaccionKardex } 
+import { createKardex, deleteKardex, getKardex, updateKardex, updateTransaccionKardex, createKardexExtraordinario } 
 from '../../../api/Parametrizacion/kardex.api.js';
 
 
@@ -95,6 +95,39 @@ export const updateTransaccionKardexjs = async (idKardex, idAlumnoPA, idMapaCurr
       icon: 'error',
       title: 'Error',
       text: 'Hubo un problema actualizando el estado de kardex.',
+    });
+  }
+};
+
+
+
+//EXTRAORDINARIOS
+// Crear un nuevo registro de Kardex EXTRAORDINARIO
+export const addKardexExtra = async (
+  idAlumnoPA,
+  idGrupo,
+  materiasSeleccionadas, // Ahora esto es un array de ids de mapaCurricular
+  setShowModalExtra,
+  getKardex
+) => {
+  try {
+    await createKardexExtraordinario(idAlumnoPA, idGrupo, materiasSeleccionadas);
+    
+    getKardex();
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Éxito!',
+      text: 'Kardex extraordinario registrado correctamente',
+    });
+
+    setShowModalExtra(false);
+  } catch (error) {
+    console.error('Error al agregar el registro de kardex extraordinario:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Hubo un problema registrando el kardex extraordinario.',
     });
   }
 };

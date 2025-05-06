@@ -198,107 +198,107 @@ export const AlumnoTramiteModales = ({
       </div>
 
 
+    {/* ---------- BONTÓN DE CANCELAR ------------------*/}
+          <div
+              className={`modal fade ${showEditModal2 ? 'show' : ''}`}
+              style={{
+                display: showEditModal2 ? 'block' : 'none',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+              }}
+              tabIndex="-1"
+              aria-labelledby="cancelModalLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content border-0 shadow-lg rounded-4">
 
-      <div
-  className={`modal fade ${showEditModal2 ? 'show' : ''}`}
-  style={{
-    display: showEditModal2 ? 'block' : 'none',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  }}
-  tabIndex="-1"
-  aria-labelledby="cancelModalLabel"
-  aria-hidden="true"
->
-  <div className="modal-dialog modal-dialog-centered">
-    <div className="modal-content border-0 shadow-lg rounded-4">
+                  {/* Header */}
+                  <div className="modal-header border-0">
+                    <h5 className="modal-title fw-semibold text-danger" id="cancelModalLabel">
+                      Confirmar Cancelación
+                    </h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      aria-label="Cerrar"
+                      onClick={() => setShowEditModal2(false)}
+                    ></button>
+                  </div>
 
-      {/* Header */}
-      <div className="modal-header border-0">
-        <h5 className="modal-title fw-semibold text-danger" id="cancelModalLabel">
-          Confirmar Cancelación
-        </h5>
-        <button
-          type="button"
-          className="btn-close"
-          aria-label="Cerrar"
-          onClick={() => setShowEditModal2(false)}
-        ></button>
-      </div>
+                  {/* Body */}
+                  <div className="modal-body text-center px-4 py-3">
 
-      {/* Body */}
-      <div className="modal-body text-center px-4 py-3">
+                    <div className="mb-4">
+                      <i className="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+                    </div>
 
-        <div className="mb-4">
-          <i className="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
-        </div>
+                    <p className="fw-semibold fs-5 text-dark mb-4">
+                      ¿Estás seguro que deseas cancelar el trámite del siguiente alumno?
+                    </p>
 
-        <p className="fw-semibold fs-5 text-dark mb-4">
-          ¿Estás seguro que deseas cancelar el trámite del siguiente alumno?
-        </p>
+                    {/* Info Card */}
+                    <div className="border rounded-4 p-3 text-start bg-light-subtle">
+                      <div className="d-flex flex-column gap-3">
 
-        {/* Info Card */}
-        <div className="border rounded-4 p-3 text-start bg-light-subtle">
-          <div className="d-flex flex-column gap-3">
+                        <div>
+                          <span className="text-secondary small">Alumno</span>
+                          <div className="fw-medium fs-6">
+                            {personaList.find(p => p.idPersona === idPersona)?.nombre + " " +
+                              personaList.find(p => p.idPersona === idPersona)?.paterno + " " +
+                              (personaList.find(p => p.idPersona === idPersona)?.materno || "")
+                              || ""}
+                          </div>
+                        </div>
 
-            <div>
-              <span className="text-secondary small">Alumno</span>
-              <div className="fw-medium fs-6">
-                {personaList.find(p => p.idPersona === idPersona)?.nombre + " " +
-                  personaList.find(p => p.idPersona === idPersona)?.paterno + " " +
-                  (personaList.find(p => p.idPersona === idPersona)?.materno || "")
-                  || ""}
+                        <div>
+                          <span className="text-secondary small">Trámite</span>
+                          <div className="fw-medium fs-6">
+                            {tramiteList.find(t => t.idTramite === idTramite)?.nombre || ""}
+                          </div>
+                        </div>
+
+                        <div>
+                          <span className="text-secondary small">Periodo</span>
+                          <div className="fw-medium fs-6">
+                            {periodoList.find(p => p.idPeriodo === idPeriodo)?.periodo || ""}
+                          </div>
+                        </div>
+
+                        <div>
+                          <span className="text-secondary small">Fecha</span>
+                          <div className="fw-medium fs-6">{fecha}</div>
+                        </div>
+
+                        <div>
+                          <span className="text-secondary small">Estatus</span>
+                          <div className="fw-bold fs-6 text-danger">Cancelado</div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="modal-footer border-0 d-flex justify-content-center gap-3 pb-4">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary px-4 py-2 rounded-pill"
+                      onClick={() => setShowEditModal2(false)}
+                    >
+                      Cerrar
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-danger px-4 py-2 rounded-pill"
+                      onClick={handleUpdate}
+                    >
+                      Cancelar trámite
+                    </button>
+                  </div>
+
+                </div>
               </div>
             </div>
-
-            <div>
-              <span className="text-secondary small">Trámite</span>
-              <div className="fw-medium fs-6">
-                {tramiteList.find(t => t.idTramite === idTramite)?.nombre || ""}
-              </div>
-            </div>
-
-            <div>
-              <span className="text-secondary small">Periodo</span>
-              <div className="fw-medium fs-6">
-                {periodoList.find(p => p.idPeriodo === idPeriodo)?.periodo || ""}
-              </div>
-            </div>
-
-            <div>
-              <span className="text-secondary small">Fecha</span>
-              <div className="fw-medium fs-6">{fecha}</div>
-            </div>
-
-            <div>
-              <span className="text-secondary small">Estatus</span>
-              <div className="fw-bold fs-6 text-danger">Cancelado</div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="modal-footer border-0 d-flex justify-content-center gap-3 pb-4">
-        <button
-          type="button"
-          className="btn btn-outline-secondary px-4 py-2 rounded-pill"
-          onClick={() => setShowEditModal2(false)}
-        >
-          Cerrar
-        </button>
-        <button
-          type="button"
-          className="btn btn-danger px-4 py-2 rounded-pill"
-          onClick={handleUpdate}
-        >
-          Cancelar trámite
-        </button>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 
       {/* Modal para eliminar AlumnoProceso */}

@@ -16,6 +16,7 @@ import { getProgramaacademicos } from "../../../api/PlanificacionAcademica/progr
 import { getGrupos } from "../../../api/PlanificacionAcademica/grupo.api.js";
 import { getMapaCurriculares } from "../../../api/PlanificacionAcademica/mapacurricular.api.js";
 import { getAlumnoPA } from "../../../api/Parametrizacion/alumnopa.api.js";
+import { getMateriasByGrupo } from '../../../api/Parametrizacion/kardex.api.js';
 
 //ALUMNO TRÁMITE
 import { getCausasBaja } from "../../../api/Tramites/causabaja.api.js";
@@ -1753,149 +1754,170 @@ export const tramiteBajaDefinitiva = (props) => (
 
 // ------------------------------------------ CARGAR DATOS (KARDEX, EVALUACIÓN) PARA EXTRAORDINARIO -------------------------------------------------------
 
-export const tramiteRegistraGrupoExtraordinario = ({ 
-  idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex, 
-  handleKardex, handleClose, show,
+export const tramiteRegistraGrupoExtraordinario = ({
+  idAlumnoPA,
+  show,
+  handleClose,
+  handleAddKardexExtra,
 }) => {
-  
   const [grupoList, setGrupoList] = useState([]);
-  const [alumnoList, setAlumnoList] = useState([]);
-  const [datosTemporalmente, setDatosTemporalmente] = useState(null);
+  const [idGrupo, setIdGrupo] = useState("");
+  const [materiasGrupo, setMateriasGrupo] = useState([]);
+  const [materiasSeleccionadas, setMateriasSeleccionadas] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-
-  const tipo = "Ordinaria";
-  const estatusKardex = "Activo";
+  const [alumnoList, setAlumnoList] = useState([]);
 
   useEffect(() => {
-    getAlumnoPA()
-      .then(data => setAlumnoList(data))
-      .catch(error => console.error("Error al obtener los alumnos:", error));
-    
-    getGrupos()
-      .then(data => setGrupoList(data))
-      .catch(error => console.error("Error al obtener los grupos:", error));
-  }, []);
+    if (show) {
+      getGrupos().then(setGrupoList).catch(console.error);
+      getAlumnoPA().then(setAlumnoList).catch(console.error);
+    }
+  }, [show]);
 
-  // Función para guardar los datos temporalmente y abrir el modal de confirmación
-  const handleGuardarTemporal = () => {
-    const alumnoSeleccionado = alumnoList.find(alumno => alumno.idAlumnoPA === idAlumnoPA);
-    const grupoSeleccionado = grupoList.find(grupo => String(grupo.idGrupo) === String(idGrupo)); // Asegurar comparación correcta
+  useEffect(() => {
+    if (idGrupo) {
+      getMateriasByGrupo(idGrupo)
+        .then((data) => {
+          setMateriasGrupo(data);
+          setMateriasSeleccionadas([]);
+        })
+        .catch(console.error);
+    }
+  }, [idGrupo]);
 
-    console.log("Alumno seleccionado:", alumnoSeleccionado); // Debug
-    console.log("Grupo seleccionado:", grupoSeleccionado); // Debug
-
-    const datos = {
-      idAlumnoPA,
-      nombreAlumno: alumnoSeleccionado 
-        ? `${alumnoSeleccionado.nombre} ${alumnoSeleccionado.paterno} ${alumnoSeleccionado.materno}`
-        : "Desconocido",
-      idGrupo,
-      nombreGrupo: grupoSeleccionado ? grupoSeleccionado.nombre : "Desconocido",
-      tipo,
-      estatusKardex,
-      idPeriodoKardex,
-    };
-
-    setDatosTemporalmente(datos);
-    setShowConfirmModal(true);
+  const handleCheckboxChange = (idMateria) => {
+    setMateriasSeleccionadas((prev) =>
+      prev.includes(idMateria)
+        ? prev.filter((id) => id !== idMateria)
+        : [...prev, idMateria]
+    );
   };
+
+  const handleConfirm = () => {
+    handleAddKardexExtra({
+      idAlumnoPA,
+      idGrupo,
+      materiasSeleccionadas,
+    });
+    setShowConfirmModal(false);
+    handleClose();
+  };
+
+  const alumnoData = alumnoList.find((a) => a.idAlumnoPA === idAlumnoPA);
+  const nombreCompleto = alumnoData
+    ? `${alumnoData.nombre} ${alumnoData.paterno} ${alumnoData.materno}`
+    : "";
 
   return (
     <>
-      {/* Modal principal */}
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={show} onHide={handleClose} centered size="lg">
         <Modal.Header closeButton className="bg-primary text-white">
-          <Modal.Title className="fw-bold">Asignar Grupo a Alumno</Modal.Title>
+          <Modal.Title>Registrar Extraordinario</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          {/* Alumno */}
-          <div className="input-group mb-3">
-            <span className="input-group-text">Alumno:</span>
-            <select className="form-select" value={idAlumnoPA} disabled>
-              <option value="">Selecciona un alumno</option>
-              {alumnoList.map((alumnopa) => (
-                <option key={alumnopa.idAlumnoPA} value={alumnopa.idAlumnoPA}>
-                  {alumnopa.nombre} {alumnopa.paterno} {alumnopa.materno}
-                </option>
-              ))}
-            </select>
-          </div>
+          {nombreCompleto && (
+            <div className="mb-3">
+              <strong>Alumno:</strong> {nombreCompleto}
+            </div>
+          )}
 
-          {/* Grupo */}
-          <div className="input-group mb-3">
-            <span className="input-group-text">Grupo:</span>
-            <select 
-              className="form-select" 
-              value={idGrupo} 
-              onChange={(event) => setIdGrupo(event.target.value)}
+          <div className="mb-3">
+            <label className="form-label fw-bold">Grupo:</label>
+            <select
+              className="form-select"
+              value={idGrupo}
+              onChange={(e) => setIdGrupo(e.target.value)}
             >
-              <option value="">Selecciona un grupo</option>
-              {grupoList.map((grupo) => (
-                <option key={grupo.idGrupo} value={grupo.idGrupo}>
-                  {grupo.nombre}
+              <option value="">-- Selecciona un grupo --</option>
+              {grupoList.map((g) => (
+                <option key={g.idGrupo} value={g.idGrupo}>
+                  {g.nombre}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Campo oculto */}
-          <input type="hidden" value={tipo} name="tipo" />
-          <input type="hidden" value={estatusKardex} name="estatusKardex" />
+          {materiasGrupo.length > 0 && (
+            <>
+              <label className="form-label fw-bold">Materias del grupo:</label>
+              <div className="list-group">
+                {materiasGrupo.map((materia) => (
+                  <label
+                    key={materia.idMapaCurricular}
+                    className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center rounded-3 mb-2 ${
+                      materiasSeleccionadas.includes(materia.idMapaCurricular)
+                        ? "active bg-primary text-white"
+                        : ""
+                    }`}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div>
+                      {materia.nombreMateria} <small>({materia.clave})</small>
+                    </div>
+                    <Form.Check
+                      type="checkbox"
+                      checked={materiasSeleccionadas.includes(
+                        materia.idMapaCurricular
+                      )}
+                      onChange={() =>
+                        handleCheckboxChange(materia.idMapaCurricular)
+                      }
+                    />
+                  </label>
+                ))}
+              </div>
+            </>
+          )}
         </Modal.Body>
 
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Cerrar
+            Cancelar
           </Button>
-          <Button variant="primary" onClick={handleGuardarTemporal}>
-            Guardar Cambios
+          <Button
+            variant="primary"
+            disabled={!idGrupo || materiasSeleccionadas.length === 0}
+            onClick={() => setShowConfirmModal(true)}
+          >
+            Confirmar
           </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Modal de confirmación */}
-      <TramiteConfirmacionGrupo
+      {/* Modal de Confirmación */}
+      <Modal
         show={showConfirmModal}
-        handleClose={() => setShowConfirmModal(false)}
-        datos={datosTemporalmente}
-        handleConfirm={() => {
-          handleKardex(datosTemporalmente);
-          setShowConfirmModal(false);
-          handleClose();
-        }}
-      />
+        onHide={() => setShowConfirmModal(false)}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar Registro</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>¿Deseas registrar extraordinario en las siguientes materias?</p>
+          <ul>
+            {materiasGrupo
+              .filter((m) => materiasSeleccionadas.includes(m.idMapaCurricular))
+              .map((m) => (
+                <li key={m.idMapaCurricular}>
+                  {m.nombreMateria} ({m.clave})
+                </li>
+              ))}
+          </ul>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmModal(false)}
+          >
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={handleConfirm}>
+            Confirmar y Registrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
-  );
-};
-
-// Modal de confirmación
-export const TramiteConfirmacionGrupo = ({ show, handleClose, datos, handleConfirm }) => {
-  return (
-    <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Confirmar Registro e Impactar Historial</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {datos ? (
-          <>
-            <p><strong>Alumno:</strong> {datos.nombreAlumno} </p>
-            <p><strong>Grupo:</strong> {datos.nombreGrupo} ({datos.idGrupo})</p>
-            <p><strong>Tipo:</strong> {datos.tipo}</p>
-            <p><strong>Estatus:</strong> {datos.estatusKardex}</p>
-          </>
-        ) : (
-          <p>No hay datos seleccionados.</p>
-        )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Cancelar
-        </Button>
-        <Button variant="primary" onClick={handleConfirm}>
-          Confirmar y Registrar
-        </Button>
-      </Modal.Footer>
-    </Modal>
   );
 };
