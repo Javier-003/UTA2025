@@ -290,7 +290,7 @@ export const getMateriasByGrupo = async (req, res) => {
   const { idGrupo } = req.params;
   try {
     const [materias] = await db.query(`
-      SELECT gm.idMapaCurricular, mp.materia AS nombreMateria, mp.clave
+      SELECT gm.idMapaCurricular, mp.materia AS nombreMateria, mp.clave, gm.tipo
       FROM grupomateria gm
       INNER JOIN mapacurricular mp ON gm.idMapaCurricular = mp.idMapaCurricular
       WHERE gm.idGrupo = ?
@@ -324,19 +324,40 @@ export const createKardexExtraordinario = async (req, res) => {
     );
     if (!grupo.length) throw new Error("Grupo no válido");
 
+    // Obtener los tipos de materia para cada idMapaCurricular
+    const [materiasInfo] = await connection.query(
+      `SELECT idMapaCurricular, tipo FROM grupomateria 
+       WHERE idGrupo = ? AND idMapaCurricular IN (?)`,
+      [idGrupo, materiasSeleccionadas]
+    );
+
+    // Crear un mapa de idMapaCurricular a tipo
+    const materiaTipoMap = {};
+    materiasInfo.forEach(materia => {
+      materiaTipoMap[materia.idMapaCurricular] = materia.tipo;
+    });
+
+    // Verificar que todas las materias seleccionadas tienen tipo
+    const valoresInsert = materiasSeleccionadas.map(id => {
+      if (!materiaTipoMap[id]) {
+        throw new Error(`No se encontró el tipo para la materia con id ${id}`);
+      }
+      return [
+        idAlumnoPA, 
+        id, 
+        idGrupo, 
+        grupo[0].idPeriodo, 
+        materiaTipoMap[id], 
+        "Activo"
+      ];
+    });
+
     // Insertar kardex
     await connection.query(
       `INSERT INTO kardex 
        (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, tipo, estatus) 
        VALUES ?`,
-      [materiasSeleccionadas.map(id => [
-        idAlumnoPA, 
-        id, 
-        idGrupo, 
-        grupo[0].idPeriodo, 
-        "Extraordinaria", 
-        "Activo"
-      ])]
+      [valoresInsert]
     );
 
     await connection.commit();
