@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { getEvaluacionTodos } from "../../assets/js/Parametrizacion/evaluacion.js";
 import { getKardex } from "../../api/Parametrizacion/kardex.api.js";
 import logo from '../../assets/img/LOGO UTA.png';
 
-function ListaEvaluacion({ cargaMateria, programaAcademico, actualizarEvaluaciones }) {
-    const [evaluaciones, setEvaluaciones] = useState([]);
+function ListaAsistencia({ cargaMateria }) {
     const [alumnos, setAlumnos] = useState([]);
 
-    const cargarDatos = () => {
+    useEffect(() => {
         if (cargaMateria) {
             getKardex(cargaMateria.idGrupoMateria).then(data => {
                 setAlumnos(data.filter(alumno =>
@@ -18,97 +16,98 @@ function ListaEvaluacion({ cargaMateria, programaAcademico, actualizarEvaluacion
                     alumno.estatus === 'Activo'
                 ));
             }).catch(error => console.error("❌ Error al obtener alumnos:", error));
-
-            getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
-                setEvaluaciones(data.filter(evaluacion => 
-                    evaluacion.idMapaCurricular === cargaMateria.idMapaCurricular &&
-                    evaluacion.materia === cargaMateria.materia
-                ));
-            }).catch(error => console.error("❌ Error al obtener evaluaciones:", error));
         }
-    };
-
-    useEffect(() => {
-        cargarDatos();
-    }, [cargaMateria, actualizarEvaluaciones]); // Recargar datos cuando `actualizarEvaluaciones` cambie
+    }, [cargaMateria]);
 
     const generarPDF = () => {
-        if (!evaluaciones.length || !alumnos.length) {
+        if (!alumnos.length) {
             alert("No hay datos disponibles para generar el PDF.");
             return;
         }
 
-        const doc = new jsPDF();
+        const doc = new jsPDF({ orientation: "landscape" });
         const fechaEmision = new Date().toLocaleDateString();
 
-        const imgWidth = 20; 
-        const imgHeight = 20;
+        const imgWidth = 30;
+        const imgHeight = 30;
         const pageWidth = doc.internal.pageSize.getWidth();
-                
-        // Agregar el logo a la derecha
+
+        // Agregar el logo a la izquierda e derecha
+        // doc.addImage(logo, "PNG", 10, 10, imgWidth, imgHeight);
         doc.addImage(logo, "PNG", pageWidth - imgWidth - 10, 15, imgWidth, imgHeight);
 
         // Encabezado
-        doc.setFontSize(18);        
-        doc.text("Universidad Tecnológica de Acapulco", doc.internal.pageSize.getWidth() / 2, 25, { align: 'center' });
-
-        doc.setFontSize(14);
-        doc.text(`${programaAcademico || "No disponible"}`, doc.internal.pageSize.getWidth() / 2, 35, { align: 'center' });
-
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Universidad Tecnológica de Acapulco", pageWidth / 2, 20, { align: 'center' });
         doc.setFontSize(12);
+        doc.text("Lista de Asistencia", pageWidth / 2, 28, { align: 'center' });
 
-        // Ajustar el texto de la asignatura si es muy largo
-        const text = `Asignatura: ${cargaMateria.materia}, Cuatrimestre: ${cargaMateria.periodo}, Grupo: ${cargaMateria.grupo}`;
-        const textLines = doc.splitTextToSize(text, doc.internal.pageSize.getWidth() - 20); // Ajustar al ancho de la página con un margen
-        doc.text(textLines, 10, 45); // Imprimir las líneas ajustadas con un margen de 10
+        // Información adicional
+        doc.setFont("helvetica", "normal");
+        const text = `Asignatura: ${cargaMateria.materia}\nCuatrimestre: ${cargaMateria.periodo}\nGrupo: ${cargaMateria.grupo}`;
+        const textLines = doc.splitTextToSize(text, pageWidth - 20);
+        doc.text(textLines, 10, 45);
 
-        const headerHeight = 55 + (textLines.length - 1) * 5; // Calcular la altura dinámica del encabezado
-        doc.text(`Profesor(a): ${cargaMateria.profesor}`, 14, headerHeight);
-        doc.text(`Fecha de emisión: ${fechaEmision}`, doc.internal.pageSize.getWidth() - 60, headerHeight);
+        // Ajustar espaciado entre líneas
+        const additionalInfoY = 45 + textLines.length * 6; // Incrementar espacio según las líneas del texto
+        doc.text(`Profesor(a): ${cargaMateria.profesor}`, 10, additionalInfoY);
+        doc.text(`Fecha de emisión: ${fechaEmision}`, pageWidth - 60, additionalInfoY);
 
         // Ordenar alumnos por matrícula
         const alumnosOrdenados = [...alumnos].sort((a, b) => a.matricula.localeCompare(b.matricula));
 
-        // Filtrar unidades con calificaciones
-        const unidadesConCalificaciones = [...new Set(
-            evaluaciones
-                .filter(evaluacion => evaluacion.calificacion !== null && evaluacion.calificacion !== undefined)
-                .map(evaluacion => evaluacion.idMateriaUnidad)
-        )].sort();
-
         // Datos de la tabla
-        const datosTabla = alumnosOrdenados.map((alumno, index) => {
-            const evalAlumno = evaluaciones.filter(e => e.idKadex === alumno.idKardex);
-            const calificaciones = unidadesConCalificaciones.map(unidad => {
-                const evalUnidad = evalAlumno.find(e => e.idMateriaUnidad === unidad);
-                return evalUnidad ? evalUnidad.calificacion : "N/A";
-            });
-            return [index + 1, alumno.matricula, `${alumno.paterno} ${alumno.materno} ${alumno.nombre}`, ...calificaciones];
-        });
+        const datosTabla = alumnosOrdenados.map((alumno, index) => [
+            index + 1,
+            alumno.matricula,
+            `${alumno.paterno} ${alumno.materno} ${alumno.nombre}`,
+            "", "", "", "", // Semana 1, Semana 2, Semana 3, Semana 4 (Parcial 1)
+            "", "", "", "", // Semana 1, Semana 2, Semana 3, Semana 4 (Parcial 2)
+            "", "", "", ""  // Semana 1, Semana 2, Semana 3, Semana 4 (Parcial 3)
+        ]);
 
-        // Generar tabla
         doc.autoTable({
-            head: [["No", "Matrícula", "Nombre", ...unidadesConCalificaciones.map((_, i) => `Parcial ${i + 1}`), "Firma"]],
+            head: [
+                [
+                    { content: "No", rowSpan: 2 },
+                    { content: "Matrícula", rowSpan: 2 },
+                    { content: "Nombre", rowSpan: 2 },
+                    { content: "Parcial 1", colSpan: 4, styles: { halign: 'center' } },
+                    { content: "Parcial 2", colSpan: 4, styles: { halign: 'center' } },
+                    { content: "Parcial 3", colSpan: 4, styles: { halign: 'center' } }
+                ],
+                ["Semana 1", "Semana 2", "Semana 3", "Semana 4", "Semana 1", "Semana 2", "Semana 3", "Semana 4", "Semana 1", "Semana 2", "Semana 3", "Semana 4"]
+            ],
             body: datosTabla,
-            startY: headerHeight + 10, // Ajustar la posición inicial según las líneas del encabezado
-            theme: 'striped',
-            styles: { fontSize: 10 },
+            startY: 65,
+            theme: 'grid',
+            styles: { fontSize: 10, cellPadding: 2 },
             headStyles: { fillColor: [0, 102, 204], textColor: [255, 255, 255] },
-            alternateRowStyles: { fillColor: [245, 245, 245] }
+            alternateRowStyles: { fillColor: [245, 245, 245] },
+            columnStyles: {
+                3: { cellWidth: 15 }, // Semana 1 (Parcial 1)
+                4: { cellWidth: 15 }, // Semana 2 (Parcial 1)
+                5: { cellWidth: 15 }, // Semana 3 (Parcial 1)
+                6: { cellWidth: 15 }, // Semana 4 (Parcial 1)
+                7: { cellWidth: 15 }, // Semana 1 (Parcial 2)
+                8: { cellWidth: 15 }, // Semana 2 (Parcial 2)
+                9: { cellWidth: 15 }, // Semana 3 (Parcial 2)
+                10: { cellWidth: 15 }, // Semana 4 (Parcial 2)
+                11: { cellWidth: 15 }, // Semana 1 (Parcial 3)
+                12: { cellWidth: 15 }, // Semana 2 (Parcial 3)
+                13: { cellWidth: 15 }, // Semana 3 (Parcial 3)
+                14: { cellWidth: 15 }  // Semana 4 (Parcial 3)
+            }
         });
-
-        // Agregar apartado para la firma del profesor
-        const finalY = doc.autoTable.previous.finalY + 20; // Espacio debajo de la tabla
-        doc.line(doc.internal.pageSize.getWidth() / 2 - 30, finalY, doc.internal.pageSize.getWidth() / 2 + 30, finalY); // Línea para la firma
-        doc.text("Firma del profesor (a)", doc.internal.pageSize.getWidth() / 2, finalY + 5, { align: 'center' });
 
         // Guardar PDF
-        doc.save(`ListaDeEvaluacion_${cargaMateria.materia}.pdf`);
+        doc.save(`ListaDeAsistencia_${cargaMateria.materia}.pdf`);
     };
 
     return (
-        <button className="btn btn-danger" onClick={generarPDF}>Lista de Evaluación</button>
+        <button className="btn btn-danger" onClick={generarPDF}>Lista de Asistencia</button>
     );
 }
 
-export default ListaEvaluacion;
+export default ListaAsistencia;
