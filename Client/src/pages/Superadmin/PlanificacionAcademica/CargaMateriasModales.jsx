@@ -169,9 +169,11 @@ export const CargaMateriaModales = ({
                                         <select className="form-control" value={idGrupo} onChange={(e) => setIdGrupo(e.target.value)}>
                                             <option value="">Selecciona un grupo</option>
                                             {grupos.map(grupo => (
-                                                <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
-                                            ))}
-                                        </select>
+                                                <option key={grupo.idGrupo} value={grupo.idGrupo}>
+                                                    {`${grupo.nombre}, ${grupo.programa_academico}`} 
+                                                </option>
+                                            ))} 
+                                        </select> {/* Muestra grupo mas programaacademico */}
                                     </div>
                                 </div>
                                 <div className="col-md-6">
@@ -313,7 +315,12 @@ export const CargaMateriaModales = ({
                                         <select className="form-control" value={idGrupo} onChange={(e) => setIdGrupo(e.target.value)}>
                                             <option value="">Selecciona un grupo</option>
                                             {grupos.map(grupo => (
-                                                <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
+                                                <option 
+                                                    key={grupo.idGrupo} 
+                                                    value={grupo.idGrupo}
+                                                >
+                                                    {`${grupo.nombre}, ${grupo.programa_academico}`}
+                                                </option>
                                             ))}
                                         </select>
                                     </div>
