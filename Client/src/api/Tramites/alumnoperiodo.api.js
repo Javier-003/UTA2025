@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000";
-
+axios.defaults.withCredentials = true;
 
 // Obtener todos los registros de kardex
 export const getAlumnoPeriodo = async () => {

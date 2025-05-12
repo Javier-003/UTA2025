@@ -3,7 +3,7 @@ import axios from 'axios'; //Act.
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
 const userSession = localStorage.getItem('Username')
-
+axios.defaults.withCredentials = true;
 // Obtener todos los trámites de alumnos
 export const getAlumnoTramites = async () => {
   try {

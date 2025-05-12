@@ -3,7 +3,7 @@ import axios from "axios";
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
 const userSession = localStorage.getItem('Username')
-
+axios.defaults.withCredentials = true;
 export const getMateriaU = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/materiaunidad`);

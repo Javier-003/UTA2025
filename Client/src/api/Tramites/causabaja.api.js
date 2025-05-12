@@ -2,7 +2,7 @@ import axios from 'axios'; //Act.
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
-
+axios.defaults.withCredentials = true;
 // Obtener todos los trámites de alumnos
 export const getCausasBaja = async () => {
   try {

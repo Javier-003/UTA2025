@@ -2,8 +2,8 @@ import axios from 'axios';
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
-
 const userSession = localStorage.getItem('Username')
+axios.defaults.withCredentials = true;
 
 // Agregar un rol a un usuario
 export const agregarRolUsuario = async (idUsuario, idRol) => {

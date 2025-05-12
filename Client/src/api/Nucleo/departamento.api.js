@@ -3,8 +3,8 @@ import axios from 'axios';
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
-
 const userSession = localStorage.getItem('Username')
+axios.defaults.withCredentials = true;
 
 // Obtener todas los departamentos
 export const getDepartamentos = async () => {

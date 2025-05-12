@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = "http://localhost:3000";
 const userSession = localStorage.getItem('Username')
+axios.defaults.withCredentials = true;
 
 // Obtener todos los administrativos
 export const getAdministrativos = async () => {

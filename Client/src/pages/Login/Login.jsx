@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { accessLogin } from "../../api/login.api.js";
+import { accessLogin, getSession } from "../../api/login.api.js";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import backgroundImage from "../../assets/img/sigea.png";
@@ -20,13 +20,18 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      const chargeUser = async () => {
+        const data = await getSession();
+        if (data) {
+           navigate("/");
+        }
+      };
       const result = await accessLogin(username, password);
-      if (result.Token) {
+      if (result.success) {
         setErrorMessage("");
-        localStorage.setItem("token", result.Token);
-        navigate("/");
+        chargeUser()
       } else {
-        setErrorMessage("Nombre de usuario o contraseña incorrectos.");
+        setErrorMessage(result.message);
       }
     } catch (error) {
       setErrorMessage("Hubo un error al iniciar sesión. Inténtalo de nuevo.");

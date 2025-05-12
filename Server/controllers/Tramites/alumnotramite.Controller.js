@@ -19,6 +19,11 @@ export const getAlumnoTramitetodos = async (req, res) => {
         tramite.nombre AS tramite,
         periodo.periodo AS periodo,
         CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS alumno
+         persona.genero AS genero,
+        grupo_unico.cuatrimestre AS cuatrimestre,
+        cicloescolar.idcicloEscolar AS cicloEscolarId,
+        cicloescolar.nombre AS cicloEscolarNombre,
+        bajacausa.nombre AS nombre
       FROM alumnotramite Alt
       LEFT JOIN bajacausa ON Alt.idBajaCausa = bajacausa.idBajaCausa
       LEFT JOIN periodo ON Alt.idPeriodo = periodo.idPeriodo
@@ -26,7 +31,15 @@ export const getAlumnoTramitetodos = async (req, res) => {
       LEFT JOIN persona ON Alt.idPersona = persona.idPersona
       LEFT JOIN alumno a ON persona.idPersona = a.idAlumno
       LEFT JOIN alumnopa apa ON a.idAlumno = apa.idAlumno
-      LEFT JOIN programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico;
+      LEFT JOIN programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico
+      LEFT JOIN (
+        SELECT idPeriodo, idProgramaAcademico, MIN(cuatrimestre) AS cuatrimestre
+        FROM grupo
+        GROUP BY idPeriodo, idProgramaAcademico
+      ) grupo_unico ON grupo_unico.idPeriodo = Alt.idPeriodo 
+         AND grupo_unico.idProgramaAcademico = prog.idProgramaAcademico
+      LEFT JOIN cicloescolar ON periodo.idCicloEscolar = cicloescolar.idcicloEscolar;
+
     `;
 
     const [rows] = await db.query(query);

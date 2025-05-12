@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-
+import cookieParser from "cookie-parser";
 import login from "./routes/login.Routes.js";
 import indexRoutes from "./routes/index.Routes.js";
 
@@ -51,14 +51,17 @@ import tramiteRoutes from "./routes/Parametrizacion/tramite.Routes.js";
 import tramiteprocesoRoutes from "./routes/Parametrizacion/tramiteproceso.Routes.js";
 import causabajaRoutes from "./routes/Tramites/causabaja.Routes.js";
 
-
-
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Rutas
 app.use("/login",login);
@@ -104,7 +107,5 @@ app.use("/cargamaterias", cargamaterias);
 app.use("/horario", horario);
 //Bitacora
 app.use("/bitacora", bitacoraRoutes);
-
-
 
 export default app;

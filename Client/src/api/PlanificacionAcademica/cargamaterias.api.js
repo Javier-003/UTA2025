@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // URL base de la API
 const BASE_URL = "http://localhost:3000";
-
+axios.defaults.withCredentials = true;
 // Obtener las cargas de materias
 export const getCargaMaterias = async () => {
   try {
