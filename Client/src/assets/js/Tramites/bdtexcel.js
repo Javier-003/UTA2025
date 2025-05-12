@@ -2,7 +2,8 @@ import * as XLSX from 'xlsx';
 
 export function generatebdtE(filteredData) {
   // Filtrado de datos como en tu código original
-  const generatebdt = filteredData.filter(item =>  
+  const generatebdt = filteredData.filter(item => 
+    item.estatus === 'Concluido' && ( 
     (item.tramite?.toLowerCase() || "").includes('inscripción') ||
     (item.tramite?.toLowerCase() || "").includes('reinscripción') ||
     (item.tramite?.toLowerCase() || "").includes('baja temporal') ||
@@ -23,7 +24,7 @@ export function generatebdtE(filteredData) {
     (item.nombre?.toLowerCase()  || "").includes('cambio de ut') ||
     (item.nombre?.toLowerCase()  || "").includes('cambio de carrera') ||
     (item.nombre?.toLowerCase()  || "").includes('faltas al reglamento escolar') ||
-    (item.nombre?.toLowerCase()  || "").includes('otras causas')
+    (item.nombre?.toLowerCase()  || "").includes('otras causas') )
   );
 
   const periodos = [...new Set(generatebdt.map(item => item.periodo || 'Periodo no definido'))];

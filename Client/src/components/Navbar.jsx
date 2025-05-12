@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
@@ -17,32 +16,20 @@ import { logoutLogin } from '../api/login.api'
 function OffcanvasNavbar() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [loadingLogout, setLoadingLogout] = useState(false);
+  const [loadingLogout] = useState(false);
   const username = localStorage.getItem("Username");
   const navigate = useNavigate();
   const toggleModal = () => setShowModal(!showModal);
-
   const handleLogout = async () => {
-    setLoadingLogout(true);
-    try {
-      const data = await logoutLogin();
-      if (data) {
-        localStorage.clear();
-        setShowModal(false); // Cierra el modal antes de redirigir  
-        // Solo una redirección al cerrar sesión
-        setTimeout(() => {
-          navigate("/Login");
-        }, 100); // Pequeño retraso antes de navegar
-       
-      }
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    } finally {
-      setLoadingLogout(false);
+    const data = await logoutLogin();
+    if (data) {
+      localStorage.clear();
+      setTimeout(() => {
+        navigate("/Login", { replace: true });
+      }, 0);
     }
   };
   
-
   return (
     <div style={{ marginTop: "150px" }}>
       <nav className="navbar">
@@ -135,7 +122,7 @@ function OffcanvasNavbar() {
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoProceso"><FaTasks />Alumno Proceso</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoTramite"><FaClipboardList />Alumno Trámite</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/SeguimientoTramite"><FaClipboardCheck />Seguimiento Trámite</Link>
-                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoPeriodo"><FaClipboardList /> Actividad</Link>
+                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoPeriodo"><FaClipboardList />Alumno Periodo</Link>
                 </div>
               
               </div>
@@ -151,9 +138,11 @@ function OffcanvasNavbar() {
               <div className="dropdown-content">
                 <div className="column">
                   <h3>Servicio</h3>
+                  <Link className={!hasAccess(['Administrador','Servicios Escolares']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Estadisticas"><FaTasks /> Estadistica</Link>
                   <Link className={!hasAccess(['Administrador','Servicios Escolares']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Constancia"><FaTasks /> Constancia</Link>
                   <Link className={!hasAccess(['Administrador','Servicios Escolares']) ? 'opacity-50 cursor-not-allowed' : ''} to="/TramiteTitulacion"><FaClipboardList />Tramite Titulación</Link>
-                  <Link className={!hasAccess(['Administrador','Servicios Escolares']) ? 'opacity-50 cursor-not-allowed' : ''} to="/ConclusiondeCarrera"><FaClipboardList />Conclusión de Carerra</Link>
+                  <Link className={!hasAccess(['Administrador','Servicios Escolares']) ? 'opacity-50 cursor-not-allowed' : ''} 
+                  to="/ConclusiondeCarrera"><FaClipboardList />Conclusion de Carrera</Link>                
                 </div>
                 <div className="column">
                   <h3>Calificaciones</h3>
@@ -164,16 +153,14 @@ function OffcanvasNavbar() {
               </div>
             )}
           </div>
-
         </div>
 
         {/* Botón de Cerrar Sesión */}
         <button className="logout-btn" onClick={toggleModal}>
           <FaSignOutAlt />
         </button>
-
-     {/* Modal para Confirmar Cierre de Sesión */}
-     <Modal show={showModal} onHide={toggleModal} centered>
+        {/* Modal para Confirmar Cierre de Sesión */}
+        <Modal show={showModal} onHide={toggleModal} centered>
           <Modal.Header closeButton>
             <Modal.Title>Cerrar Sesión</Modal.Title>
           </Modal.Header>
@@ -182,10 +169,7 @@ function OffcanvasNavbar() {
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={toggleModal} disabled={loadingLogout}>Cancelar</Button>
-        <Button variant="danger" onClick={() => handleLogout()}>
-  Cerrar Sesión
-</Button>
-
+            <Button variant="danger" onClick={() => handleLogout()}>Cerrar Sesión</Button>
           </Modal.Footer>
         </Modal>
       </nav>

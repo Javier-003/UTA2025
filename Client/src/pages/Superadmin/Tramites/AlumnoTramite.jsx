@@ -4,10 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getAlumnoTramite, addAlumnoTramite, updateAlumnoTramiteFunc, deleteAlumnoTramiteFunc } 
 from '../../../assets/js/Tramites/alumnotramite.js';
 import { AlumnoTramiteModales } from '../Tramites/AlumnoTramiteModales.jsx';
-import { generatePDF } from '../../../assets/js/Tramites/ir.js';
-import { generatebdt } from "../../../assets/js/Tramites/bdt.js";
-import { generateExcelIR } from "../../../assets/js/Tramites/excelir.js";
-import { generatebdtE } from "../../../assets/js/Tramites/bdtexcel.js";
 import { getTramites } from '../../../api/Parametrizacion/tramite.api.js';
 import { getPeriodos } from '../../../api/PlanificacionAcademica/periodo.api.js';
 import { getCausasBaja } from '../../../api/Tramites/causabaja.api.js';
@@ -127,18 +123,6 @@ const filteredData = alumnotramiteList.filter(
               </div>
             ) : (
             <>
-            <button className="btn btn-primary mb-4" onClick={() => generatePDF(filteredData)}>
-              Exportar PDF Matrícula Total
-            </button>
-            <button className="btn btn-danger mb-4" onClick={() => generatebdt(filteredData)}>
-              Exportar PDF (Bajas)
-            </button>
-            <button className="btn btn-warning mb-4" onClick={() => generateExcelIR(filteredData)}>
-              Exportar Excel Matrícula Total
-            </button>
-          <button className="btn btn-success mb-4" onClick={() => generatebdtE(filteredData)}>
-            Exportar Excel Baja
-          </button>
           <table className="table table-bordered">
             <thead>
               <tr>

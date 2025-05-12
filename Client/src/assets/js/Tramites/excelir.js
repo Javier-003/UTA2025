@@ -2,14 +2,12 @@ import * as XLSX from 'xlsx';
 
 export function generateExcelIR(filteredData) {
   const filteredExcelData = filteredData.filter(item =>
-    item.tramite.toLowerCase().includes('inscripción') ||
-    item.tramite.toLowerCase().includes('reinscripción')
+    item.estatus === 'Concluido' && (
+      item.tramite.toLowerCase().includes('inscripción') ||
+      item.tramite.toLowerCase().includes('reinscripción')
+    )
   );
 
-  if (filteredExcelData.length === 0) {
-    alert("No hay datos de Inscripción o Reinscripción para exportar.");
-    return;
-  }
 
   const cicloEscolarNombre = [...new Set(filteredExcelData.map(item => item.cicloEscolarNombre || 'Ciclo Escolar no definido'))][0];
   const periodo = [...new Set(filteredExcelData.map(item => item.periodo || 'Periodo no definido'))][0];

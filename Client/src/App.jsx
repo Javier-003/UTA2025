@@ -63,6 +63,7 @@ import Acercade from './pages/Login/Acercade';
 import TramiteTitulacion from './pages/Superadmin/Servicio/TramiteTitulacion';
 import HorarioProfesor from './pages/Superadmin/PlanificacionAcademica/HorarioProfesor';
 import ConclusiondeCarrera from './pages/Superadmin/Servicio/Conclusion';
+import Estadisticas from './pages/Superadmin/Tramites/Estadisticas';
 
 import hasAccess from './hooks/AccesUsers'
 
@@ -135,7 +136,9 @@ function App() {
         <Route path="/Constancia" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<Constancia />)} />
         <Route path="/TramiteConcluido" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<TramiteConcluido />)} />
         <Route path="/TramiteTitulacion" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<TramiteTitulacion />)} />
-        <Route path="/ConclusiondeCarrera" element={!hasAccess(['Adninistrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<ConclusiondeCarrera />)} />
+        <Route path="/ConclusiondeCarrera" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<ConclusiondeCarrera />)} />
+        
+        <Route path="/Estadisticas" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<Estadisticas />)} />
         
         <Route path="/Kardex" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Kardex />)} />
         <Route path="*" element={<NotFound />} />

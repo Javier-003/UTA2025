@@ -18,8 +18,8 @@ export const getAlumnoTramitetodos = async (req, res) => {
         COALESCE(a.idAlumno, a.idAlumno) AS idAlumno,
         tramite.nombre AS tramite,
         periodo.periodo AS periodo,
-        CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS alumno
-         persona.genero AS genero,
+        CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS alumno,
+        persona.genero AS genero,
         grupo_unico.cuatrimestre AS cuatrimestre,
         cicloescolar.idcicloEscolar AS cicloEscolarId,
         cicloescolar.nombre AS cicloEscolarNombre,
@@ -32,14 +32,13 @@ export const getAlumnoTramitetodos = async (req, res) => {
       LEFT JOIN alumno a ON persona.idPersona = a.idAlumno
       LEFT JOIN alumnopa apa ON a.idAlumno = apa.idAlumno
       LEFT JOIN programaacademico prog ON apa.idProgramaAcademico = prog.idProgramaAcademico
-      LEFT JOIN (
+            LEFT JOIN (
         SELECT idPeriodo, idProgramaAcademico, MIN(cuatrimestre) AS cuatrimestre
         FROM grupo
         GROUP BY idPeriodo, idProgramaAcademico
       ) grupo_unico ON grupo_unico.idPeriodo = Alt.idPeriodo 
-         AND grupo_unico.idProgramaAcademico = prog.idProgramaAcademico
+      AND grupo_unico.idProgramaAcademico = prog.idProgramaAcademico
       LEFT JOIN cicloescolar ON periodo.idCicloEscolar = cicloescolar.idcicloEscolar;
-
     `;
 
     const [rows] = await db.query(query);
@@ -48,6 +47,7 @@ export const getAlumnoTramitetodos = async (req, res) => {
     res.status(500).json({ message: "Algo salió mal", error: error.message });
   }
 };
+
 
 
 // 🔹 CREAR UN NUEVO TRÁMITE PARA UN ALUMNO

@@ -6,15 +6,13 @@ export function generatePDF(filteredData) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(12);
 
-  const filteredPDFData = filteredData.filter(item =>
+  const filteredPDFData = filteredData.filter(item => 
+    item.estatus === 'Concluido' && (
     item.tramite.toLowerCase().includes('inscripción') ||
     item.tramite.toLowerCase().includes('reinscripción')
+   )
   );
 
-  if (filteredPDFData.length === 0) {
-    alert("No hay datos de Inscripción o Reinscripción para exportar.");
-    return;
-  }
 
   const periodos = [...new Set(filteredPDFData.map(item => item.periodo || 'Periodo no definido'))];
   const cicloEscolarNombre = [...new Set(filteredPDFData.map(item => item.cicloEscolarNombre || 'Ciclo Escolar no definido'))][0];
