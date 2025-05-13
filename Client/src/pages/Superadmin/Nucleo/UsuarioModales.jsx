@@ -100,11 +100,13 @@ export const UsuarioModales = ({
                 <span className="input-group-text">Roles:</span>
                 <select className="form-control" value={rolId} onChange={(event) => setRolId(event.target.value)}>
                   <option value="">Selecciona un rol</option>
-                  <option value="1">Admin</option>
+                  <option value="1">Administrador</option>
                   <option value="2">Profesor</option>
                   <option value="3">Alumno</option>
-                  <option value="4">DGA</option>
-                  <option value="5">SE</option>
+                  <option value="4">Dirección Academica</option>
+                  <option value="5">Servicios Escolares</option>
+                  <option value="6">Cordinador Licienciatura</option>
+                  <option value="7">Tesoreria</option>
                 </select>
               </div>
 
@@ -193,15 +195,13 @@ export const UsuarioModales = ({
           </div>
           <div className="modal-body">
             {/* Filtrar roles que el usuario no tiene */}
-            <select className="form-select" onChange={(event) => setSelectedRole(event.target.value)}>
-              <option value="">Seleccionar Rol</option>
-             {[{id:'1',name:'Admin'},{id:'2',name:'Profesor'}, {id:'3',name:'Alumno'}, {id:'4',name:'DGA'}, {id:'5',name:'SE'}]
-                .filter(role => !rolesUsuario.some(r => r.nombre === role.name)) // Filtra los roles que no están en rolesUsuario
-                .map((role) => (
-                  <option key={role.id} value={role.id}>{role.name}</option> // Usa el name para mostrar y el id para el value
-                ))
-              }
-            </select>
+            {rolesUsuario.length === 7 ? (<p>Este usuario ya tiene todos los roles asignados.</p>) : (
+              <select className="form-select" onChange={(event) => setSelectedRole(event.target.value)}>
+                <option value="">Seleccionar Rol</option>
+                {[{id:'1',name:'Administrador'},{id:'2',name:'Profesor'}, {id:'3',name:'Alumno'}, {id:'4',name:'Dirección Académica'}, 
+                {id:'5',name:'Servicios Escolares'},{id:'6',name:'Coordinador Licenciatura'}, {id:'7',name:'Tesorería'}]
+                .filter(role => !rolesUsuario.some(r => r.nombre === role.name)) 
+                .map((role) => ( <option key={role.id} value={role.id}>{role.name}</option>))}</select>)}
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={() => setShowAddRoleModal(false)}>Cerrar</button>

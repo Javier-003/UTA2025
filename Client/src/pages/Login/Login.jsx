@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { accessLogin, getSession } from "../../api/login.api.js";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import backgroundImage from "../../assets/img/sigea.png";
 import logoImage from "../../assets/img/LOGO UTA.png";
 import "../../assets/css/Login.css";
@@ -15,15 +14,13 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showModal, setShowModal] = useState(false); // Estado para el modal
-  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const chargeUser = async () => {
         const data = await getSession();
-        if (data) {
-           navigate("/");
+        if (data) {   window.location.href = "/";
         }
       };
       const result = await accessLogin(username, password);
