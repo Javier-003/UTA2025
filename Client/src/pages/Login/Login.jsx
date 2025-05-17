@@ -46,7 +46,7 @@ function Login() {
         <div className="wave"></div>
       </div>
       <div className="container shadow-lg rounded-4 overflow-hidden" style={{ maxWidth: "900px" }}>
-        <div className="row g-0">
+        <div className="row g-4">
           <div className="col-md-6" style={{ backgroundColor: "#004466" }}>
             <div className="p-5 d-flex justify-content-center align-items-center w-100">
               <div className="w-100">
