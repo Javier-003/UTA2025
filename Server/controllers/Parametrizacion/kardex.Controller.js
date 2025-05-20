@@ -156,7 +156,7 @@ export const getKardex = async (req, res) => {
 };
  */
 
-export const createKardex = async (req, res) => {
+/* export const createKardex = async (req, res) => {
   const { idAlumnoPA, idGrupo, tipo, estatus } = req.body;
   let connection;
 
@@ -267,8 +267,130 @@ export const createKardex = async (req, res) => {
       connection.release();
     }
   }
-};
+}; */
 
+export const createKardex = async (req, res) => {
+  const { idAlumnoPA, idGrupo, tipo, estatus } = req.body;
+  let connection;
+
+  try {
+    // 1. Obtener una conexión a la base de datos
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    // 2. Validación previa: Verificar si el alumno tiene kardex previos
+    const [kardexPrevios] = await connection.query(
+      `SELECT k.idKardex, k.calificacionFinal, k.idMapaCurricular 
+       FROM kardex k
+       JOIN alumnoperiodo ap ON k.idAlumnoPA = ap.idAlumnoPA
+       WHERE k.idAlumnoPA = ?`,
+      [idAlumnoPA]
+    );
+
+    if (kardexPrevios.length > 0) {
+      // Primero, agrupar por idMapaCurricular y tomar la calificación más alta
+      const materiasAgrupadas = kardexPrevios.reduce((acc, curr) => {
+        if (!acc[curr.idMapaCurricular] || 
+            (curr.calificacionFinal !== null && 
+             (acc[curr.idMapaCurricular].calificacionFinal === null || 
+              curr.calificacionFinal > acc[curr.idMapaCurricular].calificacionFinal))) {
+          acc[curr.idMapaCurricular] = curr;
+        }
+        return acc;
+      }, {});
+
+      // Convertir el objeto a array
+      const materiasUnicas = Object.values(materiasAgrupadas);
+
+      // Verificar si hay materias con calificación menor a 7 o sin calificar
+      const materiasNoAprobadas = materiasUnicas.filter(
+        materia => materia.calificacionFinal === null || materia.calificacionFinal < 7
+      );
+
+      if (materiasNoAprobadas.length > 0) {
+        throw new Error("El alumno tiene materias sin aprobar (calificación menor a 7 o sin calificar). No se puede crear nuevo kardex.");
+      }
+    }
+
+    // 3. Obtener el idPeriodo desde la tabla grupo
+    const [grupoRows] = await connection.query(
+      "SELECT idPeriodo FROM grupo WHERE idGrupo = ?",
+      [idGrupo]
+    );
+
+    if (grupoRows.length === 0) {
+      throw new Error("Grupo no encontrado");
+    }
+
+    const idPeriodo = grupoRows[0].idPeriodo;
+
+    // 4. Insertar en la tabla alumnoperiodo
+    await connection.query(
+      "INSERT INTO alumnoperiodo (idAlumnoPA, idPeriodo, Observacion) VALUES (?, ?, ?)",
+      [idAlumnoPA, idPeriodo, "Dato ingresado automáticamente"]
+    );
+
+    // 5. Obtener todos los idMapaCurricular asociados al idGrupo
+    const [grupoMateriaRows] = await connection.query(
+      "SELECT idMapaCurricular FROM grupomateria WHERE idGrupo = ?",
+      [idGrupo]
+    );
+
+    if (grupoMateriaRows.length === 0) {
+      throw new Error("No se encontraron materias para el grupo seleccionado");
+    }
+
+    // 6. Insertar en kardex por cada idMapaCurricular y obtener el idKardex
+    for (const materia of grupoMateriaRows) {
+      const { idMapaCurricular } = materia;
+
+      // Insertar en kardex
+      const [kardexResult] = await connection.query(
+        "INSERT INTO kardex (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, null, tipo, estatus]
+      );
+
+      const idKardex = kardexResult.insertId;
+
+      // 7. Obtener las unidades de la materia (materiaunidad)
+      const [materiaUnidadRows] = await connection.query(
+        "SELECT idMateriaUnidad, nombre FROM materiaunidad WHERE idMapaCurricular = ?",
+        [idMapaCurricular]
+      );
+
+      if (materiaUnidadRows.length === 0) {
+        console.warn(`No se encontraron unidades para la materia con idMapaCurricular: ${idMapaCurricular}`);
+        continue;
+      }
+
+      // 8. Insertar en evaluacion por cada unidad de la materia
+      for (const unidad of materiaUnidadRows) {
+        const { idMateriaUnidad, nombre } = unidad;
+
+        await connection.query(
+          "INSERT INTO evaluacion (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) VALUES (?, ?, ?, ?, ?, ?, ?)",
+          [idKardex, idMapaCurricular, idMateriaUnidad, null, null, nombre, "Abierto"]
+        );
+      }
+    }
+
+    // 9. Confirmar la transacción
+    await connection.commit();
+    res.status(201).json({ message: "Kardex, alumnoperiodo y evaluaciones creados correctamente" });
+  } catch (error) {
+    // 10. Revertir la transacción en caso de error
+    if (connection) {
+      await connection.rollback();
+    }
+    console.error("Error al crear kardex, alumnoperiodo y evaluaciones:", error);
+    res.status(500).json({ message: "Algo salió mal", error: error.message });
+  } finally {
+    // 11. Liberar la conexión
+    if (connection) {
+      connection.release();
+    }
+  }
+};
 
 export const updateKardex = async (req, res) => {
   try {
