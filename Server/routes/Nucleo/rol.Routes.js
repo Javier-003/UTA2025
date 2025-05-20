@@ -6,7 +6,7 @@ import bitacora from "../../middleware/bitacora.js";
 
 const router = Router();
 
-router.get("/get/", getAllRols);
+router.get("/", getAllRols);
 router.get("/get/:idUsuario", getRol);
 router.get("/getDel/:idUsuario", getDelRol);
 router.post('/create/',bitacora('Creación', 'Se agrego  un Rol a un Usuario'), createRol);

@@ -88,7 +88,7 @@ function Alumnopa() {
         <div className="mt-4">
           <div className="d-flex mb-3">
             <select className="form-select me-2" value={selectedCarrera} onChange={(e) => setSelectedCarrera(e.target.value)}>
-              <option value="">Todos las Carrera</option>
+              <option value="">Todas las Carrera</option>
               {Array.from(new Set(alumnopaList.map(item => item.carrera))).map(carrera => (
                 <option key={carrera} value={carrera}>{carrera}</option>))}
             </select>
