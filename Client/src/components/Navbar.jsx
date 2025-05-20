@@ -143,9 +143,10 @@ function OffcanvasNavbar() {
                 </div>
                 <div className="column">
                   <h3>Calificaciones</h3>
-                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/SubirCalificacion"><FaUpload />Subir Calificacion</Link>              
+                  <Link className={!hasAccess(['Administrador','Profesor', 'Servicios Escolares','Cordinador Licienciatura']) ? 'opacity-50 cursor-not-allowed' : ''} to="/SubirCalificacion"><FaUpload />Subir Calificacion</Link>              
                   <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor', 'Tesoreria']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Consultadekadex"><FaBook />Consulta de Kardex</Link>
-                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Kardex"><FaHistory />Kardex</Link>   
+                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Kardex"><FaHistory />Kardex</Link>  
+                  <Link className={!hasAccess(['Alumno']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoKardex"><FaHistory />Calificaciones</Link>      
                 </div>
               </div>
             )}
