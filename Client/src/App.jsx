@@ -125,7 +125,7 @@ function App() {
 
         <Route path="/Bloque" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Bloque />)} />  
         <Route path="/SubirCalificacion" element={!hasAccess(['Administrador', 'Profesor']) ? (<Navigate replace to="/" />) : (<SubirCalificacion />)} />
-        <Route path="/Evaluar" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Evaluar />)} />
+        <Route path="/Evaluar" element={!hasAccess(['Administrador', 'Profesor']) ? (<Navigate replace to="/" />) : (<Evaluar />)} />
 
         <Route path="/AlumnoProceso" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<AlumnoProceso />)} /> 
         <Route path="/AlumnoTramite" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<AlumnoTramite />)} />
