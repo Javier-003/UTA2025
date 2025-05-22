@@ -1,5 +1,14 @@
 import { db } from "../../db/connection.js";
 
+// Función auxiliar para extraer número y sufijo del grupo (ejemplo: "1-A" => {num: 1, sufijo: "A"})
+function parseGrupoNombre(nombreGrupo) {
+  const match = nombreGrupo.match(/^(\d+)\s*-\s*([A-D])$/i);
+  if (match) {
+    return { num: parseInt(match[1], 10), sufijo: match[2].toUpperCase() };
+  }
+  return null;
+}
+
 // Obtener todas las materias
 export const getCargaMaterias = async (req, res) => {
   try {
@@ -79,9 +88,10 @@ export const createCargaMaterias = async (req, res) => {
 
           // Validar conflictos de aulas
           const [existeAula] = await db.query(
-            `SELECT h.idGrupoMateria, a.nombre AS aula, b.nombre AS nombreBloque 
+            `SELECT h.idGrupoMateria, gm.idGrupo, g.nombre AS grupo, a.nombre AS aula, b.nombre AS nombreBloque 
              FROM horario h
              INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
+             INNER JOIN grupo g ON g.idGrupo = gm.idGrupo
              INNER JOIN aula a ON a.idAula = gm.idAula
              INNER JOIN bloque b ON b.idBloque = h.idBloque
              WHERE gm.idAula = ? AND h.dia = ? AND h.idBloque = ?`,
@@ -89,9 +99,28 @@ export const createCargaMaterias = async (req, res) => {
           );
 
           if (existeAula.length > 0) {
-            return res.status(400).json({
-              error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.`
-            });
+            // Obtener el grupo actual y el grupo del conflicto
+            const [grupoActualRow] = await db.query(
+              `SELECT nombre FROM grupo WHERE idGrupo = ?`, [idGrupo]
+            );
+            const grupoActual = grupoActualRow[0]?.nombre || "";
+            const grupoActualParsed = parseGrupoNombre(grupoActual);
+            const grupoConflictoParsed = parseGrupoNombre(existeAula[0].grupo);
+
+            // Permitir si ambos grupos tienen el mismo sufijo y el número está entre 1 y 10
+            if (
+              grupoActualParsed &&
+              grupoConflictoParsed &&
+              grupoActualParsed.sufijo === grupoConflictoParsed.sufijo &&
+              grupoActualParsed.num >= 1 && grupoActualParsed.num <= 10 &&
+              grupoConflictoParsed.num >= 1 && grupoConflictoParsed.num <= 10
+            ) {
+              // Permitir compartir aula
+            } else {
+              return res.status(400).json({
+                error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.`
+              });
+            }
           }
         }
       }
@@ -180,9 +209,10 @@ export const updateCargaMaterias = async (req, res) => {
 
         // Verificar si el aula ya está asignada a otro bloque en el mismo horario
         const [existeAula] = await db.query(
-          `SELECT h.idGrupoMateria, a.nombre AS aula, b.nombre AS nombreBloque 
+          `SELECT h.idGrupoMateria, gm.idGrupo, g.nombre AS grupo, a.nombre AS aula, b.nombre AS nombreBloque 
            FROM horario h
            INNER JOIN grupomateria gm ON gm.idGrupoMateria = h.idGrupoMateria
+           INNER JOIN grupo g ON g.idGrupo = gm.idGrupo
            INNER JOIN aula a ON a.idAula = gm.idAula
            INNER JOIN bloque b ON b.idBloque = h.idBloque
            WHERE gm.idAula = ? AND h.dia = ? AND h.idBloque = ? AND h.idGrupoMateria != ?`,
@@ -190,9 +220,28 @@ export const updateCargaMaterias = async (req, res) => {
         );
 
         if (existeAula.length > 0) {
-          return res.status(400).json({ 
-            error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.` 
-          });
+          // Obtener el grupo actual y el grupo del conflicto
+          const [grupoActualRow] = await db.query(
+            `SELECT nombre FROM grupo WHERE idGrupo = ?`, [idGrupo]
+          );
+          const grupoActual = grupoActualRow[0]?.nombre || "";
+          const grupoActualParsed = parseGrupoNombre(grupoActual);
+          const grupoConflictoParsed = parseGrupoNombre(existeAula[0].grupo);
+
+          // Permitir si ambos grupos tienen el mismo sufijo y el número está entre 1 y 10
+          if (
+            grupoActualParsed &&
+            grupoConflictoParsed &&
+            grupoActualParsed.sufijo === grupoConflictoParsed.sufijo &&
+            grupoActualParsed.num >= 1 && grupoActualParsed.num <= 10 &&
+            grupoConflictoParsed.num >= 1 && grupoConflictoParsed.num <= 10
+          ) {
+            // Permitir compartir aula
+          } else {
+            return res.status(400).json({ 
+              error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.` 
+            });
+          }
         }
       }
     }
