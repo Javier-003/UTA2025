@@ -11,8 +11,8 @@ function Evaluacion() {
   const [evaluaciones, setEvaluaciones] = useState([]);
   const [kardex, setKardex] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [periodo, setPeriodo] = useState("");
-  const [periodos, setPeriodos] = useState([]);
+  const [periodo, setPeriodo] = useState(""); // Guardar el idPeriodo seleccionado
+  const [periodos, setPeriodos] = useState([]); // Guardar objetos de periodo { idPeriodo, periodo }
   const [loading, setLoading] = useState(true);
   const [calificaciones, setCalificaciones] = useState({});
 
@@ -23,9 +23,10 @@ function Evaluacion() {
       const uniqueIdPeriodos = [...new Set(data.map(alumno => alumno.idPeriodo))];
 
       getPeriodos().then(periodosData => {
+        // Filtrar periodos que están en kardex y están "Iniciado"
         const periodosIniciados = periodosData
           .filter(periodo => uniqueIdPeriodos.includes(periodo.idPeriodo) && periodo.estado === "Iniciado")
-          .map(periodo => periodo.periodo);
+          .map(periodo => ({ idPeriodo: periodo.idPeriodo, periodo: periodo.periodo }));
 
         setPeriodos(periodosIniciados);
       });
@@ -117,9 +118,11 @@ function Evaluacion() {
   const filteredAlumnos = [...kardex]
     .filter(alumno =>
       alumno.estatus === "Activo" &&
-      (!periodo || alumno.periodo === periodo) &&
-      (searchText === "" ||
+      (!periodo || String(alumno.idPeriodo) === String(periodo)) &&
+      (
+        searchText === "" ||
         alumno.matricula.toLowerCase().includes(searchText.toLowerCase()) ||
+        (alumno.grupo && alumno.grupo.toLowerCase().includes(searchText.toLowerCase())) || // Buscar por grupo
         evaluaciones.some(evaluacion => 
           evaluacion.idKadex === alumno.idKardex && 
           evaluacion.materia.toLowerCase().includes(searchText.toLowerCase())
@@ -136,19 +139,14 @@ function Evaluacion() {
     <div className="container">
       <h2>Corrección de Calificaciones</h2>
       <div className="mb-3 d-flex">
-        <select className="form-control me-2" value={periodo} onChange={(e) => setPeriodo(e.target.value)}>
+        <select className="form-control me-2" value={periodo} onChange={(e) => setPeriodo(e.target.value)} >
           <option value="">Seleccione un periodo</option>
-          {periodos.map((p, index) => (
-            <option key={index} value={p}>{p}</option>
+          {periodos.map((p) => (
+            <option key={p.idPeriodo} value={p.idPeriodo}>{p.periodo}</option>
           ))}
         </select>
-        <input
-          type="text"
-          className="form-control"
-          value={searchText || ""}
-          onChange={(e) => setSearchText(e.target.value)}
-          placeholder="Buscar por Matrícula o Materia"
-        />
+        <input type="text" className="form-control" value={searchText || ""} onChange={(e) => setSearchText(e.target.value)}
+          placeholder="Buscar por Matrícula, Materia o Grupo" />
       </div>
       {periodo && (
         <div className="table-responsive">
@@ -183,14 +181,10 @@ function Evaluacion() {
                             return evalUnidad ? (
                               <div key={idx}>
                                 Unidad {idx + 1}:{" "}
-                                <input
-                                  type="number"
-                                  step="0.01"
-                                  aria-label={`Calificación para la unidad ${idx + 1}`}
+                                <input type="number" step="0.01" aria-label={`Calificación para la unidad ${idx + 1}`}
                                   value={calificaciones[alumno.idKardex]?.[unidad] || evalUnidad.calificacion || ""}
                                   onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
-                                  disabled={evalUnidad.estatus === 'Cerrado'}
-                                />
+                                  disabled={evalUnidad.estatus === 'Cerrado'} />
                               </div>
                             ) : null;
                           })
