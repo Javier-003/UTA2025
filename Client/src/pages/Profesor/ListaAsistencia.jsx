@@ -51,7 +51,7 @@ function ListaAsistencia({ cargaMateria }) {
         doc.text(`Fecha de emisión: ${fechaEmision}`, doc.internal.pageSize.getWidth() - 60, 55);
     
         // Ordenar alumnos por matrícula
-        const alumnosOrdenados = [...alumnos].sort((a, b) => a.matricula.localeCompare(b.matricula));
+        const alumnosOrdenados = [...alumnos].sort((a, b) => a.paterno.localeCompare(b.paterno));
     
         // Datos de la tabla
         const datosTabla = alumnosOrdenados.map((alumno, index) => [

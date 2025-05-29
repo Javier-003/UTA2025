@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getKardex } from '../../../api/Parametrizacion/kardex.api.js';
-import { getPeriodos } from '../../../api/PlanificacionAcademica/periodo.api.js'; // Asegúrate de tener esta función
+import { getPeriodos } from '../../../api/PlanificacionAcademica/periodo.api.js';
 import { getEvaluacionTodos, updateEvaluacionFunc } from '../../../assets/js/Parametrizacion/evaluacion.js';
 import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,43 +11,43 @@ function Evaluacion() {
   const [evaluaciones, setEvaluaciones] = useState([]);
   const [kardex, setKardex] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [periodo, setPeriodo] = useState(""); // Guardar el idPeriodo seleccionado
-  const [periodos, setPeriodos] = useState([]); // Guardar objetos de periodo { idPeriodo, periodo }
-  const [loading, setLoading] = useState(true);
+  const [periodo, setPeriodo] = useState("");
+  const [periodos, setPeriodos] = useState([]);
   const [calificaciones, setCalificaciones] = useState({});
 
   useEffect(() => {
-    getKardex().then(data => {
-      setKardex(data);
-
-      const uniqueIdPeriodos = [...new Set(data.map(alumno => alumno.idPeriodo))];
-
-      getPeriodos().then(periodosData => {
-        // Filtrar periodos que están en kardex y están "Iniciado"
+    const fetchData = async () => {
+      try {
+        const [kardexData, evaluacionesData, periodosData] = await Promise.all([
+          getKardex(),
+          getEvaluacionTodos(),
+          getPeriodos()
+        ]);
+        setKardex(kardexData);
+        setEvaluaciones(evaluacionesData);
+        const uniqueIdPeriodos = [...new Set(kardexData.map(alumno => alumno.idPeriodo))];
         const periodosIniciados = periodosData
-          .filter(periodo => uniqueIdPeriodos.includes(periodo.idPeriodo) && periodo.estado === "Iniciado")
-          .map(periodo => ({ idPeriodo: periodo.idPeriodo, periodo: periodo.periodo }));
-
+          .filter(p => uniqueIdPeriodos.includes(p.idPeriodo) && p.estado === "Iniciado")
+          .map(p => ({ idPeriodo: p.idPeriodo, periodo: p.periodo }));
         setPeriodos(periodosIniciados);
-      });
-
-    }).catch(error => console.error("Error al obtener los registros de kardex:", error))
-      .finally(() => setLoading(false));
-
-    getEvaluacionTodos().then(data => {
-      setEvaluaciones(data);
-    }).catch(error => console.error("Error al obtener los registros de evaluación:", error))
-      .finally(() => setLoading(false));
+      } catch (error) {
+        console.error("Error al obtener los datos:", error);
+      }
+    };
+    fetchData();
   }, []);
 
+  // Solo permite valores entre 0 y 10 con hasta 2 decimales o vacío
   const handleCalificacionChange = (idKadex, idMateriaUnidad, value) => {
-    // Permitir valores vacíos para que el usuario pueda borrar el contenido
-    if (value === "" || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 10 && /^\d{1,2}(\.\d{1,2})?$/.test(value))) {
-      setCalificaciones(prevCalificaciones => ({
-        ...prevCalificaciones,
+    if (
+      value === "" ||
+      (/^(10(\.0{0,2})?|[0-9](\.\d{0,2})?)$/.test(value) && parseFloat(value) <= 10)
+    ) {
+      setCalificaciones(prev => ({
+        ...prev,
         [idKadex]: {
-          ...prevCalificaciones[idKadex],
-          [idMateriaUnidad]: value // Permitir que el valor vacío se guarde
+          ...prev[idKadex],
+          [idMateriaUnidad]: value
         }
       }));
     }
@@ -64,8 +64,8 @@ function Evaluacion() {
       updatedEvaluacion.nombreUnidad,
       updatedEvaluacion.estatus
     ).then(() => {
-      setEvaluaciones(prevEvaluaciones =>
-        prevEvaluaciones.map(e =>
+      setEvaluaciones(prev =>
+        prev.map(e =>
           e.idEvaluacion === updatedEvaluacion.idEvaluacion ? updatedEvaluacion : e
         )
       );
@@ -84,56 +84,49 @@ function Evaluacion() {
     });
   };
 
-  const handleSubmitCalificaciones = () => {
-    const isValid = Object.values(calificaciones).every(kadex =>
-      Object.values(kadex).every(calificacion => 
-        calificacion !== "" && !isNaN(calificacion) && calificacion >= 0 && calificacion <= 10
-      )
+  const handleSubmitCalificaciones = (idKadex) => {
+    const califs = calificaciones[idKadex];
+    if (!califs) return;
+    const isValid = Object.values(califs).every(calif =>
+      calif !== "" && !isNaN(calif) && calif >= 0 && calif <= 10
     );
     if (!isValid) {
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Las calificaciones deben estar entre 0 y 10',
+        icon: 'warning',
+        title: 'Valor no válido',
+        text: 'El alumno debe de tener una calificación',
       });
       return;
     }
-
-    Object.keys(calificaciones).forEach(idKadex => {
-      Object.keys(calificaciones[idKadex]).forEach(idMateriaUnidad => {
-        const evaluacion = evaluaciones.find(e =>
-          e.idKadex === parseInt(idKadex) && e.idMateriaUnidad === parseInt(idMateriaUnidad)
-        );
-        if (evaluacion) {
-          const updatedEvaluacion = {
-            ...evaluacion,
-            calificacion: calificaciones[idKadex][idMateriaUnidad],
-          };
-          handleUpdateCalificacion(updatedEvaluacion);
-        }
-      });
+    Object.keys(califs).forEach(idMateriaUnidad => {
+      const evaluacion = evaluaciones.find(e =>
+        e.idKadex === parseInt(idKadex) && e.idMateriaUnidad === parseInt(idMateriaUnidad)
+      );
+      if (evaluacion) {
+        const updatedEvaluacion = {
+          ...evaluacion,
+          calificacion: califs[idMateriaUnidad],
+        };
+        handleUpdateCalificacion(updatedEvaluacion);
+      }
     });
   };
 
-  const filteredAlumnos = [...kardex]
+  const filteredAlumnos = kardex
     .filter(alumno =>
       alumno.estatus === "Activo" &&
       (!periodo || String(alumno.idPeriodo) === String(periodo)) &&
       (
         searchText === "" ||
         alumno.matricula.toLowerCase().includes(searchText.toLowerCase()) ||
-        (alumno.grupo && alumno.grupo.toLowerCase().includes(searchText.toLowerCase())) || // Buscar por grupo
-        evaluaciones.some(evaluacion => 
-          evaluacion.idKadex === alumno.idKardex && 
+        (alumno.grupo && alumno.grupo.toLowerCase().includes(searchText.toLowerCase())) ||
+        evaluaciones.some(evaluacion =>
+          evaluacion.idKadex === alumno.idKardex &&
           evaluacion.materia.toLowerCase().includes(searchText.toLowerCase())
         )
       )
     )
-    .sort((a, b) => a.matricula.localeCompare(b.matricula)); // Ordenar por matrícula
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+    .sort((a, b) => a.matricula.localeCompare(b.matricula));
 
   return (
     <div className="container">
@@ -145,7 +138,8 @@ function Evaluacion() {
             <option key={p.idPeriodo} value={p.idPeriodo}>{p.periodo}</option>
           ))}
         </select>
-        <input type="text" className="form-control" value={searchText || ""} onChange={(e) => setSearchText(e.target.value)}
+        <input type="text" className="form-control"
+          value={searchText} onChange={(e) => setSearchText(e.target.value)}
           placeholder="Buscar por Matrícula, Materia o Grupo" />
       </div>
       {periodo && (
@@ -179,10 +173,9 @@ function Evaluacion() {
                           unidadesMateria.map((unidad, idx) => {
                             const evalUnidad = evalAlumno.find(e => e.idMateriaUnidad === unidad);
                             return evalUnidad ? (
-                              <div key={idx}>
-                                Unidad {idx + 1}:{" "}
-                                <input type="number" step="0.01" aria-label={`Calificación para la unidad ${idx + 1}`}
-                                  value={calificaciones[alumno.idKardex]?.[unidad] || evalUnidad.calificacion || ""}
+                              <div key={idx}> Unidad {idx + 1}:{" "}
+                                <input type="number"step="0.01" aria-label={`Calificación para la unidad ${idx + 1}`}
+                                  value={calificaciones[alumno.idKardex]?.[unidad] ?? evalUnidad.calificacion ?? ""}
                                   onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
                                   disabled={evalUnidad.estatus === 'Cerrado'} />
                               </div>
@@ -191,7 +184,7 @@ function Evaluacion() {
                         ) : 'N/A'}
                       </td>
                       <td>
-                        <button className="btn btn-primary" onClick={() => handleSubmitCalificaciones()} disabled={Object.keys(calificaciones).length === 0}>
+                        <button className="btn btn-primary" onClick={() => handleSubmitCalificaciones(alumno.idKardex)}disabled={!calificaciones[alumno.idKardex]}>
                           <FontAwesomeIcon icon={faUpload} />
                         </button>
                       </td>
