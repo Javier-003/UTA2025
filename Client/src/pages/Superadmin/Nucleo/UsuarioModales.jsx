@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, Fragment } from 'react';
 import { getPersonas } from "../../../api/Nucleo/persona.api.js";
+import Select from 'react-select';
 
 export const UsuarioModales = ({
   idPersona, setidPersona,
@@ -19,10 +20,14 @@ export const UsuarioModales = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [usuarioList, setUsuarios] = useState([]);
+  const [personaList, setPersonaList] = useState([]); 
   const [rolesUsuario, setRolesUsuario] = useState([]); // Nuevo estado para almacenar los roles del usuario
-
+  const [filteredOptions, setFilteredOptions] = useState([]); 
   useEffect(() => {
     getPersonas().then(data => setUsuarios(data)).catch(error => console.error("Error al obtener las personas:", error));
+    getPersonas()
+      .then((data) => setPersonaList(data))
+      .catch((error) => console.error("Error al obtener las personas:", error));
   }, []);
 
   useEffect(() => {
@@ -49,6 +54,20 @@ export const UsuarioModales = ({
       console.log('selectedUsuario.rolId o selectedUsuario.rol no están disponibles');
     }
   }, [selectedUsuario]); // Ejecutar cuando selectedUsuario cambie
+     // Convertimos personaList en el formato requerido por react-select
+     const options = filteredOptions.map(persona => ({
+      value: persona.idPersona,
+      label: `${persona.nombre} ${persona.paterno} ${persona.materno}`
+    }));// Función para manejar la búsqueda
+  const handleSearch = (inputValue) => {
+    if (!inputValue) {
+      setFilteredOptions(personaList.slice(-20)); // Si no hay búsqueda, mostrar solo los últimos 5
+      } else {
+        setFilteredOptions(personaList.filter(persona =>
+          `${persona.nombre} ${persona.paterno} ${persona.materno}`.toLowerCase().includes(inputValue.toLowerCase())
+        ));
+      }
+  };
 
   return (
     <Fragment>
@@ -69,14 +88,13 @@ export const UsuarioModales = ({
               {/* Campo para seleccionar persona */}
               <div className="input-group mb-3">
                 <span className="input-group-text">Persona:</span>
-                <select className="form-select" value={idPersona || ''} onChange={(event) => setidPersona(event.target.value)}>
-                  <option value="">Selecciona una persona</option>
-                  {usuarioList.map((persona) => (
-                    <option key={persona.idPersona} value={persona.idPersona}>
-                      {`${persona.nombre} ${persona.paterno} ${persona.materno}`}
-                    </option>
-                  ))}
-                </select>
+                <Select 
+                options={options} 
+                value={options.find(option => option.value === idPersona)}
+                onChange={(selectedOption) => setidPersona(selectedOption ? selectedOption.value : '')}
+                onInputChange={handleSearch} // Filtra en tiempo real
+                isClearable 
+                placeholder="Buscar a una persona"/>
               </div>
 
               {/* Campo para ingresar el nombre de usuario */}
