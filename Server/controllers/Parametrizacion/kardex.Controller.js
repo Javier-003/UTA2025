@@ -154,7 +154,7 @@ export const getKardex = async (req, res) => {
     }
   }
 };
- */
+  */
 
 /* export const createKardex = async (req, res) => {
   const { idAlumnoPA, idGrupo, tipo, estatus } = req.body;
@@ -390,7 +390,122 @@ export const createKardex = async (req, res) => {
       connection.release();
     }
   }
-};
+}; 
+
+/* export const createKardexMasivo = async (req, res) => {
+  const { alumnos, idGrupo, tipo, estatus } = req.body;
+  let connection;
+
+  // Validación básica
+  if (!alumnos || !Array.isArray(alumnos) || alumnos.length === 0) {
+    return res.status(400).json({ message: "Debe proporcionar un array de alumnos" });
+  }
+
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    // 1. Obtener información del grupo y periodo
+    const [grupoRows] = await connection.query(
+      "SELECT idPeriodo FROM grupo WHERE idGrupo = ?",
+      [idGrupo]
+    );
+
+    if (grupoRows.length === 0) {
+      throw new Error("Grupo no encontrado");
+    }
+    const idPeriodo = grupoRows[0].idPeriodo;
+
+    // 2. Obtener materias del grupo (una sola consulta para todos los alumnos)
+    const [materiasRows] = await connection.query(
+      `SELECT gm.idMapaCurricular, mu.idMateriaUnidad, mu.nombre 
+       FROM grupomateria gm
+       JOIN materiaunidad mu ON gm.idMapaCurricular = mu.idMapaCurricular
+       WHERE gm.idGrupo = ?`,
+      [idGrupo]
+    );
+
+    if (materiasRows.length === 0) {
+      throw new Error("No se encontraron materias para el grupo seleccionado");
+    }
+
+    // Organizar materias por mapa curricular para fácil acceso
+    const materiasPorCurricular = materiasRows.reduce((acc, materia) => {
+      if (!acc[materia.idMapaCurricular]) {
+        acc[materia.idMapaCurricular] = [];
+      }
+      acc[materia.idMapaCurricular].push({
+        idMateriaUnidad: materia.idMateriaUnidad,
+        nombre: materia.nombre
+      });
+      return acc;
+    }, {});
+
+    // 3. Procesar cada alumno
+    for (const idAlumnoPA of alumnos) {
+      // Insertar en alumnoperiodo
+      await connection.query(
+        "INSERT INTO alumnoperiodo (idAlumnoPA, idPeriodo, Observacion) VALUES (?, ?, ?)",
+        [idAlumnoPA, idPeriodo, "Inscripción masiva"]
+      );
+
+      // Insertar kardex y evaluaciones para cada materia
+      for (const [idMapaCurricular, unidades] of Object.entries(materiasPorCurricular)) {
+        // Insertar kardex
+        const [kardexResult] = await connection.query(
+          `INSERT INTO kardex 
+           (idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, estatus) 
+           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, null, tipo, estatus]
+        );
+
+        const idKardex = kardexResult.insertId;
+
+        // Insertar evaluaciones para cada unidad
+        const evaluacionesValues = unidades.map(unidad => [
+          idKardex,
+          idMapaCurricular,
+          unidad.idMateriaUnidad,
+          null, // calificacion
+          null, // faltas
+          unidad.nombre,
+          "Abierto"
+        ]);
+
+        await connection.query(
+          `INSERT INTO evaluacion 
+           (idKadex, idMapaCurricular, idMateriaUnidad, calificacion, faltas, nombreUnidad, estatus) 
+           VALUES ?`,
+          [evaluacionesValues]
+        );
+      }
+    }
+
+    await connection.commit();
+    res.status(201).json({ 
+      success: true,
+      message: `Kardex creado para ${alumnos.length} alumnos`,
+      totalAlumnos: alumnos.length,
+      totalMaterias: Object.keys(materiasPorCurricular).length
+    });
+  } catch (error) {
+    if (connection) await connection.rollback();
+    console.error("Error en createKardexMasivo:", {
+      error: error.message,
+      idGrupo,
+      alumnos
+    });
+    
+    res.status(500).json({ 
+      success: false,
+      message: "Error al procesar la inscripción masiva",
+      error: process.env.NODE_ENV === 'development' ? error.message : "Detalles en consola"
+    });
+  } finally {
+    if (connection) connection.release();
+  }
+}; */
+
 
 export const updateKardex = async (req, res) => {
   try {
