@@ -1,4 +1,4 @@
-import { db } from "../../db/conexion.js";
+import { db } from "../../db/connection.js";
 
 export const getKardex = async (req, res) => {
   try {
