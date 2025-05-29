@@ -3,6 +3,7 @@ import { db } from "../../db/conexion.js";
 export const getKardex = async (req, res) => {
   try {
     const query = `SELECT k.*, 
+      u.usuario,   
       ap.matricula, 
       pe.periodo, 
       pa.nombreOficial, 
@@ -33,6 +34,7 @@ export const getKardex = async (req, res) => {
     INNER JOIN alumnopa AS ap ON ap.idAlumnoPA = k.idAlumnoPA
     INNER JOIN alumno AS a ON a.idAlumno = ap.idAlumno
     INNER JOIN persona AS p ON p.idPersona = a.idAlumno
+    LEFT JOIN usuario AS u ON u.idPersona = p.idPersona
     INNER JOIN mapacurricular AS mp ON mp.idMapaCurricular = k.idMapaCurricular
     INNER JOIN grupo AS g ON g.idGrupo = k.idGrupo
     INNER JOIN periodo AS pe ON pe.idPeriodo = k.idPeriodo

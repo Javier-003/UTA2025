@@ -1,8 +1,9 @@
 import '../../../assets/css/App.css';
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {getKardexTodos, addKardexFun, updateKardexFunc, deleteKardexFunc } from '../../../assets/js/Parametrizacion/kardex.js';
-import { KardexModales } from '../Parametrizacion/KardexModales.jsx'; 
+import { getKardexTodos, addKardexFun, updateKardexFunc, deleteKardexFunc } from '../../../assets/js/Parametrizacion/kardex.js';
+import { KardexModales } from '../Parametrizacion/KardexModales.jsx';
+import Select from 'react-select';
 
 function Kardex() {
   const [kardexList, setKardexList] = useState([]);
@@ -21,38 +22,79 @@ function Kardex() {
   const [showModal, setShowModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [searchText, setSearchText] = useState(""); 
-
+  const [searchText, setSearchText] = useState("");
   const [selectedKardex, setSelectedKardex] = useState(null);
+  const [selectedAlumno, setSelectedAlumno] = useState(null);
 
   useEffect(() => {
     getKardexTodos(setKardexList);
   }, []);
 
-  // FILTROS PARA LA BÚSQUEDA
+  const alumnosOptions = kardexList
+    .map(k => ({
+      value: k.idAlumnoPA,
+      label: `${k.nombre} ${k.paterno} ${k.materno}`
+    }))
+    .filter((v, i, a) => a.findIndex(t => t.value === v.value) === i);
+
   const filteredData = kardexList.filter(item => {
-    return (
+    const matchesSearch =
       (item.nombre || "").toLowerCase().includes(searchText.toLowerCase()) ||
       (item.grupo || "").toLowerCase().includes(searchText.toLowerCase()) ||
-      (item.mapa || "").toLowerCase().includes(searchText.toLowerCase())
-    );
+      (item.mapa || "").toLowerCase().includes(searchText.toLowerCase());
+    const matchesAlumno = selectedAlumno ? item.idAlumnoPA === selectedAlumno.value : false;
+    return matchesSearch && matchesAlumno;
   });
 
-  const handleAdd = () => {  
-    addKardexFun( idAlumnoPA,  idMapaCurricular,  idGrupo,  idPeriodo, calificacionFinal,  tipo, setShowModal,  () => getKardexTodos(setKardexList) );
+  const handleAdd = () => {
+    addKardexFun(
+      idAlumnoPA,
+      idMapaCurricular,
+      idGrupo,
+      idPeriodo,
+      calificacionFinal,
+      tipo,
+      setShowModal,
+      () => getKardexTodos(setKardexList)
+    );
   };
 
   const handleUpdate = () => {
-    updateKardexFunc(  selectedKardex.idKardex, idAlumnoPA, idMapaCurricular, idGrupo, idPeriodo, calificacionFinal, tipo, setShowEditModal, () => getKardexTodos(setKardexList) );
+    updateKardexFunc(
+      selectedKardex.idKardex,
+      idAlumnoPA,
+      idMapaCurricular,
+      idGrupo,
+      idPeriodo,
+      calificacionFinal,
+      tipo,
+      setShowEditModal,
+      () => getKardexTodos(setKardexList)
+    );
   };
 
   const handleDelete = () => {
-    deleteKardexFunc( selectedKardex.idKardex, setShowDeleteModal, () => getKardexTodos(setKardexList));
+    deleteKardexFunc(
+      selectedKardex.idKardex,
+      setShowDeleteModal,
+      () => getKardexTodos(setKardexList)
+    );
   };
 
   return (
     <div className="container">
       <div className="card-body">
+        <div className="mb-3">
+          <label className="form-label"><strong>Selecciona un Alumno:</strong></label>
+          <Select
+            options={alumnosOptions}
+            value={selectedAlumno}
+            onChange={(option) => setSelectedAlumno(option)}
+            placeholder="Selecciona un alumno"
+            isClearable
+          />
+        </div>
+
         <div className="d-flex justify-content-between align-items-center">
           <button
             className="btn btn-success"
@@ -66,7 +108,6 @@ function Kardex() {
               setIdPeriodo("");
               setCalificacionFinal("");
               setTipo("");
-              setNombre("");
               setMapa("");
               setGrupo("");
               setPeriodo("");
@@ -85,83 +126,91 @@ function Kardex() {
             placeholder="Buscar por Nombre, Grupo o Mapa Curricular"
           />
         </div>
+
         <div className="mt-4">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>id Kardex</th>
-                <th>id Alumno programa</th>
-                <th>Nombre</th>
-                <th>id mapa curricular</th>
-                <th>mapa</th>
-                <th>id Grupo</th>
-                <th>grupo</th>
-                <th>id periodo</th>
-                <th>periodo</th>
-                <th>calificación final</th>
-                <th>tipo</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.length > 0 ? (
-                filteredData.map((kardex) => (
-                  <tr key={kardex.idKardex}>
-                    <td>{kardex.idKardex}</td>
-                    <td>{kardex.idAlumnoPA}</td>
-                    <td>{kardex.nombre} {kardex.paterno} {kardex.materno}</td>
-                    <td>{kardex.idMapaCurricular}</td>
-                    <td>{kardex.mapa}</td>
-                    <td>{kardex.idGrupo}</td>
-                    <td>{kardex.grupo}</td>
-                    <td>{kardex.idPeriodo}</td>
-                    <td>{kardex.periodo}</td>
-                    <td>{kardex.calificacionFinal}</td>
-                    <td>{kardex.tipo}</td>
-                    <td>
-                      <button
-                        className="btn btn-warning"
-                        onClick={() => {
-                          setShowEditModal(true);
-                          setSelectedKardex(kardex);
-                          setIdAlumnoPA(kardex.idAlumnoPA);
-                          setNombre(kardex.nombre);
-                          setIdMapaCurricular(kardex.idMapaCurricular);
-                          setMapa(kardex.mapa);
-                          setIdGrupo(kardex.idGrupo);
-                          setGrupo(kardex.grupo);
-                          setIdPeriodo(kardex.idPeriodo);
-                          setPeriodo(kardex.periodo);
-                          setCalificacionFinal(kardex.calificacionFinal);
-                          setTipo(kardex.tipo);
-                        }}
-                      >
-                        Editar
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => {
-                          setShowDeleteModal(true);
-                          setSelectedKardex(kardex);
-                        }}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
+          {selectedAlumno ? (
+            <table className="table table-bordered">
+              <thead>
                 <tr>
-                  <td colSpan="13">No hay registros para mostrar</td>
+                  <th>id Kardex</th>
+                  <th>id Alumno programa</th>
+                  <th>Nombre</th>
+                  <th>id mapa curricular</th>
+                  <th>mapa</th>
+                  <th>id Grupo</th>
+                  <th>grupo</th>
+                  <th>id periodo</th>
+                  <th>periodo</th>
+                  <th>calificación final</th>
+                  <th>tipo</th>
+                  <th>Editar</th>
+                  <th>Eliminar</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredData.length > 0 ? (
+                  filteredData.map((kardex) => (
+                    <tr key={kardex.idKardex}>
+                      <td>{kardex.idKardex}</td>
+                      <td>{kardex.idAlumnoPA}</td>
+                      <td>{kardex.nombre} {kardex.paterno} {kardex.materno}</td>
+                      <td>{kardex.idMapaCurricular}</td>
+                      <td>{kardex.mapa}</td>
+                      <td>{kardex.idGrupo}</td>
+                      <td>{kardex.grupo}</td>
+                      <td>{kardex.idPeriodo}</td>
+                      <td>{kardex.periodo}</td>
+                      <td>{kardex.calificacionFinal}</td>
+                      <td>{kardex.tipo}</td>
+                      <td>
+                        <button
+                          className="btn btn-warning"
+                          onClick={() => {
+                            setShowEditModal(true);
+                            setSelectedKardex(kardex);
+                            setIdAlumnoPA(kardex.idAlumnoPA);
+                            setNombre(kardex.nombre);
+                            setPaterno(kardex.paterno);
+                            setMaterno(kardex.materno);
+                            setIdMapaCurricular(kardex.idMapaCurricular);
+                            setMapa(kardex.mapa);
+                            setIdGrupo(kardex.idGrupo);
+                            setGrupo(kardex.grupo);
+                            setIdPeriodo(kardex.idPeriodo);
+                            setPeriodo(kardex.periodo);
+                            setCalificacionFinal(kardex.calificacionFinal);
+                            setTipo(kardex.tipo);
+                          }}
+                        >
+                          Editar
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => {
+                            setShowDeleteModal(true);
+                            setSelectedKardex(kardex);
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="13">No hay registros para mostrar</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          ) : (
+            <div className="alert alert-info">Selecciona un alumno para ver los registros del kardex.</div>
+          )}
         </div>
       </div>
+
       <KardexModales
         idAlumnoPA={idAlumnoPA} setIdAlumnoPA={setIdAlumnoPA}
         nombre={nombre} setNombre={setNombre}
@@ -185,7 +234,6 @@ function Kardex() {
       />
     </div>
   );
-  
 }
 
 export default Kardex;

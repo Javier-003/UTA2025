@@ -60,7 +60,7 @@ const ConsultarHorario = ({ idGrupo }) => {
     const esTurnoValido = (horaInicio) => {
         const hora = parseInt(horaInicio.split(":")[0], 10);
         if (turno === "matutino") {
-            return hora >= 7 && hora < 13;
+            return hora >= 7 && hora < 14;
         } else if (turno === "vespertino") {
             return hora >= 12 && hora < 22;
         }

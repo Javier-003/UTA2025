@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getPuestos } from "../../../api/Nucleo/puesto.api.js";
 import { getDepartamentos } from "../../../api/Nucleo/departamento.api.js";
 import { getPersonas } from "../../../api/Nucleo/persona.api.js";
+import Select from 'react-select';
 
 export const ProfesorModales = ({
   idDepartamento, setidDepartamento,
@@ -25,12 +26,28 @@ export const ProfesorModales = ({
   const [puestoList, setPuestoList] = useState([]);
   const [departamentoList, setDepartamentoList] = useState([]);
   const [personaList, setPersonaList] = useState([]); 
+  const [filteredOptions, setFilteredOptions] = useState([]); 
   
   useEffect(() => {
     getPuestos().then(data => setPuestoList(data)).catch(error => console.error("Error al obtener los puestos:", error));
     getDepartamentos().then(data => setDepartamentoList(data)).catch(error => console.error("Error al obtener los departamentos:", error));
     getPersonas().then(data => setPersonaList(data)).catch(error => console.error("Error al obtener las personas:", error));
   }, []);
+   // Convertimos personaList en el formato requerido por react-select
+   const options = filteredOptions.map(persona => ({
+    value: persona.idPersona,
+    label: `${persona.nombre} ${persona.paterno} ${persona.materno}`
+  }));// Función para manejar la búsqueda
+  
+  const handleSearch = (inputValue) => {
+    if (!inputValue) {
+      setFilteredOptions(personaList.slice(-20)); // Si no hay búsqueda, mostrar solo los últimos 5
+      } else {
+        setFilteredOptions(personaList.filter(persona =>
+          `${persona.nombre} ${persona.paterno} ${persona.materno}`.toLowerCase().includes(inputValue.toLowerCase())
+        ));
+      }
+  };
 
   return (
     <>
@@ -47,14 +64,13 @@ export const ProfesorModales = ({
               <div className="col-md-6">
                 <div className="input-group mb-3">
                   <span className="input-group-text">Persona:</span>
-            <select className="form-select" value={idPersona} onChange={(event) => setidPersona(event.target.value)}>
-                <option value="">Selecciona una persona</option>
-                {personaList.map((persona) => (
-                  <option key={persona.idPersona} value={persona.idPersona}>
-                    {`${persona.nombre} ${persona.paterno} ${persona.materno}`}
-                  </option>
-                ))}
-              </select>
+                  <Select 
+                options={options} 
+                value={options.find(option => option.value === idPersona)}
+                onChange={(selectedOption) => setidPersona(selectedOption ? selectedOption.value : '')}
+                onInputChange={handleSearch} // Filtra en tiempo real
+                isClearable 
+                placeholder="Buscar a una persona"/>
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Departamento:</span>

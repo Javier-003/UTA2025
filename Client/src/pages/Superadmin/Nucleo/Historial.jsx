@@ -52,6 +52,7 @@ function Bitacora() {
           </div>
         }
         columns={columns}
+        pagination={10}
         data={dataToDisplay}
         noDataComponent="No hay registros para mostrar"
         paginationComponentOptions={{ rowsPerPageText: 'Filas por página', rangeSeparatorText: 'de', noRowsPerPage: true }}

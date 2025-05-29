@@ -20,34 +20,37 @@ function Evaluar() {
     const [selectedEvaluacion, setSelectedEvaluacion] = useState(null);
     const [calificaciones, setCalificaciones] = useState({});
     const [actualizarEvaluaciones, setActualizarEvaluaciones] = useState(false);
+    const [loading, setLoading] = useState(true); // Estado de carga
     const programaAcademico = cargaMateria?.programaAcademico || "No disponible"; // Programa académico por defecto
 
     useEffect(() => {
         if (cargaMateria) {
-            getKardex(cargaMateria.idGrupoMateria).then(data => {
-                const alumnosFiltrados = data.filter(alumno =>
-                    alumno.idMapaCurricular === cargaMateria.idMapaCurricular &&
-                    alumno.idGrupo === cargaMateria.idGrupo &&
-                    alumno.estatus === 'Activo' // Filtrar solo alumnos activos
-                );
-                setAlumnos(alumnosFiltrados);
-            }).catch(error => console.error("❌ Error al obtener alumnos:", error));
-            
-            getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
-                const evaluacionesFiltradas = data.filter(evaluacion => 
-                    evaluacion.idMapaCurricular === cargaMateria.idMapaCurricular &&
-                    evaluacion.materia === cargaMateria.materia
-                );
-                setEvaluaciones(evaluacionesFiltradas);
-                const initialCalificaciones = {};
-                evaluacionesFiltradas.forEach(evaluacion => {
-                    if (!initialCalificaciones[evaluacion.idKadex]) {
-                        initialCalificaciones[evaluacion.idKadex] = {};
-                    }
-                    initialCalificaciones[evaluacion.idKadex][evaluacion.idMateriaUnidad] = evaluacion.calificacion || '';
-                });
-                setCalificaciones(initialCalificaciones);
-            }).catch(error => console.error("❌ Error al obtener evaluaciones:", error));
+            setLoading(true); // Inicia carga
+            Promise.all([
+                getKardex(cargaMateria.idGrupoMateria).then(data => {
+                    const alumnosFiltrados = data.filter(alumno =>
+                        alumno.idMapaCurricular === cargaMateria.idMapaCurricular &&
+                        alumno.idGrupo === cargaMateria.idGrupo &&
+                        alumno.estatus === 'Activo' // Filtrar solo alumnos activos
+                    );
+                    setAlumnos(alumnosFiltrados);
+                }),
+                getEvaluacionTodos(cargaMateria.idGrupoMateria).then(data => {
+                    const evaluacionesFiltradas = data.filter(evaluacion => 
+                        evaluacion.idMapaCurricular === cargaMateria.idMapaCurricular &&
+                        evaluacion.materia === cargaMateria.materia
+                    );
+                    setEvaluaciones(evaluacionesFiltradas);
+                    const initialCalificaciones = {};
+                    evaluacionesFiltradas.forEach(evaluacion => {
+                        if (!initialCalificaciones[evaluacion.idKadex]) {
+                            initialCalificaciones[evaluacion.idKadex] = {};
+                        }
+                        initialCalificaciones[evaluacion.idKadex][evaluacion.idMateriaUnidad] = evaluacion.calificacion || '';
+                    });
+                    setCalificaciones(initialCalificaciones);
+                })
+            ]).finally(() => setLoading(false)); // Finaliza carga
         }
     }, [cargaMateria]);
 
@@ -138,65 +141,75 @@ function Evaluar() {
                     </div>
                 </div>
             )}
-            <div className="table-responsive" style={{ maxHeight: "500px", overflowY: "auto", overflowX: "auto" }}>
-                <table className="table table-bordered table-striped">
-                    <thead className="text-center">
-                        <tr>
-                            <th>N°</th>
-                            <th>Matrícula</th>
-                            <th>Nombre</th>
-                            {unidades.map((unidad, index) => (
-                                <th key={index}>Parcial {index + 1}</th>
-                            ))}
-                            <th>Faltas</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {alumnos.length > 0 ? (
-                            [...alumnos].sort((a, b) => a.matricula.localeCompare(b.matricula)).map((alumno, index) => { // Ordenar por matrícula
-                                const evalAlumno = evaluaciones.filter(e => e.idKadex === alumno.idKardex);
-                                return (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{alumno.matricula}</td>
-                                        <td>{`${alumno.paterno} ${alumno.materno} ${alumno.nombre}`}</td>
-                                        {unidades.map((unidad, idx) => {
-                                            const evalUnidad = evalAlumno.find(e => e.idMateriaUnidad === unidad);
-                                            const calificacion = calificaciones[alumno.idKardex]?.[unidad] || ''; // Mantener vacío si no hay calificación
-                                            return (
-                                            <td key={idx}>
-                                                <input
-                                                    type="number"
-                                                    step="0.01"
-                                                    className="form-control"
-                                                    value={calificacion}
-                                                    placeholder="N/A" // Mostrar "N/A" cuando el campo está vacío
-                                                    onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
-                                                    // disabled={evalUnidad?.estatus === 'Cerrado'} // Deshabilitar si el estatus está cerrado
-                                                    disabled={evalUnidad?.estatus === 'Cerrado' || evalUnidad?.calificacion !== null} // Deshabilitar si el estatus está cerrado o ya tiene calificación asignada
-                                                />
-                                            </td>
-                                            );
-                                            })}
-                                        <td>
-                                            <button 
-                                                className="btn btn-warning"
-                                                onClick={() => handleEditCalificacion(alumno, evalAlumno)}
-                                            >
-                                                <FontAwesomeIcon icon={faEdit} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        ) : (
+            {loading ? (
+                <div className="text-center my-4">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Cargando datos...</span>
+                    </div>
+                    <div>Cargando datos...</div>
+                </div>
+            ) : (
+                <div className="table-responsive" style={{ maxHeight: "500px", overflowY: "auto", overflowX: "auto" }}>
+                    <table className="table table-bordered table-striped">
+                        <thead className="text-center">
                             <tr>
-                                <td colSpan={3 + unidades.length} className="text-center">No hay alumnos inscritos</td>
+                                <th>N°</th>
+                                <th>Matrícula</th>
+                                <th>Nombre</th>
+                                {unidades.map((unidad, index) => (
+                                    <th key={index}>Parcial {index + 1}</th>
+                                ))}
+                                <th>Faltas</th>
                             </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {alumnos.length > 0 ? (
+                                // [...alumnos].sort((a, b) => a.matricula.localeCompare(b.matricula)).map((alumno, index) => { // Ordenar por matrícula
+                                [...alumnos].sort((a, b) => a.paterno.localeCompare(b.paterno)).map((alumno, index) => { // Ordenar por apellido paterno
+                                    const evalAlumno = evaluaciones.filter(e => e.idKadex === alumno.idKardex);
+                                    return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{alumno.matricula}</td>
+                                            <td>{`${alumno.paterno} ${alumno.materno} ${alumno.nombre}`}</td>
+                                            {unidades.map((unidad, idx) => {
+                                                const evalUnidad = evalAlumno.find(e => e.idMateriaUnidad === unidad);
+                                                const calificacion = calificaciones[alumno.idKardex]?.[unidad] || ''; // Mantener vacío si no hay calificación
+                                                return (
+                                                <td key={idx}>
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        className="form-control"
+                                                        value={calificacion}
+                                                        placeholder="N/A" // Mostrar "N/A" cuando el campo está vacío
+                                                        onChange={(e) => handleCalificacionChange(alumno.idKardex, unidad, e.target.value)}
+                                                        disabled={evalUnidad?.estatus === 'Cerrado'} // Deshabilitar si el estatus está cerrado
+                                                        // disabled={evalUnidad?.estatus === 'Cerrado' || evalUnidad?.calificacion !== null} // Deshabilitar si el estatus está cerrado o ya tiene calificación asignada
+                                                    />
+                                                </td>
+                                                );
+                                                })}
+                                            <td>
+                                                <button 
+                                                    className="btn btn-warning"
+                                                    onClick={() => handleEditCalificacion(alumno, evalAlumno)}
+                                                >
+                                                    <FontAwesomeIcon icon={faEdit} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                <tr>
+                                    <td colSpan={3 + unidades.length} className="text-center">No hay alumnos inscritos</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
             {showModal && (
                 <EvaluacionModales 
                     showModal={showModal} 
