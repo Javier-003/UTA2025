@@ -64,6 +64,7 @@ import TramiteTitulacion from './pages/Superadmin/Servicio/TramiteTitulacion';
 import HorarioProfesor from './pages/Superadmin/PlanificacionAcademica/HorarioProfesor';
 import ConclusiondeCarrera from './pages/Superadmin/Servicio/Conclusion';
 import Estadisticas from './pages/Superadmin/Tramites/Estadisticas';
+import AlumnoKardex from './pages/Superadmin/plantillaAlumno/AlumnoKarddex';
 
 import hasAccess from './hooks/AccesUsers'
 
@@ -100,7 +101,7 @@ function App() {
         <Route path="/Alumno" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Alumno />)} />
         <Route path="/Administrativo" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Administrativo />)} />
         <Route path="/Profesor" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Profesor />)} />
-        <Route path="/AsignarPA" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<AsignarPA />)} />
+        <Route path="/AsignarPA" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<AsignarPA />)} />
         <Route path="/Historial" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Historial />)} />
   
         {/* Parametrización */}
@@ -118,14 +119,16 @@ function App() {
         <Route path="/Materias" element={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor']) ? (<Navigate replace to="/" />) : (<Materias />)} />
         <Route path="/AdicionProfesor" element={!hasAccess(['Administrador','Direccion Academica']) ? (<Navigate replace to="/" />) : (<AdicionProfesor />)} />
         <Route path="/ControlCapturaCalificaciones" element={!hasAccess(['Administrador','Direccion Academica', 'Profesor']) ? (<Navigate replace to="/" />) : (<ControlCapturaCalificaciones />)} />  
-        <Route path="/CorreccionCalificaciones" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<CorreccionCalificaciones />)} />
+        <Route path="/CorreccionCalificaciones" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<CorreccionCalificaciones />)} />
         {/* Consultas */}
-        <Route path="/Consultadekadex" element={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor', 'Tesoreria']) ? (<Navigate replace to="/" />) : (<Consultadekadex />)} />
+        <Route path="/Consultadekadex" element={!hasAccess(['Administrador','Servicios Escolares','Direccion Academica','Cordinador Licienciatura', 'Profesor', 'Tesoreria']) ? (<Navigate replace to="/" />) : (<Consultadekadex />)} />
         <Route path="/HorarioProfesor" element={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor']) ? (<Navigate replace to="/" />) : (<HorarioProfesor />)} />
 
         <Route path="/Bloque" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Bloque />)} />  
-        <Route path="/SubirCalificacion" element={!hasAccess(['Administrador', 'Profesor']) ? (<Navigate replace to="/" />) : (<SubirCalificacion />)} />
-        <Route path="/Evaluar" element={!hasAccess(['Administrador', 'Profesor']) ? (<Navigate replace to="/" />) : (<Evaluar />)} />
+
+        <Route path="/SubirCalificacion" element={!hasAccess(['Administrador','Cordinador Licienciatura','Profesor']) ? (<Navigate replace to="/" />) : (<SubirCalificacion />)} />
+        <Route path="/Evaluar" element={!hasAccess(['Administrador','Profesor','Direccion Academica','Cordinador Licienciatura','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<Evaluar />)} />
+
 
         <Route path="/AlumnoProceso" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<AlumnoProceso />)} /> 
         <Route path="/AlumnoTramite" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<AlumnoTramite />)} />
@@ -137,10 +140,10 @@ function App() {
         <Route path="/TramiteConcluido" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<TramiteConcluido />)} />
         <Route path="/TramiteTitulacion" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<TramiteTitulacion />)} />
         <Route path="/ConclusiondeCarrera" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<ConclusiondeCarrera />)} />
-        
         <Route path="/Estadisticas" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<Estadisticas />)} />
         
         <Route path="/Kardex" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Kardex />)} />
+        <Route path="/AlumnoKardex" element={!hasAccess(['Administrador', 'Alumno']) ? (<Navigate replace to="/" />) : (<AlumnoKardex />)} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

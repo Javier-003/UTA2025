@@ -117,6 +117,7 @@ function Administrativo() {
         }
         columns={columns}
         data={dataToDisplay}
+        pagination={10}
         noDataComponent="No hay registros para mostrar"
         paginationComponentOptions={{
           rowsPerPageText: 'Filas por página',

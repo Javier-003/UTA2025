@@ -67,7 +67,7 @@ function ListaEvaluacion({ cargaMateria, programaAcademico, actualizarEvaluacion
         doc.text(`Fecha de emisión: ${fechaEmision}`, doc.internal.pageSize.getWidth() - 60, headerHeight);
 
         // Ordenar alumnos por matrícula
-        const alumnosOrdenados = [...alumnos].sort((a, b) => a.matricula.localeCompare(b.matricula));
+        const alumnosOrdenados = [...alumnos].sort((a, b) => a.paterno.localeCompare(b.paterno));
 
         // Filtrar unidades con calificaciones
         const unidadesConCalificaciones = [...new Set(

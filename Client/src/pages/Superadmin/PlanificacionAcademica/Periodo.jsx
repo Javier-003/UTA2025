@@ -25,11 +25,11 @@ function Periodo() {
   );
 
   const handleAdd = () => {
-    addPeriodo(periodo, fechaFin, fechaFin, estado,fechaRegistro ,setShowModal, () => getPeriodo(setPeriodo));
+    addPeriodo(periodo, fechaInicio, fechaFin, estado, fechaRegistro, setShowModal, () => getPeriodo(setPeriodo));
   };
 
   const handleUpdate = () => {
-    updatePeriodoFunc(selectedPeriodo.idPeriodo, periodo, fechaFin, fechaFin, estado, setShowEditModal, () => getPeriodo(setPeriodo));
+    updatePeriodoFunc(selectedPeriodo.idPeriodo, periodo, fechaInicio, fechaFin, estado, setShowEditModal, () => getPeriodo(setPeriodo));
   };
 
   const handleDelete = () => {
@@ -83,7 +83,7 @@ const formatDateStringHora = (isoDateString) => {
                   filteredData.map((periodo) => (
                     <tr key={periodo.idPeriodo}>
                       <td>{periodo.periodo}</td>
-                      <td>{formatDateString(periodo.fechaFin)}</td>
+                      <td>{formatDateString(periodo.fechaInicio)}</td>
                       <td>{formatDateString(periodo.fechaFin)}</td>
                       <td>{formatDateStringHora(periodo.fechaRegistro)}</td>
                       <td>{periodo.estado}</td>
@@ -92,7 +92,7 @@ const formatDateStringHora = (isoDateString) => {
                           setShowEditModal(true);
                           setSelectedPeriodo(periodo);
                           setPeriodoName(periodo.periodo);
-                          setFechaInicio(formatDateString(periodo.fechaFin));
+                          setFechaInicio(formatDateString(periodo.fechaInicio));
                           setFechaFin(formatDateString(periodo.fechaFin));
                           setEstado(periodo.estado);
                         }}>Editar</button>
@@ -111,7 +111,7 @@ const formatDateStringHora = (isoDateString) => {
         periodo={periodo} setPeriodoName={setPeriodoName}
         fechaInicio={fechaInicio} setFechaInicio={setFechaInicio}
         fechaFin={fechaFin} setFechaFin={setFechaFin}
-        fechaRegistro={fetch} setFechaRegistro={setFechaRegistro}
+        fechaRegistro={fechaRegistro} setFechaRegistro={setFechaRegistro}
         estado={estado} setEstado={setEstado}
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
@@ -126,4 +126,3 @@ const formatDateStringHora = (isoDateString) => {
 }
 
 export default Periodo;
- 

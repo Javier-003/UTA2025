@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL base de la API
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from '../config'; 
 const userSession = localStorage.getItem('Username')
 axios.defaults.withCredentials = true;
 // Obtener todas los periodos

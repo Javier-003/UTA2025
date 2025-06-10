@@ -9,7 +9,6 @@ import {
   FaTasks, FaMapSigns, FaBook, FaHistory, FaLayerGroup, FaFileAlt, FaClipboardCheck 
 } from "react-icons/fa";
 import "../assets/css/Navbar.css";
-import { useNavigate } from 'react-router-dom';
 import hasAccess from '../hooks/AccesUsers'
 import { logoutLogin } from '../api/login.api'
 
@@ -18,15 +17,13 @@ function OffcanvasNavbar() {
   const [showModal, setShowModal] = useState(false);
   const [loadingLogout] = useState(false);
   const username = localStorage.getItem("Username");
-  const navigate = useNavigate();
+
   const toggleModal = () => setShowModal(!showModal);
   const handleLogout = async () => {
     const data = await logoutLogin();
     if (data) {
       localStorage.clear();
-      setTimeout(() => {
-        navigate("/Login", { replace: true });
-      }, 0);
+      window.location.href = "/Login"; 
     }
   };
   
@@ -64,7 +61,7 @@ function OffcanvasNavbar() {
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Puesto"><FaTasks /> Puesto</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Edificio"><FaTasks /> Edificio</Link>           
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Aula"><FaTasks /> Aula</Link>
-                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AsignarPA"><FaUniversity /> Alumno PA</Link>
+                  <Link className={!hasAccess(['Administrador','Servicios Escolares']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AsignarPA"><FaUniversity /> Alumno PA</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Historial"><FaHistory /> Bitácora</Link>
                 </div>
                 <div className="column">
@@ -97,13 +94,13 @@ function OffcanvasNavbar() {
                   <h3>Planificación Académica</h3>
                   <Link className={!hasAccess(['Administrador','Direccion Academica']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Periodo"><FaCalendarAlt /> Periodo</Link>
                   <Link className={!hasAccess(['Administrador','Direccion Academica']) ? 'opacity-50 cursor-not-allowed' : ''}  to="/Grupo"><FaLayerGroup /> Grupo</Link>
-                  <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Materias"><FaBook /> Carga de Materias</Link>
+                  <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura','Profesor']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Materias"><FaBook /> Carga de Materias</Link>
                 </div>
                 <div className="column">
                   <h3>Profesor</h3>
                   <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AdicionProfesor"><FaChalkboardTeacher /> Adición de Profesor</Link>
                   <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor']) ? 'opacity-50 cursor-not-allowed' : ''} to="/HorarioProfesor"><FaChalkboardTeacher /> HorarioProfesor</Link>
-                  <Link className={!hasAccess(['Administrador','Direccion Academica']) ? 'opacity-50 cursor-not-allowed' : ''} to="/ControlCapturaCalificaciones"><FaClipboardCheck /> Control de Captura de Calificaciones</Link>
+                  <Link className={!hasAccess(['Administrador','Direccion Academica','Profesor']) ? 'opacity-50 cursor-not-allowed' : ''} to="/ControlCapturaCalificaciones"><FaClipboardCheck /> Control de Captura de Calificaciones</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/CorreccionCalificaciones"><FaClipboardCheck />Corrección de Calificaciones</Link>
                 </div>
               </div>
@@ -121,7 +118,7 @@ function OffcanvasNavbar() {
                   <h3>Trámites</h3>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoProceso"><FaTasks />Alumno Proceso</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoTramite"><FaClipboardList />Alumno Trámite</Link>
-                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/SeguimientoTramite"><FaClipboardCheck />Seguimiento Trámite</Link>
+                  <Link className={!hasAccess(['Administrador','Servicios Escolares']) ? 'opacity-50 cursor-not-allowed' : ''} to="/SeguimientoTramite"><FaClipboardCheck />Seguimiento Trámite</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoPeriodo"><FaClipboardList />Alumno Periodo</Link>
                 </div>
               
@@ -131,10 +128,10 @@ function OffcanvasNavbar() {
           
           {/* Menú Servicio */}
           <div className="dropdown"
-            onMouseEnter={() => setActiveMenu("tramites")}
+            onMouseEnter={() => setActiveMenu("Servicio")}
             onMouseLeave={() => setActiveMenu(null)}>
             <span className="menu-option"><FaClipboardList />Servicio</span>
-            {activeMenu === "tramites" && (
+            {activeMenu === "Servicio" && (
               <div className="dropdown-content">
                 <div className="column">
                   <h3>Servicio</h3>
@@ -146,9 +143,11 @@ function OffcanvasNavbar() {
                 </div>
                 <div className="column">
                   <h3>Calificaciones</h3>
-                  <Link className={!hasAccess(['Administrador', 'Profesor']) ? 'opacity-50 cursor-not-allowed' : ''} to="/SubirCalificacion"><FaUpload />Subir Calificacion</Link>              
+
+                  <Link className={!hasAccess(['Administrador','Profesor', 'Servicios Escolares','Cordinador Licienciatura']) ? 'opacity-50 cursor-not-allowed' : ''} to="/SubirCalificacion"><FaUpload />Subir Calificacion</Link>              
                   <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor', 'Tesoreria']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Consultadekadex"><FaBook />Consulta de Kardex</Link>
-                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Kardex"><FaHistory />Kardex</Link>   
+                  <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Kardex"><FaHistory />Kardex</Link>  
+                  <Link className={!hasAccess(['Alumno']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AlumnoKardex"><FaHistory />Calificaciones</Link>      
                 </div>
               </div>
             )}

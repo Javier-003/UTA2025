@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, Fragment } from 'react';
 import { getPersonas } from "../../../api/Nucleo/persona.api.js";
+import Select from 'react-select';
 
 export const UsuarioModales = ({
   idPersona, setidPersona,
@@ -19,10 +20,14 @@ export const UsuarioModales = ({
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [usuarioList, setUsuarios] = useState([]);
+  const [personaList, setPersonaList] = useState([]); 
   const [rolesUsuario, setRolesUsuario] = useState([]); // Nuevo estado para almacenar los roles del usuario
-
+  const [filteredOptions, setFilteredOptions] = useState([]); 
   useEffect(() => {
     getPersonas().then(data => setUsuarios(data)).catch(error => console.error("Error al obtener las personas:", error));
+    getPersonas()
+      .then((data) => setPersonaList(data))
+      .catch((error) => console.error("Error al obtener las personas:", error));
   }, []);
 
   useEffect(() => {
@@ -49,6 +54,20 @@ export const UsuarioModales = ({
       console.log('selectedUsuario.rolId o selectedUsuario.rol no están disponibles');
     }
   }, [selectedUsuario]); // Ejecutar cuando selectedUsuario cambie
+     // Convertimos personaList en el formato requerido por react-select
+     const options = filteredOptions.map(persona => ({
+      value: persona.idPersona,
+      label: `${persona.nombre} ${persona.paterno} ${persona.materno}`
+    }));// Función para manejar la búsqueda
+  const handleSearch = (inputValue) => {
+    if (!inputValue) {
+      setFilteredOptions(personaList.slice(-20)); // Si no hay búsqueda, mostrar solo los últimos 5
+      } else {
+        setFilteredOptions(personaList.filter(persona =>
+          `${persona.nombre} ${persona.paterno} ${persona.materno}`.toLowerCase().includes(inputValue.toLowerCase())
+        ));
+      }
+  };
 
   return (
     <Fragment>
@@ -69,14 +88,13 @@ export const UsuarioModales = ({
               {/* Campo para seleccionar persona */}
               <div className="input-group mb-3">
                 <span className="input-group-text">Persona:</span>
-                <select className="form-select" value={idPersona || ''} onChange={(event) => setidPersona(event.target.value)}>
-                  <option value="">Selecciona una persona</option>
-                  {usuarioList.map((persona) => (
-                    <option key={persona.idPersona} value={persona.idPersona}>
-                      {`${persona.nombre} ${persona.paterno} ${persona.materno}`}
-                    </option>
-                  ))}
-                </select>
+                <Select 
+                options={options} 
+                value={options.find(option => option.value === idPersona)}
+                onChange={(selectedOption) => setidPersona(selectedOption ? selectedOption.value : '')}
+                onInputChange={handleSearch} // Filtra en tiempo real
+                isClearable 
+                placeholder="Buscar a una persona"/>
               </div>
 
               {/* Campo para ingresar el nombre de usuario */}
@@ -100,11 +118,13 @@ export const UsuarioModales = ({
                 <span className="input-group-text">Roles:</span>
                 <select className="form-control" value={rolId} onChange={(event) => setRolId(event.target.value)}>
                   <option value="">Selecciona un rol</option>
-                  <option value="1">Admin</option>
+                  <option value="1">Administrador</option>
                   <option value="2">Profesor</option>
                   <option value="3">Alumno</option>
-                  <option value="4">DGA</option>
-                  <option value="5">SE</option>
+                  <option value="4">Dirección Academica</option>
+                  <option value="5">Servicios Escolares</option>
+                  <option value="6">Cordinador Licienciatura</option>
+                  <option value="7">Tesoreria</option>
                 </select>
               </div>
 
@@ -193,15 +213,13 @@ export const UsuarioModales = ({
           </div>
           <div className="modal-body">
             {/* Filtrar roles que el usuario no tiene */}
-            <select className="form-select" onChange={(event) => setSelectedRole(event.target.value)}>
-              <option value="">Seleccionar Rol</option>
-             {[{id:'1',name:'Admin'},{id:'2',name:'Profesor'}, {id:'3',name:'Alumno'}, {id:'4',name:'DGA'}, {id:'5',name:'SE'}]
-                .filter(role => !rolesUsuario.some(r => r.nombre === role.name)) // Filtra los roles que no están en rolesUsuario
-                .map((role) => (
-                  <option key={role.id} value={role.id}>{role.name}</option> // Usa el name para mostrar y el id para el value
-                ))
-              }
-            </select>
+            {rolesUsuario.length === 7 ? (<p>Este usuario ya tiene todos los roles asignados.</p>) : (
+              <select className="form-select" onChange={(event) => setSelectedRole(event.target.value)}>
+                <option value="">Seleccionar Rol</option>
+                {[{id:'1',name:'Administrador'},{id:'2',name:'Profesor'}, {id:'3',name:'Alumno'}, {id:'4',name:'Dirección Académica'}, 
+                {id:'5',name:'Servicios Escolares'},{id:'6',name:'Coordinador Licenciatura'}, {id:'7',name:'Tesorería'}]
+                .filter(role => !rolesUsuario.some(r => r.nombre === role.name)) 
+                .map((role) => ( <option key={role.id} value={role.id}>{role.name}</option>))}</select>)}
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={() => setShowAddRoleModal(false)}>Cerrar</button>

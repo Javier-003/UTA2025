@@ -1,4 +1,4 @@
-import { db } from "../../db/conexion.js";
+import { db } from "../../db/connection.js";
 
 // 🔹 OBTENER TODAS LAS CAUSAS DE BAJA
 export const getCausasBaja = async (req, res) => {

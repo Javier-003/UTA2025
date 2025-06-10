@@ -16,6 +16,8 @@ function SubirCalificacion() {
     const [idProfesor, setIdProfesor] = useState("");
     const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
     const navigate = useNavigate(); // Definir useNavigate
+    const username = localStorage.getItem("Username");
+    const rol = localStorage.getItem("Rol");
 
     useEffect(() => {
         getCargaMaterias().then(data => setCargaMaterias(data));
@@ -24,19 +26,28 @@ function SubirCalificacion() {
     }, []);
 
     // Filtrar profesores por periodo seleccionado (si hay un periodo seleccionado)
-    const profesoresFiltrados = cargaMateriasList
+    let profesoresFiltrados = cargaMateriasList
         .filter(cargaMateria => !idPeriodo || cargaMateria.periodo === idPeriodo)
         .map(cargaMateria => ({
             idProfesor: cargaMateria.idProfesor,
             nombre: cargaMateria.profesor.split(' ')[0],
             paterno: cargaMateria.profesor.split(' ')[1],
-            materno: cargaMateria.profesor.split(' ')[2]
+            materno: cargaMateria.profesor.split(' ')[2],
+            usuario: cargaMateria.usuario // Asegúrate de que usuario venga en la cargaMateriasList
         }))
         .filter((profesor, index, self) =>
             index === self.findIndex((p) => (
                 p.idProfesor === profesor.idProfesor
             ))
         );
+
+    // Si el rol es Profesor, filtrar solo su usuario y seleccionar automáticamente
+    if (rol === "Profesor" && username) {
+        profesoresFiltrados = profesoresFiltrados.filter(profesor => profesor.usuario === username);
+        if (profesoresFiltrados.length > 0 && idProfesor !== String(profesoresFiltrados[0].idProfesor)) {
+            setTimeout(() => setIdProfesor(String(profesoresFiltrados[0].idProfesor)), 0);
+        }
+    }
 
     // Filtrar cargaMateriasList solo si se selecciona un periodo, un profesor o se realiza una búsqueda
     const filteredData = cargaMateriasList.filter(cargaMateria => 
@@ -92,7 +103,9 @@ function SubirCalificacion() {
                         </div>
                         <div className="col-md-4">
                             <h6 className="card-title">Profesor</h6>
-                            <select className="form-select" value={idProfesor} onChange={(e) => setIdProfesor(e.target.value)} disabled={!idPeriodo}>
+                            <select className="form-select" value={idProfesor}
+                                onChange={(e) => setIdProfesor(e.target.value)}
+                                disabled={!idPeriodo || rol === "Profesor"} >
                                 <option value="">Selecciona un Profesor</option>
                                 {profesoresFiltrados.length > 0 ? (
                                     profesoresFiltrados.map((profesor) => (

@@ -93,7 +93,8 @@ function TramiteProceso() {
                     <td>{tramiteproceso.NombreTramite}</td>
                     {/* <td>{tramiteproceso.idActividad}</td> */}
                     <td>{tramiteproceso.NombreActividad}</td>
-                    <td>
+                    <td>{tramiteproceso.objeto}</td>
+                   {/*  <td>
                       <button className='btn btn-primary' onClick={() => {
                         setobjeto(tramiteproceso.objeto); 
                         setIdTramite(tramiteproceso.idTramite);
@@ -103,7 +104,7 @@ function TramiteProceso() {
                         setShowObjetoModal(true); 
                         }}>{tramiteproceso.objeto || "Objeto"}
                       </button>
-                    </td>
+                    </td> */}
                     <td>{tramiteproceso.orden}</td>
                     <td>
                       <button className="btn btn-warning" onClick={() => {

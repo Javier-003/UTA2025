@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL base de la API
-const BASE_URL = "http://localhost:3000";
+import { BASE_URL } from '../config'; 
 axios.defaults.withCredentials = true;
 // Obtener todos los profesores con su información de persona
 export const getAdicionProfesoresTodos = async () => {
