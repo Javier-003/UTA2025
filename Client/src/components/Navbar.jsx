@@ -94,13 +94,13 @@ function OffcanvasNavbar() {
                   <h3>Planificación Académica</h3>
                   <Link className={!hasAccess(['Administrador','Direccion Academica']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Periodo"><FaCalendarAlt /> Periodo</Link>
                   <Link className={!hasAccess(['Administrador','Direccion Academica']) ? 'opacity-50 cursor-not-allowed' : ''}  to="/Grupo"><FaLayerGroup /> Grupo</Link>
-                  <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura','Profesor']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Materias"><FaBook /> Carga de Materias</Link>
+                  <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura']) ? 'opacity-50 cursor-not-allowed' : ''} to="/Materias"><FaBook /> Carga de Materias</Link>
                 </div>
                 <div className="column">
                   <h3>Profesor</h3>
                   <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura']) ? 'opacity-50 cursor-not-allowed' : ''} to="/AdicionProfesor"><FaChalkboardTeacher /> Adición de Profesor</Link>
                   <Link className={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor']) ? 'opacity-50 cursor-not-allowed' : ''} to="/HorarioProfesor"><FaChalkboardTeacher /> HorarioProfesor</Link>
-                  <Link className={!hasAccess(['Administrador','Direccion Academica','Profesor']) ? 'opacity-50 cursor-not-allowed' : ''} to="/ControlCapturaCalificaciones"><FaClipboardCheck /> Control de Captura de Calificaciones</Link>
+                  <Link className={!hasAccess(['Administrador','Direccion Academica']) ? 'opacity-50 cursor-not-allowed' : ''} to="/ControlCapturaCalificaciones"><FaClipboardCheck /> Control de Captura de Calificaciones</Link>
                   <Link className={!hasAccess(['Administrador']) ? 'opacity-50 cursor-not-allowed' : ''} to="/CorreccionCalificaciones"><FaClipboardCheck />Corrección de Calificaciones</Link>
                 </div>
               </div>
