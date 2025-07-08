@@ -1,13 +1,13 @@
 import { db } from "../db/connection.js";
-import  jwt  from "jsonwebtoken";
-import  bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import cookieParser from "cookie-parser";
-import {SECRET_JWT_KEY} from "../conf.js"
+import { SECRET_JWT_KEY } from "../conf.js"
 
-export const accessLogin = async (req,res) => {
+export const accessLogin = async (req, res) => {
   try {
 
-    const {Username, Password} = req.body;
+    const { Username, Password } = req.body;
 
     if (
       !Username ||
@@ -24,25 +24,25 @@ export const accessLogin = async (req,res) => {
     if (data.length === 0) {  // Cambiado < 0 a === 0
       return res.status(409).json({ message: "Usuario no encontrado" });
     } else {
-        const foundUser = data[0];
-        const matchPassword = bcrypt.compareSync(Password, foundUser.Contrasena);
-        const username = foundUser.Username
-        const rol = foundUser.nombreRol
+      const foundUser = data[0];
+      const matchPassword = bcrypt.compareSync(Password, foundUser.Contrasena);
+      const username = foundUser.Username
+      const rol = foundUser.nombreRol
 
-        if (!matchPassword || foundUser.estatus !== 1) {
-          return res.status(409).send({ message: `Usuario o contraseña incorrectos` });
-        } else {
-          const token = jwt.sign({username: username, rol: rol }, SECRET_JWT_KEY, {expiresIn: '8h'});
-          return res.cookie('acces_token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV !== 'production',
-            sameSite: 'strict',
-            maxAge: 1000 * 60 * 60 * 24
-          }).
+      if (!matchPassword || foundUser.estatus !== 1) {
+        return res.status(409).send({ message: `Usuario o contraseña incorrectos` });
+      } else {
+        const token = jwt.sign({ username: username, rol: rol }, SECRET_JWT_KEY, { expiresIn: '8h' });
+        return res.cookie('acces_token', token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: 'lax',
+          maxAge: 1000 * 60 * 60 * 24
+        }).
           status(200).send({
             message: `Autenticación exitosa`
           });
-        }
+      }
     }
 
   } catch (error) {
@@ -134,8 +134,8 @@ export const changePassword = async (req, res) => {
   }
 };
 
-export const logoutLogin = async (req,res) => {
-  res.clearCookie('access_token', {
+export const logoutLogin = async (req, res) => {
+  res.clearCookie('acces_token', {
     httpOnly: true,
     secure: true,  // asegúrate que esté en true si usas HTTPS
     sameSite: 'Strict',
