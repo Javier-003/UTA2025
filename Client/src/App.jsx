@@ -116,9 +116,9 @@ function App() {
         {/* Planificación Académica */}
         <Route path="/Periodo" element={!hasAccess(['Administrador','Direccion Academica']) ? (<Navigate replace to="/" />) : (<Periodo />)} />
         <Route path="/Grupo" element={!hasAccess(['Administrador','Direccion Academica']) ? (<Navigate replace to="/" />) : (<Grupo />)} />
-        <Route path="/Materias" element={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor']) ? (<Navigate replace to="/" />) : (<Materias />)} />
+        <Route path="/Materias" element={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura']) ? (<Navigate replace to="/" />) : (<Materias />)} />
         <Route path="/AdicionProfesor" element={!hasAccess(['Administrador','Direccion Academica']) ? (<Navigate replace to="/" />) : (<AdicionProfesor />)} />
-        <Route path="/ControlCapturaCalificaciones" element={!hasAccess(['Administrador','Direccion Academica', 'Profesor']) ? (<Navigate replace to="/" />) : (<ControlCapturaCalificaciones />)} />  
+        <Route path="/ControlCapturaCalificaciones" element={!hasAccess(['Administrador','Direccion Academica']) ? (<Navigate replace to="/" />) : (<ControlCapturaCalificaciones />)} />  
         <Route path="/CorreccionCalificaciones" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<CorreccionCalificaciones />)} />
         {/* Consultas */}
         <Route path="/Consultadekadex" element={!hasAccess(['Administrador','Servicios Escolares','Direccion Academica','Cordinador Licienciatura', 'Profesor', 'Tesoreria']) ? (<Navigate replace to="/" />) : (<Consultadekadex />)} />
