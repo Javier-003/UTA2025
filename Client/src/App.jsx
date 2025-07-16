@@ -57,7 +57,7 @@ import TramiteProceso from './pages/Superadmin/Parametrizacion/TramitePrroceso';
 import OfertaAcademica from './pages/Superadmin/PlanificacionAcademica/OfertaAcademica';
 
 // -------------------------- PLANTILLA ALUMNO --------------------------------
-import Consultadekadex from './pages/Superadmin/plantillaAlumno/ConsultaKardex ';
+import Consultadekardex from './pages/Superadmin/plantillaAlumno/ConsultaKardex ';
 import Constancia from './pages/Superadmin/Servicio/Constancia';
 import Acercade from './pages/Login/Acercade';
 import TramiteTitulacion from './pages/Superadmin/Servicio/TramiteTitulacion';
@@ -121,7 +121,7 @@ function App() {
         <Route path="/ControlCapturaCalificaciones" element={!hasAccess(['Administrador','Direccion Academica']) ? (<Navigate replace to="/" />) : (<ControlCapturaCalificaciones />)} />  
         <Route path="/CorreccionCalificaciones" element={!hasAccess(['Administrador','Servicios Escolares']) ? (<Navigate replace to="/" />) : (<CorreccionCalificaciones />)} />
         {/* Consultas */}
-        <Route path="/Consultadekadex" element={!hasAccess(['Administrador','Servicios Escolares','Direccion Academica','Cordinador Licienciatura', 'Profesor', 'Tesoreria']) ? (<Navigate replace to="/" />) : (<Consultadekadex />)} />
+        <Route path="/Consultadekardex" element={!hasAccess(['Administrador','Servicios Escolares','Direccion Academica','Cordinador Licienciatura', 'Profesor', 'Tesoreria']) ? (<Navigate replace to="/" />) : (<Consultadekardex />)} />
         <Route path="/HorarioProfesor" element={!hasAccess(['Administrador','Direccion Academica','Cordinador Licienciatura', 'Profesor']) ? (<Navigate replace to="/" />) : (<HorarioProfesor />)} />
 
         <Route path="/Bloque" element={!hasAccess(['Administrador']) ? (<Navigate replace to="/" />) : (<Bloque />)} />  
