@@ -7,9 +7,9 @@ import indexRoutes from "./routes/index.Routes.js";
 //--------------------------  NUCLEO -----------------------------------------
 //Usuarios
 import rolRoutes from "./routes/Nucleo/rol.Routes.js";
-import personaRoutes from "./routes/Nucleo/persona.Routes.js"; 
+import personaRoutes from "./routes/Nucleo/persona.Routes.js";
 import usuarioRoutes from "./routes/Nucleo/usuario.Routes.js";
-import alumnoRoutes from "./routes/Nucleo/alumno.Routes.js"; 
+import alumnoRoutes from "./routes/Nucleo/alumno.Routes.js";
 import profesorRoutes from "./routes/Nucleo/profesor.Routes.js";
 import administrativoRoutes from "./routes/Nucleo/administrativo.Routes.js";
 //Area
@@ -53,9 +53,12 @@ import causabajaRoutes from "./routes/Tramites/causabaja.Routes.js";
 
 const app = express();
 
+// 🔹 Importante: confiar en el proxy (Nginx) para HTTPS
+app.set('trust proxy', 1);
+
 // Middlewares
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://192.168.1.8:5173'],
+  origin: 'https://vps-5255617-x.dattaweb.com',
   credentials: true
 }));
 app.use(cookieParser());
@@ -64,7 +67,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Rutas
-app.use("/login",login);
+app.use("/api/login",login);
 app.use("/olvidaste",login);
 app.use("/recuperar",login);
 app.use("/",indexRoutes);
@@ -109,3 +112,4 @@ app.use("/horario", horario);
 app.use("/bitacora", bitacoraRoutes);
 
 export default app;
+

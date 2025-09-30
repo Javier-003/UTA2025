@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import {getAlumnoPeriodo} 
-from "../../controllers/Tramites/alumnoPeriodo.Controller.js";
+from "../../controllers/Tramites/alumnoperiodo.Controller.js";
 
 import bitacora from "../../middleware/bitacora.js";
 

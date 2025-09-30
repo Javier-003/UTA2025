@@ -33,13 +33,14 @@ export const accessLogin = async (req, res) => {
         return res.status(409).send({ message: `Usuario o contraseña incorrectos` });
       } else {
         const token = jwt.sign({ username: username, rol: rol }, SECRET_JWT_KEY, { expiresIn: '8h' });
-        return res.cookie('acces_token', token, {
+	console.log("Enviando cookie")
+	res.cookie('acces_token', token, {
           httpOnly: true,
-          secure: false,
-          sameSite: 'lax',
+          secure: true,
+          sameSite: 'none',
           maxAge: 1000 * 60 * 60 * 24
-        }).
-          status(200).send({
+        });
+          return res.status(200).send({
             message: `Autenticación exitosa`
           });
       }
@@ -138,6 +139,6 @@ export const logoutLogin = async (req, res) => {
   res.clearCookie('acces_token', {
     httpOnly: true,
     secure: true,  // asegúrate que esté en true si usas HTTPS
-    sameSite: 'Strict',
+    sameSite: 'none',
   }).status(200).json({ message: "Cerrando Sesion" });
 }

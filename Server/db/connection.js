@@ -1,13 +1,12 @@
 import mysql from 'mysql2/promise';
 
-
 export const db = mysql.createPool({
   host: 'localhost',
-  user: 'root',
-    password: '123456789',
-    database: 'UT2025', 
+  user: 'utaserver',
+  password: 'utaserveruta2025',
+  database: 'uta2025',
   waitForConnections: true,
-  connectionLimit: 10, // 🔹 Permite hasta 10 conexiones simultáneas
+  connectionLimit: 10,
   queueLimit: 0
 });
 

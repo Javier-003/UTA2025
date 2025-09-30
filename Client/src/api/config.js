@@ -1,4 +1,3 @@
-export const BASE_URL = `https://vps-5255617-x.dattaweb.com/api`;
-
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 

@@ -11,7 +11,9 @@ export const accessLogin = async (username, password) => {
     const response = await axios.post(`${BASE_URL}/login/access`, {
       Username: username,
       Password: password
-    });
+    },
+    { withCredentials: true } // obligatorio
+);
 
     if (response.status === 200 && response.data?.message === 'Autenticación exitosa') {
       return {
@@ -61,7 +63,7 @@ export const forgotLogin = async (username) => {
 
 export const changePassword = async (username, newPassword, repeatPassword) => {
   try {
-    const response = await axios.post(`${BASE_URL}/login/recuperar/${username}`, {
+    const response = await axios.post(`${BASE_URL}/recuperar/${username}`, {
       newPassword,
       repeatPassword,
     });
