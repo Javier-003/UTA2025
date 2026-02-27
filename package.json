@@ -1,0 +1,12 @@
+{
+  "name": "uta2025-root",
+  "version": "1.0.0",
+  "description": "Root manager for UTA2025 project",
+  "main": "manager.js",
+  "scripts": {
+    "manager": "node manager.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
