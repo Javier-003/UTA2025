@@ -191,7 +191,6 @@ export const updateCargaMaterias = async (req, res) => {
   try {
     const { idGrupoMateria } = req.params;
     const { idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios } = req.body;
-    console.log("Valores recibidos para actualizar:", { idGrupoMateria, idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios });
 
     /* 
     // DESCOMENTAR SI EL AULA DEBE SER OBLIGATORIA
@@ -300,7 +299,6 @@ export const updateCargaMaterias = async (req, res) => {
 
       // Insertar los nuevos horarios
       const values = horarios.map(horario => [idGrupoMateria, horario.idBloque, horario.dia]);
-      console.log("Valores de horarios a actualizar:", values);
 
       const placeholders = values.map(() => "(?, ?, ?)").join(", ");
       const flattenedValues = values.flat();
