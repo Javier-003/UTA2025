@@ -44,7 +44,7 @@ export const createEvaluacion = async (req, res) => {
     res.status(201).json({
       message: "Evaluación creada correctamente",
       idEvaluacion: rows.insertId,
-      idKadex,idMapaCurricular,faltas,calificacion,estatus,nombreUnidad,idMateriaUnidad,
+      idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad,
     });
   } catch (error) {
     console.error("Error al crear la evaluación:", error);
@@ -56,21 +56,18 @@ export const updateEvaluacion = async (req, res) => {
   try {
     const { idEvaluacion } = req.params;
     const { idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad } = req.body;
-    console.log("Datos recibidos en updateEvaluacion:", req.body);
     const [exists] = await db.query("SELECT 1 FROM evaluacion WHERE idEvaluacion = ?", [idEvaluacion]);
     if (!exists.length) {
       return res.status(404).json({ message: "La evaluación no existe" });
     }
     const query = "UPDATE evaluacion SET idKadex = ?, idMapaCurricular = ?, faltas = ?, calificacion = ?, estatus = ?, nombreUnidad = ?, idMateriaUnidad = ? WHERE idEvaluacion = ?";
-    console.log("Consulta SQL:", query);
     const [result] = await db.query(query, [idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad, idEvaluacion]);
-    console.log("Resultado de la consulta:", result);
     if (result.affectedRows === 0) {
       return res.status(400).json({ message: "No se pudo actualizar la evaluación" });
     }
     res.status(200).json({
       message: "Evaluación actualizada correctamente",
-      idEvaluacion,idKadex,idMapaCurricular,faltas,calificacion,estatus,nombreUnidad,idMateriaUnidad,
+      idEvaluacion, idKadex, idMapaCurricular, faltas, calificacion, estatus, nombreUnidad, idMateriaUnidad,
     });
   } catch (error) {
     console.error("Error al actualizar la evaluación:", error);

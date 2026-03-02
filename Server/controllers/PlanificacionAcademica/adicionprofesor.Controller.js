@@ -28,7 +28,7 @@ export const createAdicionProfesor = async (req, res) => {
     // Insertar en la tabla persona
     const [personaResult] = await db.query(
       `INSERT INTO persona (nombre, paterno, materno, nacimiento, curp, genero, direccion, telefono) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [nombre, paterno, materno, nacimiento, curp, genero, direccion, telefono]
     );
 
@@ -37,7 +37,7 @@ export const createAdicionProfesor = async (req, res) => {
     // Insertar en la tabla profesor
     await db.query(
       `INSERT INTO profesor (idProfesor, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [idPersona, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc]
     );
 
@@ -51,9 +51,6 @@ export const createAdicionProfesor = async (req, res) => {
 
 // Actualizar un profesor
 export const updateAdicionProfesor = async (req, res) => {
-  console.log("Parámetros recibidos en la URL:", req.params);
-  console.log("Cuerpo recibido en la petición:", req.body);
-
   const { idAdicionProfesor } = req.params; // Aquí se recibe el ID desde la URL
   const { idPersona, nombre, paterno, materno, nacimiento, curp, genero, direccion, telefono, idDepartamento, idPuesto, clave, perfil, email, noCedula, programaAcademicos, nss, rfc } = req.body;
 
@@ -95,9 +92,6 @@ export const updateAdicionProfesor = async (req, res) => {
 
 // Eliminar un profesor
 export const deleteAdicionProfesor = async (req, res) => {
-  console.log("🛠️ Toda la solicitud recibida:", req.params); 
-  console.log("🔍 ID recibido:", req.params.idAdicionProfesor); 
-
   const { idAdicionProfesor } = req.params;
 
   if (!idAdicionProfesor) {
@@ -106,18 +100,16 @@ export const deleteAdicionProfesor = async (req, res) => {
 
   try {
     const [profesorResult] = await db.query(
-      "SELECT * FROM profesor WHERE idProfesor = ?", 
+      "SELECT * FROM profesor WHERE idProfesor = ?",
       [idAdicionProfesor]
     );
 
     if (profesorResult.length === 0) {
-      console.log("⚠️ Profesor no encontrado en la base de datos.");
       return res.status(404).json({ error: "Profesor no encontrado" });
     }
 
-    console.log("✅ Profesor encontrado, eliminando...");
     await db.query(
-      "DELETE FROM profesor WHERE idProfesor = ?", 
+      "DELETE FROM profesor WHERE idProfesor = ?",
       [idAdicionProfesor]
     );
 

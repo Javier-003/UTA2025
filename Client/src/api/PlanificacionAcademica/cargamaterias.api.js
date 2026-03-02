@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL base de la API
-import { BASE_URL } from '../config'; 
+import { BASE_URL } from '../config';
 axios.defaults.withCredentials = true;
 // Obtener las cargas de materias
 export const getCargaMaterias = async () => {

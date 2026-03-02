@@ -20,7 +20,8 @@ export const CargaMateriaModales = ({
     showEditModal, setShowEditModal,
     showDeleteModal, setShowDeleteModal,
     handleAdd, handleUpdate, handleDelete,
-    selectedCargaMateria
+    selectedCargaMateria,
+    idProgramaAcademicoSeleccionado
 }) => {
     const [grupos, setGrupos] = useState([]);
     const [profesores, setProfesores] = useState([]);
@@ -52,7 +53,7 @@ export const CargaMateriaModales = ({
         };
         fetchData();
     }, []);
-    
+
     useEffect(() => {
         if (selectedCargaMateria) {
             setIdGrupo(selectedCargaMateria.idGrupo || "");
@@ -61,7 +62,7 @@ export const CargaMateriaModales = ({
             setIdAula(selectedCargaMateria.idAula || "");
             setTipo(selectedCargaMateria.tipo || "");
             setFecha(formatDateString(selectedCargaMateria.fecha));
-    
+
             // Transformar los horarios para incluir información del bloque
             if (selectedCargaMateria.horarios && Array.isArray(selectedCargaMateria.horarios)) {
                 const horariosConBloques = selectedCargaMateria.horarios.map(horario => {
@@ -80,21 +81,23 @@ export const CargaMateriaModales = ({
             }
         }
     }, [selectedCargaMateria, bloques]); // 👈 Asegura que se re-renderice cuando bloques cambie
-    
+
     useEffect(() => {
         // console.log("Horarios cargados en modal:", horarios);
         // console.log("Bloques disponibles:", bloques);
     }, [horarios, bloques]);
-    
+
     useEffect(() => {
-        // Actualizar el programa académico del grupo seleccionado
+        // Actualizar el programa académico del grupo seleccionado o usar el seleccionado en el sidebar
         const grupoSeleccionado = grupos.find(grupo => grupo.idGrupo === parseInt(idGrupo));
         if (grupoSeleccionado) {
             setProgramaAcademicoDelGrupo(grupoSeleccionado.idProgramaAcademico);
+        } else if (idProgramaAcademicoSeleccionado) {
+            setProgramaAcademicoDelGrupo(parseInt(idProgramaAcademicoSeleccionado));
         } else {
             setProgramaAcademicoDelGrupo("");
         }
-    }, [idGrupo, grupos]);
+    }, [idGrupo, grupos, idProgramaAcademicoSeleccionado]);
 
     useEffect(() => {
         if (!fecha) {
@@ -103,7 +106,7 @@ export const CargaMateriaModales = ({
             setFecha(today.toISOString().split("T")[0]); // Formato YYYY-MM-DD
         }
     }, [fecha, setFecha]);
-    
+
     const formatDateString = (dateString) => dateString ? dateString.split("T")[0] : "";
 
     const agregarHorario = () => {
@@ -115,14 +118,14 @@ export const CargaMateriaModales = ({
             });
             return;
         }
-    
+
         const bloqueSeleccionado = bloques.find(b => b.idBloque === Number(nuevoHorario.idBloque));
-    
+
         if (bloqueSeleccionado) {
             setHorarios(prevHorarios => [
                 ...prevHorarios,
-                { 
-                    dia: nuevoHorario.dia, 
+                {
+                    dia: nuevoHorario.dia,
                     idBloque: Number(nuevoHorario.idBloque),
                     nombreBloque: bloqueSeleccionado.nombre,  // Asigna el nombre del bloque
                     horaInicio: bloqueSeleccionado.horaInicio,  // Asigna hora de inicio
@@ -130,7 +133,7 @@ export const CargaMateriaModales = ({
                 }
             ]);
         }
-    
+
         setNuevoHorario({ dia: "", idBloque: "" });
     };
 
@@ -148,7 +151,12 @@ export const CargaMateriaModales = ({
 
     // Filtrar materias según el programa académico del grupo seleccionado
     const filteredMapaCurriculares = mapaCurriculares.filter(mapa =>
-        !programaAcademicoDelGrupo || mapa.idProgramaAcademico === programaAcademicoDelGrupo
+        !programaAcademicoDelGrupo || mapa.idProgramaAcademico === parseInt(programaAcademicoDelGrupo)
+    );
+
+    // Filtrar grupos por programa académico si está seleccionado
+    const filteredGrupos = grupos.filter(grupo =>
+        !idProgramaAcademicoSeleccionado || grupo.idProgramaAcademico === parseInt(idProgramaAcademicoSeleccionado)
     );
 
     return (
@@ -168,11 +176,11 @@ export const CargaMateriaModales = ({
                                         <label>Grupo</label>
                                         <select className="form-control" value={idGrupo} onChange={(e) => setIdGrupo(e.target.value)}>
                                             <option value="">Selecciona un grupo</option>
-                                            {grupos.map(grupo => (
+                                            {filteredGrupos.map(grupo => (
                                                 <option key={grupo.idGrupo} value={grupo.idGrupo}>
-                                                    {`${grupo.nombre}, ${grupo.programa_academico}`} 
+                                                    {`${grupo.nombre}, ${grupo.programa_academico}`}
                                                 </option>
-                                            ))} 
+                                            ))}
                                         </select> {/* Muestra grupo mas programaacademico */}
                                     </div>
                                 </div>
@@ -221,7 +229,7 @@ export const CargaMateriaModales = ({
                                             <option value="Recuperación">Recuperación</option>
                                         </select>
                                     </div>
-                                </div>  
+                                </div>
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <label>Fecha</label>
@@ -244,8 +252,8 @@ export const CargaMateriaModales = ({
                                                 </select>
                                             </div>
                                             <div className="col-md-4">
-                                                <select className="form-control" 
-                                                    value={nuevoHorario.idBloque} 
+                                                <select className="form-control"
+                                                    value={nuevoHorario.idBloque}
                                                     onChange={(e) => setNuevoHorario({ ...nuevoHorario, idBloque: Number(e.target.value) })}>
                                                     <option value="">Selecciona un bloque</option>
                                                     {bloques.map(bloque => (
@@ -297,158 +305,158 @@ export const CargaMateriaModales = ({
                     </div>
                 </div>
             </div>
-            
+
             {/* Modal para editar carga de materias */}
             {showEditModal && (
-            <div className={`modal fade ${showEditModal ? "show" : ""}`} style={{ display: showEditModal ? "block" : "none" }}>
-                <div className="modal-dialog modal-dialog-left">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Editar carga de materias</h5>
-                            <button type="button" className="btn-close" onClick={cerrarModal}></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label>Grupo</label>
-                                        <select className="form-control" value={idGrupo} onChange={(e) => setIdGrupo(e.target.value)}>
-                                            <option value="">Selecciona un grupo</option>
-                                            {grupos.map(grupo => (
-                                                <option 
-                                                    key={grupo.idGrupo} 
-                                                    value={grupo.idGrupo}
-                                                >
-                                                    {`${grupo.nombre}, ${grupo.programa_academico}`}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label>Profesor</label>
-                                        <select className="form-control" value={idProfesor} onChange={(e) => setIdProfesor(e.target.value)}>
-                                            <option value="">Selecciona un profesor</option>
-                                            {profesores.map(profesor => (
-                                                <option key={profesor.idProfesor} value={profesor.idProfesor}>
-                                                    {profesor.nombre} {profesor.paterno} {profesor.materno}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label>Mapa curricular</label>
-                                        <select className="form-control" value={idMapaCurricular} onChange={(e) => setIdMapaCurricular(e.target.value)}>
-                                            <option value="">Selecciona una materia</option>
-                                            {filteredMapaCurriculares.map(mapa => (
-                                                <option key={mapa.idMapaCurricular} value={mapa.idMapaCurricular}>{mapa.materia}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label>Aula</label>
-                                        <select className="form-control" value={idAula} onChange={(e) => setIdAula(e.target.value)}>
-                                            <option value="">Selecciona un aula</option>
-                                            {aulas.map(aula => (
-                                                <option key={aula.idAula} value={aula.idAula}>{aula.nombre}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label>Tipo</label>
-                                        <select className="form-control" value={tipo} onChange={(e) => setTipo(e.target.value)}>
-                                            <option value="">Selecciona un tipo</option>
-                                            <option value="Ordinaria">Ordinaria</option>
-                                            <option value="Extraordinaria">Extraordinaria</option>
-                                            <option value="Recuperación">Recuperación</option>
-                                        </select>
-                                    </div>
-                                </div>  
-                                <div className="col-md-6">
-                                    <div className="form-group">
-                                        <label>Fecha</label>
-                                        <input type="date" className="form-control" value={fecha} onChange={(e) => setFecha(e.target.value)} />
-                                    </div>
-                                </div>
-                                <div className="col-md-12">
-                                    <div className="form-group">
-                                        <label>Horarios</label>
-                                        <div className="row">
-                                            <div className="col-md-4">
-                                                <select className="form-control" value={nuevoHorario.dia} onChange={(e) => setNuevoHorario({ ...nuevoHorario, dia: e.target.value })}>
-                                                    <option value="">Selecciona un día</option>
-                                                    <option value="Lunes">Lunes</option>
-                                                    <option value="Martes">Martes</option>
-                                                    <option value="Miércoles">Miércoles</option>
-                                                    <option value="Jueves">Jueves</option>
-                                                    <option value="Viernes">Viernes</option>
-                                                    <option value="Sábado">Sábado</option>
-                                                </select>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <select className="form-control" 
-                                                    value={nuevoHorario.idBloque} 
-                                                    onChange={(e) => setNuevoHorario({ ...nuevoHorario, idBloque: Number(e.target.value) })}>
-                                                    <option value="">Selecciona un bloque</option>
-                                                    {bloques.map(bloque => (
-                                                        <option key={bloque.idBloque} value={bloque.idBloque}>
-                                                            {bloque.nombre}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                            <div className="col-md-4">
-                                                <button className="btn btn-primary" onClick={agregarHorario}>Agregar</button>
-                                            </div>
+                <div className={`modal fade ${showEditModal ? "show" : ""}`} style={{ display: showEditModal ? "block" : "none" }}>
+                    <div className="modal-dialog modal-dialog-left">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Editar carga de materias</h5>
+                                <button type="button" className="btn-close" onClick={cerrarModal}></button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label>Grupo</label>
+                                            <select className="form-control" value={idGrupo} onChange={(e) => setIdGrupo(e.target.value)}>
+                                                <option value="">Selecciona un grupo</option>
+                                                {filteredGrupos.map(grupo => (
+                                                    <option
+                                                        key={grupo.idGrupo}
+                                                        value={grupo.idGrupo}
+                                                    >
+                                                        {`${grupo.nombre}, ${grupo.programa_academico}`}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
-                                        <div className="table-responsive" style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                                            <table className="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Día</th>
-                                                        <th>Bloque</th>
-                                                        <th>Modulo</th>
-                                                        <th>Eliminar</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {horarios.map((horario, index) => {
-                                                        const bloque = bloques.find(b => b.idBloque === Number(horario.idBloque));
-                                                        return (
-                                                            <tr key={index}>
-                                                                <td>{horario.dia}</td>
-                                                                <td>{bloque ? bloque.nombre : "No disponible"}</td>
-                                                                <td>{bloque ? `${bloque.horaInicio} - ${bloque.horaFin}` : "No disponible"}</td>
-                                                                <td>
-                                                                    <button className="btn btn-danger" onClick={() => eliminarHorario(index)}>Eliminar</button>
-                                                                </td>
-                                                            </tr>
-                                                        );
-                                                    })}
-                                                </tbody>
-                                            </table>
-                                            <h6>Nota: Agregar Nuevos Horarios</h6>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label>Profesor</label>
+                                            <select className="form-control" value={idProfesor} onChange={(e) => setIdProfesor(e.target.value)}>
+                                                <option value="">Selecciona un profesor</option>
+                                                {profesores.map(profesor => (
+                                                    <option key={profesor.idProfesor} value={profesor.idProfesor}>
+                                                        {profesor.nombre} {profesor.paterno} {profesor.materno}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label>Mapa curricular</label>
+                                            <select className="form-control" value={idMapaCurricular} onChange={(e) => setIdMapaCurricular(e.target.value)}>
+                                                <option value="">Selecciona una materia</option>
+                                                {filteredMapaCurriculares.map(mapa => (
+                                                    <option key={mapa.idMapaCurricular} value={mapa.idMapaCurricular}>{mapa.materia}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label>Aula</label>
+                                            <select className="form-control" value={idAula} onChange={(e) => setIdAula(e.target.value)}>
+                                                <option value="">Selecciona un aula</option>
+                                                {aulas.map(aula => (
+                                                    <option key={aula.idAula} value={aula.idAula}>{aula.nombre}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label>Tipo</label>
+                                            <select className="form-control" value={tipo} onChange={(e) => setTipo(e.target.value)}>
+                                                <option value="">Selecciona un tipo</option>
+                                                <option value="Ordinaria">Ordinaria</option>
+                                                <option value="Extraordinaria">Extraordinaria</option>
+                                                <option value="Recuperación">Recuperación</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label>Fecha</label>
+                                            <input type="date" className="form-control" value={fecha} onChange={(e) => setFecha(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12">
+                                        <div className="form-group">
+                                            <label>Horarios</label>
+                                            <div className="row">
+                                                <div className="col-md-4">
+                                                    <select className="form-control" value={nuevoHorario.dia} onChange={(e) => setNuevoHorario({ ...nuevoHorario, dia: e.target.value })}>
+                                                        <option value="">Selecciona un día</option>
+                                                        <option value="Lunes">Lunes</option>
+                                                        <option value="Martes">Martes</option>
+                                                        <option value="Miércoles">Miércoles</option>
+                                                        <option value="Jueves">Jueves</option>
+                                                        <option value="Viernes">Viernes</option>
+                                                        <option value="Sábado">Sábado</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-4">
+                                                    <select className="form-control"
+                                                        value={nuevoHorario.idBloque}
+                                                        onChange={(e) => setNuevoHorario({ ...nuevoHorario, idBloque: Number(e.target.value) })}>
+                                                        <option value="">Selecciona un bloque</option>
+                                                        {bloques.map(bloque => (
+                                                            <option key={bloque.idBloque} value={bloque.idBloque}>
+                                                                {bloque.nombre}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-4">
+                                                    <button className="btn btn-primary" onClick={agregarHorario}>Agregar</button>
+                                                </div>
+                                            </div>
+                                            <div className="table-responsive" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                                                <table className="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Día</th>
+                                                            <th>Bloque</th>
+                                                            <th>Modulo</th>
+                                                            <th>Eliminar</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {horarios.map((horario, index) => {
+                                                            const bloque = bloques.find(b => b.idBloque === Number(horario.idBloque));
+                                                            return (
+                                                                <tr key={index}>
+                                                                    <td>{horario.dia}</td>
+                                                                    <td>{bloque ? bloque.nombre : "No disponible"}</td>
+                                                                    <td>{bloque ? `${bloque.horaInicio} - ${bloque.horaFin}` : "No disponible"}</td>
+                                                                    <td>
+                                                                        <button className="btn btn-danger" onClick={() => eliminarHorario(index)}>Eliminar</button>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                                <h6>Nota: Agregar Nuevos Horarios</h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" onClick={cerrarModal}>Cerrar</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { handleUpdate(); cerrarModal(); }}>Guardar</button>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={cerrarModal}>Cerrar</button>
+                                <button type="button" className="btn btn-primary" onClick={() => { handleUpdate(); cerrarModal(); }}>Guardar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             )}
-            
+
             {/* Modal para eliminar carga de materias */}
             <div className={`modal fade ${showDeleteModal ? "show" : ""}`} style={{ display: showDeleteModal ? "block" : "none" }}>
                 <div className="modal-dialog">

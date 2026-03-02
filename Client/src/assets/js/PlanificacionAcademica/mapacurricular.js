@@ -1,7 +1,7 @@
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2';
 
-import { createMapaCurricular, deleteMapaCurricular, getMapaCurriculares, updateMapaCurricular } 
-from '../../../api/PlanificacionAcademica/mapacurricular.api.js';
+import { createMapaCurricular, deleteMapaCurricular, getMapaCurriculares, updateMapaCurricular }
+  from '../../../api/PlanificacionAcademica/mapacurricular.api.js';
 
 export const getMapaCurricular = async (setMapaCurricular) => {
   try {
@@ -13,16 +13,6 @@ export const getMapaCurricular = async (setMapaCurricular) => {
 };
 
 export const addMapaCurricular = async (idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowModal, getMapaCurricular) => {
-  if (!idProgramaAcademico || !ciclo || !cuatrimestre || !materia || !clave || !horasSemana || !horasTeoricas || !horasPracticas || !horasTotal || !creditos || !modalidad || !espacio || !noUnidad) {
-    console.error("Error: Campos obligatorios faltantes.");
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Todos los campos son obligatorios. Por favor, completa todos los campos.',
-    });
-    return;
-  }
-  // console.log("Datos enviados para registrar:", { idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad });
   try {
     await createMapaCurricular(idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad);
     getMapaCurricular();
@@ -37,13 +27,12 @@ export const addMapaCurricular = async (idProgramaAcademico, ciclo, cuatrimestre
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema registrando el Mapa Curricular.',
+      text: error.message || 'Hubo un problema registrando el Mapa Curricular.',
     });
   }
 };
 
 export const editMapaCurricular = async (idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, setShowEditModal, getMapaCurricular) => {
-  // console.log("Datos enviados para actualizar:", { idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad });
   try {
     await updateMapaCurricular(idMapaCurricular, idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad);
     getMapaCurricular();
@@ -58,7 +47,7 @@ export const editMapaCurricular = async (idMapaCurricular, idProgramaAcademico, 
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema actualizando el Mapa Curricular.',
+      text: error.message || 'Hubo un problema actualizando el Mapa Curricular.',
     });
   }
 };
