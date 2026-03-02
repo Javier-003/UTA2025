@@ -48,18 +48,25 @@ function CargaMaterias() {
 
     // Agrega un useEffect para registrar la lista de niveles de estudio cada vez que cambie
     useEffect(() => {
-      //console.log("Lista de niveles de estudio:", programaAcademicoList);
+        //console.log("Lista de niveles de estudio:", programaAcademicoList);
     }, [programaAcademicoList]);
-  
+
     useEffect(() => {
-      getProgramaacademicos()
-        .then(data => setProgramaAcademicoList(data))
-        .catch(error => console.error("Error al obtener los niveles de estudio:", error));
+        getProgramaacademicos()
+            .then(data => setProgramaAcademicoList(data))
+            .catch(error => console.error("Error al obtener los niveles de estudio:", error));
     }, []);
-    
+
     const handleAdd = async () => {
+        /*
+        // DESCOMENTAR SI EL AULA DEBE SER OBLIGATORIA
+        if (!idAula) {
+            Swal.fire({ title: "Error", text: "El aula es obligatoria.", icon: "error" });
+            return;
+        }
+        */
         try {
-            await createCargaMaterias(idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios);
+            await createCargaMaterias(idGrupo, idProfesor, idMapaCurricular, idAula || null, tipo, fecha, horarios);
             const data = await getCargaMaterias();
             setCargaMaterias(data);
             setShowModal(false); // Cerrar el modal después de agregar
@@ -73,8 +80,15 @@ function CargaMaterias() {
     };
 
     const handleUpdate = async () => {
+        /*
+        // DESCOMENTAR SI EL AULA DEBE SER OBLIGATORIA
+        if (!idAula) {
+            Swal.fire({ title: "Error", text: "El aula es obligatoria.", icon: "error" });
+            return;
+        }
+        */
         try {
-            await updateCargaMaterias(selectedCargaMaterias.idGrupoMateria, idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios);
+            await updateCargaMaterias(selectedCargaMaterias.idGrupoMateria, idGrupo, idProfesor, idMapaCurricular, idAula || null, tipo, fecha, horarios);
             const data = await getCargaMaterias();
             setCargaMaterias(data);
             setShowEditModal(false); // Cerrar el modal después de actualizar
@@ -101,14 +115,14 @@ function CargaMaterias() {
     };
 
     // Filtrado de grupos por periodo y programa académico
-    const gruposFiltrados = grupoList.filter(grupo => 
-        idPeriodo && idProgramaAcademico && 
-        grupo.idPeriodo === parseInt(idPeriodo) && 
+    const gruposFiltrados = grupoList.filter(grupo =>
+        idPeriodo && idProgramaAcademico &&
+        grupo.idPeriodo === parseInt(idPeriodo) &&
         grupo.idProgramaAcademico === parseInt(idProgramaAcademico)
     );
 
     // Filtrado de cargaMateriasList según el grupo seleccionado
-    const filteredData = cargaMateriasList.filter(cargaMateria => 
+    const filteredData = cargaMateriasList.filter(cargaMateria =>
         cargaMateria.idGrupo === parseInt(idGrupo)
     );
 
@@ -118,9 +132,9 @@ function CargaMaterias() {
     const groupedData = filteredData.reduce((acc, item) => {
         const existingItem = acc.find(i => i.idGrupoMateria === item.idGrupoMateria);
         if (existingItem) {
-            existingItem.horarios.push({ dia: item.dia, bloque: item.bloque, horaInicio: item.horaInicio, horaFin: item.horaFin });
+            existingItem.horarios.push({ dia: item.dia, idBloque: item.idBloque, bloque: item.bloque, horaInicio: item.horaInicio, horaFin: item.horaFin });
         } else {
-            acc.push({ ...item, horarios: [{ dia: item.dia, bloque: item.bloque, horaInicio: item.horaInicio, horaFin: item.horaFin }] });
+            acc.push({ ...item, horarios: [{ dia: item.dia, idBloque: item.idBloque, bloque: item.bloque, horaInicio: item.horaInicio, horaFin: item.horaFin }] });
         }
         return acc;
     }, []);
@@ -144,44 +158,47 @@ function CargaMaterias() {
                         <div className="col-md-4">
                             <div className="card">
                                 <div className="card-body">
-                                        <h6 className="card-title">Periodo</h6>
-                                        <select className="form-select" value={idPeriodo} onChange={(e) => setIdPeriodo(e.target.value)}>
-                                            <option value="">Selecciona un Periodo</option>
-                                            {periodoList && periodoList.map((periodo) => (
-                                                <option key={periodo.idPeriodo} value={periodo.idPeriodo}>
-                                                    {periodo.periodo}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <h6 className="card-title">Programa Académico</h6>
-                                        <select className="form-select" value={idProgramaAcademico} onChange={(e) => setIdProgramaAcademico(e.target.value)}>
-                                            <option value="">Selecciona un Programa Académico</option>
-                                            {programaAcademicoList && programaAcademicoList.map((programa) => (
-                                                <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>
-                                                    {programa.nombre}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <h6 className="card-title">Grupo</h6>
-                                        <select className="form-select" value={idGrupo} onChange={(e) => setIdGrupo(e.target.value)}>
-                                            <option value="">Selecciona un Grupo</option>
-                                            {gruposFiltrados && gruposFiltrados.map((grupo) => (
-                                                <option key={grupo.idGrupo} value={grupo.idGrupo}>
-                                                    {grupo.nombre}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        {idGrupo && <ConsultarHorario idGrupo={idGrupo} />}
+                                    <h6 className="card-title">Periodo</h6>
+                                    <select className="form-select" value={idPeriodo} onChange={(e) => setIdPeriodo(e.target.value)}>
+                                        <option value="">Selecciona un Periodo</option>
+                                        {periodoList && periodoList.map((periodo) => (
+                                            <option key={periodo.idPeriodo} value={periodo.idPeriodo}>
+                                                {periodo.periodo}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <h6 className="card-title">Programa Académico</h6>
+                                    <select className="form-select" value={idProgramaAcademico} onChange={(e) => setIdProgramaAcademico(e.target.value)}>
+                                        <option value="">Selecciona un Programa Académico</option>
+                                        {programaAcademicoList && programaAcademicoList.map((programa) => (
+                                            <option key={programa.idProgramaAcademico} value={programa.idProgramaAcademico}>
+                                                {programa.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <h6 className="card-title">Grupo</h6>
+                                    <select className="form-select" value={idGrupo} onChange={(e) => setIdGrupo(e.target.value)}>
+                                        <option value="">Selecciona un Grupo</option>
+                                        {gruposFiltrados && gruposFiltrados.map((grupo) => (
+                                            <option key={grupo.idGrupo} value={grupo.idGrupo}>
+                                                {grupo.nombre}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {idGrupo && <ConsultarHorario idGrupo={idGrupo} />}
                                 </div>
                             </div>
                         </div>
                         {/* Columna a la derecha */}
                         <div className="col-md-8">
                             <button className="btn btn-success mb-3" onClick={() => {
-                                setIdGrupoMateria(""); setIdGrupo(""); setIdProfesor("");
+                                setIdGrupoMateria("");
+                                // Preservar idGrupo si ya está seleccionado
+                                if (!idGrupo) setIdGrupo("");
+                                setIdProfesor("");
                                 setIdMapaCurricular(""); setIdAula(""); setTipo("");
                                 setFecha(""); setHorarios([]); setShowModal(true);
-                                }}>Agregar Materia
+                            }}>Agregar Materia
                             </button>
                             {/* Mostrar el nombre del grupo y programa académico */}
                             {nombreGrupoYPrograma && (
@@ -281,7 +298,8 @@ function CargaMaterias() {
                 handleAdd={handleAdd}
                 handleUpdate={handleUpdate}
                 handleDelete={handleDelete}
-                selectedCargaMaterias={selectedCargaMaterias}
+                selectedCargaMateria={selectedCargaMaterias}
+                idProgramaAcademicoSeleccionado={idProgramaAcademico}
             />
             <VerHorarioModal
                 showModal={showHorarioModal}
@@ -291,7 +309,7 @@ function CargaMaterias() {
                 idGrupoMateria={idGrupoMateria}
                 setIdGrupoMateria={setIdGrupoMateria}
             />
-            
+
         </div>
     );
 }

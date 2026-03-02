@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import {getCargaMaterias, createCargaMaterias, updateCargaMaterias, deleteCargaMaterias} 
-from "../../controllers/PlanificacionAcademica/cargamaterias.Controller.js";
+import { getCargaMaterias, createCargaMaterias, updateCargaMaterias, deleteCargaMaterias }
+    from "../../controllers/PlanificacionAcademica/cargamaterias.Controller.js";
 
 const router = Router();
 

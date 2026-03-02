@@ -66,6 +66,13 @@ export const createCargaMaterias = async (req, res) => {
   try {
     const { idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios } = req.body;
 
+    /* 
+    // DESCOMENTAR SI EL AULA DEBE SER OBLIGATORIA
+    if (!idAula) {
+      return res.status(400).json({ error: "⚠️ El aula es obligatoria." });
+    }
+    */
+
     // Validar conflictos de horarios y aulas solo para materias "Ordinaria"
     if (tipo === "Ordinaria") {
       // Validar conflictos de horarios
@@ -186,6 +193,13 @@ export const updateCargaMaterias = async (req, res) => {
     const { idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios } = req.body;
     console.log("Valores recibidos para actualizar:", { idGrupoMateria, idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, horarios });
 
+    /* 
+    // DESCOMENTAR SI EL AULA DEBE SER OBLIGATORIA
+    if (!idAula) {
+      return res.status(400).json({ error: "⚠️ El aula es obligatoria." });
+    }
+    */
+
     // Verificar si los nuevos horarios generan conflicto
     if (horarios && horarios.length) {
       for (const horario of horarios) {
@@ -199,12 +213,12 @@ export const updateCargaMaterias = async (req, res) => {
            WHERE g.idGrupo = ? 
            AND h.dia = ? 
            AND h.idBloque = ? 
-           AND h.idGrupoMateria != ?`, 
+           AND h.idGrupoMateria != ?`,
           [idGrupo, horario.dia, horario.idBloque, idGrupoMateria]
         );
 
         if (existeHorario.length > 0) {
-          return res.status(400).json({ 
+          return res.status(400).json({
             error: `⚠️ No se puede actualizar: el horario ${horario.dia}, bloque ${existeHorario[0].nombreBloque} ya está ocupado por la materia ${existeHorario[0].materia} en el grupo ${existeHorario[0].grupo}.`
           });
         }
@@ -240,8 +254,8 @@ export const updateCargaMaterias = async (req, res) => {
           ) {
             // Permitir compartir aula
           } else {
-            return res.status(400).json({ 
-              error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.` 
+            return res.status(400).json({
+              error: `⚠️ El aula ${existeAula[0].aula} ya está asignada al bloque ${existeAula[0].nombreBloque} en el horario ${horario.dia}.`
             });
           }
         }

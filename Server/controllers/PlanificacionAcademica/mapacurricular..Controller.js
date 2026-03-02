@@ -20,24 +20,45 @@ export const getMapaCurriculartodos = async (req, res) => {
 // Crear un mapa curricular
 export const createMapaCurricular = async (req, res) => {
   try {
-    const { idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad } = req.body;
-    if (!idProgramaAcademico || !ciclo || !cuatrimestre || !materia || !clave || !horasSemana || !horasTeoricas || !horasPracticas || !horasTotal || !creditos || !modalidad || !espacio || !noUnidad) {
-      return res.status(400).json({ message: "Todos los campos son obligatorios" });
+    const {
+      idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana,
+      horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad
+    } = req.body;
+
+    const fields = {
+      idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana,
+      horasTeoricas, horasPracticas, horasTotal, creditos, modalidad
+    };
+
+    /*
+    // DESCOMENTAR SI ESPACIO Y NO UNIDAD DEBEN SER OBLIGATORIOS
+    const extraFields = { espacio, noUnidad };
+    Object.assign(fields, extraFields);
+    */
+
+    const missing = Object.entries(fields)
+      .filter(([_, value]) => value === undefined || value === null || value === "")
+      .map(([key]) => key);
+
+    if (missing.length > 0) {
+      return res.status(400).json({
+        message: `Faltan los siguientes campos obligatorios: ${missing.join(", ")}`
+      });
     }
     const [exists] = await db.query("SELECT * FROM mapacurricular WHERE clave = ?", [clave]);
     if (exists.length) {
       return res.status(400).json({ message: "El mapa curricular ya existe" });
     }
     const [result] = await db.query("INSERT INTO mapacurricular (idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-       [idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad]
-      ); 
-      res.status(201).json({
-        message: `'${materia}' ha sido registrado`, idMapaCurricular: result.insertId,
-        idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad
-      });
+      [idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad]
+    );
+    res.status(201).json({
+      message: `'${materia}' ha sido registrado`, idMapaCurricular: result.insertId,
+      idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad
+    });
   } catch (error) {
     console.error("Error al registrar el mapa curricular:", error);
-    res.status(500).json({ message: "Error al registrar el mapa curricular", error: error.message});
+    res.status(500).json({ message: "Error al registrar el mapa curricular", error: error.message });
   }
 };
 
@@ -45,7 +66,31 @@ export const createMapaCurricular = async (req, res) => {
 export const updateMapaCurricular = async (req, res) => {
   try {
     const { idMapaCurricular } = req.params;
-    const { idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad } = req.body;
+    const {
+      idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana,
+      horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad
+    } = req.body;
+
+    const fields = {
+      idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana,
+      horasTeoricas, horasPracticas, horasTotal, creditos, modalidad
+    };
+
+    /*
+    // DESCOMENTAR SI ESPACIO Y NO UNIDAD DEBEN SER OBLIGATORIOS
+    const extraFields = { espacio, noUnidad };
+    Object.assign(fields, extraFields);
+    */
+
+    const missing = Object.entries(fields)
+      .filter(([_, value]) => value === undefined || value === null || value === "")
+      .map(([key]) => key);
+
+    if (missing.length > 0) {
+      return res.status(400).json({
+        message: `Faltan los siguientes campos obligatorios: ${missing.join(", ")}`
+      });
+    }
     const [result] = await db.query(
       "UPDATE mapacurricular SET idProgramaAcademico = ?, ciclo = ?, cuatrimestre = ?, materia = ?, clave = ?, horasSemana = ?, horasTeoricas = ?, horasPracticas = ?, horasTotal = ?, creditos = ?, modalidad = ?, espacio = ?, noUnidad = ? WHERE idMapaCurricular = ?",
       [idProgramaAcademico, ciclo, cuatrimestre, materia, clave, horasSemana, horasTeoricas, horasPracticas, horasTotal, creditos, modalidad, espacio, noUnidad, idMapaCurricular]
