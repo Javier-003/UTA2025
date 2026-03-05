@@ -4,7 +4,7 @@ export const db = mysql.createPool({
   host: 'localhost',
   user: 'utaserver',
   password: 'utaserveruta2025',
-  database: 'uta2026',
+  database: 'uta_2026',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
