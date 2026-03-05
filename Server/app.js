@@ -58,7 +58,7 @@ app.set('trust proxy', 1);
 
 // Middlewares
 app.use(cors({
-  origin: 'https://vps-5255617-x.dattaweb.com',
+  origin: 'https://vps-5498202-x.dattaweb.com',
   credentials: true
 }));
 app.use(cookieParser());
