@@ -159,11 +159,15 @@ export const createCargaMaterias = async (req, res) => {
       });
     }
 
+    // Normalizar valores para evitar errores de SQL (vacio -> null o valor por defecto)
+    const normalizedIdAula = idAula === "" || idAula === "null" || idAula === undefined ? null : idAula;
+    const normalizedTipo = tipo === "" || tipo === undefined ? "Ordinaria" : tipo;
+
     // Insertar en `grupomateria`
     const [result] = await db.query(
       `INSERT INTO grupomateria (idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha)
        VALUES (?, ?, ?, ?, ?, ?);`,
-      [idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha]
+      [idGrupo, idProfesor, idMapaCurricular, normalizedIdAula, normalizedTipo, fecha]
     );
 
     const idGrupoMateria = result.insertId;
@@ -285,12 +289,16 @@ export const updateCargaMaterias = async (req, res) => {
       });
     }
 
+    // Normalizar valores para evitar errores de SQL (vacio -> null o valor por defecto)
+    const normalizedIdAula = idAula === "" || idAula === "null" || idAula === undefined ? null : idAula;
+    const normalizedTipo = tipo === "" || tipo === undefined ? "Ordinaria" : tipo;
+
     // Actualizar los datos de la carga de materias
     await db.query(`
       UPDATE grupomateria
       SET idGrupo = ?, idProfesor = ?, idMapaCurricular = ?, idAula = ?, tipo = ?, fecha = ?
       WHERE idGrupoMateria = ?;
-    `, [idGrupo, idProfesor, idMapaCurricular, idAula, tipo, fecha, idGrupoMateria]);
+    `, [idGrupo, idProfesor, idMapaCurricular, normalizedIdAula, normalizedTipo, fecha, idGrupoMateria]);
 
     // Actualizar horarios
     if (horarios && horarios.length) {
