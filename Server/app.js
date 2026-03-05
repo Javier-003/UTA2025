@@ -67,49 +67,56 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // Rutas
-app.use("/api/login",login);
-app.use("/olvidaste",login);
-app.use("/recuperar",login);
-app.use("/",indexRoutes);
+app.use("/api/login", login);
+app.use("/api/olvidaste", login);
+app.use("/api/recuperar", login);
+app.use("/api/", indexRoutes);
+
 //Gestion de Usarios
-app.use("/rol",rolRoutes);
-app.use("/usuario", usuarioRoutes);
-app.use("/persona", personaRoutes);
-app.use("/alumno", alumnoRoutes);
-app.use("/profesor", profesorRoutes);
-app.use("/administrativo", administrativoRoutes);
+app.use("/api/rol", rolRoutes);
+app.use("/api/usuario", usuarioRoutes);
+app.use("/api/persona", personaRoutes);
+app.use("/api/alumno", alumnoRoutes);
+app.use("/api/profesor", profesorRoutes);
+app.use("/api/administrativo", administrativoRoutes);
+
 //Parametrizacion
-app.use("/actividad", actividadRoutes);
-app.use("/tramite",tramiteRoutes);
-app.use("/alumnotramite",alumnotramiteRoutes);
-app.use("/tramiteproceso",tramiteprocesoRoutes);
-app.use("/alumnoproceso",alumnoprocesoRoutes);
-app.use("/alumnoperiodo",alumnoperiodoRoutes);
-app.use("/causabaja",causabajaRoutes);
+app.use("/api/actividad", actividadRoutes);
+app.use("/api/tramite", tramiteRoutes);
+app.use("/api/alumnotramite", alumnotramiteRoutes);
+app.use("/api/tramiteproceso", tramiteprocesoRoutes);
+app.use("/api/alumnoproceso", alumnoprocesoRoutes);
+app.use("/api/alumnoperiodo", alumnoperiodoRoutes);
+app.use("/api/causabaja", causabajaRoutes);
+
 //Oferta Academica
-app.use("/alumnopa",alumnopaRoutes);
-app.use("/programaacademico",programaacademicoRoutes);
-app.use("/mapacurricular",mapacurricularRoutes);
-app.use("/nivelestudio", nivelestudioRoutes);
-app.use("/periodo", periodoRoutes);
-app.use("/ofertaacademica", ofertaacademicaRoutes); // Usar las rutas de Oferta Academica
-app.use("/adicionprofesor", adicionprofesorRoutes);
+app.use("/api/alumnopa", alumnopaRoutes);
+app.use("/api/programaacademico", programaacademicoRoutes);
+app.use("/api/mapacurricular", mapacurricularRoutes);
+app.use("/api/nivelestudio", nivelestudioRoutes);
+app.use("/api/periodo", periodoRoutes);
+app.use("/api/ofertaacademica", ofertaacademicaRoutes);
+app.use("/api/adicionprofesor", adicionprofesorRoutes);
+
 //Area
-app.use("/aula", aulaRoutes);
-app.use("/edificio",edificioRoutes);
-app.use("/departamento", departamentoRoutes);
-app.use("/puesto", puestoRoutes);
+app.use("/api/aula", aulaRoutes);
+app.use("/api/edificio", edificioRoutes);
+app.use("/api/departamento", departamentoRoutes);
+app.use("/api/puesto", puestoRoutes);
+
 //Evaluacion
-app.use("/evaluacion", evaluacionRoutes);
-app.use("/kardex",kardexRoutes);
-app.use("/materiaunidad", materiaunidadRoutes);
+app.use("/api/evaluacion", evaluacionRoutes);
+app.use("/api/kardex", kardexRoutes);
+app.use("/api/materiaunidad", materiaunidadRoutes);
+
 //Autorizacion
-app.use("/grupo", grupoRoutes);
-app.use("/bloque", bloqueRoutes);
-app.use("/cargamaterias", cargamaterias);
-app.use("/horario", horario);
+app.use("/api/grupo", grupoRoutes);
+app.use("/api/bloque", bloqueRoutes);
+app.use("/api/cargamaterias", cargamaterias);
+app.use("/api/horario", horario);
+
 //Bitacora
-app.use("/bitacora", bitacoraRoutes);
+app.use("/api/bitacora", bitacoraRoutes);
 
 export default app;
 
