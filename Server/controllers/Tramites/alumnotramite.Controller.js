@@ -1,4 +1,4 @@
-import { db } from "../../db/connection.js"; 
+import { db } from "../../db/connection.js";
 //Act. 
 export const getAlumnoTramitetodos = async (req, res) => {
   try {
@@ -108,9 +108,9 @@ export const createAlumnoTramite = async (req, res) => {
 
     await connection.commit(); // 🔹 Confirmar la transacción
 
-    res.status(201).json({ 
-      message: "Alumno Trámite y su proceso creado correctamente", 
-      idAlumnoTramite 
+    res.status(201).json({
+      message: "Alumno Trámite y su proceso creado correctamente",
+      idAlumnoTramite
     });
   } catch (error) {
     await connection.rollback(); // 🔹 Revertir si hay error
@@ -127,18 +127,6 @@ export const updateAlumnoTramite = async (req, res) => {
   try {
     const { idAlumnoTramite } = req.params;
     const { idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, idBajaCausa } = req.body;
-
-    // Mostrar en consola los datos recibidos
-    console.log('Datos recibidos para actualización:', {
-      idAlumnoTramite,
-      idTramite,
-      idPersona,
-      idAlumnoPA,
-      idPeriodo,
-      fecha,
-      estatus,
-      idBajaCausa
-    });
 
     // Verificar si el trámite existe
     const [exists] = await db.query("SELECT 1 FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
@@ -170,7 +158,7 @@ export const deleteAlumnoTramite = async (req, res) => {
 
     // Verificar si el trámite del alumno existe
     const [alumnotramite] = await db.query("SELECT idAlumnoTramite FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
-    if (!alumnotramite.length) 
+    if (!alumnotramite.length)
       return res.status(404).json({ message: "Alumno Trámite no encontrado" });
 
     // Eliminar el trámite del alumno
