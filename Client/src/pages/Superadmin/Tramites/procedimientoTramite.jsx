@@ -117,17 +117,6 @@ function ProcedimientoTramite() {
     getAlumnoProceso(setAlumnoProceso);
   }, []);
 
-  useEffect(() => {
-    getAlumnoProceso(setAlumnoProceso);
-}, []);
-
-useEffect(() => {
-    if (alumnoprocesoList.length > 0) {
-        console.log("Datos de alumnoproceso:", alumnoprocesoList[0]); // Ver el primer objeto
-        console.log("Claves del objeto:", Object.keys(alumnoprocesoList[0])); // Verificar nombres de las claves
-    }
-}, [alumnoprocesoList]);
-
 
   if (!idAlumnoTramiteParam) {
     return <h5 className="text-danger text-center mt-4">⚠ Acceso denegado: Falta seleccionar un trámite.</h5>;
