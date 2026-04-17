@@ -27,10 +27,14 @@ export const addKardexFun = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeri
     setShowModal(false);
   } catch (error) {
     console.error('Error al agregar el registro de kardex:', error);
+    const message = error.response && error.response.data && error.response.data.error 
+      ? error.response.data.error 
+      : error.message || 'Hubo un problema registrando el registro de kardex.';
+    
     Swal.fire({
       icon: 'error',
       title: 'Error',
-      text: 'Hubo un problema registrando el registro de kardex.',
+      text: message,
     });
   }
 };
