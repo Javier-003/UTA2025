@@ -52,3 +52,4 @@ export const deleteAdicionProfesor = async (idProfesor) => {
     throw new Error("Error al eliminar el profesor");
   }
 };
+

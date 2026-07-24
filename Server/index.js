@@ -1,3 +1,19 @@
-import PORT from "./server.js";
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import app from "./app.js"; // Importa tu app con todas las rutas
 
-console.log(`El servidor está configurado para ejecutarse en el puerto: ${PORT}`);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Servir frontend compilado
+app.use(express.static(path.join(__dirname, "../Client/dist")));
+
+// Catch-all SPA (Solo si NO es una ruta de API)
+app.get(/^(?!\/api).+/, (req, res) => {
+  res.sendFile(path.join(__dirname, "../Client/dist", "index.html"));
+});
+
+
+app.listen(3000, () => { console.log("Servidor corriendo en puerto 3000 🚀"); });
+

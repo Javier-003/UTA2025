@@ -35,7 +35,7 @@ export const createKardex = async (idAlumnoPA, idMapaCurricular, idGrupo, idPeri
     } else {
       console.error("Error al registrar el kardex:", error);
     }
-    throw new Error('Error al registrar el kardex');
+    throw error;
   }
 };
 

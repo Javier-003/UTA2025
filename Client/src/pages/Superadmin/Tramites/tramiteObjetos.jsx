@@ -468,11 +468,13 @@ export const tramiteRegistraPAs = ({
                 <span className="input-group-text">Periodo:</span>
                 <select className="form-select" value={idPeriodo} onChange={(e) => setIdPeriodo(e.target.value)}>
                   <option value="">Selecciona un periodo</option>
-                  {periodoList.map((periodo) => (
-                    <option key={periodo.idPeriodo} value={periodo.idPeriodo}>
-                      {periodo.periodo}
-                    </option>
-                  ))}
+                  {periodoList
+                    .filter(periodo => periodo.estado === "Iniciado")
+                    .map((periodo) => (
+                      <option key={periodo.idPeriodo} value={periodo.idPeriodo}>
+                        {periodo.periodo}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -524,6 +526,7 @@ export const tramiteRegistraGrupoMateriasss = ({
   idMapaCurricular, setIdMapaCurricular,
   idGrupo, setIdGrupo,idAlumnoPA,setIdAlumnoPA,
   idPeriodoKardex,  setIdPeriodoKardex, 
+  idPeriodo, idProgramaAcademico,
   calificacionFinal, setCalificacionFinal,
   tipo, setTipo,
   showModal, setShowModal, 
@@ -577,18 +580,25 @@ export const tramiteRegistraGrupoMateriasss = ({
                 <span className="input-group-text">Grupo:</span>
                 <select className="form-select" value={idGrupo} onChange={(event) => setIdGrupo(event.target.value)}>
                   <option value="">Selecciona un grupo</option>
-                  {grupoList.map((grupo) => (
-                    <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
-                  ))}
+                  {grupoList
+                    .filter(grupo => 
+                      (!idPeriodo || String(grupo.idPeriodo) === String(idPeriodo)) && 
+                      (!idProgramaAcademico || String(grupo.idProgramaAcademico) === String(idProgramaAcademico))
+                    )
+                    .map((grupo) => (
+                      <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
+                    ))}
                 </select>
               </div>
               <div className="input-group mb-3">
                 <span className="input-group-text">Periodo:</span>
                 <select className="form-select" value={idPeriodoKardex} onChange={(event) => setIdPeriodoKardex(event.target.value)}>
                   <option value="">Selecciona un periodo</option>
-                  {periodoList.map((periodo) => (
-                    <option key={periodo.idPeriodo} value={periodo.idPeriodo}>{periodo.periodo}</option>
-                  ))}
+                  {periodoList
+                    .filter(periodo => periodo.estado === "Iniciado")
+                    .map((periodo) => (
+                      <option key={periodo.idPeriodo} value={periodo.idPeriodo}>{periodo.periodo}</option>
+                    ))}
                 </select>
               </div>
               <div className="input-group mb-3">
@@ -625,6 +635,7 @@ export const tramiteRegistraGrupoMateriasss = ({
 
 export const tramiteRegistraGrupoMaterias2 = ({
   idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex,
+  idPeriodo, idProgramaAcademico,
   handleKardex, handleClose, show,
 }) => {
   
@@ -663,9 +674,14 @@ export const tramiteRegistraGrupoMaterias2 = ({
           <span className="input-group-text">Grupo:</span>
           <select className="form-select" value={idGrupo} onChange={(event) => setIdGrupo(event.target.value)}>
             <option value="">Selecciona un grupo</option>
-            {grupoList.map((grupo) => (
-              <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
-            ))}
+            {grupoList
+              .filter(grupo => 
+                (!idPeriodo || String(grupo.idPeriodo) === String(idPeriodo)) && 
+                (!idProgramaAcademico || String(grupo.idProgramaAcademico) === String(idProgramaAcademico))
+              )
+              .map((grupo) => (
+                <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
+              ))}
           </select>
         </div>
 
@@ -695,6 +711,7 @@ export const tramiteRegistraGrupoMaterias2 = ({
 
 export const tramiteRegistraGrupoMaterias8 = ({
   idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex,
+  idPeriodo, idProgramaAcademico,
   handleKardex, handleClose, show,
 }) => {
   
@@ -733,9 +750,14 @@ export const tramiteRegistraGrupoMaterias8 = ({
           <span className="input-group-text">Grupo:</span>
           <select className="form-select" value={idGrupo} onChange={(event) => setIdGrupo(event.target.value)}>
             <option value="">Selecciona un grupo</option>
-            {grupoList.map((grupo) => (
-              <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
-            ))}
+            {grupoList
+              .filter(grupo => 
+                (!idPeriodo || String(grupo.idPeriodo) === String(idPeriodo)) && 
+                (!idProgramaAcademico || String(grupo.idProgramaAcademico) === String(idProgramaAcademico))
+              )
+              .map((grupo) => (
+                <option key={grupo.idGrupo} value={grupo.idGrupo}>{grupo.nombre}</option>
+              ))}
           </select>
         </div>
 
@@ -893,11 +915,13 @@ const TramiteModalRegistroPA = ({
               <span className="input-group-text">Periodo:</span>
               <select className="form-select" value={idPeriodo} onChange={(e) => setIdPeriodo(e.target.value)}>
                 <option value="">Selecciona un periodo</option>
-                {periodoList.map((periodo) => (
-                  <option key={periodo.idPeriodo} value={periodo.idPeriodo}>
-                    {periodo.periodo}
-                  </option>
-                ))}
+                {periodoList
+                  .filter(periodo => periodo.estado === "Iniciado")
+                  .map((periodo) => (
+                    <option key={periodo.idPeriodo} value={periodo.idPeriodo}>
+                      {periodo.periodo}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -957,6 +981,7 @@ export const tramiteRegistraPA = (props) => (
 
 export const tramiteRegistraGrupoMaterias = ({ 
   idGrupo, setIdGrupo, idAlumnoPA, idPeriodoKardex, 
+  idPeriodo, idProgramaAcademico,
   handleKardex, handleClose, show,
 }) => {
   
@@ -1033,11 +1058,16 @@ export const tramiteRegistraGrupoMaterias = ({
               onChange={(event) => setIdGrupo(event.target.value)}
             >
               <option value="">Selecciona un grupo</option>
-              {grupoList.map((grupo) => (
-                <option key={grupo.idGrupo} value={grupo.idGrupo}>
-                  {grupo.nombre}
-                </option>
-              ))}
+              {grupoList
+                .filter(grupo => 
+                  (!idPeriodo || String(grupo.idPeriodo) === String(idPeriodo)) && 
+                  (!idProgramaAcademico || String(grupo.idProgramaAcademico) === String(idProgramaAcademico))
+                )
+                .map((grupo) => (
+                  <option key={grupo.idGrupo} value={grupo.idGrupo}>
+                    {grupo.nombre}
+                  </option>
+                ))}
             </select>
           </div>
 

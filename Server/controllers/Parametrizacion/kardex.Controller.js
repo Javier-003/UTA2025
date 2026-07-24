@@ -281,10 +281,13 @@ export const createKardex = async (req, res) => {
     await connection.beginTransaction();
 
     // 2. Validación previa: Verificar si el alumno tiene kardex previos
+    if (!idAlumnoPA) {
+      throw new Error("El alumno no tiene un Programa Académico asignado. Por favor, realice la inscripción primero.");
+    }
+
     const [kardexPrevios] = await connection.query(
       `SELECT k.idKardex, k.calificacionFinal, k.idMapaCurricular 
        FROM kardex k
-       JOIN alumnoperiodo ap ON k.idAlumnoPA = ap.idAlumnoPA
        WHERE k.idAlumnoPA = ?`,
       [idAlumnoPA]
     );
@@ -326,11 +329,30 @@ export const createKardex = async (req, res) => {
 
     const idPeriodo = grupoRows[0].idPeriodo;
 
-    // 4. Insertar en la tabla alumnoperiodo
-    await connection.query(
-      "INSERT INTO alumnoperiodo (idAlumnoPA, idPeriodo, Observacion) VALUES (?, ?, ?)",
-      [idAlumnoPA, idPeriodo, "Dato ingresado automáticamente"]
+    // 4. Verificar si el alumno ya está registrado en este periodo
+    const [alumnoPeriodoRows] = await connection.query(
+      "SELECT 1 FROM alumnoperiodo WHERE idAlumnoPA = ? AND idPeriodo = ?",
+      [idAlumnoPA, idPeriodo]
     );
+
+    if (alumnoPeriodoRows.length > 0) {
+      // No lanzamos error si ya existe en alumnoperiodo, simplemente no insertamos de nuevo
+      // pero verificamos si ya tiene kardex para ese grupo/periodo
+      const [kardexExistente] = await connection.query(
+        "SELECT 1 FROM kardex WHERE idAlumnoPA = ? AND idGrupo = ? AND idPeriodo = ?",
+        [idAlumnoPA, idGrupo, idPeriodo]
+      );
+      if (kardexExistente.length > 0) {
+        throw new Error("El alumno ya tiene materias registradas en este grupo y periodo.");
+      }
+    } else {
+      // Insertar en la tabla alumnoperiodo
+      await connection.query(
+        "INSERT INTO alumnoperiodo (idAlumnoPA, idPeriodo, Observacion) VALUES (?, ?, ?)",
+        [idAlumnoPA, idPeriodo, "Dato ingresado automáticamente"]
+      );
+    }
+
 
     // 5. Obtener todos los idMapaCurricular asociados al idGrupo
     const [grupoMateriaRows] = await connection.query(
