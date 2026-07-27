@@ -2,8 +2,8 @@ import '../../../assets/css/App.css'; //Act.
 import { useNavigate } from 'react-router-dom'; //Botón 
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { getAlumnoTramite, addAlumnoTramite, updateAlumnoTramiteFunc, deleteAlumnoTramiteFunc } 
-from '../../../assets/js/Tramites/alumnotramite.js';
+import { getAlumnoTramite, addAlumnoTramite, updateAlumnoTramiteFunc, deleteAlumnoTramiteFunc }
+  from '../../../assets/js/Tramites/alumnotramite.js';
 import { AlumnoTramiteModales } from './AlumnoTramiteModales.jsx';
 
 import { getTramites } from '../../../api/Parametrizacion/tramite.api.js';
@@ -45,27 +45,27 @@ function Seguimientodetramite() {
 
   const navigate = useNavigate();//BOTÓN
 
-// --------- Porcentaje de procedimiento Trámite ---------------
-const [alumnoprocesoList, setAlumnoProceso] = useState([]);
+  // --------- Porcentaje de procedimiento Trámite ---------------
+  const [alumnoprocesoList, setAlumnoProceso] = useState([]);
 
-useEffect(() => {
-  getAlumnoProceso(setAlumnoProceso);
-}, []);
+  useEffect(() => {
+    getAlumnoProceso(setAlumnoProceso);
+  }, []);
 
-const getPorcentajeProgreso = (idAlumnoTramite) => {
-  const filteredData = alumnoprocesoList.filter(item => item.idAlumnoTramite == idAlumnoTramite);
-  return calcularPorcentajeConcluido(filteredData);
-};
-//------------------------------------------------------------
+  const getPorcentajeProgreso = (idAlumnoTramite) => {
+    const filteredData = alumnoprocesoList.filter(item => item.idAlumnoTramite == idAlumnoTramite);
+    return calcularPorcentajeConcluido(filteredData);
+  };
+  //------------------------------------------------------------
 
-  useEffect(() => { 
-    getAlumnoTramite(setAlumnoTramite); 
+  useEffect(() => {
+    getAlumnoTramite(setAlumnoTramite);
     getTramites().then(setTramiteList); // Obtiene todos los trámites para el filtro
   }, []);
 
 
 
-// ---------------------------- CONCLUIDO AUTOMATICO SI ESTÁ AL 100% ---------------------------------
+  // ---------------------------- CONCLUIDO AUTOMATICO SI ESTÁ AL 100% ---------------------------------
   useEffect(() => {
     // Itera a través de los trámites y actualiza el estatus si el progreso es 100%
     alumnotramiteList.forEach((alumnotramite) => {
@@ -78,17 +78,17 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
           alumnotramite.idPersona,
           alumnotramite.idAlumnoPA,
           alumnotramite.idPeriodo,
-          formatDateString(alumnotramite.fecha),  
+          formatDateString(alumnotramite.fecha),
           'Concluido', // Establece el estatus como 'Concluido'
-          () => {}, // Callback después de la actualización 
+          () => { }, // Callback después de la actualización 
           () => getAlumnoTramite(setAlumnoTramite) // Vuelve a cargar los datos actualizados
-        );        
+        );
       }
     });
   }, [alumnotramiteList, alumnoprocesoList]); // Ejecutar cuando cambian los datos de trámites o progreso
-// -----------------------------------------------------------------------------------------------------
+  // -----------------------------------------------------------------------------------------------------
 
-  
+
   /* const filteredData = alumnotramiteList.filter(
     (item) =>
       (!selectedTramite || item.idTramite == selectedTramite) && // Usar == para comparar string con número
@@ -107,7 +107,7 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
       (!selectedPrograma || item.programa === selectedPrograma)
     );
   });
-  
+
 
   const handleAdd = () => {
     addAlumnoTramite(idTramite, idPersona, idAlumnoPA, idPeriodo, fecha, estatus, setShowModal, () => getAlumnoTramite(setAlumnoTramite));
@@ -139,64 +139,65 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
 
 
 
-    {/* Botón mejorado */}
-        <button 
-          className="btn btn-success mb-3"
-          onClick={() => navigate('/nuevoTramiteAlumno')}
-        >
-          <i className="bi bi-plus-circle me-2"></i> Ir a Nuevo Trámite
-        </button>
-    {/* ------------------- Filtros -------------------------------*/}
+          {/* Botón mejorado */}
+          <button
+            className="btn btn-success mb-3"
+            onClick={() => navigate('/nuevoTramiteAlumno')}
+          >
+            <i className="bi bi-plus-circle me-2"></i> Ir a Nuevo Trámite
+          </button>
+          {/* ------------------- Filtros -------------------------------*/}
           <div className="d-flex mb-3">
-        <select
-          className="form-select me-2"
-          value={selectedTramite}
-          onChange={(e) => setSelectedTramite(e.target.value)}
-        >
-          <option value="">Mostrar todos los trámites</option>
-          {tramiteList.map((tramite) => (
-            <option key={tramite.idTramite} value={tramite.idTramite}>
-              {tramite.nombre}
-            </option>
-          ))}
-        </select>
+            <select
+              className="form-select me-2"
+              value={selectedTramite}
+              onChange={(e) => setSelectedTramite(e.target.value)}
+            >
+              <option value="">Mostrar todos los trámites</option>
+              {tramiteList.map((tramite) => (
+                <option key={tramite.idTramite} value={tramite.idTramite}>
+                  {tramite.nombre}
+                </option>
+              ))}
+            </select>
 
-        {/* Filtro de Estatus */}
-        <select
-          className="form-select me-2"
-          value={selectedEstatus}
-          onChange={(e) => setSelectedEstatus(e.target.value)}
-        >
-          <option value="">Mostrar todos los estatus</option>
-          <option value="En proceso">En proceso</option>
-          <option value="Concluido">Concluido</option>
-          <option value="Cancelado">Cancelado</option>
-        </select>
+            {/* Filtro de Estatus */}
+            <select
+              className="form-select me-2"
+              value={selectedEstatus}
+              onChange={(e) => setSelectedEstatus(e.target.value)}
+            >
+              <option value="">Mostrar todos los estatus</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Concluido">Concluido</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
 
-        {/* Filtro de Programa Académico */}
-        <select
-          className="form-select"
-          value={selectedPrograma}
-          onChange={(e) => setSelectedPrograma(e.target.value)}
-        >
-          <option value="">Mostrar todos los programas</option>
-          {alumnotramiteList
-            .map((item) => item.programa)
-            .filter((value, index, self) => self.indexOf(value) === index) // Eliminar duplicados
-            .map((programa) => (
-              <option key={programa} value={programa}>
-                {programa}
-              </option>
-            ))}
-        </select>
-      </div>
+            {/* Filtro de Programa Académico */}
+            <select
+              className="form-select"
+              value={selectedPrograma}
+              onChange={(e) => setSelectedPrograma(e.target.value)}
+            >
+              <option value="">Mostrar todos los programas</option>
+              {alumnotramiteList
+                .map((item) => item.programa)
+                .filter(Boolean)                         // quita null y "" (programas vacíos)
+                .filter((value, index, self) => self.indexOf(value) === index) // Eliminar duplicados
+                .map((programa) => (
+                  <option key={programa} value={programa}>
+                    {programa}
+                  </option>
+                ))}
+            </select>
+          </div>
 
- {/* ------------------- FIN Filtros -------------------------------*/}
+          {/* ------------------- FIN Filtros -------------------------------*/}
           <div className="mt-4">
             <input type="text" className="form-control mb-1" value={searchText}
-            onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Alumno" />
+              onChange={(e) => setSearchText(e.target.value)} placeholder="Buscar por Alumno" />
             <table className="table table-bordered">
-              <thead> 
+              <thead>
                 <tr>
                   {/* <th>ID</th> */}
                   {/* <th>ID TRÁMITE</th> */}
@@ -232,95 +233,95 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
                       <td>{alumnotramite.periodo}</td>
                       <td>{formatDateString(alumnotramite.fecha)}</td>
                       <td>
-                            <span
-                              className={`badge 
+                        <span
+                          className={`badge 
                                 ${alumnotramite.estatus === 'En proceso' ? 'bg-warning' : ''}  // Amarillo
                                 ${alumnotramite.estatus === 'Concluido' ? 'bg-success' : ''}  // Verde
                                 ${alumnotramite.estatus === 'Cancelado' ? 'bg-danger' : ''}    // Rojo
                                 text-light p-2 rounded-pill`}
-                            >
-                              {alumnotramite.estatus}
-                            </span>
+                        >
+                          {alumnotramite.estatus}
+                        </span>
                       </td>
 
 
                       {/* ------------------------------------- BARRA DE PROCESO -----------------------------------*/}
                       <td>
-                                  <div
-                                    className="d-flex align-items-center justify-content-center position-relative"
-                                    style={{
-                                      width: '60px',
-                                      height: '60px',
-                                      borderRadius: '50%',
-                                      background: `conic-gradient(
+                        <div
+                          className="d-flex align-items-center justify-content-center position-relative"
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                            borderRadius: '50%',
+                            background: `conic-gradient(
                                         #28a745 ${getPorcentajeProgreso(alumnotramite.idAlumnoTramite, alumnoprocesoList) * 3.6}deg,
                                         transparent ${getPorcentajeProgreso(alumnotramite.idAlumnoTramite, alumnoprocesoList) * 3.6}deg 360deg
                                       )`,
-                                      boxShadow: '0 0 0 4px #e9ecef',
-                                    }}
-                                  >
-                                    {/* Fondo del círculo */}
-                                    <div
-                                      style={{
-                                        width: '45px',
-                                        height: '45px',
-                                        borderRadius: '50%',
-                                        background: '#fff',
-                                        position: 'absolute',
-                                        zIndex: 1,
-                                      }}
-                                    ></div>
+                            boxShadow: '0 0 0 4px #e9ecef',
+                          }}
+                        >
+                          {/* Fondo del círculo */}
+                          <div
+                            style={{
+                              width: '45px',
+                              height: '45px',
+                              borderRadius: '50%',
+                              background: '#fff',
+                              position: 'absolute',
+                              zIndex: 1,
+                            }}
+                          ></div>
 
-                                    {/* Texto del porcentaje */}
-                                    <span
-                                      className="fw-bold fs-8 text-dark"
-                                      style={{
-                                        position: 'absolute',
-                                        zIndex: 2,
-                                      }}
-                                    >
-                                      {getPorcentajeProgreso(alumnotramite.idAlumnoTramite, alumnoprocesoList)}%
-                                    </span>
-                                  </div>
+                          {/* Texto del porcentaje */}
+                          <span
+                            className="fw-bold fs-8 text-dark"
+                            style={{
+                              position: 'absolute',
+                              zIndex: 2,
+                            }}
+                          >
+                            {getPorcentajeProgreso(alumnotramite.idAlumnoTramite, alumnoprocesoList)}%
+                          </span>
+                        </div>
                       </td>
                       <td>
-                      <button
-                        className={`btn btn-sm 
+                        <button
+                          className={`btn btn-sm 
                           ${alumnotramite.estatus === 'En proceso' ? 'btn-secondary text-white' : ''} 
                           ${alumnotramite.estatus === 'Concluido' ? 'btn-success text-white' : ''} 
                           ${alumnotramite.estatus === 'Cancelado' ? 'btn-danger text-white' : ''} 
                           rounded-pill shadow-sm d-flex align-items-center justify-content-center px-3 py-2`}
-                        onClick={() => {
-                          if (alumnotramite.estatus === 'En proceso') {
-                            navigate(`/procedimientoTramite?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
-                          } else if (alumnotramite.estatus === 'Concluido') {
-                            navigate(`/TramiteConcluido?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
-                          } else if (alumnotramite.estatus === 'Cancelado') {
-                            navigate(`/seguimientoTramite?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
-                          }
-                        }}
-                        style={{
-                          transition: 'all 0.3s ease',
-                          transform: 'scale(1)',
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
-                        onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
-                      >
-                        {alumnotramite.estatus === 'En proceso' && (
-                          <i className="bi bi-person-gear text-white fs-4"></i>
-                        )}
-                        {alumnotramite.estatus === 'Concluido' && (
-                          <i className="bi bi-person-check text-white fs-4"></i>
-                        )}
-                        {alumnotramite.estatus === 'Cancelado' && (
-                          <i className="bi bi-person-x text-white fs-4"></i>
-                        )}
-                      </button>
+                          onClick={() => {
+                            if (alumnotramite.estatus === 'En proceso') {
+                              navigate(`/procedimientoTramite?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
+                            } else if (alumnotramite.estatus === 'Concluido') {
+                              navigate(`/TramiteConcluido?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
+                            } else if (alumnotramite.estatus === 'Cancelado') {
+                              navigate(`/seguimientoTramite?idAlumnoTramite=${alumnotramite.idAlumnoTramite}`);
+                            }
+                          }}
+                          style={{
+                            transition: 'all 0.3s ease',
+                            transform: 'scale(1)',
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+                          onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                        >
+                          {alumnotramite.estatus === 'En proceso' && (
+                            <i className="bi bi-person-gear text-white fs-4"></i>
+                          )}
+                          {alumnotramite.estatus === 'Concluido' && (
+                            <i className="bi bi-person-check text-white fs-4"></i>
+                          )}
+                          {alumnotramite.estatus === 'Cancelado' && (
+                            <i className="bi bi-person-x text-white fs-4"></i>
+                          )}
+                        </button>
                       </td>
 
-                       {/* ---------------------------------------------------------- */}
+                      {/* ---------------------------------------------------------- */}
 
-                     {/*  <td>
+                      {/*  <td>
                         <button className="btn btn-warning" onClick={() => {
                           setIdTramite(alumnotramite.idTramite);
                           setIdAlumnoPA(alumnotramite.idAlumnoPA);
@@ -348,8 +349,8 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
                         }}> <i class="bi bi-file-earmark-excel"></i> </button>
                       </td>
 
-    
-                     {/*  <td>
+
+                      {/*  <td>
                         <button className="btn btn-danger" onClick={() => {
                           setShowDeleteModal(true);
                           setSelectedAlumnoTramite(alumnotramite);
@@ -383,7 +384,7 @@ const getPorcentajeProgreso = (idAlumnoTramite) => {
         showModal={showModal} setShowModal={setShowModal}
         showEditModal={showEditModal} setShowEditModal={setShowEditModal}
         showEditModal2={showEditModal2} setShowEditModal2={setShowEditModal2}
-       // showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
+        // showDeleteModal={showDeleteModal} setShowDeleteModal={setShowDeleteModal}
         handleAdd={handleAdd}
         handleUpdate={handleUpdate}
         handleDelete={handleDelete}

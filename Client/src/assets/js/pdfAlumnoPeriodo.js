@@ -35,65 +35,65 @@ export const generateAlumnosPDF = ({
     total: { fillColor: [0, 82, 164], textColor: 255, fontStyle: 'bold' }
   };
 
-  
+
   // Encabezado institucional con logo opcional
-const pageWidth = doc.internal.pageSize.getWidth();
-const margin = 15;
-let currentY = 15; // Inicio más arriba para mejor distribución
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 15;
+  let currentY = 15; // Inicio más arriba para mejor distribución
 
-// Insertar logo si existe
-if (institution.logo) {
-  doc.addImage(institution.logo, 'JPEG', margin, currentY, 25, 25); // Ajusta según tamaño del logo
-}
+  // Insertar logo si existe
+  if (institution.logo) {
+    doc.addImage(institution.logo, 'JPEG', margin, currentY, 25, 25); // Ajusta según tamaño del logo
+  }
 
-// Nombre de la institución centrado si no hay logo, alineado si hay logo
-const institutionNameX = institution.logo ? margin + 30 : pageWidth / 2;
-const institutionNameAlign = institution.logo ? 'left' : 'center';
+  // Nombre de la institución centrado si no hay logo, alineado si hay logo
+  const institutionNameX = institution.logo ? margin + 30 : pageWidth / 2;
+  const institutionNameAlign = institution.logo ? 'left' : 'center';
 
-doc.setFontSize(14);
-doc.setTextColor(0, 51, 102);
-doc.setFont('helvetica', 'bold');
-doc.text(institution.name, institutionNameX, currentY + 8, { align: institutionNameAlign });
+  doc.setFontSize(14);
+  doc.setTextColor(0, 51, 102);
+  doc.setFont('helvetica', 'bold');
+  doc.text(institution.name, institutionNameX, currentY + 8, { align: institutionNameAlign });
 
-doc.setFontSize(10);
-doc.setTextColor(100);
-doc.setFont('helvetica', 'normal');
-doc.text(institution.address, institutionNameX, currentY + 14, { align: institutionNameAlign });
+  doc.setFontSize(10);
+  doc.setTextColor(100);
+  doc.setFont('helvetica', 'normal');
+  doc.text(institution.address, institutionNameX, currentY + 14, { align: institutionNameAlign });
 
-// Fecha en la esquina superior derecha
-doc.setFontSize(10);
-doc.setTextColor(120);
-doc.text(`Generado: ${new Date().toLocaleDateString()}`, pageWidth - margin, currentY, { align: 'right' });
+  // Fecha en la esquina superior derecha
+  doc.setFontSize(10);
+  doc.setTextColor(120);
+  doc.text(`Generado: ${new Date().toLocaleDateString()}`, pageWidth - margin, currentY, { align: 'right' });
 
-currentY += 20; // Ajuste de espacio si hay logo, si no, se mantiene limpio
+  currentY += 20; // Ajuste de espacio si hay logo, si no, se mantiene limpio
 
-// Línea divisoria mejorada
-doc.setDrawColor(200);
-doc.setLineWidth(0.5);
-doc.line(margin, currentY, pageWidth - margin, currentY);
-currentY += 10;
-
-// Título principal con total
-doc.setFontSize(16);
-doc.setTextColor(0, 51, 102);
-doc.setFont('helvetica', 'bold');
-
-let mainTitle = 'REPORTE DE ALUMNOS';
-if (periodo) mainTitle += ` - ${periodo}`;
-if (!programa && options.showTotal) {
-  mainTitle += ` (Total: ${data.length} alumnos)`;
-}
-
-doc.text(mainTitle, pageWidth / 2, currentY, { align: 'center' });
-currentY += 10;
-
-// Subtítulo con programa si está seleccionado
-if (programa) {
-  doc.setFontSize(12);
-  doc.setTextColor(102, 102, 102);
-  doc.text(`Programa Académico: ${programa}`, pageWidth / 2, currentY, { align: 'center' });
+  // Línea divisoria mejorada
+  doc.setDrawColor(200);
+  doc.setLineWidth(0.5);
+  doc.line(margin, currentY, pageWidth - margin, currentY);
   currentY += 10;
-}
+
+  // Título principal con total
+  doc.setFontSize(16);
+  doc.setTextColor(0, 51, 102);
+  doc.setFont('helvetica', 'bold');
+
+  let mainTitle = 'REPORTE DE ALUMNOS';
+  if (periodo) mainTitle += ` - ${periodo}`;
+  if (!programa && options.showTotal) {
+    mainTitle += ` (Total: ${data.length} alumnos)`;
+  }
+
+  doc.text(mainTitle, pageWidth / 2, currentY, { align: 'center' });
+  currentY += 10;
+
+  // Subtítulo con programa si está seleccionado
+  if (programa) {
+    doc.setFontSize(12);
+    doc.setTextColor(102, 102, 102);
+    doc.text(`Programa Académico: ${programa}`, pageWidth / 2, currentY, { align: 'center' });
+    currentY += 10;
+  }
 
 
   // Generar contenido según el modo seleccionado
@@ -101,23 +101,23 @@ if (programa) {
     // Agrupar datos por programa académico
     const programas = [...new Set(data.map(item => item.programa))].sort();
     let programStartY = currentY;
-    
+
     // Tabla de resumen general primero
     if (options.showTotal) {
       generateGeneralSummary(doc, data.length, programas.length, currentY, styles);
       programStartY = doc.lastAutoTable.finalY + 15;
     }
-    
+
     // Tablas por programa
     programas.forEach((program, index) => {
       if (index !== 0) {
         doc.addPage();
         programStartY = 30;
       }
-      
+
       const programData = data.filter(item => item.programa === program);
       generateProgramTable(doc, program, programData, programStartY, styles);
-      
+
       // Resumen por programa
       if (options.showSummary) {
         const summaryY = doc.lastAutoTable.finalY + 5;
@@ -127,7 +127,7 @@ if (programa) {
   } else {
     // Tabla única para un programa específico
     generateProgramTable(doc, programa || 'Todos los programas', data, currentY, styles);
-    
+
     // Resumen individual
     if (options.showSummary) {
       const summaryY = doc.lastAutoTable.finalY + 10;
@@ -147,6 +147,7 @@ if (programa) {
 
 // Función para generar tabla por programa (mejorada)
 const generateProgramTable = (doc, programTitle, data, startY, styles) => {
+  const total = data.length; // guardar antes: en el hook el argumento "tapa" a data
   const headers = [['#', 'Matrícula', 'Nombre del Alumno', 'Programa Académico']];
   const body = data.map((item, index) => [
     index + 1,
@@ -154,7 +155,6 @@ const generateProgramTable = (doc, programTitle, data, startY, styles) => {
     item.NombreAlumno,
     item.programa
   ]);
-
   doc.autoTable({
     head: headers,
     body: body,
@@ -162,12 +162,13 @@ const generateProgramTable = (doc, programTitle, data, startY, styles) => {
     headStyles: styles.header,
     bodyStyles: styles.row,
     alternateRowStyles: { fillColor: [248, 248, 248] },
-    margin: { horizontal: 15 },
-    didDrawPage: () => {
-      // Título de la tabla con contador
+    margin: { horizontal: 15, top: 22 }, // reserva espacio arriba en TODAS las páginas
+    didDrawPage: (hookData) => {
       doc.setFontSize(12);
       doc.setTextColor(...styles.title.color);
-      doc.text(`${programTitle} (${data.length} alumnos)`, 15, startY - 5);
+      // en la página 1 el título va arriba de la tabla; en las siguientes, en el margen superior
+      const tituloY = (hookData.pageNumber === 1) ? (startY - 5) : (hookData.settings.margin.top - 5);
+      doc.text(`${programTitle} (${total} alumnos)`, 15, tituloY);
     }
   });
 };
