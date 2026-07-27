@@ -1,4 +1,4 @@
-import { db } from "../../db/connection.js"; 
+import { db } from "../../db/connection.js";
 //Act. 
 export const getAlumnoPeriodo = async (req, res) => {
   try {
@@ -8,7 +8,7 @@ export const getAlumnoPeriodo = async (req, res) => {
       prog.nombreOficial AS programa,
       CONCAT(persona.nombre, ' ', persona.paterno, ' ', persona.materno) AS NombreAlumno,
       periodo.periodo AS periodo
-      FROM alumnoPeriodo aper
+      FROM alumnoperiodo aper
       LEFT JOIN alumnopa ON alumnopa.idAlumnoPA = aper.idAlumnoPA
       LEFT JOIN alumno ON alumno.idAlumno = alumnopa.idAlumno
       LEFT JOIN persona ON persona.idPersona = alumno.idAlumno
