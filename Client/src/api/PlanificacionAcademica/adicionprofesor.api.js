@@ -12,7 +12,7 @@ export const getAdicionProfesoresTodos = async () => {
       console.error("⚠️ La API no devolvió datos válidos:", response.data);
       return [];
     }
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("❌ Error al obtener los adicionprofesores:", error);
     return [];
