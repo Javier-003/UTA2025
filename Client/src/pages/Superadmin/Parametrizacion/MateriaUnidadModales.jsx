@@ -6,6 +6,7 @@ import Select from 'react-select';
 
 export const MateriaUnidadModales = ({
   idMapaCurricular, setIdMapaCurricular,
+  programaEducativo, cuatrimestre,
   unidad, setUnidad,
   nombre, setNombre,
   showModal, setShowModal,
@@ -22,12 +23,22 @@ export const MateriaUnidadModales = ({
     console.log("Lista de programaAcademico:", programaAcademicoList);
   }, [programaAcademicoList]);
 
+  // Materias del programa academico / cuatrimestre que el usuario tiene filtrados.
+  // Si no hay filtro, se muestran todas.
+  const enFiltro = (m) =>
+    (!programaEducativo || m.carrera === programaEducativo) &&
+    (!cuatrimestre || m.cuatrimestre?.toString() === cuatrimestre.toString());
+
   useEffect(() => {
     getMapaCurriculares().then(data => {
       setMapaList(data);
-      setFilteredOptions(data.slice(-5)); // Mostrar solo los últimos 5 registros inicialmente
     }).catch(error => console.error("Error al obtener los mapas curriculares:", error));
   }, []);
+
+  // Recalcular las opciones cuando cambian los datos o el filtro seleccionado
+  useEffect(() => {
+    setFilteredOptions(mapaList.filter(enFiltro));
+  }, [mapaList, programaEducativo, cuatrimestre]);
 
   useEffect(() => {
     getProgramaacademicos().then(response => {
@@ -36,18 +47,30 @@ export const MateriaUnidadModales = ({
   }, []);
 
   const handleSearch = (inputValue) => {
+    // La busqueda siempre respeta el programa/cuatrimestre filtrados
+    const base = mapaList.filter(enFiltro);
     if (!inputValue) {
-      setFilteredOptions(mapaList.slice(-5)); // Si no hay búsqueda, mostrar solo los últimos 5
+      setFilteredOptions(base);
     } else {
-      setFilteredOptions(mapaList.filter(mapacurricular =>
+      setFilteredOptions(base.filter(mapacurricular =>
         mapacurricular.materia.toLowerCase().includes(inputValue.toLowerCase())
       ));
     }
   };
 
+  // Se incluye cuatrimestre, clave y carrera en la etiqueta porque la misma materia
+  // (ej. "Ingles V") existe en varias carreras y de otro modo serian indistinguibles.
+  const etiqueta = (m) => {
+    const partes = [m.materia];
+    if (m.cuatrimestre) partes.push(`Cuatri ${m.cuatrimestre}`);
+    if (m.clave) partes.push(m.clave);
+    if (!programaEducativo && m.carrera) partes.push(m.carrera);
+    return partes.join(" — ");
+  };
+
   const options = filteredOptions.map(mapacurricular => ({
     value: mapacurricular.idMapaCurricular,
-    label: mapacurricular.materia
+    label: etiqueta(mapacurricular)
   }));
 
   return (

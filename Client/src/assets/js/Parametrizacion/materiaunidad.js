@@ -12,16 +12,18 @@ export const getMateriajs = async (setMateriajs) => {
   }
 };
 
-export const addMateriajs = async (idMapaCurricular, unidad, nombre, setShowModal) => {
+// onSuccess: callback que cierra el modal y recarga la lista (lo define la pagina).
+// Antes este parametro se llamaba setShowModal y la pagina mandaba un argumento de
+// mas (nombreOficial), por lo que aqui llegaba un texto en vez de una funcion.
+export const addMateriajs = async (idMapaCurricular, unidad, nombre, onSuccess) => {
   try {
     await createMateriaU(idMapaCurricular, unidad, nombre);
-    getMateriajs();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
       text: 'Materia Unidad registrada correctamente',
     });
-    setShowModal(false);
+    if (typeof onSuccess === 'function') onSuccess();
   } catch (error) {
     console.error('Error al agregar Materia Unidad:', error);
     Swal.fire({
@@ -32,16 +34,16 @@ export const addMateriajs = async (idMapaCurricular, unidad, nombre, setShowModa
   }
 };
 
-export const updateMateriajs = async (idMateriaUnidad, idMapaCurricular, unidad, nombre, setShowEditModal, getMateriajs) => {
+// onSuccess: cierra el modal y recarga la lista (lo define la pagina).
+export const updateMateriajs = async (idMateriaUnidad, idMapaCurricular, unidad, nombre, onSuccess) => {
   try {
     await updateMateriaU(idMateriaUnidad, idMapaCurricular, unidad, nombre);
-    getMateriajs();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
       text: 'Materia Unidad actualizada correctamente',
     });
-    setShowEditModal(false);
+    if (typeof onSuccess === 'function') onSuccess();
   } catch (error) {
     console.error('Error al actualizar la Materia Unidad:', error);
     Swal.fire({
@@ -52,16 +54,16 @@ export const updateMateriajs = async (idMateriaUnidad, idMapaCurricular, unidad,
   }
 };
 
-export const deleteMateriajs = async (idMateriaUnidad, setShowDeleteModal, getMateriajs) => {
+// onSuccess: cierra el modal y recarga la lista (lo define la pagina).
+export const deleteMateriajs = async (idMateriaUnidad, onSuccess) => {
   try {
     await deleteMateriaU(idMateriaUnidad);
-    getMateriajs();
     Swal.fire({
       icon: 'success',
       title: '¡Éxito!',
       text: 'Materia Unidad eliminada correctamente',
     });
-    setShowDeleteModal(false);
+    if (typeof onSuccess === 'function') onSuccess();
   } catch (error) {
     console.error('Error al eliminar Materia Unidad:', error);
     Swal.fire({

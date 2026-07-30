@@ -18,7 +18,8 @@ export const OfertaAcademicaModales = ({
         if (dateString) {
             return dateString.split('T')[0];
         }
-        return dateString;
+        // Devolver "" (y no null/undefined) para no romper el input controlado de React
+        return "";
     };
 
     return (
@@ -38,11 +39,11 @@ export const OfertaAcademicaModales = ({
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Descripción:</span>
-                                <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
+                                <input type="text" className="form-control" value={descripcion ?? ""} onChange={(event) => setDescripcion(event.target.value)} />
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Sigla:</span>
-                                <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+                                <input type="text" className="form-control" value={sigla ?? ""} onChange={(event) => setSigla(event.target.value)} />
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Desde:</span>
@@ -76,11 +77,11 @@ export const OfertaAcademicaModales = ({
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Descripción:</span>
-                                <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
+                                <input type="text" className="form-control" value={descripcion ?? ""} onChange={(event) => setDescripcion(event.target.value)} />
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Sigla:</span>
-                                <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+                                <input type="text" className="form-control" value={sigla ?? ""} onChange={(event) => setSigla(event.target.value)} />
                             </div>
                             <div className="input-group mb-3">
                                 <span className="input-group-text">Desde:</span>

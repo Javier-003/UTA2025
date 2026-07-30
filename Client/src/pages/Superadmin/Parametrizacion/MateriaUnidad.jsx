@@ -27,14 +27,14 @@ function MateriaUnidad() {
   useEffect(() => { getMateriajs(setmateriaUList); }, []);
 
   const handleAdd = () => {
-    addMateriajs(idMapaCurricular, unidad, nombre, nombreOficial, () => {
+    addMateriajs(idMapaCurricular, unidad, nombre, () => {
       setShowModal(false);
       getMateriajs(setmateriaUList);
     });
   };
 
   const handleUpdate = () => {
-    updateMateriajs(selectedMateriaU.idMateriaUnidad, idMapaCurricular, unidad, nombre, nombreOficial, () => {
+    updateMateriajs(selectedMateriaU.idMateriaUnidad, idMapaCurricular, unidad, nombre, () => {
       setShowEditModal(false);
       getMateriajs(setmateriaUList);
     });
@@ -97,9 +97,10 @@ function MateriaUnidad() {
             title={
                 <div className="d-flex justify-content-between align-items-center w-100">
                     <button className='btn btn-success me-2' onClick={() => {
-                        setProgramaEducativo("");
+                        // NO se limpian programaEducativo ni cuatrimestre: son los filtros
+                        // que el usuario tiene seleccionados y el modal los usa para
+                        // mostrar solo las materias de ese programa/cuatrimestre.
                         setMateria("");
-                        setCuatrimestre("");
                         setUnidad("");
                         setNombre("");
                         setNombreOficial("");

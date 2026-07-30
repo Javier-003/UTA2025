@@ -47,7 +47,8 @@ export const ProgramaAcademicoModales = ({
     if (dateString) {
       return dateString.split('T')[0];
     }
-    return dateString;
+    // Devolver "" (y no null/undefined) para no romper el input controlado de React
+    return "";
   };
 
   return (
@@ -93,15 +94,15 @@ export const ProgramaAcademicoModales = ({
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Nombre Oficial:</span>
-              <input type="text" className="form-control" value={nombreOficial} onChange={(event) => setNombreOficial(event.target.value)} />
+              <input type="text" className="form-control" value={nombreOficial ?? ""} onChange={(event) => setNombreOficial(event.target.value)} />
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Descripción:</span>
-              <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
+              <input type="text" className="form-control" value={descripcion ?? ""} onChange={(event) => setDescripcion(event.target.value)} />
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Sigla:</span>
-              <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+              <input type="text" className="form-control" value={sigla ?? ""} onChange={(event) => setSigla(event.target.value)} />
             </div>
           </div>
           <div className="col-md-6">
@@ -127,7 +128,7 @@ export const ProgramaAcademicoModales = ({
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Estatus:</span>
-              <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
+              <select className="form-select" value={estatus ?? ""} onChange={(event) => setEstatus(event.target.value)}>
                 <option value="">Selecciona un tipo</option>
                 <option value="Activo">Activo</option>
                 <option value="Sin Actividad">Sin Actividad</option>
@@ -189,15 +190,15 @@ export const ProgramaAcademicoModales = ({
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Nombre Oficial:</span>
-              <input type="text" className="form-control" value={nombreOficial} onChange={(event) => setNombreOficial(event.target.value)} />
+              <input type="text" className="form-control" value={nombreOficial ?? ""} onChange={(event) => setNombreOficial(event.target.value)} />
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Descripción:</span>
-              <input type="text" className="form-control" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} />
+              <input type="text" className="form-control" value={descripcion ?? ""} onChange={(event) => setDescripcion(event.target.value)} />
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Sigla:</span>
-              <input type="text" className="form-control" value={sigla} onChange={(event) => setSigla(event.target.value)} />
+              <input type="text" className="form-control" value={sigla ?? ""} onChange={(event) => setSigla(event.target.value)} />
             </div>
           </div>
           <div className="col-md-6">
@@ -223,7 +224,7 @@ export const ProgramaAcademicoModales = ({
             </div>
             <div className="input-group mb-3">
               <span className="input-group-text">Estatus:</span>
-              <select className="form-select" value={estatus} onChange={(event) => setEstatus(event.target.value)}>
+              <select className="form-select" value={estatus ?? ""} onChange={(event) => setEstatus(event.target.value)}>
                 <option value="">Selecciona un tipo</option>
                 <option value="Activo">Activo</option>
                 <option value="Sin Actividad">Sin Actividad</option>
