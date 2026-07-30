@@ -10,7 +10,7 @@ export const createRol = async (req, res) => {
       return res.status(400).json({ message: "Faltan datos: idUsuario o idRol." });
     }
 
-    const query = 'INSERT INTO rolUsuario (idUsuario, idRol) VALUES (?, ?)';
+    const query = 'INSERT INTO rolusuario (idUsuario, idRol) VALUES (?, ?)';
     const [result] = await db.execute(query, [idUsuario, idRol]);
 
     // Verificar si se insertó correctamente el rol
@@ -85,7 +85,7 @@ export const deleteRol = async (req, res) => {
       return res.status(400).json({ message: "Faltan datos: idUsuario o idRol." });
     }
 
-    const query = 'DELETE FROM rolUsuario WHERE idUsuario = ? AND idRol = ?';
+    const query = 'DELETE FROM rolusuario WHERE idUsuario = ? AND idRol = ?';
     const [result] = await db.execute(query, [idUsuario, idRol]);
 
     // Verificar si se eliminó correctamente el rol

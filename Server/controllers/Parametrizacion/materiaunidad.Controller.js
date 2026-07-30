@@ -66,17 +66,48 @@ export const createMateriaUnidad = async (req, res) => {
     if (!idMapaCurricular || !unidad || !nombre) {
       return res.status(400).json({ message: "Todos los campos son requeridos: idMapaCurricular, unidad, nombre" });
     }
-    // Insertar la nueva Materia Unidad en la base de datos
-    const [rows] = await db.query(
-      "INSERT INTO materiaunidad (idMapaCurricular, unidad, nombre) VALUES (?, ?, ?)",
-      [idMapaCurricular, unidad, nombre]
+
+    // La columna 'unidad' es INT y se guarda UNA FILA POR UNIDAD, pero el formulario
+    // permite capturar varias a la vez ("1,2,3"). Aqui se separan y se validan.
+    const unidades = String(unidad)
+      .split(",")
+      .map(u => u.trim())
+      .filter(u => u !== "");
+
+    if (unidades.length === 0) {
+      return res.status(400).json({ message: "Debes indicar al menos una unidad" });
+    }
+    const noNumericas = unidades.filter(u => !/^\d+$/.test(u));
+    if (noNumericas.length > 0) {
+      return res.status(400).json({
+        message: `Las unidades deben ser numeros. Revisa: ${noNumericas.join(", ")}`
+      });
+    }
+    const numeros = [...new Set(unidades.map(Number))]; // sin repetidos en la misma captura
+
+    // No permitir unidades que ya existan para esa materia
+    const [yaExisten] = await db.query(
+      "SELECT unidad FROM materiaunidad WHERE idMapaCurricular = ? AND unidad IN (?)",
+      [idMapaCurricular, numeros]
     );
+    if (yaExisten.length > 0) {
+      return res.status(400).json({
+        message: `Esta materia ya tiene registrada(s) la(s) unidad(es): ${yaExisten.map(r => r.unidad).join(", ")}`
+      });
+    }
+
+    // Insertar una fila por unidad
+    const [rows] = await db.query(
+      "INSERT INTO materiaunidad (idMapaCurricular, unidad, nombre) VALUES ?",
+      [numeros.map(n => [idMapaCurricular, n, nombre])]
+    );
+
     // Obtener el nombre del mapa curricular recién creado
     const [mapaCurricular] = await db.query("SELECT materia FROM mapacurricular WHERE idMapaCurricular = ?", [idMapaCurricular]);
     res.status(201).json({
-      message: `'${nombre}' creado correctamente`,
+      message: `'${nombre}' creado correctamente (${numeros.length} unidad(es): ${numeros.join(", ")})`,
       idMateriaUnidad: rows.insertId,
-      idMapaCurricular, unidad, nombre,
+      idMapaCurricular, unidades: numeros, nombre,
       materia: mapaCurricular[0].materia
     });
   } catch (error) {

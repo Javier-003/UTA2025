@@ -46,10 +46,16 @@ export const createMapaCurricular = async (req, res) => {
       });
     }
 
-    // Evitar duplicados: por clave, y por programa + cuatrimestre + materia
-    const [existsClave] = await db.query("SELECT 1 FROM mapacurricular WHERE clave = ?", [clave]);
+    // Evitar duplicados DENTRO DEL MISMO PROGRAMA (por clave y por materia+cuatrimestre).
+    // OJO: la clave NO es unica a nivel global. Las materias comunes (Ingles, Liderazgo,
+    // Proyecto Integrador, etc.) se imparten en varias carreras con la MISMA clave,
+    // por eso solo se valida que no se repita dentro del mismo programa academico.
+    const [existsClave] = await db.query(
+      "SELECT 1 FROM mapacurricular WHERE clave = ? AND idProgramaAcademico = ?",
+      [clave, idProgramaAcademico]
+    );
     if (existsClave.length) {
-      return res.status(400).json({ message: "Ya existe un mapa curricular con esa clave" });
+      return res.status(400).json({ message: "Ya existe una materia con esa clave en este programa académico" });
     }
     const [existsMateria] = await db.query(
       "SELECT 1 FROM mapacurricular WHERE idProgramaAcademico = ? AND cuatrimestre = ? AND materia = ?",
