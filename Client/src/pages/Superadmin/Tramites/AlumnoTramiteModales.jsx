@@ -152,7 +152,10 @@ export const AlumnoTramiteModales = ({
 
               <div className="input-group mb-3">
                   <span className="input-group-text">Fecha:</span>
-                  <input type="date" className="form-control" value={fecha} onChange={(event) => setFecha(event.target.value)} disabled/>                         
+                  {/* TEMPORAL - MIGRACION: se quito disabled para poder corregir la fecha
+                      de tramites ya creados durante la carga historica. Al terminar la
+                      migracion, valorar si se vuelve a bloquear. Buscar "TEMPORAL - MIGRACION". */}
+                  <input type="date" className="form-control" value={fecha} onChange={(event) => setFecha(event.target.value)} />
               </div>
 
               <div className="input-group mb-3">
