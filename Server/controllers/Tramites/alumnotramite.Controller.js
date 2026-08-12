@@ -153,22 +153,34 @@ export const updateAlumnoTramite = async (req, res) => {
 
 // 🔹 ELIMINAR UN TRÁMITE
 export const deleteAlumnoTramite = async (req, res) => {
+  const conn = await db.getConnection();
   try {
     const { idAlumnoTramite } = req.params;
 
     // Verificar si el trámite del alumno existe
-    const [alumnotramite] = await db.query("SELECT idAlumnoTramite FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
-    if (!alumnotramite.length)
+    const [alumnotramite] = await conn.query("SELECT idAlumnoTramite FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
+    if (!alumnotramite.length) {
+      conn.release();
       return res.status(404).json({ message: "Alumno Trámite no encontrado" });
+    }
 
-    // Eliminar el trámite del alumno
-    const [rows] = await db.query("DELETE FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
+    // Borrado en cadena dentro de una transaccion.
+    // Los pasos (alumnoproceso) referencian al tramite con FK NO ACTION, asi que
+    // hay que eliminarlos primero o MySQL rechaza el borrado con el error 1451.
+    await conn.beginTransaction();
+    await conn.query("DELETE FROM alumnoproceso WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
+    const [rows] = await conn.query("DELETE FROM alumnotramite WHERE idAlumnoTramite = ?", [idAlumnoTramite]);
+    await conn.commit();
 
     // Verificar si la eliminación se realizó correctamente
     rows.affectedRows
       ? res.status(200).json({ message: `Trámite eliminado correctamente` })
       : res.status(404).json({ message: "Alumno Trámite no encontrado" });
   } catch (error) {
+    await conn.rollback();
+    console.error("Error al eliminar el trámite del alumno:", error);
     res.status(500).json({ message: "Algo salió mal", error: error.message });
+  } finally {
+    conn.release();
   }
 };

@@ -284,7 +284,10 @@ function NuevoTramite() {
 
               <div className="mb-3">
                 <label className="form-label fw-bold">Fecha:</label>
-                <input type="date" className="form-control" value={fecha} onChange={(event) => setFecha(event.target.value)} readOnly />
+                {/* TEMPORAL - MIGRACION: se quito readOnly para poder capturar tramites
+                    con fecha pasada (periodo Septiembre-Diciembre 2024). Al terminar la
+                    migracion, valorar si se vuelve a bloquear. Buscar "TEMPORAL - MIGRACION". */}
+                <input type="date" className="form-control" value={fecha} onChange={(event) => setFecha(event.target.value)} />
               </div>
               {errors.fecha && <div className="text-danger">{errors.fecha}</div>}
               
